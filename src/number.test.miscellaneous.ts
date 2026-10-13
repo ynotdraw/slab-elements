@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
+import type NumberField from './number.js';
 
 test(
   'defines itself',
@@ -264,17 +265,27 @@ test(
   },
 );
 
+// The error's name is checked in the page because Firefox, unlike Chromium and
+// WebKit, leaves it out of the message Playwright passes back.
 test(
   'throws from `stepUp()` when `step` is "any"',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
+  async ({ renderTemplate, page }) => {
     await renderTemplate(
       () =>
         html`<slab-number label="Label" step="any" value="1"></slab-number>`,
     );
 
-    await expect(
-      callMethod(page.locator('slab-number'), 'stepUp'),
-    ).rejects.toThrow('InvalidStateError');
+    const errorName = await page
+      .locator('slab-number')
+      .evaluate<string | undefined, void, NumberField>((element) => {
+        try {
+          element.stepUp();
+        } catch (error) {
+          return error instanceof DOMException ? error.name : undefined;
+        }
+      });
+
+    expect(errorName).toBe('InvalidStateError');
   },
 );

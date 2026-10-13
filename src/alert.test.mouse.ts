@@ -46,9 +46,10 @@ test(
   },
 );
 
-// WebKit doesn't focus a button on click, so the button never has focus to
-// return and focus falls to `<body>`, as it would without an alert. Elsewhere
-// the click focuses the dismiss button and focus is returned.
+// WebKit on macOS doesn't focus a button on click, so the button never has
+// focus to return and focus falls to `<body>`, as it would without an alert.
+// Elsewhere, including WebKit on Linux in CI, the click focuses the dismiss
+// button and focus is returned.
 test(
   'returns focus to the element focused before its dismiss button is clicked',
   { tag: '@mouse' },
@@ -72,7 +73,11 @@ test(
             : document.activeElement?.textContent,
         ),
       )
-      .toBe(browserName === 'webkit' ? 'BODY' : 'Before');
+      .toBe(
+        browserName === 'webkit' && process.platform === 'darwin'
+          ? 'BODY'
+          : 'Before',
+      );
   },
 );
 
