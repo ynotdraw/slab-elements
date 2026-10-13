@@ -1,16 +1,8 @@
-# Paused. Every workflow here runs on `workflow_dispatch` only, so nothing runs
-# on a push or a pull request and nothing bills minutes. The triggers each one
-# used are commented out below, so switching them back on is a matter of
-# deleting the `workflow_dispatch` line and uncommenting them.
-
 name: On Merge Branch "changeset-release/main"
 
 on:
-  workflow_dispatch:
-
-# on:
-#   pull_request:
-#     types: [closed]
+  pull_request:
+    types: [closed]
 
 concurrency:
   group: ${{ github.head_ref }}

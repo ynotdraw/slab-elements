@@ -65,17 +65,14 @@ Storybook on port 6006.
 If your `~/.npmrc` sets `ignore-scripts=true`, run `pnpm prepare` as well so the
 Git hooks and Playwright's browsers get installed.
 
-CI is paused while the repository is private, because Actions bills minutes
-against the account there. Run the checks yourself before pushing:
+CI runs format, lint, typecheck and the Playwright suites on every pull
+request. To catch failures before pushing, run the same checks yourself:
 
 ```bash
 pnpm typecheck
 pnpm lint
 pnpm test
 ```
-
-Switching CI back on is a matter of deleting each workflow's
-`workflow_dispatch` line and uncommenting the triggers beneath it.
 
 ### Branching
 

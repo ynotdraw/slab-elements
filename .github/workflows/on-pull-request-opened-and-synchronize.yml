@@ -1,18 +1,10 @@
-# Paused. Every workflow here runs on `workflow_dispatch` only, so nothing runs
-# on a push or a pull request and nothing bills minutes. The triggers each one
-# used are commented out below, so switching them back on is a matter of
-# deleting the `workflow_dispatch` line and uncommenting them.
-
 name: On Pull Request Opened And Synchronize
 
 on:
-  workflow_dispatch:
-
-# on:
-#   pull_request:
-#     types: [opened, synchronize]
-#   merge_group:
-#     types: [checks_requested]
+  pull_request:
+    types: [opened, synchronize]
+  merge_group:
+    types: [checks_requested]
 
 concurrency:
   group: ${{ github.head_ref || github.ref }}
