@@ -14,6 +14,11 @@ updates:
       interval: weekly
     cooldown:
       default-days: 7
+    ignore:
+      # Changesets action v2 needs Changesets CLI v3, which is still a
+      # prerelease. Remove this when moving to CLI v3.
+      - dependency-name: changesets/action
+        update-types: ['version-update:semver-major']
     groups:
       actions:
         patterns:
