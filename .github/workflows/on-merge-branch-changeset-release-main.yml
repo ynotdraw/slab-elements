@@ -47,6 +47,9 @@ jobs:
     if: github.event.pull_request.merged == true && github.head_ref == 'changeset-release/main'
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    # Waits for a required reviewer before publishing. npm's trusted publisher
+    # for `slab-elements` names this environment, so keep the two in sync.
+    environment: release
     needs:
       - install-dependencies
     permissions:
@@ -64,6 +67,7 @@ jobs:
         uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         with:
           publish: pnpm release
+        # No `NPM_TOKEN`: npm trusted publishing exchanges this job's OIDC token
+        # (`id-token: write`) for a short-lived publish token.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
