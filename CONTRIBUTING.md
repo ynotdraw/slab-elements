@@ -45,7 +45,6 @@ choices that tend to raise questions.
   - [What is `per-env`?](#what-is-per-env)
   - [Why do Axe and ARIA snapshots both exist?](#why-do-axe-and-aria-snapshots-both-exist)
   - [Why is local coverage lower than CI's?](#why-is-local-coverage-lower-than-cis)
-  - [Why isn't `custom-elements.json` published?](#why-isnt-custom-elementsjson-published)
 
 ## Getting started
 
@@ -587,17 +586,3 @@ produces a report covering that one test. For a total, run the whole
 ```bash
 pnpm test:production:playwright
 ```
-
-### Why isn't `custom-elements.json` published?
-
-Because nothing appears to consume it. The manifest is widely recommended for
-tooling, but the tooling largely isn't there yet.
-
-VS Code's Lit plugin nominally supports it through
-[`customHtmlData`](https://github.com/runem/lit-analyzer/tree/master/packages/vscode-lit-plugin#-configuration),
-but the option takes no file path and a
-[bug](https://github.com/runem/lit-analyzer/issues/300) requires pasting the
-whole manifest inline. Even then attributes show up duplicated on hover and some
-don't show at all.
-
-If a real use case turns up, publishing it is easy enough.

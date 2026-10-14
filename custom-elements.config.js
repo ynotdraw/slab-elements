@@ -8,6 +8,7 @@ import addRequiredToAttributes from './dist/cem-analyzer-plugins/add-required-to
 import addSlots from './dist/cem-analyzer-plugins/add-slots.js';
 import removeBlockComments from './dist/cem-analyzer-plugins/remove-block-comments.js';
 import removePrivateMembers from './dist/cem-analyzer-plugins/remove-private-members.js';
+import writePublishedManifest from './dist/cem-analyzer-plugins/write-published-manifest.js';
 
 export default {
   exclude: [
@@ -22,6 +23,9 @@ export default {
   ],
   globs: ['./src/*.ts'],
   litelement: true,
+  // `"customElements"` in package.json points at the published copy that
+  // `writePublishedManifest()` writes, so the analyzer mustn't overwrite it.
+  packagejson: false,
   plugins: [
     removeBlockComments(),
     removePrivateMembers(),
@@ -30,5 +34,6 @@ export default {
     addEvents(),
     addRequiredToAttributes(),
     addSlots(),
+    writePublishedManifest(),
   ],
 };
