@@ -14,11 +14,15 @@
   "routes": [{ "pattern": "slab-elements.dev", "custom_domain": true }],
 
   // Production is served at its own domain only, with no workers.dev address.
-  // Preview URLs, `<version>-slab-elements.<subdomain>.workers.dev`, are on so
-  // Workers Builds can link a pull request's branch to a preview of the site.
-  // They serve only versions that aren't deployed.
+  // Preview URLs are on so Workers Builds can link a pull request's branch to
+  // a preview of the site. They serve only versions that aren't deployed.
   "workers_dev": false,
   "preview_urls": true,
+
+  // Workers Builds runs `wrangler preview` for branches other than main, which
+  // needs this block even when it's empty. The top-level settings above apply
+  // to previews as well.
+  "previews": {},
 
   // As Storybook's is in the root's scripts.
   "send_metrics": false,
