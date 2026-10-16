@@ -1,7 +1,7 @@
 // The site, as a Worker that serves only static assets: the built `dist`, at
-// slab-elements.dev. Deployed by hand for now, with
-// `pnpm --filter slab-site run deploy`, until Workers Builds is connected to
-// this same Worker, which it matches by `name`.
+// slab-elements.dev. Deployed on every push to main by the "Deploy Site" job in
+// `.github/workflows/on-push-branch-main.yml`, which runs
+// `pnpm --filter slab-site run deploy`.
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "slab-elements",

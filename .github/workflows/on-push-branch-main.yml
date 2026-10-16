@@ -63,3 +63,24 @@ jobs:
         with:
           name: storybook
           path: dist/storybook
+
+  deploy-site:
+    name: Deploy Site
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    # Holds the Cloudflare secrets, so only jobs that name it can read them.
+    environment:
+      name: site
+      url: https://slab-elements.dev
+    needs:
+      - install-dependencies
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/pnpm
+      # The site's own Wrangler, from the lockfile, rather than a third-party
+      # action. It reads the account and token from the environment.
+      - name: Build And Deploy
+        run: pnpm --filter slab-site run deploy
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
