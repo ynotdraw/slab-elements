@@ -1,7 +1,7 @@
 // The site, as a Worker that serves only static assets: the built `dist`, at
-// slab-elements.dev. Deployed by hand for now, with
-// `pnpm --filter slab-site run deploy`, until Workers Builds is connected to
-// this same Worker, which it matches by `name`.
+// slab-elements.dev. Workers Builds deploys it on every push to main, and
+// uploads a preview version for every other branch. It finds this Worker by
+// `name`.
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "slab-elements",
@@ -13,10 +13,12 @@
   },
   "routes": [{ "pattern": "slab-elements.dev", "custom_domain": true }],
 
-  // Served at its own domain only: no workers.dev address, and no preview
-  // URLs, so nothing of it is public anywhere else.
+  // Production is served at its own domain only, with no workers.dev address.
+  // Preview URLs, `<version>-slab-elements.<subdomain>.workers.dev`, are on so
+  // Workers Builds can link a pull request's branch to a preview of the site.
+  // They serve only versions that aren't deployed.
   "workers_dev": false,
-  "preview_urls": false,
+  "preview_urls": true,
 
   // As Storybook's is in the root's scripts.
   "send_metrics": false,

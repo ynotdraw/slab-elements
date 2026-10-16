@@ -6,7 +6,7 @@
   "scripts": {
     "build": "astro build",
     "deploy": "astro build && wrangler deploy",
-    "deploy:comment": "By hand for now, with your own `wrangler login`. Run it with `pnpm --filter slab-site run deploy`, since a bare `deploy` is pnpm's own command. Once Workers Builds is connected to the repository, it builds and deploys on every push to main instead.",
+    "deploy:comment": "Workers Builds deploys on every push to main, so this is only for a deploy by hand, with your own `wrangler login`. Run it with `pnpm --filter slab-site run deploy`, since a bare `deploy` is pnpm's own command.",
     "dev": "astro dev",
     "og": "astro build && pnpm og:generate && astro build",
     "og:comment": "The cards are read from the built pages, so the site's built first, then again so they're copied into it.",
