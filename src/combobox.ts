@@ -963,7 +963,7 @@ export default class Combobox extends LitElement {
     this.isBlurring = false;
   }
 
-  #remove(value: string) {
+  #remove(value?: string) {
     this.#setValues(this.values.filter((other) => other !== value));
     this.requestUpdate();
   }
@@ -976,7 +976,7 @@ export default class Combobox extends LitElement {
       this.#pendingTagFocus = index;
     }
 
-    this.#remove(this.values[index] ?? '');
+    this.#remove(this.values[index]);
   }
 
   #renderTags() {
