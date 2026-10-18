@@ -10,8 +10,7 @@ declare global {
 }
 
 /**
- * Toggle Group, styled: a raised row of buttons joined by ink rules, with a
- * pressed one filled in ember.
+ * Toggle Group, styled: a raised row of buttons joined by ink rules.
  */
 @customElement('slab-styled-toggle-group')
 export default class StyledToggleGroup extends ToggleGroup {

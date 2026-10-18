@@ -1,3 +1,4 @@
+import './toggle-group.button.js';
 import './toggle-group.js';
 import { html } from 'lit';
 import { withActions } from '@storybook/addon-actions/decorator';
@@ -9,6 +10,7 @@ const meta: Meta = {
     withActions,
     (story) =>
       html`<script type="ignore">
+          import 'slab-elements/toggle-group.button.js';
           import 'slab-elements/toggle-group.js';
         </script>
 
@@ -45,9 +47,9 @@ const meta: Meta = {
       control: false,
       table: {
         type: {
-          summary: 'HTMLButtonElement',
+          summary: 'ToggleGroupButton',
           detail:
-            '// Each pressed or not through `aria-pressed`. Set it to "true" for one that starts out pressed.',
+            '// Set `pressed` on one that starts out pressed. The group handles the ARIA.',
         },
       },
       type: { name: 'function', required: true },
@@ -120,9 +122,9 @@ const meta: Meta = {
       orientation=${arguments_.orientation}
       ?multiple=${arguments_.multiple}
     >
-      <button value="one">One</button>
-      <button value="two">Two</button>
-      <button value="three">Three</button>
+      <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+      <slab-toggle-group-button value="two">Two</slab-toggle-group-button>
+      <slab-toggle-group-button value="three">Three</slab-toggle-group-button>
     </slab-toggle-group>`;
   },
 };

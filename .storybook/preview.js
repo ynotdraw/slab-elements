@@ -301,16 +301,15 @@ export default {
             }
           }
 
-          // What Toggle Group adds to the buttons, rather than what a consumer
-          // writes.
           if (component === 'toggle-group') {
-            for (const $button of $component.children) {
+            for (const $button of $component.querySelectorAll(
+              'slab-toggle-group-button',
+            )) {
+              $button.removeAttribute('aria-disabled');
+              $button.removeAttribute('aria-label');
+              $button.removeAttribute('aria-pressed');
+              $button.removeAttribute('role');
               $button.removeAttribute('tabindex');
-              $button.removeAttribute('type');
-
-              if ($button.getAttribute('aria-pressed') === 'false') {
-                $button.removeAttribute('aria-pressed');
-              }
             }
           }
 

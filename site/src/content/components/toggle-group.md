@@ -1,30 +1,32 @@
 ---
 title: Toggle Group
 group: Selection
-element: '<button aria-pressed>'
-tags: [slab-toggle-group]
+element: '[role=group]'
+tags: [slab-toggle-group, slab-toggle-group-button]
 summary: 'A row of toggle buttons that Tab reaches once, with one pressed at a time or several.'
 example: |
   <div class="stack">
     <slab-styled-toggle-group label="Finish">
-      <button aria-pressed="true" value="broom">Broom</button>
-      <button value="trowel">Trowel</button>
-      <button value="stamp">Stamp</button>
-      <button value="polish" disabled>Polish</button>
+      <slab-styled-toggle-group-button value="broom" pressed>Broom</slab-styled-toggle-group-button>
+      <slab-styled-toggle-group-button value="trowel">Trowel</slab-styled-toggle-group-button>
+      <slab-styled-toggle-group-button value="stamp">Stamp</slab-styled-toggle-group-button>
+      <slab-styled-toggle-group-button value="polish" disabled>Polish</slab-styled-toggle-group-button>
     </slab-styled-toggle-group>
     <slab-styled-toggle-group label="Additives" multiple>
-      <button aria-pressed="true" value="fiber">Fiber</button>
-      <button value="accelerator">Accelerator</button>
-      <button aria-pressed="true" value="color">Color</button>
+      <slab-styled-toggle-group-button value="fiber" pressed>Fiber</slab-styled-toggle-group-button>
+      <slab-styled-toggle-group-button value="accelerator">Accelerator</slab-styled-toggle-group-button>
+      <slab-styled-toggle-group-button value="color" pressed>Color</slab-styled-toggle-group-button>
     </slab-styled-toggle-group>
   </div>
 usage: |
   <slab-toggle-group label="Alignment">
-    <button aria-pressed="true" value="left">Left</button>
-    <button value="center">Center</button>
-    <button value="right">Right</button>
+    <slab-toggle-group-button value="left" pressed>Left</slab-toggle-group-button>
+    <slab-toggle-group-button value="center">Center</slab-toggle-group-button>
+    <slab-toggle-group-button value="right">Right</slab-toggle-group-button>
   </slab-toggle-group>
 ---
+
+Each item is a Toggle Group Button. The group sets each one's `aria-pressed`, so there's no ARIA to write.
 
 ## Keyboard
 

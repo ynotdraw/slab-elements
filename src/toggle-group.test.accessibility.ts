@@ -9,8 +9,12 @@ test(
     await renderTemplate(
       () => html`
         <slab-toggle-group label="Label">
-          <button aria-pressed="true" value="one">One</button>
-          <button disabled value="two">Two</button>
+          <slab-toggle-group-button pressed value="one"
+            >One</slab-toggle-group-button
+          >
+          <slab-toggle-group-button disabled value="two"
+            >Two</slab-toggle-group-button
+          >
         </slab-toggle-group>
       `,
     );
@@ -26,7 +30,7 @@ test(
     await renderTemplate(
       () => html`
         <slab-toggle-group label="Label" orientation="vertical">
-          <button value="one">One</button>
+          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
         </slab-toggle-group>
       `,
     );

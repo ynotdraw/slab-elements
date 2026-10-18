@@ -8,13 +8,15 @@ test(
     await renderTemplate(
       () =>
         html`<slab-toggle-group label="Label">
-          <button aria-pressed="true" value="one">One</button>
-          <button value="two">Two</button>
+          <slab-toggle-group-button pressed value="one"
+            >One</slab-toggle-group-button
+          >
+          <slab-toggle-group-button value="two">Two</slab-toggle-group-button>
         </slab-toggle-group>`,
     );
 
     const host = page.locator('slab-toggle-group');
-    const buttons = page.locator('button');
+    const buttons = page.locator('slab-toggle-group-button');
 
     await expect(host).toDispatchEvents(async () => {
       await buttons.nth(1).click();
@@ -36,13 +38,15 @@ test(
     await renderTemplate(
       () =>
         html`<slab-toggle-group label="Label">
-          <button aria-pressed="true" value="one">One</button>
+          <slab-toggle-group-button pressed value="one"
+            >One</slab-toggle-group-button
+          >
         </slab-toggle-group>`,
     );
 
-    await page.locator('button').click();
+    await page.locator('slab-toggle-group-button').click();
 
-    await expect(page.locator('button')).toHaveAttribute(
+    await expect(page.locator('slab-toggle-group-button')).toHaveAttribute(
       'aria-pressed',
       'false',
     );
@@ -61,13 +65,15 @@ test(
     await renderTemplate(
       () =>
         html`<slab-toggle-group label="Label" multiple>
-          <button value="one">One</button>
-          <button value="two">Two</button>
-          <button value="three">Three</button>
+          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+          <slab-toggle-group-button value="two">Two</slab-toggle-group-button>
+          <slab-toggle-group-button value="three"
+            >Three</slab-toggle-group-button
+          >
         </slab-toggle-group>`,
     );
 
-    const buttons = page.locator('button');
+    const buttons = page.locator('slab-toggle-group-button');
 
     await buttons.nth(2).click();
     await buttons.nth(0).click();
@@ -86,13 +92,15 @@ test(
     await renderTemplate(
       () =>
         html`<slab-toggle-group label="Label">
-          <button value="one"><span>One</span></button>
+          <slab-toggle-group-button value="one"
+            ><span>One</span></slab-toggle-group-button
+          >
         </slab-toggle-group>`,
     );
 
     await page.locator('span').click();
 
-    await expect(page.locator('button')).toHaveAttribute(
+    await expect(page.locator('slab-toggle-group-button')).toHaveAttribute(
       'aria-pressed',
       'true',
     );
@@ -106,25 +114,25 @@ test(
     await renderTemplate(
       () =>
         html`<slab-toggle-group label="Label">
-          <button
+          <slab-toggle-group-button
             value="one"
             @click=${(event: MouseEvent) => {
               event.preventDefault();
             }}
           >
             One
-          </button>
+          </slab-toggle-group-button>
         </slab-toggle-group>`,
     );
 
     const host = page.locator('slab-toggle-group');
 
     await expect(host).not.toDispatchEvents(
-      () => page.locator('button').click(),
+      () => page.locator('slab-toggle-group-button').click(),
       [{ type: 'change' }],
     );
 
-    await expect(page.locator('button')).toHaveAttribute(
+    await expect(page.locator('slab-toggle-group-button')).toHaveAttribute(
       'aria-pressed',
       'false',
     );
@@ -138,12 +146,12 @@ test(
     await renderTemplate(
       () =>
         html`<slab-toggle-group label="Label">
-          <button value="one">One</button>
-          <button value="two">Two</button>
+          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+          <slab-toggle-group-button value="two">Two</slab-toggle-group-button>
         </slab-toggle-group>`,
     );
 
-    const buttons = page.locator('button');
+    const buttons = page.locator('slab-toggle-group-button');
 
     await buttons.nth(1).click();
 

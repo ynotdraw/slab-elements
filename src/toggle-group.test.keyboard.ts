@@ -8,13 +8,13 @@ test(
     await renderTemplate(
       () =>
         html`<slab-toggle-group label="Label">
-          <button value="one">One</button>
-          <button value="two">Two</button>
+          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+          <slab-toggle-group-button value="two">Two</slab-toggle-group-button>
         </slab-toggle-group>`,
     );
 
     const host = page.locator('slab-toggle-group');
-    const buttons = page.locator('button');
+    const buttons = page.locator('slab-toggle-group-button');
 
     await page.keyboard.press('Tab');
 
@@ -41,13 +41,17 @@ test(
     await renderTemplate(
       () =>
         html`<slab-toggle-group label="Label">
-          <button value="one">One</button>
-          <button disabled value="two">Two</button>
-          <button value="three">Three</button>
+          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+          <slab-toggle-group-button disabled value="two"
+            >Two</slab-toggle-group-button
+          >
+          <slab-toggle-group-button value="three"
+            >Three</slab-toggle-group-button
+          >
         </slab-toggle-group>`,
     );
 
-    const buttons = page.locator('button');
+    const buttons = page.locator('slab-toggle-group-button');
 
     await page.keyboard.press('Tab');
     await expect(buttons.nth(0)).toBeFocused();
@@ -77,13 +81,15 @@ test(
     await renderTemplate(
       () =>
         html`<slab-toggle-group label="Label">
-          <button value="one">One</button>
-          <button value="two">Two</button>
-          <button value="three">Three</button>
+          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+          <slab-toggle-group-button value="two">Two</slab-toggle-group-button>
+          <slab-toggle-group-button value="three"
+            >Three</slab-toggle-group-button
+          >
         </slab-toggle-group>`,
     );
 
-    const buttons = page.locator('button');
+    const buttons = page.locator('slab-toggle-group-button');
 
     await page.keyboard.press('Tab');
     await page.keyboard.press('End');
@@ -101,12 +107,12 @@ test(
     await renderTemplate(
       () =>
         html`<slab-toggle-group label="Label" orientation="vertical">
-          <button value="one">One</button>
-          <button value="two">Two</button>
+          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+          <slab-toggle-group-button value="two">Two</slab-toggle-group-button>
         </slab-toggle-group>`,
     );
 
-    const buttons = page.locator('button');
+    const buttons = page.locator('slab-toggle-group-button');
 
     await page.keyboard.press('Tab');
     await page.keyboard.press('ArrowRight');
@@ -129,8 +135,8 @@ test(
         html`<button>Before</button>
 
           <slab-toggle-group label="Label">
-            <button value="one">One</button>
-            <button value="two">Two</button>
+            <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+            <slab-toggle-group-button value="two">Two</slab-toggle-group-button>
           </slab-toggle-group>
 
           <button>After</button>`,
@@ -154,8 +160,8 @@ test(
     await renderTemplate(
       () =>
         html`<slab-toggle-group label="Label">
-          <button value="one">One</button>
-          <button value="two">Two</button>
+          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+          <slab-toggle-group-button value="two">Two</slab-toggle-group-button>
         </slab-toggle-group>`,
     );
 

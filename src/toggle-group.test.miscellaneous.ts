@@ -2,6 +2,7 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 import type ToggleGroup from './toggle-group.js';
+import type ToggleGroupButton from './toggle-group.button.js';
 
 test(
   'defines itself',
@@ -10,7 +11,7 @@ test(
     await renderTemplate(
       () =>
         html`<slab-toggle-group label="Label">
-          <button value="one">One</button>
+          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
         </slab-toggle-group>`,
     );
 
@@ -21,55 +22,46 @@ test(
 );
 
 test(
-  'makes its buttons toggles that never submit a form',
+  "sets each button's `aria-pressed` and `:state(pressed)`",
   { tag: '@miscellaneous' },
   async ({ renderTemplate, page }) => {
     await renderTemplate(
       () =>
-        html`<form>
-          <slab-toggle-group label="Label">
-            <button value="one">One</button>
-            <button aria-pressed="true" type="reset" value="two">Two</button>
-          </slab-toggle-group>
-        </form>`,
+        html`<slab-toggle-group label="Label">
+          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+          <slab-toggle-group-button pressed value="two"
+            >Two</slab-toggle-group-button
+          >
+        </slab-toggle-group>`,
     );
 
-    const buttons = page.locator('button');
+    const buttons = page.locator('slab-toggle-group-button');
 
     await expect(buttons.nth(0)).toHaveAttribute('aria-pressed', 'false');
-    await expect(buttons.nth(0)).toHaveAttribute('type', 'button');
-
-    // What's already there is left alone.
     await expect(buttons.nth(1)).toHaveAttribute('aria-pressed', 'true');
-    await expect(buttons.nth(1)).toHaveAttribute('type', 'reset');
 
-    const isSubmitted = await page.locator('form').evaluate((form) => {
-      let isSubmitted = false;
-
-      form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        isSubmitted = true;
-      });
-
-      form.querySelector('button')?.click();
-
-      return isSubmitted;
-    });
-
-    expect(isSubmitted).toBe(false);
+    expect(
+      await buttons
+        .nth(1)
+        .evaluate((element) => element.matches(':state(pressed)')),
+    ).toBe(true);
   },
 );
 
 test(
-  'keeps only the first button pressed unless `multiple`',
+  'keeps only the last button pressed unless `multiple`',
   { tag: '@miscellaneous' },
   async ({ renderTemplate, page }) => {
     await renderTemplate(
       () =>
         html`<slab-toggle-group label="Label" multiple>
-          <button value="one">One</button>
-          <button aria-pressed="true" value="two">Two</button>
-          <button aria-pressed="true" value="three">Three</button>
+          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+          <slab-toggle-group-button pressed value="two"
+            >Two</slab-toggle-group-button
+          >
+          <slab-toggle-group-button pressed value="three"
+            >Three</slab-toggle-group-button
+          >
         </slab-toggle-group>`,
     );
 
@@ -81,17 +73,47 @@ test(
       element.multiple = false;
     });
 
-    await expect(host).toHaveJSProperty('values', ['two']);
+    await expect(host).toHaveJSProperty('values', ['three']);
 
+    // Pressed other than by a click.
     await host.evaluate<void, void, ToggleGroup>((element) => {
-      const button = document.createElement('button');
-      button.setAttribute('aria-pressed', 'true');
-      button.textContent = 'Zero';
-      button.value = 'zero';
-      element.prepend(button);
+      const button = element.querySelector('slab-toggle-group-button');
+
+      if (button) {
+        button.pressed = true;
+      }
     });
 
-    await expect(host).toHaveJSProperty('values', ['zero']);
+    await expect(host).toHaveJSProperty('values', ['one']);
+
+    // Added already pressed.
+    await host.evaluate<void, void, ToggleGroup>((element) => {
+      const button = document.createElement('slab-toggle-group-button');
+      button.pressed = true;
+      button.textContent = 'Four';
+      button.value = 'four';
+      element.append(button);
+    });
+
+    await expect(host).toHaveJSProperty('values', ['four']);
+
+    // Pressed and released while it allows more than one.
+    await host.evaluate<void, void, ToggleGroup>((element) => {
+      element.multiple = true;
+      element.values = ['one', 'two'];
+    });
+
+    await expect(host).toHaveJSProperty('values', ['one', 'two']);
+
+    await host.evaluate<void, void, ToggleGroup>((element) => {
+      const [one] = element.buttons;
+
+      if (one) {
+        one.pressed = false;
+      }
+    });
+
+    await expect(host).toHaveJSProperty('values', ['two']);
   },
 );
 
@@ -102,15 +124,17 @@ test(
     await renderTemplate(
       () =>
         html`<slab-toggle-group label="Label">
-          <button value="one">One</button>
-          <button value="two">Two</button>
-          <button value="">Three</button>
-          <button disabled value="four">Four</button>
+          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+          <slab-toggle-group-button value="two">Two</slab-toggle-group-button>
+          <slab-toggle-group-button value="">Three</slab-toggle-group-button>
+          <slab-toggle-group-button disabled value="four"
+            >Four</slab-toggle-group-button
+          >
         </slab-toggle-group>`,
     );
 
     const host = page.locator('slab-toggle-group');
-    const buttons = page.locator('button');
+    const buttons = page.locator('slab-toggle-group-button');
 
     await host.evaluate<void, void, ToggleGroup>((element) => {
       element.value = 'two';
@@ -159,13 +183,17 @@ test(
     await renderTemplate(
       () =>
         html`<slab-toggle-group label="Label">
-          <button disabled value="one">One</button>
-          <button value="two">Two</button>
-          <button value="three">Three</button>
+          <slab-toggle-group-button disabled value="one"
+            >One</slab-toggle-group-button
+          >
+          <slab-toggle-group-button value="two">Two</slab-toggle-group-button>
+          <slab-toggle-group-button value="three"
+            >Three</slab-toggle-group-button
+          >
         </slab-toggle-group>`,
     );
 
-    const buttons = page.locator('button');
+    const buttons = page.locator('slab-toggle-group-button');
 
     await expect(buttons.nth(1)).toHaveAttribute('tabindex', '0');
     await expect(buttons.nth(2)).toHaveAttribute('tabindex', '-1');
@@ -185,15 +213,17 @@ test(
     await renderTemplate(
       () =>
         html`<slab-toggle-group label="Label">
-          <button value="one">One</button>
-          <button value="two">Two</button>
-          <button value="three">Three</button>
+          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+          <slab-toggle-group-button value="two">Two</slab-toggle-group-button>
+          <slab-toggle-group-button value="three"
+            >Three</slab-toggle-group-button
+          >
         </slab-toggle-group>`,
     );
 
-    const buttons = page.locator('button');
+    const buttons = page.locator('slab-toggle-group-button');
 
-    await buttons.nth(0).evaluate((element: HTMLButtonElement) => {
+    await buttons.nth(0).evaluate((element: ToggleGroupButton) => {
       element.disabled = true;
     });
 
@@ -217,45 +247,15 @@ test(
     await renderTemplate(
       () =>
         html`<slab-toggle-group label="Label">
-          <button disabled value="one">One</button>
-          <button value="two">Two</button>
+          <slab-toggle-group-button disabled value="one"
+            >One</slab-toggle-group-button
+          >
+          <slab-toggle-group-button value="two">Two</slab-toggle-group-button>
         </slab-toggle-group>`,
     );
 
     await callMethod(page.locator('slab-toggle-group'), 'focus');
     await expect(page.getByRole('button', { name: 'Two' })).toBeFocused();
-  },
-);
-
-test(
-  'stops watching for disabled buttons when disconnected',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-toggle-group label="Label">
-          <button value="one">One</button>
-          <button value="two">Two</button>
-        </slab-toggle-group>`,
-    );
-
-    const tabindex = await page
-      .locator('slab-toggle-group')
-      .evaluate(async (element) => {
-        const button = element.querySelector('button');
-        element.remove();
-
-        if (button) {
-          button.disabled = true;
-        }
-
-        // A tick for an observer that's still watching to have run.
-        await new Promise((resolve) => setTimeout(resolve));
-
-        return button?.getAttribute('tabindex');
-      });
-
-    expect(tabindex).toBe('0');
   },
 );
 
@@ -280,7 +280,7 @@ test(
         class extends ToggleGroup {},
       );
 
-      document.body.innerHTML = `<acme-toggle-group label='Label'><button>One</button></acme-toggle-group>`;
+      document.body.innerHTML = `<acme-toggle-group label='Label'><slab-toggle-group-button>One</slab-toggle-group-button></acme-toggle-group>`;
     });
 
     await expect(
@@ -299,7 +299,7 @@ test(
       renderTemplate(
         () =>
           html`<slab-toggle-group>
-            <button value="one">One</button>
+            <slab-toggle-group-button value="one">One</slab-toggle-group-button>
           </slab-toggle-group>`,
       ),
     ).rejects.toThrow();

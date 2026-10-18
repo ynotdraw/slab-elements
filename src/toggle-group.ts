@@ -13,15 +13,8 @@ import customElement from './library/custom-element.js';
 import assertSlot from './library/assert-slot.js';
 import required from './library/required.js';
 import RovingTabindex from './library/roving-tabindex.js';
+import ToggleGroupButton from './toggle-group.button.js';
 import styles from './toggle-group.styles.js';
-
-function isEnabled(button: HTMLButtonElement) {
-  return !button.matches(':disabled');
-}
-
-function isPressed(button: HTMLButtonElement) {
-  return button.getAttribute('aria-pressed') === 'true';
-}
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -30,16 +23,19 @@ declare global {
 }
 
 /**
- * A group of toggle buttons with no visual styles: a `[role=group]` around the
- * `<button>`s slotted into it, each pressed or not through `aria-pressed`, so
- * Tab reaches the group once and the arrow keys move between them.
+ * A group of toggle buttons with no visual styles: a `[role=group]` around its
+ * Toggle Group Buttons, so Tab reaches the group once and the arrow keys move
+ * between them.
  *
  * A click, Space or Enter presses a button or releases it. Only one is pressed
- * at a time unless `multiple` is set, so pressing one releases the rest. The
- * buttons are yours, and so is their `aria-pressed`: set it to `"true"` in your
- * markup for a button that starts out pressed. A button without it gets
- * `"false"`, and one without a `type` gets `"button"` so it never submits a
- * form. A click your own handler cancels doesn't press anything.
+ * at a time unless `multiple` is set, so pressing one releases the rest, and
+ * when more than one is pressed anyway, the last one stays pressed. The group
+ * sets each button's `aria-pressed`, so set `pressed` on one that starts out
+ * pressed and leave the ARIA to it. A click your own handler cancels doesn't
+ * press anything.
+ *
+ * Buttons are found by class rather than by tag name, so your subclass of
+ * Toggle Group Button can be named anything.
  *
  * Exactly one button is tabbable: the one most recently focused, or the first
  * that isn't disabled. Left and Right, or Up and Down when `orientation` is
@@ -47,8 +43,8 @@ declare global {
  * disabled ones, and Home and End go to the first and last. Moving focus
  * doesn't press anything.
  *
- * Style it through its part, and the buttons directly, by their
- * `[aria-pressed="true"]`.
+ * Style it through its part, and the buttons through their
+ * `:state(pressed)` and `:state(disabled)`.
  *
  * @attr {string} label - Names the group.
  * @attr {boolean} [multiple=false] - Lets more than one button be pressed at a time.
@@ -57,18 +53,15 @@ declare global {
  * @readonly
  * @attr {string} [version]
  *
- * @slot {HTMLButtonElement}
+ * @slot {ToggleGroupButton}
  *
  * @csspart group - The buttons
  *
- * @fires {Event} change
- * @fires {Event} input
+ * @readonly
+ * @prop {ToggleGroupButton[]} buttons
  *
  * @readonly
- * @prop {HTMLButtonElement[]} buttons
- *
- * @readonly
- * @prop {HTMLButtonElement[]} pressedButtons - Pressed and enabled buttons, in the order they appear.
+ * @prop {ToggleGroupButton[]} pressedButtons - Pressed and enabled buttons, in the order they appear.
  *
  * @prop {string} value - The value of the first pressed and enabled button. Setting it presses the button with that value, and only that one.
  * @prop {string[]} values - The value of every pressed and enabled button, in the order they appear. Setting it presses the buttons with those values, and only those, or only the first of them unless `multiple` is set.
@@ -99,19 +92,17 @@ export default class ToggleGroup extends LitElement {
   readonly version: string = packageJson.version;
 
   // The slotted buttons, in order.
-  get buttons(): HTMLButtonElement[] {
+  get buttons(): ToggleGroupButton[] {
     return (this.#slotElementRef.value?.assignedElements() ?? []).filter(
-      (element) => element instanceof HTMLButtonElement,
+      (element) => element instanceof ToggleGroupButton,
     );
   }
 
   /**
    * Pressed and enabled buttons, in the order they appear.
    */
-  get pressedButtons(): HTMLButtonElement[] {
-    return this.buttons.filter((button) => {
-      return isPressed(button) && isEnabled(button);
-    });
+  get pressedButtons(): ToggleGroupButton[] {
+    return this.buttons.filter(({ disabled, pressed }) => pressed && !disabled);
   }
 
   /**
@@ -149,27 +140,9 @@ export default class ToggleGroup extends LitElement {
         values.includes(button.value) &&
         (this.multiple || !isAnyPressed);
 
-      button.setAttribute('aria-pressed', String(isMatch));
+      button.pressed = isMatch;
       isAnyPressed ||= isMatch;
     }
-  }
-
-  override connectedCallback() {
-    super.connectedCallback();
-
-    // A button disabled while it's the tabbable one would leave nothing to Tab
-    // to. Native buttons don't say when they're disabled, other than through
-    // the attribute.
-    this.#observer.observe(this, {
-      attributeFilter: ['disabled'],
-      attributes: true,
-      subtree: true,
-    });
-  }
-
-  override disconnectedCallback() {
-    super.disconnectedCallback();
-    this.#observer.disconnect();
   }
 
   override focus(options?: FocusOptions) {
@@ -190,20 +163,19 @@ export default class ToggleGroup extends LitElement {
     >
       <!-- The buttons -->
       <slot
-        ${assertSlot([HTMLButtonElement])}
+        ${assertSlot([ToggleGroupButton])}
         ${ref(this.#slotElementRef)}
         @slotchange=${this.#onSlotChange}
       >
-        <!-- @type {HTMLButtonElement} -->
+        <!-- @type {ToggleGroupButton} -->
       </slot>
     </div>`;
   }
 
   override updated(changes: PropertyValues<this>) {
-    // Only the first stays pressed when a group that allowed more no longer
-    // does.
+    // Only one stays pressed when a group that allowed more no longer does.
     if (changes.has('multiple') && !this.multiple) {
-      this.#releaseAllButFirst();
+      this.#releaseAllBut(this.pressedButtons.at(-1));
     }
   }
 
@@ -215,40 +187,53 @@ export default class ToggleGroup extends LitElement {
     return super.finalizeStyles([styles, subclassStyles ?? []]);
   }
 
-  #observer = new MutationObserver(this.#settle.bind(this));
+  constructor() {
+    super();
+
+    this.addEventListener('private-connected', this.#onConnected);
+    this.addEventListener('private-disabled-change', this.#onDisabledChange);
+    this.addEventListener('private-pressed-change', this.#onPressedChange);
+  }
 
   // Wrapping at each end, as Toolbar does.
-  #rovingTabindex = new RovingTabindex<HTMLButtonElement>({
+  #rovingTabindex = new RovingTabindex<ToggleGroupButton>({
     hasHomeAndEnd: true,
-    isNavigable: isEnabled,
+    isNavigable: ({ disabled }) => !disabled,
     items: () => this.buttons,
     orientation: () => this.orientation,
   });
 
   #slotElementRef = createRef<HTMLSlotElement>();
 
-  // Space and Enter click a button natively, so this covers the keyboard as
-  // well as the mouse.
+  // Space and Enter click a button, so this covers the keyboard as well as the
+  // mouse. On the group rather than on each button so a click a consumer's
+  // own handler cancels, which runs first, presses nothing.
   #onClick = (event: MouseEvent) => {
     const button = this.#buttonOf(event.target);
 
-    // A disabled button never gets a click, so there's no need to check.
-    if (!button || event.defaultPrevented) {
+    if (!button || button.disabled || event.defaultPrevented) {
       return;
     }
 
-    const isPressing = !isPressed(button);
-
-    if (isPressing && !this.multiple) {
-      for (const each of this.buttons) {
-        each.setAttribute('aria-pressed', 'false');
-      }
+    if (!button.pressed && !this.multiple) {
+      this.#releaseAllBut(button);
     }
 
-    button.setAttribute('aria-pressed', String(isPressing));
+    button.privateToggle();
+  };
 
-    this.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
-    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+  #onConnected = (event: Event) => {
+    if (this.#isOwn(event)) {
+      this.#settle();
+    }
+  };
+
+  // A button disabled while it's the tabbable one would leave nothing to Tab
+  // to.
+  #onDisabledChange = (event: Event) => {
+    if (this.#isOwn(event)) {
+      this.#settle();
+    }
   };
 
   // Remembered as the tabbable button, so Tab comes back to it.
@@ -282,22 +267,22 @@ export default class ToggleGroup extends LitElement {
     }
   };
 
-  #onSlotChange = () => {
-    for (const button of this.buttons) {
-      // So every button is announced as a toggle, pressed or not.
-      if (!button.hasAttribute('aria-pressed')) {
-        button.setAttribute('aria-pressed', 'false');
-      }
-
-      // A button in a form submits it unless it says otherwise. A toggle
-      // never should.
-      if (!button.hasAttribute('type')) {
-        button.type = 'button';
-      }
+  // A button pressed other than by a click, such as through its `pressed`
+  // property, releases the rest too.
+  #onPressedChange = (event: Event) => {
+    if (
+      this.#isOwn(event) &&
+      event.target instanceof ToggleGroupButton &&
+      event.target.pressed &&
+      !this.multiple
+    ) {
+      this.#releaseAllBut(event.target);
     }
+  };
 
+  #onSlotChange = () => {
     if (!this.multiple) {
-      this.#releaseAllButFirst();
+      this.#releaseAllBut(this.pressedButtons.at(-1));
     }
 
     this.#settle();
@@ -310,12 +295,17 @@ export default class ToggleGroup extends LitElement {
     });
   }
 
-  #releaseAllButFirst() {
-    const first = this.buttons.find((button) => isPressed(button));
+  #isOwn(event: Event) {
+    return (
+      event.target instanceof ToggleGroupButton &&
+      event.target.parentElement === this
+    );
+  }
 
+  #releaseAllBut(pressed?: ToggleGroupButton) {
     for (const button of this.buttons) {
-      if (button !== first && isPressed(button)) {
-        button.setAttribute('aria-pressed', 'false');
+      if (button !== pressed) {
+        button.pressed = false;
       }
     }
   }
