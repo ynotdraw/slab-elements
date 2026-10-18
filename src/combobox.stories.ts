@@ -83,6 +83,7 @@ const meta: Meta = {
         ?allow-custom=${arguments_['allow-custom']}
         ?disabled=${arguments_.disabled}
         ?hide-label=${arguments_['hide-label'] || nothing}
+        ?multiple=${arguments_.multiple}
         ?required=${arguments_.required}
       >
         <slab-option
@@ -117,9 +118,11 @@ const meta: Meta = {
     disabled: false,
     filter: '',
     'hide-label': false,
+    multiple: false,
     name: '',
     placeholder: '',
     placement: 'bottom',
+    removeLabel: '',
     'reportValidity()': '',
     required: false,
     'resetValidityFeedback()': '',
@@ -203,6 +206,15 @@ const meta: Meta = {
         },
       },
     },
+    multiple: {
+      table: {
+        defaultValue: { summary: 'false' },
+        type: {
+          summary: 'boolean',
+          detail: '// Each selected Option is shown as a tag that removes it.',
+        },
+      },
+    },
     name: {
       table: {
         defaultValue: { summary: '""' },
@@ -222,6 +234,17 @@ const meta: Meta = {
         type: {
           summary: '"bottom" | "top"',
           detail: "// It flips when there isn't room.",
+        },
+      },
+    },
+    removeLabel: {
+      control: false,
+      table: {
+        defaultValue: { summary: '(text) => `Remove ${text}`' },
+        type: {
+          summary: '(text: string) => string',
+          detail:
+            "// Names each tag's button, which shows only the selected Option's text, from that text.",
         },
       },
     },
@@ -282,7 +305,7 @@ const meta: Meta = {
         type: {
           summary: 'string',
           detail:
-            "// The selected Option's value, or the typed text when `allow-custom` is set.",
+            "// The selected Option's value, or the typed text when `allow-custom` is set. `values` has every one of them when `multiple` is set.",
         },
       },
     },
@@ -352,6 +375,12 @@ export const Combobox: StoryObj = {
 export const AllowCustom: StoryObj = {
   args: {
     'allow-custom': true,
+  },
+};
+
+export const Multiple: StoryObj = {
+  args: {
+    multiple: true,
   },
 };
 

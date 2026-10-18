@@ -463,3 +463,339 @@ test(
     await expect(page.getByRole('combobox')).toHaveValue('One');
   },
 );
+
+test(
+  'toggles the active option on Enter and stays open when `multiple`',
+  { tag: '@keyboard' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () =>
+        html`<slab-combobox label="Label" multiple>
+          <slab-option value="one">One</slab-option>
+          <slab-option value="two">Two</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+    const options = page.locator('slab-option');
+
+    await page.getByRole('combobox').pressSequentially('tw');
+    await page.keyboard.press('ArrowDown');
+
+    await expect(host).toDispatchEvents(
+      () => page.keyboard.press('Enter'),
+      [
+        { type: 'input', bubbles: true, cancelable: false, composed: true },
+        { type: 'change', bubbles: true, cancelable: false, composed: true },
+      ],
+    );
+
+    await expect(host).toHaveJSProperty('values', ['two']);
+    await expect(host).toHaveJSProperty('value', 'two');
+
+    // What was typed is cleared for the next one, so every option is back.
+    await expect(page.getByRole('combobox')).toHaveValue('');
+    await expect(page.getByRole('listbox')).toBeVisible();
+    await expect(options.nth(0)).toBeVisible();
+    await expect(options.nth(1)).toHaveJSProperty('selected', true);
+
+    await page.keyboard.press('ArrowUp');
+    await page.keyboard.press('Enter');
+
+    await expect(host).toHaveJSProperty('values', ['two', 'one']);
+
+    await expect(
+      page.getByRole('button', { name: 'Remove Two' }),
+    ).toBeVisible();
+
+    await expect(
+      page.getByRole('button', { name: 'Remove One' }),
+    ).toBeVisible();
+
+    // Again, and it's removed.
+    await page.keyboard.press('Enter');
+
+    await expect(host).toHaveJSProperty('values', ['two']);
+    await expect(options.nth(0)).toHaveJSProperty('selected', false);
+    await expect(page.getByRole('button', { name: 'Remove One' })).toBeHidden();
+  },
+);
+
+test(
+  'adds what is typed on Enter when `multiple`',
+  { tag: '@keyboard' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () =>
+        html`<form>
+          <slab-combobox label="Label" multiple>
+            <slab-option value="one">One</slab-option>
+            <slab-option value="two">Two</slab-option>
+          </slab-combobox>
+        </form>`,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await page.locator('form').evaluate((form) => {
+      form.addEventListener('submit', (event) => event.preventDefault());
+    });
+
+    await page.getByRole('combobox').pressSequentially('two');
+    await page.keyboard.press('Enter');
+
+    await expect(host).toHaveJSProperty('values', ['two']);
+    await expect(page.getByRole('combobox')).toHaveValue('');
+    await expect(page.getByRole('listbox')).toBeVisible();
+
+    // Text that names a selected option leaves it selected.
+    await page.getByRole('combobox').pressSequentially('TWO');
+    await page.keyboard.press('Enter');
+
+    await expect(host).toHaveJSProperty('values', ['two']);
+
+    // Text that names no option is dropped.
+    await page.getByRole('combobox').pressSequentially('zzz');
+    await expect(page.getByRole('listbox')).toBeHidden();
+
+    // Closed, what's typed is settled rather than the form submitted.
+    await expect(page.locator('form')).not.toDispatchEvents(
+      () => page.keyboard.press('Enter'),
+      [{ type: 'submit' }],
+    );
+
+    await expect(host).toHaveJSProperty('values', ['two']);
+    await expect(page.getByRole('combobox')).toHaveValue('');
+    await expect(page.getByRole('listbox')).toBeHidden();
+
+    // Open with nothing active or typed, Enter only closes it.
+    await page.keyboard.press('Alt+ArrowDown');
+
+    await expect(page.getByRole('listbox')).toBeVisible();
+
+    await page.keyboard.press('Enter');
+
+    await expect(page.getByRole('listbox')).toBeHidden();
+    await expect(host).toHaveJSProperty('values', ['two']);
+  },
+);
+
+test(
+  'adds text that matches no option when `multiple` and `allow-custom`',
+  { tag: '@keyboard' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () =>
+        html`<slab-combobox label="Label" allow-custom multiple>
+          <slab-option value="one">One</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await page.getByRole('combobox').pressSequentially(' custom ');
+    await page.keyboard.press('Enter');
+
+    await expect(host).toHaveJSProperty('values', ['custom']);
+
+    await expect(
+      page.getByRole('button', { name: 'Remove custom' }),
+    ).toHaveText('custom');
+
+    await expect(host).toHaveJSProperty('selectedOptions', []);
+  },
+);
+
+test(
+  'removes the last tag on Backspace in an empty input when `multiple`',
+  { tag: '@keyboard' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () =>
+        html`<slab-combobox label="Label" multiple>
+          <slab-option value="one" selected>One</slab-option>
+          <slab-option value="two" selected>Two</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await page.getByRole('combobox').pressSequentially('o');
+
+    // Only what's typed is deleted while there's something.
+    await page.keyboard.press('Backspace');
+
+    await expect(host).toHaveJSProperty('values', ['one', 'two']);
+
+    await expect(host).toDispatchEvents(
+      () => page.keyboard.press('Backspace'),
+      [{ type: 'input' }, { type: 'change' }],
+    );
+
+    await expect(host).toHaveJSProperty('values', ['one']);
+
+    await page.keyboard.press('Backspace');
+    await page.keyboard.press('Backspace');
+
+    await expect(host).toHaveJSProperty('values', []);
+  },
+);
+
+test(
+  'moves between its tags with the arrow keys when `multiple`',
+  { tag: '@keyboard' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () =>
+        html`<slab-combobox label="Label" multiple>
+          <slab-option value="one" selected>One</slab-option>
+          <slab-option value="two" selected>Two</slab-option>
+        </slab-combobox>`,
+    );
+
+    const one = page.getByRole('button', { name: 'Remove One' });
+    const two = page.getByRole('button', { name: 'Remove Two' });
+
+    await page.getByRole('combobox').pressSequentially('o');
+
+    // Not from part-way through what's typed.
+    await page.keyboard.press('ArrowLeft');
+    await expect(page.getByRole('combobox')).toBeFocused();
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(two).toBeFocused();
+
+    // Leaving the input for a tag is still being in the Combobox.
+    await expect(page.getByRole('listbox')).toBeHidden();
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(one).toBeFocused();
+
+    // It stops at the first.
+    await page.keyboard.press('ArrowLeft');
+    await expect(one).toBeFocused();
+
+    await page.keyboard.press('ArrowRight');
+    await expect(two).toBeFocused();
+
+    await page.keyboard.press('ArrowRight');
+    await expect(page.getByRole('combobox')).toBeFocused();
+
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('combobox')).toBeFocused();
+
+    // Other keys are left alone.
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('a');
+    await expect(two).toBeFocused();
+  },
+);
+
+test(
+  'removes a focused tag on Backspace, Delete, Enter or Space when `multiple`',
+  { tag: '@keyboard' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () =>
+        html`<slab-combobox label="Label" multiple>
+          <slab-option value="one" selected>One</slab-option>
+          <slab-option value="two" selected>Two</slab-option>
+          <slab-option value="three" selected>Three</slab-option>
+          <slab-option value="four" selected>Four</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await page.getByRole('combobox').focus();
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('ArrowLeft');
+
+    await expect(
+      page.getByRole('button', { name: 'Remove Two' }),
+    ).toBeFocused();
+
+    await expect(host).toDispatchEvents(
+      () => page.keyboard.press('Backspace'),
+      [{ type: 'input' }, { type: 'change' }],
+    );
+
+    // Focus goes to the tag that takes its place.
+    await expect(host).toHaveJSProperty('values', ['one', 'three', 'four']);
+
+    await expect(
+      page.getByRole('button', { name: 'Remove Three' }),
+    ).toBeFocused();
+
+    await page.keyboard.press('Delete');
+
+    await expect(host).toHaveJSProperty('values', ['one', 'four']);
+
+    await expect(
+      page.getByRole('button', { name: 'Remove Four' }),
+    ).toBeFocused();
+
+    // Or the input, when there's none.
+    await page.keyboard.press('Enter');
+
+    await expect(host).toHaveJSProperty('values', ['one']);
+    await expect(page.getByRole('combobox')).toBeFocused();
+
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('Space');
+
+    await expect(host).toHaveJSProperty('values', []);
+    await expect(page.getByRole('combobox')).toBeFocused();
+  },
+);
+
+test(
+  'clears only what is typed on a second Escape when `multiple`',
+  { tag: '@keyboard' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () =>
+        html`<slab-combobox label="Label" multiple>
+          <slab-option value="one" selected>One</slab-option>
+          <slab-option value="two">Two</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await page.getByRole('combobox').pressSequentially('tw');
+    await page.keyboard.press('Escape');
+    await page.keyboard.press('Escape');
+
+    await expect(page.getByRole('combobox')).toHaveValue('');
+    await expect(host).toHaveJSProperty('values', ['one']);
+  },
+);
+
+test(
+  'adds what is typed when it loses focus when `multiple`',
+  { tag: '@keyboard' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () =>
+        html`<slab-combobox label="Label" multiple>
+            <slab-option value="one">One</slab-option>
+          </slab-combobox>
+
+          <button>Button</button>`,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await page.getByRole('combobox').pressSequentially('one');
+    await page.keyboard.press('Tab');
+
+    await expect(host).toHaveJSProperty('values', ['one']);
+    await expect(page.getByRole('combobox')).toHaveValue('');
+
+    // Tab skips the tags.
+    await expect(page.getByRole('button', { name: 'Button' })).toBeFocused();
+  },
+);

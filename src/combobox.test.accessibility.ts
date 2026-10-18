@@ -240,3 +240,68 @@ test(
     expect(await getActiveDescendant()).toBeNull();
   },
 );
+
+test(
+  'is accessible when `multiple`',
+  { tag: '@accessibility' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () => html`
+        <slab-combobox label="Label" multiple>
+          <slab-option value="one" selected>One</slab-option>
+          <slab-option value="two" selected>Two</slab-option>
+          <slab-option value="three">Three</slab-option>
+        </slab-combobox>
+      `,
+    );
+
+    await page.getByRole('combobox').focus();
+    await page.keyboard.press('ArrowDown');
+
+    await expect(page).toBeAccessible('slab-combobox');
+  },
+);
+
+test(
+  'has tags when `multiple`',
+  { tag: '@accessibility' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () => html`
+        <slab-combobox label="Label" multiple>
+          <slab-option value="one" selected>One</slab-option>
+          <slab-option value="two" selected>Two</slab-option>
+          <slab-option value="three">Three</slab-option>
+
+          <div slot="description">Description</div>
+        </slab-combobox>
+      `,
+    );
+
+    await page.getByRole('combobox').focus();
+    await page.keyboard.press('Alt+ArrowDown');
+
+    await expect(page.locator('slab-combobox')).toMatchAriaSnapshot(`
+      - text: Label
+      - button "Remove One": One
+      - button "Remove Two": Two
+      - combobox "Label" [expanded]
+      - listbox "Label":
+        - option "One" [selected]
+        - option "Two" [selected]
+        - option "Three"
+      - text: Description
+    `);
+
+    await expect(page.getByRole('listbox')).toHaveAttribute(
+      'aria-multiselectable',
+      'true',
+    );
+
+    // Its description starts with what's selected, rather than with each
+    // tag's "Remove".
+    await expect(page.getByRole('combobox')).toHaveAccessibleDescription(
+      'One, Two Description',
+    );
+  },
+);

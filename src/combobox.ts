@@ -7,6 +7,7 @@ import {
 } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { repeat } from 'lit/directives/repeat.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { when } from 'lit/directives/when.js';
 import packageJson from '../package.json' with { type: 'json' };
@@ -64,20 +65,33 @@ declare global {
  * "change" are dispatched together when it changes, as on a `<select>`, rather
  * than on every keystroke.
  *
+ * With `multiple`, choosing an Option toggles it and leaves the listbox open,
+ * and what's typed is cleared rather than replaced by the Option's text. Each
+ * selected value is shown before the input as a tag, a `<button>` that
+ * removes it. Backspace in an empty input removes the last, and Left at the
+ * start of the input moves focus to the tags, where Left and Right move
+ * between them and Backspace, Delete, Enter and Space remove one. They aren't
+ * Tab stops, so Tab still leaves the Combobox in one press. `values` lists the
+ * selected values in the order they were chosen, and each is submitted as its
+ * own entry, as a `<select multiple>` submits them. Text that names an Option
+ * adds it, and with `allow-custom` so does text that names none.
+ *
  * Style it through its parts and through `:state(disabled)`, `:state(empty)`,
  * `:state(error)`, `:state(open)` and `:state(required)`, and each Option
- * through `:state(active)`, `:state(disabled)` and `:state(selected)`.
+ * through `:state(active)`, `:state(disabled)` and `:state(selected)`. The
+ * tags are `::part(tag)`, in `::part(tags)`.
  *
  * @attr {string} label
  * @attr {boolean} [allow-custom=false] - Lets the value be text that matches no Option.
  * @attr {boolean} [disabled=false]
  * @attr {boolean} [hide-label=false]
+ * @attr {boolean} [multiple=false] - Lets more than one Option be selected, each shown as a tag that removes it.
  * @attr {string} [name='']
  * @attr {boolean} [open=false]
  * @attr {string} [placeholder]
  * @attr {'bottom'|'top'} [placement='bottom'] - The side of the input the listbox opens on, when there's room. It flips when there isn't.
  * @attr {boolean} [required=false]
- * @attr {string} [value=''] - The selected Option's value, or the typed text when `allow-custom` is set and it matches no Option. Setting it selects the Option with that value. Like a native input, the attribute is the default value and the property is the current one.
+ * @attr {string} [value=''] - The selected Option's value, or the typed text when `allow-custom` is set and it matches no Option. The first of `values` when `multiple` is set. Setting it selects the Option with that value, and only that one. Like a native input, the attribute is the default value and the property is the current one.
  *
  * @readonly
  * @attr {string} [version]
@@ -89,6 +103,8 @@ declare global {
  * @csspart input
  * @csspart label - The label
  * @csspart listbox - The Options, in a popover beside the input
+ * @csspart tag - A selected value's button, which removes it
+ * @csspart tags - The tags
  * @csspart validity-message
  *
  * @fires {Event} change
@@ -103,11 +119,18 @@ declare global {
  * @readonly
  * @prop {Option[]} options
  *
+ * @prop {(text: string) => string} removeLabel - Names each tag's button, which shows only the selected Option's text, from that text. "Remove" and the text when unset.
+ *
  * @readonly
  * @prop {Option | null} selectedOption
  *
  * @readonly
+ * @prop {Option[]} selectedOptions - The Options of `values`, in the same order. Values that name no Option are left out.
+ *
+ * @readonly
  * @prop {ValidityState} validity
+ *
+ * @prop {string[]} values - Every selected value, in the order they were chosen. Only the first when `multiple` isn't set. Setting it selects the Options with those values, and only those.
  *
  * @method checkValidity
  * @returns boolean
@@ -166,6 +189,13 @@ export default class Combobox extends LitElement {
   @property({ attribute: 'hide-label', reflect: true, type: Boolean })
   hideLabel = false;
 
+  /**
+   * Lets more than one Option be selected, each shown as a tag that removes
+   * it.
+   */
+  @property({ reflect: true, type: Boolean })
+  multiple = false;
+
   @property({ reflect: true, useDefault: true })
   name = '';
 
@@ -182,24 +212,51 @@ export default class Combobox extends LitElement {
   @property({ reflect: true, useDefault: true })
   placement: 'bottom' | 'top' = 'bottom';
 
+  /**
+   * Names each tag's button, which shows only the selected Option's text,
+   * from that text. "Remove" and the text when unset.
+   */
+  @property({ attribute: false })
+  removeLabel: (text: string) => string = (text) => `Remove ${text}`;
+
   @property({ reflect: true, type: Boolean })
   required = false;
 
   /**
    * The selected Option's value, or the typed text when `allow-custom` is set
-   * and it matches no Option. Setting it selects the Option with that value.
-   * Like a native input, the attribute is the default value and the property
-   * is the current one.
+   * and it matches no Option. The first of `values` when `multiple` is set.
+   * Setting it selects the Option with that value, and only that one. Like a
+   * native input, the attribute is the default value and the property is the
+   * current one.
    *
    * @default ''
    */
   @property()
   get value(): string {
-    return this.#value ?? this.#declaredOption?.value ?? '';
+    return this.values.at(0) ?? '';
   }
 
   set value(value: string) {
-    this.#value = value;
+    this.values = value === '' ? [] : [value];
+  }
+
+  /**
+   * Every selected value, in the order they were chosen. Only the first when
+   * `multiple` isn't set. Setting it selects the Options with those values,
+   * and only those.
+   *
+   * @default []
+   */
+  @property({ attribute: false })
+  get values(): string[] {
+    const values =
+      this.#values ?? this.#declaredOptions.map(({ value }) => value);
+
+    return this.multiple ? values : values.slice(0, 1);
+  }
+
+  set values(values: string[]) {
+    this.#values = values;
   }
 
   @property({ reflect: true })
@@ -233,6 +290,16 @@ export default class Combobox extends LitElement {
     return this.options.find(({ value }) => value === this.value) ?? null;
   }
 
+  /**
+   * The Options of `values`, in the same order. Values that name no Option
+   * are left out.
+   */
+  get selectedOptions(): Option[] {
+    return this.values.flatMap((value) => {
+      return this.options.find((option) => option.value === value) ?? [];
+    });
+  }
+
   get validity(): ValidityState {
     return this.#internals.validity;
   }
@@ -258,7 +325,16 @@ export default class Combobox extends LitElement {
   }
 
   formResetCallback(): void {
-    this.#value = this.getAttribute('value') ?? undefined;
+    const value = this.getAttribute('value');
+
+    // Back to the Options that say they're selected unless there's an
+    // initial `value`, the way a `<select>` is reset.
+    this.#values = undefined;
+
+    if (value !== null) {
+      this.value = value;
+    }
+
     this.#query = undefined;
     this.open = false;
     this.resetValidityFeedback();
@@ -266,7 +342,16 @@ export default class Combobox extends LitElement {
   }
 
   formStateRestoreCallback(state: string | File | FormData | null): void {
-    this.#value = typeof state === 'string' ? state : '';
+    if (typeof state === 'string') {
+      this.value = state;
+    } else if (state instanceof FormData) {
+      this.values = state
+        .getAll(this.name)
+        .filter((value): value is string => typeof value === 'string');
+    } else {
+      this.values = [];
+    }
+
     this.#query = undefined;
     this.requestUpdate();
   }
@@ -287,10 +372,12 @@ export default class Combobox extends LitElement {
         ${this.label}
       </label>
 
+      ${when(this.multiple, () => this.#renderTags())}
+
       <input
         aria-autocomplete="list"
         aria-controls="listbox"
-        aria-describedby="description"
+        aria-describedby=${this.multiple ? 'selected description' : 'description'}
         aria-expanded=${this.open ? 'true' : 'false'}
         aria-invalid=${this.#isShowValidationFeedback ? 'true' : 'false'}
         autocomplete="off"
@@ -320,6 +407,7 @@ export default class Combobox extends LitElement {
       -->
       <div
         aria-labelledby="label"
+        aria-multiselectable=${this.multiple ? 'true' : 'false'}
         data-test="listbox"
         id="listbox"
         part="listbox"
@@ -398,14 +486,18 @@ export default class Combobox extends LitElement {
 
   override updated(changes: PropertyValues<this>) {
     const visible = this.#visible;
-    const selected = this.selectedOption;
+
+    const selected = this.multiple
+      ? this.selectedOptions
+      : [this.selectedOption];
 
     for (const option of this.options) {
       option.hidden = !visible.includes(option);
-      option.selected = option === selected;
+      option.selected = selected.includes(option);
     }
 
     this.#updateText();
+    this.#focusPendingTag();
 
     if (changes.has('open')) {
       this.#togglePopover();
@@ -507,20 +599,30 @@ export default class Combobox extends LitElement {
     slot: () => this.#slotElementRef.value,
   });
 
+  // Moved to once a tag is removed with the keyboard, so focus isn't lost
+  // with it.
+  #pendingTagFocus?: number;
+
   // What's been typed since the value was last committed, or `undefined` when
   // the input shows the value. Filters the Options while there's something.
   #query?: string;
 
   #slotElementRef = createRef<HTMLSlotElement>();
 
-  // What `value` was set to. Until it's set, an Option that says it's
-  // `selected` is the value, the way a `<select>`'s is.
-  #value?: string;
+  // What `values` was set to. Until it's set, the Options that say they're
+  // `selected` are the values, the way a `<select>`'s are.
+  #values?: string[];
 
   // What a validation message is anchored to, so reporting validity takes
   // focus somewhere sensible.
   get #anchor() {
     return this.#inputElementRef.value;
+  }
+
+  get #tagElements() {
+    return [
+      ...this.renderRoot.querySelectorAll<HTMLButtonElement>('[part~="tag"]'),
+    ];
   }
 
   // What's in the input, which is only read once there's an input to read.
@@ -529,8 +631,8 @@ export default class Combobox extends LitElement {
     return this.#inputElementRef.value?.value ?? '';
   }
 
-  get #declaredOption() {
-    return this.options.find((option) => option.hasAttribute('selected'));
+  get #declaredOptions() {
+    return this.options.filter((option) => option.hasAttribute('selected'));
   }
 
   get #isDisabled() {
@@ -550,13 +652,10 @@ export default class Combobox extends LitElement {
     return this.options.filter((option) => this.#isVisible(option));
   }
 
-  #onInputBlur = () => {
+  #onInputBlur = (event: FocusEvent) => {
     this.#commit();
     this.open = false;
-
-    this.isBlurring = true;
-    this.reportValidity();
-    this.isBlurring = false;
+    this.#onBlur(event);
   };
 
   // "change" doesn't compose and never leaves the shadow root, but it's
@@ -617,7 +716,10 @@ export default class Combobox extends LitElement {
     }
 
     if (event.key === 'Enter') {
-      if (!this.open) {
+      // What's typed becomes a tag rather than submitting part-way through.
+      const isAdding = this.multiple && this.#text !== '';
+
+      if (!this.open && !isAdding) {
         this.#commit();
         this.form?.requestSubmit();
 
@@ -632,7 +734,9 @@ export default class Combobox extends LitElement {
         this.#commit();
       }
 
-      this.open = false;
+      // Left open when `multiple`, for the next one, unless there was nothing
+      // to choose.
+      this.open = this.multiple && this.open && (active !== null || isAdding);
 
       return;
     }
@@ -649,10 +753,42 @@ export default class Combobox extends LitElement {
       }
 
       // The APG's second Escape. Rendering empties the input, now that it
-      // shows the value again.
+      // shows the value again. With `multiple`, only what's typed is
+      // cleared, rather than every tag at once.
       this.#query = undefined;
-      this.#setValue('');
+
+      if (!this.multiple) {
+        this.#setValue('');
+      }
+
       this.requestUpdate();
+
+      return;
+    }
+
+    const input = this.#inputElementRef.value;
+
+    const isAtStart = input?.selectionStart === 0 && input.selectionEnd === 0;
+
+    if (this.multiple && event.key === 'Backspace' && this.#text === '') {
+      const last = this.values.at(-1);
+
+      if (last !== undefined) {
+        event.preventDefault();
+        this.#remove(last);
+      }
+
+      return;
+    }
+
+    if (
+      this.multiple &&
+      event.key === 'ArrowLeft' &&
+      isAtStart &&
+      this.#tagElements.length > 0
+    ) {
+      event.preventDefault();
+      this.#tagElements.at(-1)?.focus();
 
       return;
     }
@@ -673,10 +809,86 @@ export default class Combobox extends LitElement {
     }
 
     this.#select(option);
-    this.open = false;
+
+    // Left open when `multiple`, for the next one.
+    this.open = this.multiple;
   };
 
   #onListboxMousedown = (event: MouseEvent) => {
+    event.preventDefault();
+  };
+
+  // Not when the tag was removed, which some browsers count as a blur. Focus
+  // is about to move to what takes its place.
+  #onTagBlur = (event: FocusEvent) => {
+    if (this.#pendingTagFocus === undefined) {
+      this.#onBlur(event);
+    }
+  };
+
+  // A click from the keyboard, with Enter or Space, moves focus to what takes
+  // the tag's place. A click from a pointer leaves focus where it was.
+  #onTagClick = (event: MouseEvent) => {
+    // Always a tag. The check is for TypeScript.
+    /* v8 ignore next 3 */
+    if (!(event.currentTarget instanceof HTMLButtonElement)) {
+      return;
+    }
+
+    const isFocused = this.shadowRoot?.activeElement === event.currentTarget;
+
+    this.#removeTag(event.currentTarget, isFocused);
+  };
+
+  #onTagKeydown = (event: KeyboardEvent) => {
+    // Always a tag. The check is for TypeScript.
+    /* v8 ignore next 3 */
+    if (!(event.currentTarget instanceof HTMLButtonElement)) {
+      return;
+    }
+
+    const tags = this.#tagElements;
+    const index = tags.indexOf(event.currentTarget);
+
+    if (event.key === 'Backspace' || event.key === 'Delete') {
+      event.preventDefault(); // So the browser doesn't go back a page
+      this.#removeTag(event.currentTarget, true);
+
+      return;
+    }
+
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      tags.at(Math.max(index - 1, 0))?.focus();
+
+      return;
+    }
+
+    // Past the last tag is the input, with the caret at its start.
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+
+      const next = tags.at(index + 1);
+
+      if (next) {
+        next.focus();
+      } else {
+        this.focus();
+        this.#inputElementRef.value?.setSelectionRange(0, 0);
+      }
+
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.focus();
+    }
+  };
+
+  // Cancelled so a click on a tag doesn't take focus from the input, which
+  // would close the listbox.
+  #onTagMousedown = (event: MouseEvent) => {
     event.preventDefault();
   };
 
@@ -694,13 +906,38 @@ export default class Combobox extends LitElement {
       return !disabled && text.toLowerCase() === query.trim().toLowerCase();
     });
 
-    if (match) {
+    // Added rather than toggled when `multiple`, so text that names a tag
+    // that's already there doesn't remove it.
+    if (this.multiple) {
+      const value = match?.value ?? (this.allowCustom ? query.trim() : '');
+
+      if (value !== '' && !this.values.includes(value)) {
+        this.#setValues([...this.values, value]);
+      }
+    } else if (match) {
       this.#select(match);
     } else if (query === '' || this.allowCustom) {
       this.#setValue(query);
     }
 
     this.requestUpdate();
+  }
+
+  // After the tags have rendered without the one that was removed.
+  #focusPendingTag() {
+    if (this.#pendingTagFocus === undefined) {
+      return;
+    }
+
+    const tag = this.#tagElements.at(this.#pendingTagFocus);
+
+    this.#pendingTagFocus = undefined;
+
+    if (tag) {
+      tag.focus();
+    } else {
+      this.focus();
+    }
   }
 
   #isVisible(option: Option) {
@@ -710,9 +947,92 @@ export default class Combobox extends LitElement {
     return query === '' || filter(option, query);
   }
 
+  // Only when focus leaves the Combobox. Moving between the input and the
+  // tags is still being in it.
+  #onBlur(event: FocusEvent) {
+    const isInside =
+      event.relatedTarget instanceof Node &&
+      this.renderRoot.contains(event.relatedTarget);
+
+    if (isInside) {
+      return;
+    }
+
+    this.isBlurring = true;
+    this.reportValidity();
+    this.isBlurring = false;
+  }
+
+  #remove(value: string) {
+    this.#setValues(this.values.filter((other) => other !== value));
+    this.requestUpdate();
+  }
+
+  // Focus goes to the tag that takes its place, or else the input.
+  #removeTag(tag: HTMLButtonElement, isMovingFocus: boolean) {
+    const index = this.#tagElements.indexOf(tag);
+
+    if (isMovingFocus) {
+      this.#pendingTagFocus = index;
+    }
+
+    this.#remove(this.values[index] ?? '');
+  }
+
+  #renderTags() {
+    const selected = this.values.map((value) => {
+      return {
+        text: this.options.find((option) => option.value === value)?.text,
+        value,
+      };
+    });
+
+    // The input is described by the selected values' text rather than by the
+    // tags, whose names each start with "Remove". A `hidden` element can still
+    // describe one.
+    return html`<span hidden id="selected">
+        ${selected.map(({ text, value }) => text ?? value).join(', ')}
+      </span>
+
+      <div part="tags">
+        <!-- The tags -->
+        ${repeat(
+          selected,
+          ({ value }) => value,
+          ({ text, value }) =>
+            html`<button
+              aria-label=${this.removeLabel(text ?? value)}
+              data-test="tag"
+              part="tag"
+              tabindex="-1"
+              type="button"
+              ?disabled=${this.#isDisabled}
+              @blur=${this.#onTagBlur}
+              @click=${this.#onTagClick}
+              @keydown=${this.#onTagKeydown}
+              @mousedown=${this.#onTagMousedown}
+            >
+              <!-- A selected value's button, which removes it -->
+              ${text ?? value}
+            </button>`,
+        )}
+      </div>`;
+  }
+
+  // Toggled when `multiple`, so choosing a selected Option again removes it.
   #select(option: Option) {
     this.#query = undefined;
-    this.#setValue(option.value);
+
+    if (this.multiple) {
+      this.#setValues(
+        this.values.includes(option.value)
+          ? this.values.filter((value) => value !== option.value)
+          : [...this.values, option.value],
+      );
+    } else {
+      this.#setValue(option.value);
+    }
+
     this.requestUpdate();
   }
 
@@ -726,11 +1046,19 @@ export default class Combobox extends LitElement {
 
   // A value the user chose, with the events a native control dispatches.
   #setValue(value: string) {
-    if (value === this.value) {
+    this.#setValues(value === '' ? [] : [value]);
+  }
+
+  #setValues(values: string[]) {
+    const isChange =
+      values.length !== this.values.length ||
+      values.some((value, index) => value !== this.values[index]);
+
+    if (!isChange) {
       return;
     }
 
-    this.value = value;
+    this.values = values;
 
     // Now rather than on the next render, so a form submitted straight after,
     // by Enter, sees it.
@@ -758,14 +1086,29 @@ export default class Combobox extends LitElement {
     }
   }
 
-  // What's typed is left alone until it's committed. Otherwise the input shows
-  // the selected Option, and is kept in step with Options that are added or
   #updateFormValue() {
     const isSubmittable = !this.#isDisabled && this.name !== '';
-    this.#internals.setFormValue(isSubmittable ? this.value : null);
+
+    if (!isSubmittable || !this.multiple) {
+      this.#internals.setFormValue(isSubmittable ? this.value : null);
+
+      return;
+    }
+
+    // One entry per value, the way a native `<select multiple>` submits.
+    const data = new FormData();
+
+    for (const value of this.values) {
+      data.append(this.name, value);
+    }
+
+    this.#internals.setFormValue(data);
   }
 
-  // renamed later.
+  // What's typed is left alone until it's committed. Otherwise the input shows
+  // the selected Option, and is kept in step with Options that are added or
+  // renamed later. With `multiple` the tags show what's selected, so the input
+  // is left empty for the next one.
   #updateText() {
     const input = this.#inputElementRef.value;
 
@@ -775,7 +1118,9 @@ export default class Combobox extends LitElement {
     }
 
     if (this.#query === undefined) {
-      input.value = this.selectedOption?.text ?? this.value;
+      input.value = this.multiple
+        ? ''
+        : (this.selectedOption?.text ?? this.value);
     }
   }
 
@@ -785,7 +1130,7 @@ export default class Combobox extends LitElement {
       return;
     }
 
-    if (this.required && this.value === '') {
+    if (this.required && this.values.every((value) => value === '')) {
       this.#internals.setValidity(
         { customError: Boolean(this.validityMessage), valueMissing: true },
         ' ',

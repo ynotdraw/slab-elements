@@ -435,3 +435,78 @@ test(
     await expect(page.locator('slab-option[value="one"]')).toBeHidden();
   },
 );
+
+test(
+  'selects the options of its `values` when `multiple`',
+  { tag: '@miscellaneous' },
+  async ({ renderTemplate, page, setProperty }) => {
+    await renderTemplate(
+      () =>
+        html`<slab-combobox label="Label" multiple>
+          <slab-option value="one">One</slab-option>
+          <slab-option value="two">Two</slab-option>
+          <slab-option value="three">Three</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+    const options = page.locator('slab-option');
+
+    await setProperty(host, 'values', ['three', 'one']);
+
+    await expect(options.nth(0)).toHaveJSProperty('selected', true);
+    await expect(options.nth(1)).toHaveJSProperty('selected', false);
+    await expect(options.nth(2)).toHaveJSProperty('selected', true);
+    await expect(host).toHaveJSProperty('value', 'three');
+
+    // In the order they were chosen.
+    await expect(page.getByRole('button')).toHaveText(['Three', 'One']);
+
+    const selected = await host.evaluate<string[], void, Combobox>((element) => {
+      return element.selectedOptions.map(({ value }) => value);
+    });
+
+    expect(selected).toStrictEqual(['three', 'one']);
+
+    // Setting `value` leaves only that one.
+    await setProperty(host, 'value', 'two');
+
+    await expect(host).toHaveJSProperty('values', ['two']);
+
+    await setProperty(host, 'value', '');
+
+    await expect(host).toHaveJSProperty('values', []);
+
+    // The input is left for typing.
+    await expect(page.getByRole('combobox')).toHaveValue('');
+  },
+);
+
+test(
+  'names its tags with `removeLabel`',
+  { tag: '@miscellaneous' },
+  async ({ renderTemplate, page, setProperty }) => {
+    await renderTemplate(
+      () =>
+        html`<slab-combobox label="Label" multiple>
+          <slab-option value="one" selected>One</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await host.evaluate<void, void, Combobox>((element) => {
+      element.removeLabel = (text) => `Quitar ${text}`;
+    });
+
+    await expect(
+      page.getByRole('button', { name: 'Quitar One' }),
+    ).toBeVisible();
+
+    await setProperty(host, 'disabled', true);
+
+    await expect(
+      page.getByRole('button', { name: 'Quitar One' }),
+    ).toBeDisabled();
+  },
+);

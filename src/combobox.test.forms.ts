@@ -646,3 +646,200 @@ test(
     }
   },
 );
+
+test(
+  'has one form data entry per value when `multiple`',
+  { tag: '@forms' },
+  async ({ renderTemplate, page, setProperty }) => {
+    await renderTemplate(
+      () => html`
+        <form>
+          <slab-combobox label="Label" name="name" multiple>
+            <slab-option value="one" selected>One</slab-option>
+            <slab-option value="two">Two</slab-option>
+            <slab-option value="three" selected>Three</slab-option>
+          </slab-combobox>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await expect(page.locator('form')).toHaveFormData('name', ['one', 'three']);
+
+    await setProperty(host, 'values', ['three', 'two']);
+
+    await expect(page.locator('form')).toHaveFormData('name', ['three', 'two']);
+
+    await setProperty(host, 'values', []);
+
+    await expect(page.locator('form')).toHaveFormData('name', null);
+  },
+);
+
+test(
+  'keeps only its first value when `multiple` is removed',
+  { tag: '@forms' },
+  async ({ renderTemplate, page, setProperty }) => {
+    await renderTemplate(
+      () => html`
+        <form>
+          <slab-combobox label="Label" name="name" multiple>
+            <slab-option value="one" selected>One</slab-option>
+            <slab-option value="two" selected>Two</slab-option>
+          </slab-combobox>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await setProperty(host, 'multiple', false);
+
+    await expect(host).toHaveJSProperty('values', ['one']);
+    await expect(page.locator('form')).toHaveFormData('name', 'one');
+    await expect(page.getByRole('combobox')).toHaveValue('One');
+    await expect(page.getByRole('button')).toHaveCount(0);
+  },
+);
+
+test(
+  'can be reset to its initial values when `multiple`',
+  { tag: '@forms' },
+  async ({ callMethod, renderTemplate, page }) => {
+    await renderTemplate(
+      () => html`
+        <form>
+          <slab-combobox label="Label" multiple>
+            <slab-option value="one" selected>One</slab-option>
+            <slab-option value="two">Two</slab-option>
+            <slab-option value="three" selected>Three</slab-option>
+          </slab-combobox>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await page.getByRole('combobox').focus();
+    await page.keyboard.press('Backspace');
+    await page.getByRole('combobox').fill('Two');
+    await page.keyboard.press('Enter');
+
+    await expect(host).toHaveJSProperty('values', ['one', 'two']);
+
+    await callMethod(page.locator('form'), 'reset');
+
+    await expect(host).toHaveJSProperty('values', ['one', 'three']);
+  },
+);
+
+test(
+  'restores its state when `multiple`',
+  { tag: '@forms' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () => html`
+        <form>
+          <slab-combobox label="Label" name="name" multiple>
+            <slab-option value="one">One</slab-option>
+            <slab-option value="two">Two</slab-option>
+          </slab-combobox>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await host.evaluate<void, void, Combobox>((element) => {
+      const data = new FormData();
+
+      data.append('name', 'two');
+      data.append('name', 'one');
+      data.append('name', new File([], 'file'));
+
+      element.formStateRestoreCallback(data);
+    });
+
+    await expect(host).toHaveJSProperty('values', ['two', 'one']);
+  },
+);
+
+test(
+  'is invalid when required, `multiple` and without a value',
+  { tag: '@forms' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () => html`
+        <form>
+          <slab-combobox label="Label" multiple required>
+            <slab-option value="one" selected>One</slab-option>
+          </slab-combobox>
+
+          <button>Button</button>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await expect(host).toHaveJSProperty('validity.valid', true);
+
+    await page.getByRole('combobox').focus();
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('Backspace');
+
+    await expect(host).toHaveJSProperty('validity.valid', false);
+
+    // Focus is still in the Combobox, so no feedback yet.
+    await expect(page.getByRole('combobox')).toBeFocused();
+
+    await expect(page.getByRole('combobox')).toHaveAttribute(
+      'aria-invalid',
+      'false',
+    );
+
+    // Now it's left.
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('Tab');
+
+    await expect(page.getByRole('combobox')).toHaveAttribute(
+      'aria-invalid',
+      'true',
+    );
+  },
+);
+
+test(
+  'reports its validity when focus leaves it from a tag',
+  { tag: '@forms' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () => html`
+        <form>
+          <slab-combobox label="Label" multiple>
+            <slab-option value="one" selected>One</slab-option>
+          </slab-combobox>
+
+          <button>Button</button>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await page.getByRole('combobox').focus();
+    await page.keyboard.press('ArrowLeft');
+
+    await host.evaluate<void, void, Combobox>((element) => {
+      element.setValidity({ customError: true }, 'message');
+    });
+
+    await page.getByRole('button', { name: 'Button' }).focus();
+
+    await expect(page.getByRole('combobox')).toHaveAttribute(
+      'aria-invalid',
+      'true',
+    );
+  },
+);

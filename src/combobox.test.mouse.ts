@@ -123,3 +123,62 @@ test(
     await expect(host).toHaveJSProperty('value', 'one');
   },
 );
+
+test(
+  'toggles options on click and stays open when `multiple`',
+  { tag: '@mouse' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () =>
+        html`<slab-combobox label="Label" multiple>
+          <slab-option value="one">One</slab-option>
+          <slab-option value="two">Two</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+    const options = page.locator('slab-option');
+
+    await page.getByRole('combobox').click();
+    await options.nth(1).click();
+    await options.nth(0).click();
+
+    await expect(host).toHaveJSProperty('values', ['two', 'one']);
+    await expect(page.getByRole('listbox')).toBeVisible();
+    await expect(page.getByRole('combobox')).toBeFocused();
+
+    await options.nth(1).click();
+
+    await expect(host).toHaveJSProperty('values', ['one']);
+  },
+);
+
+test(
+  'removes a tag on click when `multiple`',
+  { tag: '@mouse' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () =>
+        html`<slab-combobox label="Label" multiple>
+          <slab-option value="one" selected>One</slab-option>
+          <slab-option value="two" selected>Two</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await page.getByRole('combobox').click();
+
+    await expect(host).toDispatchEvents(
+      () => page.getByRole('button', { name: 'Remove One' }).click(),
+      [{ type: 'input' }, { type: 'change' }],
+    );
+
+    await expect(host).toHaveJSProperty('values', ['two']);
+
+    // The click's "mousedown" is cancelled, so focus stays in the input and
+    // the listbox stays open.
+    await expect(page.getByRole('combobox')).toBeFocused();
+    await expect(page.getByRole('listbox')).toBeVisible();
+  },
+);

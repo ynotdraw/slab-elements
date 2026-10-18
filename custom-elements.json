@@ -1560,6 +1560,14 @@
             },
             {
               "name": "validity-message"
+            },
+            {
+              "name": "tags",
+              "description": "The tags"
+            },
+            {
+              "name": "tag",
+              "description": "A selected value's button, which removes it"
             }
           ],
           "slots": [
@@ -1647,6 +1655,17 @@
             },
             {
               "kind": "field",
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lets more than one Option be selected, each shown as a tag that removes\nit.",
+              "attribute": "multiple",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -1687,6 +1706,14 @@
             },
             {
               "kind": "field",
+              "name": "removeLabel",
+              "type": {
+                "text": "(text: string) => string"
+              },
+              "description": "Names each tag's button, which shows only the selected Option's text,\nfrom that text. \"Remove\" and the text when unset."
+            },
+            {
+              "kind": "field",
               "name": "required",
               "type": {
                 "text": "boolean"
@@ -1701,9 +1728,18 @@
               "type": {
                 "text": "string"
               },
-              "description": "The selected Option's value, or the typed text when `allow-custom` is set\nand it matches no Option. Setting it selects the Option with that value.\nLike a native input, the attribute is the default value and the property\nis the current one.",
+              "description": "The selected Option's value, or the typed text when `allow-custom` is set\nand it matches no Option. The first of `values` when `multiple` is set.\nSetting it selects the Option with that value, and only that one. Like a\nnative input, the attribute is the default value and the property is the\ncurrent one.",
               "default": "''",
               "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "values",
+              "type": {
+                "text": "string[]"
+              },
+              "description": "Every selected value, in the order they were chosen. Only the first when\n`multiple` isn't set. Setting it selects the Options with those values,\nand only those.",
+              "default": "[]"
             },
             {
               "kind": "field",
@@ -1746,6 +1782,15 @@
               "type": {
                 "text": "Option | null"
               },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "selectedOptions",
+              "type": {
+                "text": "Option[]"
+              },
+              "description": "The Options of `values`, in the same order. Values that name no Option\nare left out.",
               "readonly": true
             },
             {
@@ -1952,6 +1997,15 @@
               "fieldName": "hideLabel"
             },
             {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lets more than one Option be selected, each shown as a tag that removes\nit.",
+              "fieldName": "multiple"
+            },
+            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -1996,7 +2050,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "The selected Option's value, or the typed text when `allow-custom` is set\nand it matches no Option. Setting it selects the Option with that value.\nLike a native input, the attribute is the default value and the property\nis the current one.",
+              "description": "The selected Option's value, or the typed text when `allow-custom` is set\nand it matches no Option. The first of `values` when `multiple` is set.\nSetting it selects the Option with that value, and only that one. Like a\nnative input, the attribute is the default value and the property is the\ncurrent one.",
               "default": "''",
               "fieldName": "value"
             },
