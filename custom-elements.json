@@ -10398,6 +10398,233 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/toggle-group.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/toggle-group.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/toggle-group.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ToggleGroup",
+          "cssParts": [
+            {
+              "name": "group",
+              "description": "The buttons"
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "",
+              "type": {
+                "text": "HTMLButtonElement"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the group.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lets more than one button be pressed at a time.",
+              "attribute": "multiple",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'horizontal'",
+              "description": "Which arrow keys move between the buttons. Where they sit is still up to\nyour styles.",
+              "attribute": "orientation",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "buttons",
+              "type": {
+                "text": "HTMLButtonElement[]"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "pressedButtons",
+              "type": {
+                "text": "HTMLButtonElement[]"
+              },
+              "description": "Pressed and enabled buttons, in the order they appear.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "The value of the first pressed and enabled button. Setting it presses the\nbutton with that value, and only that one.",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "values",
+              "type": {
+                "text": "string[]"
+              },
+              "description": "The value of every pressed and enabled button, in the order they appear.\nSetting it presses the buttons with those values, and only those, or only\nthe first of them unless `multiple` is set.",
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the group.",
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lets more than one button be pressed at a time.",
+              "fieldName": "multiple"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'horizontal'",
+              "description": "Which arrow keys move between the buttons. Where they sit is still up to\nyour styles.",
+              "fieldName": "orientation"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-toggle-group",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ToggleGroup",
+            "module": "src/toggle-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-toggle-group",
+          "declaration": {
+            "name": "ToggleGroup",
+            "module": "src/toggle-group.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/toolbar.styles.ts",
       "declarations": [],
       "exports": [
