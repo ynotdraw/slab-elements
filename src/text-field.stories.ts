@@ -187,7 +187,7 @@ const meta: Meta = {
         type: {
           summary: '"text" | "email" | "password" | "search" | "tel" | "url"',
           detail:
-            '// Number and date have components of their own: Number and Date Field.',
+            '// Number, date and time have components of their own: Number, Date Field and Time Field.',
         },
       },
     },

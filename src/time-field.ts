@@ -1,0 +1,539 @@
+import {
+  html,
+  LitElement,
+  type CSSResultGroup,
+  type CSSResultOrNative,
+  type PropertyValues,
+} from 'lit';
+import { createRef, ref } from 'lit/directives/ref.js';
+import { property, state } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
+import { when } from 'lit/directives/when.js';
+import packageJson from '../package.json' with { type: 'json' };
+import customElement from './library/custom-element.js';
+import isFormCheckingValidity from './library/is-form-checking-validity.js';
+import required from './library/required.js';
+import styles from './time-field.styles.js';
+import afterReflection from './library/after-reflection.js';
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'slab-time-field': TimeField;
+  }
+}
+
+/**
+ * A time field with no visual styles, around a native `<input type="time">`,
+ * so it is typed into, stepped, and read the way one is. Any picker is the
+ * browser's own.
+ *
+ * The value is the input's: a 24-hour "hh:mm" string, "hh:mm:ss" or
+ * "hh:mm:ss.sss" when it has seconds, or an empty one. Whether a person sees a
+ * 12-hour or a 24-hour clock is the browser's call for their locale, but
+ * what's submitted and read is always that one format.
+ *
+ * The label and the input are both in the shadow root, so a plain `for`
+ * reference names it without crossing out of one. The host delegates focus, so
+ * clicking anywhere on it, or a `<label for>` pointing at it, focuses the
+ * input.
+ *
+ * Validity is the native input's. `required`, `min`, `max` and `step` are
+ * passed through to it, and whatever it decides is mirrored onto the host, so
+ * `valueMissing`, `rangeUnderflow`, `rangeOverflow`, `stepMismatch` and
+ * `badInput` all mean what they mean on an `<input>`. That includes a `max`
+ * earlier than `min`, which is a range across midnight, such as a night shift.
+ * Nothing is computed twice.
+ *
+ * Style it through its parts and through `:state(disabled)`, `:state(error)`,
+ * `:state(readonly)` and `:state(required)`. Where the label sits relative to
+ * the input is layout, so it's left to the styles around it.
+ *
+ * @attr {string} label
+ * @attr {HTMLInputElement['autocomplete']} [autocomplete]
+ * @attr {boolean} [disabled=false]
+ * @attr {boolean} [hide-label=false]
+ * @attr {string} [max] - The latest time allowed, as "hh:mm". Earlier than `min`, the range runs across midnight.
+ * @attr {string} [min] - The earliest time allowed, as "hh:mm". Also where `step` counts from.
+ * @attr {string} [name='']
+ * @attr {boolean} [readonly=false]
+ * @attr {boolean} [required=false]
+ * @attr {string} [step] - In seconds, or "any". 60 when unset, so there's no seconds to fill in. Counted from `min` when there is one.
+ * @attr {string} [value=''] - A 24-hour "hh:mm" string, with ":ss" and ".sss" when it has them. Like a native input, the attribute is the default value and the property is the current one, so the attribute doesn't change as the field is edited.
+ *
+ * @readonly
+ * @attr {string} [version]
+ *
+ * @slot {Element | string} [description]
+ *
+ * @csspart description - Text about the field, and its validity message when it has one
+ * @csspart input
+ * @csspart label - The label
+ * @csspart validity-message
+ *
+ * @fires {Event} change
+ * @fires {Event} input
+ *
+ * @readonly
+ * @prop {HTMLFormElement | null} form
+ *
+ * @readonly
+ * @prop {ValidityState} validity
+ *
+ * @prop {Date | null} valueAsDate - `value` as a `Date` on January 1, 1970, UTC, or `null` when empty, as on a native input.
+ *
+ * @method checkValidity
+ * @returns boolean
+ *
+ * @method formDisabledCallback
+ * @param {boolean} isDisabled
+ *
+ * @method formResetCallback
+ *
+ * @method formStateRestoreCallback
+ * @param {string | File | FormData | null} state
+ *
+ * @method reportValidity
+ * @returns boolean
+ *
+ * @method resetValidityFeedback - Clears the validity feedback without changing `validity`.
+ *
+ * @method setCustomValidity
+ * @param {string} message
+ *
+ * @method setValidity
+ * @param {ValidityStateFlags} [flags]
+ * @param {string} [message]
+ *
+ * @method showPicker - Opens the browser's time picker, where it has one. It's the native input's, so it throws where that one does, such as without a user gesture.
+ */
+@customElement('slab-time-field')
+export default class TimeField extends LitElement {
+  static formAssociated = true;
+
+  static override shadowRootOptions: ShadowRootInit = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true,
+  };
+
+  @property({ reflect: true })
+  @required
+  label?: string;
+
+  // The native input's own union rather than `string`, so a typo is caught at
+  // the callsite the way it would be on an `<input>`.
+  @property({ reflect: true })
+  autocomplete?: HTMLInputElement['autocomplete'];
+
+  @property({ reflect: true, type: Boolean })
+  disabled = false;
+
+  @property({ attribute: 'hide-label', reflect: true, type: Boolean })
+  hideLabel = false;
+
+  /**
+   * The latest time allowed, as "hh:mm". Earlier than `min`, the range runs
+   * across midnight.
+   */
+  @property({ reflect: true })
+  max?: string;
+
+  /**
+   * The earliest time allowed, as "hh:mm". Also where `step` counts from.
+   */
+  @property({ reflect: true })
+  min?: string;
+
+  @property({ reflect: true, useDefault: true })
+  name = '';
+
+  @property({ reflect: true, type: Boolean })
+  readonly = false;
+
+  @property({ reflect: true, type: Boolean })
+  required = false;
+
+  /**
+   * In seconds, or "any". 60 when unset, so there's no seconds to fill in.
+   * Counted from `min` when there is one.
+   */
+  // A string rather than a number because "any" is one of its values, and
+  // the input takes it as an attribute either way.
+  @property({ reflect: true })
+  step?: string;
+
+  /**
+   * A 24-hour "hh:mm" string, with ":ss" and ".sss" when it has them. Like a
+   * native input, the attribute is the default value and the property is the
+   * current one, so the attribute doesn't change as the field is edited.
+   */
+  @property()
+  value = '';
+
+  @property({ reflect: true })
+  readonly version: string = packageJson.version;
+
+  get form(): HTMLFormElement | null {
+    return this.#internals.form;
+  }
+
+  get validity(): ValidityState {
+    return this.#internals.validity;
+  }
+
+  /**
+   * `value` as a `Date` on January 1, 1970, UTC, or `null` when empty, as on a
+   * native input.
+   *
+   * @default null
+   */
+  get valueAsDate(): Date | null {
+    return this.value === '' ? null : new Date(`1970-01-01T${this.value}Z`);
+  }
+
+  // Only the time of day is kept. Seconds and milliseconds are left off when
+  // they're zero, which is how a native input writes it.
+  set valueAsDate(date: Date | null) {
+    this.value =
+      date === null || Number.isNaN(date.getTime())
+        ? ''
+        : date
+            .toISOString()
+            .slice(11, 23)
+            .replace(/(:00)?\.000$/, '');
+  }
+
+  checkValidity(): boolean {
+    this.isCheckingValidity = true;
+    const isValid = this.#internals.checkValidity();
+    this.isCheckingValidity = false;
+
+    return isValid;
+  }
+
+  override click() {
+    this.#inputElementRef.value?.click();
+  }
+
+  override focus(options?: FocusOptions) {
+    this.#inputElementRef.value?.focus(options);
+  }
+
+  formDisabledCallback(isDisabled: boolean): void {
+    afterReflection(() => {
+      this.isFormDisabled = isDisabled;
+    });
+  }
+
+  formResetCallback(): void {
+    this.value = this.getAttribute('value') ?? '';
+    this.resetValidityFeedback();
+  }
+
+  formStateRestoreCallback(state: string | File | FormData | null): void {
+    this.value = typeof state === 'string' ? state : '';
+  }
+
+  override render() {
+    // ARIA goes on attributes rather than on ElementInternals. Screenreaders
+    // read both. But Playwright's role queries and ARIA snapshots, and Axe,
+    // only read attributes, which would leave the ARIA untested.
+    return html`<label for="input" part="label">
+        <!-- The label -->
+        ${this.label}
+      </label>
+
+      <input
+        aria-describedby="description"
+        aria-invalid=${this.#isShowValidationFeedback ? 'true' : 'false'}
+        data-test="input"
+        id="input"
+        max=${ifDefined(this.max)}
+        min=${ifDefined(this.min)}
+        part="input"
+        type="time"
+        ?disabled=${this.#isDisabled}
+        ?readonly=${this.readonly}
+        ?required=${this.required}
+        @blur=${this.#onInputBlur}
+        @change=${this.#onInputChangeOrInput}
+        @input=${this.#onInputChangeOrInput}
+        @keydown=${this.#onInputKeydown}
+        ${ref(this.#inputElementRef)}
+      />
+
+      <div id="description" part="description">
+        <!-- Text about the field, and its validity message when it has one -->
+        <slot name="description">
+          <!-- @type {Element | string} -->
+        </slot>
+
+        ${when(
+          this.#isShowValidationFeedback && this.validityMessage,
+          () =>
+            html`<span data-test="validity-message" part="validity-message">
+              ${this.validityMessage}
+            </span>`,
+        )}
+      </div>`;
+  }
+
+  reportValidity(): boolean {
+    this.hasReportedValidityOrSubmitted = true;
+
+    const isValid = this.#internals.reportValidity();
+
+    // So anything reading `validity.valid` renders again.
+    this.requestUpdate();
+
+    return isValid;
+  }
+
+  /**
+   * Clears the validity feedback without changing `validity`.
+   */
+  resetValidityFeedback(): void {
+    this.hasReportedValidityOrSubmitted = false;
+  }
+
+  setCustomValidity(message: string): void {
+    this.validityMessage = message;
+
+    if (message === '') {
+      this.#hasCustomValidity = false;
+      this.#updateValidity();
+
+      return;
+    }
+
+    this.#hasCustomValidity = true;
+
+    this.#internals.setValidity(
+      { customError: true },
+      ' ',
+      this.#inputElementRef.value,
+    );
+  }
+
+  setValidity(flags?: ValidityStateFlags, message?: string): void {
+    // From here on the consumer owns validity, so the native input's stops
+    // being mirrored onto the host.
+    this.#hasCustomValidity = true;
+    this.validityMessage = message;
+
+    this.#internals.setValidity(flags, ' ', this.#inputElementRef.value);
+  }
+
+  /**
+   * Opens the browser's time picker, where it has one. It's the native
+   * input's, so it throws where that one does, such as without a user gesture.
+   */
+  showPicker(): void {
+    this.#inputElementRef.value?.showPicker();
+  }
+
+  // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
+  // only knows public keys.
+  override updated(changes: PropertyValues) {
+    const input = this.#inputElementRef.value;
+
+    // Set here rather than in the template, and only when it differs. Writing
+    // the value back on every change would clear the input's record of having
+    // been edited by the user, the same as it would on Text Field.
+    if (input && input.value !== this.value) {
+      input.value = this.value;
+
+      // The input sanitizes what it's given: anything that isn't a valid
+      // "hh:mm", such as "9:30" or "9:30 AM", becomes an empty string. The
+      // host takes that back rather than holding, and submitting, a value the
+      // input threw away.
+      if (input.value !== this.value) {
+        this.value = input.value;
+      }
+    }
+
+    // Set here rather than in the template because the template binding is
+    // checked against lit-analyzer's list of autocomplete tokens, which is
+    // narrower than the platform's.
+    if (input) {
+      input.autocomplete = this.autocomplete ?? '';
+    }
+
+    // Also set here rather than in the template: lit-analyzer types `step` as
+    // a number, and the platform also takes "any".
+    if (input && this.step === undefined) {
+      input.removeAttribute('step');
+    } else if (input && this.step !== undefined) {
+      input.setAttribute('step', this.step);
+    }
+
+    if (changes.has('disabled') || changes.has('isFormDisabled')) {
+      this.#setState('disabled', this.#isDisabled);
+    }
+
+    if (changes.has('readonly')) {
+      this.#setState('readonly', this.readonly);
+    }
+
+    if (changes.has('required')) {
+      this.#setState('required', this.required);
+    }
+
+    this.#updateFormValue();
+    this.#updateValidity();
+    this.#setState('error', this.#isShowValidationFeedback);
+  }
+
+  // Functional styles go in here rather than in `styles`, so a subclass that
+  // sets its own `styles` keeps them.
+  protected static override finalizeStyles(
+    subclassStyles?: CSSResultGroup,
+  ): CSSResultOrNative[] {
+    return super.finalizeStyles([styles, subclassStyles ?? []]);
+  }
+
+  constructor() {
+    super();
+    this.#internals = this.attachInternals();
+
+    // On the host because the host is what's form-associated, which is also
+    // why a consumer could remove this listener. Nothing better is available.
+    this.addEventListener('invalid', (event) => {
+      event.preventDefault(); // So no native validation bubble is shown.
+
+      // Focus belongs to the user here unless the form was submitted, or
+      // `reportValidity()` was called by something other than a blur.
+      if (
+        this.isCheckingValidity ||
+        this.isBlurring ||
+        isFormCheckingValidity(this.form)
+      ) {
+        return;
+      }
+
+      this.hasReportedValidityOrSubmitted = true;
+
+      // The browser ignores this when another control is the first invalid one.
+      if (this.form?.querySelector(':invalid') === this) {
+        this.focus();
+      }
+    });
+  }
+
+  @state()
+  private hasReportedValidityOrSubmitted = false;
+
+  @state()
+  private isBlurring = false;
+
+  @state()
+  private isCheckingValidity = false;
+
+  @state()
+  private isFormDisabled = false;
+
+  @state()
+  private validityMessage?: string;
+
+  #hasCustomValidity = false;
+
+  #inputElementRef = createRef<HTMLInputElement>();
+
+  #internals: ElementInternals;
+
+  get #isDisabled() {
+    return this.disabled || this.isFormDisabled;
+  }
+
+  get #isShowValidationFeedback() {
+    return (
+      !this.#isDisabled &&
+      !this.validity.valid &&
+      this.hasReportedValidityOrSubmitted
+    );
+  }
+
+  #onInputBlur() {
+    this.isBlurring = true;
+    this.reportValidity();
+    this.isBlurring = false;
+  }
+
+  #onInputChangeOrInput(event: Event) {
+    if (event.target instanceof HTMLInputElement) {
+      this.value = event.target.value;
+    }
+
+    // The analyzer's `add-events` plugin can't see events dispatched by a
+    // native control inside a component, and reads their names from the
+    // source. So each is dispatched by name from the host instead.
+    //
+    // "input" composes, so the original is stopped first or it would escape
+    // alongside this one. "change" doesn't compose and never leaves the shadow
+    // root, so there's nothing to stop.
+    if (event.type === 'input') {
+      event.stopPropagation();
+
+      this.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    }
+
+    if (event.type === 'change') {
+      this.dispatchEvent(
+        new Event('change', { bubbles: true, composed: true }),
+      );
+    }
+  }
+
+  #onInputKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.form?.requestSubmit();
+    }
+  }
+
+  #setState(state: string, isActive: boolean) {
+    if (isActive) {
+      this.#internals.states.add(state);
+    } else {
+      this.#internals.states.delete(state);
+    }
+  }
+
+  #updateFormValue() {
+    const isSubmittable = !this.#isDisabled && this.name !== '';
+    this.#internals.setFormValue(isSubmittable ? this.value : null);
+  }
+
+  // The native input is the one deciding. Reading its `validity` and copying
+  // the flags across is all this does: no rule is reimplemented here, so
+  // `min`, `max` and `step` behave the way they do on an `<input>`.
+  #updateValidity() {
+    // The consumer owns validity once they've set it themselves.
+    if (this.#hasCustomValidity) {
+      return;
+    }
+
+    const input = this.#inputElementRef.value;
+
+    /* v8 ignore next 3 */
+    if (!input) {
+      return;
+    }
+
+    if (input.validity.valid) {
+      this.#internals.setValidity({});
+
+      return;
+    }
+
+    this.#internals.setValidity(
+      {
+        badInput: input.validity.badInput,
+        rangeOverflow: input.validity.rangeOverflow,
+        rangeUnderflow: input.validity.rangeUnderflow,
+        stepMismatch: input.validity.stepMismatch,
+        valueMissing: input.validity.valueMissing,
+      },
+      ' ',
+      input,
+    );
+  }
+}

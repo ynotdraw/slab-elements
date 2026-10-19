@@ -9354,7 +9354,7 @@
                 "text": "'text' | 'email' | 'password' | 'search' | 'tel' | 'url'"
               },
               "default": "'text'",
-              "description": "One of \"text\", \"email\", \"password\", \"search\", \"tel\" or \"url\". Number and\ndate have components of their own.",
+              "description": "One of \"text\", \"email\", \"password\", \"search\", \"tel\" or \"url\". Number,\ndate and time have components of their own.",
               "attribute": "type",
               "reflects": true
             },
@@ -9688,7 +9688,7 @@
                 "text": "'text' | 'email' | 'password' | 'search' | 'tel' | 'url'"
               },
               "default": "'text'",
-              "description": "One of \"text\", \"email\", \"password\", \"search\", \"tel\" or \"url\". Number and\ndate have components of their own.",
+              "description": "One of \"text\", \"email\", \"password\", \"search\", \"tel\" or \"url\". Number,\ndate and time have components of their own.",
               "fieldName": "type"
             },
             {
@@ -10287,6 +10287,515 @@
           "declaration": {
             "name": "Textarea",
             "module": "src/textarea.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/time-field.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/time-field.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/time-field.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "TimeField",
+          "cssParts": [
+            {
+              "name": "label",
+              "description": "The label"
+            },
+            {
+              "name": "input"
+            },
+            {
+              "name": "description",
+              "description": "Text about the field, and its validity message when it has one"
+            },
+            {
+              "name": "validity-message"
+            }
+          ],
+          "slots": [
+            {
+              "name": "description",
+              "description": "",
+              "type": {
+                "text": "Element | string"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "autocomplete",
+              "type": {
+                "text": "HTMLInputElement['autocomplete'] | undefined"
+              },
+              "attribute": "autocomplete",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hideLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hide-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The latest time allowed, as \"hh:mm\". Earlier than `min`, the range runs\nacross midnight.",
+              "attribute": "max",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The earliest time allowed, as \"hh:mm\". Also where `step` counts from.",
+              "attribute": "min",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "step",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "In seconds, or \"any\". 60 when unset, so there's no seconds to fill in.\nCounted from `min` when there is one.",
+              "attribute": "step",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A 24-hour \"hh:mm\" string, with \":ss\" and \".sss\" when it has them. Like a\nnative input, the attribute is the default value and the property is the\ncurrent one, so the attribute doesn't change as the field is edited.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "HTMLFormElement | null"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "valueAsDate",
+              "type": {
+                "text": "Date | null"
+              },
+              "description": "`value` as a `Date` on January 1, 1970, UTC, or `null` when empty, as on a\nnative input.",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "click"
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isDisabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "string | File | FormData | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resetValidityFeedback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears the validity feedback without changing `validity`."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "flags",
+                  "optional": true,
+                  "type": {
+                    "text": "ValidityStateFlags"
+                  }
+                },
+                {
+                  "name": "message",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "showPicker",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Opens the browser's time picker, where it has one. It's the native\ninput's, so it throws where that one does, such as without a user gesture."
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "autocomplete",
+              "type": {
+                "text": "HTMLInputElement['autocomplete'] | undefined"
+              },
+              "fieldName": "autocomplete"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "hide-label",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hideLabel"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The latest time allowed, as \"hh:mm\". Earlier than `min`, the range runs\nacross midnight.",
+              "fieldName": "max"
+            },
+            {
+              "name": "min",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The earliest time allowed, as \"hh:mm\". Also where `step` counts from.",
+              "fieldName": "min"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "required"
+            },
+            {
+              "name": "step",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "In seconds, or \"any\". 60 when unset, so there's no seconds to fill in.\nCounted from `min` when there is one.",
+              "fieldName": "step"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A 24-hour \"hh:mm\" string, with \":ss\" and \".sss\" when it has them. Like a\nnative input, the attribute is the default value and the property is the\ncurrent one, so the attribute doesn't change as the field is edited.",
+              "fieldName": "value"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-time-field",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "TimeField",
+            "module": "src/time-field.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-time-field",
+          "declaration": {
+            "name": "TimeField",
+            "module": "src/time-field.ts"
           }
         }
       ]

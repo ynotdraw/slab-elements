@@ -2,8 +2,9 @@ import { css } from 'lit';
 
 /*
   The look shared by everything typed into: Text Field, Textarea, Number, Date
-  Field and Combobox, whose fields are "::part(input)", or "::part(textarea)"
-  for Textarea. File Drop starts from it too, for its label and description.
+  Field, Time Field and Combobox, whose fields are "::part(input)", or
+  "::part(textarea)" for Textarea. File Drop starts from it too, for its label
+  and description.
 */
 export default css`
   :host {

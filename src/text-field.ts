@@ -52,7 +52,7 @@ declare global {
  * @attr {string} [placeholder]
  * @attr {boolean} [readonly=false]
  * @attr {boolean} [required=false]
- * @attr {'text'|'email'|'password'|'search'|'tel'|'url'} [type='text'] - One of "text", "email", "password", "search", "tel" or "url". Number and date have components of their own.
+ * @attr {'text'|'email'|'password'|'search'|'tel'|'url'} [type='text'] - One of "text", "email", "password", "search", "tel" or "url". Number, date and time have components of their own.
  * @attr {string} [value=''] - Like a native input, the attribute is the default value and the property is the current one, so the attribute doesn't change as the field is typed into.
  *
  * @readonly
@@ -149,8 +149,8 @@ export default class TextField extends LitElement {
   required = false;
 
   /**
-   * One of "text", "email", "password", "search", "tel" or "url". Number and
-   * date have components of their own.
+   * One of "text", "email", "password", "search", "tel" or "url". Number,
+   * date and time have components of their own.
    */
   @property({ reflect: true, useDefault: true })
   type: 'text' | 'email' | 'password' | 'search' | 'tel' | 'url' = 'text';
