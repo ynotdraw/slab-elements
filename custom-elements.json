@@ -471,7 +471,19 @@
             },
             {
               "name": "selected",
-              "description": "The selected day"
+              "description": "The selected day, or with range a day of the selected range"
+            },
+            {
+              "name": "range-start",
+              "description": "With range, the first day of the selected range"
+            },
+            {
+              "name": "range-end",
+              "description": "With range, the last day of the selected range"
+            },
+            {
+              "name": "preview",
+              "description": "With range, a day from the first one picked to the one focused or hovered, until the last is picked"
             },
             {
               "name": "today",
@@ -529,12 +541,23 @@
             },
             {
               "kind": "field",
+              "name": "range",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Selects a range of days rather than one.",
+              "attribute": "range",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "value",
               "type": {
                 "text": "string"
               },
               "default": "''",
-              "description": "The selected date, as \"yyyy-mm-dd\", or an empty string. Like a native\ninput, the attribute is the default value and the property is the current\none.",
+              "description": "The selected date, as \"yyyy-mm-dd\", or with `range` the selected range, as\n\"yyyy-mm-dd/yyyy-mm-dd\". Otherwise an empty string. Like a native input,\nthe attribute is the default value and the property is the current one.",
               "attribute": "value"
             },
             {
@@ -634,12 +657,21 @@
               "fieldName": "previousLabel"
             },
             {
+              "name": "range",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Selects a range of days rather than one.",
+              "fieldName": "range"
+            },
+            {
               "name": "value",
               "type": {
                 "text": "string"
               },
               "default": "''",
-              "description": "The selected date, as \"yyyy-mm-dd\", or an empty string. Like a native\ninput, the attribute is the default value and the property is the current\none.",
+              "description": "The selected date, as \"yyyy-mm-dd\", or with `range` the selected range, as\n\"yyyy-mm-dd/yyyy-mm-dd\". Otherwise an empty string. Like a native input,\nthe attribute is the default value and the property is the current one.",
               "fieldName": "value"
             },
             {

@@ -30,6 +30,7 @@ const meta: Meta = {
     min: '',
     'next-label': '',
     'previous-label': '',
+    range: false,
     value: '2026-10-15',
     'week-start': 0,
     version: '',
@@ -41,7 +42,7 @@ const meta: Meta = {
         type: {
           summary: 'method',
           detail:
-            '(event: "change", handler: (event: Event) => void): void\n\n// When the user selects a day.',
+            '(event: "change", handler: (event: Event) => void): void\n\n// When the user selects a day, or with `range` the last day of a range.',
         },
       },
     },
@@ -79,13 +80,22 @@ const meta: Meta = {
         },
       },
     },
+    range: {
+      table: {
+        defaultValue: { summary: 'false' },
+        type: {
+          summary: 'boolean',
+          detail: '// Selects a range of days rather than one.',
+        },
+      },
+    },
     value: {
       table: {
         defaultValue: { summary: '""' },
         type: {
           summary: 'string',
           detail:
-            '// The selected date, as "yyyy-mm-dd". The attribute is the default value. The property is the current one.',
+            '// The selected date, as "yyyy-mm-dd", or with `range` the selected range, as "yyyy-mm-dd/yyyy-mm-dd". The attribute is the default value. The property is the current one.',
         },
       },
     },
@@ -115,6 +125,7 @@ const meta: Meta = {
       min=${arguments_.min || nothing}
       next-label=${arguments_['next-label'] || nothing}
       previous-label=${arguments_['previous-label'] || nothing}
+      ?range=${arguments_.range}
       value=${arguments_.value || nothing}
       week-start=${arguments_['week-start']}
     ></slab-calendar>`;
@@ -124,3 +135,10 @@ const meta: Meta = {
 export default meta;
 
 export const Calendar: StoryObj = {};
+
+export const Range: StoryObj = {
+  args: {
+    range: true,
+    value: '2026-10-12/2026-10-16',
+  },
+};

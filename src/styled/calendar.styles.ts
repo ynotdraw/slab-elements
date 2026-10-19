@@ -132,6 +132,49 @@ export default css`
     }
   }
 
+  /*
+    While a range is being picked, the days it would cover are hatched, so
+    they don't read as chosen yet. Once it's picked, they're a band of chalk
+    between its ends, which are ink like a single selected day.
+  */
+  [part~='preview'] {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--chalk) 0 4px,
+      transparent 4px 8px
+    );
+  }
+
+  :host([range]) [part~='selected'] {
+    background-color: var(--chalk);
+    background-image: none;
+    color: var(--ink);
+    font-weight: 400;
+
+    &:hover {
+      background-color: var(--chalk);
+    }
+
+    &:focus-visible {
+      outline-color: var(--ember);
+    }
+  }
+
+  :host([range]) [part~='range-start'],
+  :host([range]) [part~='range-end'] {
+    background-color: var(--ink);
+    color: var(--paper);
+    font-weight: 600;
+
+    &:hover {
+      background-color: var(--ink);
+    }
+
+    &:focus-visible {
+      outline-color: currentcolor;
+    }
+  }
+
   [part~='disabled'] {
     color: var(--ash);
     cursor: not-allowed;

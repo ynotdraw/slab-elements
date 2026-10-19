@@ -98,3 +98,83 @@ test(
     await expect(heading).toHaveText('September 2026');
   },
 );
+
+test(
+  'selects a range when its first and last days are clicked, in either order',
+  { tag: '@mouse' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () =>
+        html`<slab-calendar
+          range
+          value="2026-10-12/2026-10-16"
+        ></slab-calendar>`,
+    );
+
+    const host = page.locator('slab-calendar');
+
+    await expect(host).not.toDispatchEvents(
+      () => page.locator('[data-date="2026-10-20"]').click(),
+      [{ type: 'change' }],
+    );
+
+    // The preview follows the pointer.
+    await page.locator('[data-date="2026-10-22"]').hover();
+    await expect(page.locator('[part~="preview"]')).toHaveCount(3);
+
+    await expect(page.locator('[data-date="2026-10-22"]')).toHaveAttribute(
+      'part',
+      'day preview',
+    );
+
+    await expect(host).toDispatchEvents(
+      () => page.locator('[data-date="2026-10-18"]').click(),
+      [{ type: 'change', bubbles: true, cancelable: false, composed: true }],
+    );
+
+    await expect(host).toHaveJSProperty('value', '2026-10-18/2026-10-20');
+    await expect(page.locator('[part~="selected"]')).toHaveCount(3);
+
+    // With nothing being picked, hovering previews nothing.
+    await page.locator('[data-date="2026-10-25"]').hover();
+    await expect(page.locator('[part~="preview"]')).toHaveCount(0);
+  },
+);
+
+test(
+  'previews a range to the focused day when the hovered one can’t be picked or the pointer leaves',
+  { tag: '@mouse' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () =>
+        html`<slab-calendar
+          max="2026-10-20"
+          min="2026-10-10"
+          range
+        ></slab-calendar>`,
+    );
+
+    await page.locator('[data-date="2026-10-15"]').click();
+    await page.locator('[data-date="2026-10-17"]').hover();
+    await expect(page.locator('[part~="preview"]')).toHaveCount(3);
+
+    // After `max`.
+    await page.locator('[data-date="2026-10-22"]').hover();
+    await expect(page.locator('[part~="preview"]')).toHaveCount(1);
+
+    // A weekday isn't a day.
+    await page.getByRole('columnheader').first().hover();
+    await expect(page.locator('[part~="preview"]')).toHaveCount(1);
+
+    await page.locator('[data-date="2026-10-12"]').hover();
+    await expect(page.locator('[part~="preview"]')).toHaveCount(4);
+
+    await page.mouse.move(0, 0);
+    await expect(page.locator('[part~="preview"]')).toHaveCount(1);
+
+    // The keyboard takes the preview back from the pointer.
+    await page.locator('[data-date="2026-10-12"]').hover();
+    await page.keyboard.press('ArrowRight');
+    await expect(page.locator('[part~="preview"]')).toHaveCount(2);
+  },
+);

@@ -67,3 +67,28 @@ test(
     `);
   },
 );
+
+test(
+  'is accessible with a range',
+  { tag: '@accessibility' },
+  async ({ renderTemplate, page }) => {
+    await renderTemplate(
+      () =>
+        html`<slab-calendar
+          range
+          value="2026-10-12/2026-10-16"
+        ></slab-calendar>`,
+    );
+
+    await expect(page).toBeAccessible('slab-calendar');
+
+    await expect(page.getByRole('grid')).toHaveAttribute(
+      'aria-multiselectable',
+      'true',
+    );
+
+    await expect(
+      page.getByRole('gridcell', { name: 'Wednesday, October 14, 2026' }),
+    ).toHaveAttribute('aria-selected', 'true');
+  },
+);

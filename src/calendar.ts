@@ -20,6 +20,13 @@ declare global {
 
 const DAY = 24 * 60 * 60 * 1000;
 
+// The first and last of the days selected, and of the days previewed while a
+// range is being picked.
+interface Highlight {
+  preview?: { end: Date; start: Date };
+  selected?: { end: Date; start: Date };
+}
+
 /**
  * A calendar with no visual styles: a month of days in a `[role=grid]`, to
  * pick one from, as in the APG's date picker.
@@ -35,6 +42,12 @@ const DAY = 24 * 60 * 60 * 1000;
  * Enter, Space and a click select the day and dispatch "change". Days before
  * `min` or after `max` can't be reached or selected.
  *
+ * With `range`, two days are picked rather than one: the first and the last
+ * of a range, in either order. "change" is dispatched once both are, and
+ * `value` is then the range as "yyyy-mm-dd/yyyy-mm-dd", the ISO 8601 form of
+ * an interval. Between the two, the days from the first to the one focused
+ * or hovered are `::part(preview)`, and Escape starts over.
+ *
  * The month's name, the weekdays' and each day's full date are the browser's
  * own, from `Intl.DateTimeFormat`, in the language of the nearest `lang`
  * attribute. Slab ships no text, so the only words that aren't the browser's
@@ -42,13 +55,16 @@ const DAY = 24 * 60 * 60 * 1000;
  * set.
  *
  * Style it through its parts. A day is also `::part(selected)`,
- * `::part(today)` and `::part(disabled)` when it's those.
+ * `::part(today)` and `::part(disabled)` when it's those, and with `range`,
+ * `::part(range-start)`, `::part(range-end)` and `::part(preview)`. The
+ * first day picked of a range is its start and end until the last is picked.
  *
  * @attr {string} [max] - The latest date that can be selected, as "yyyy-mm-dd".
  * @attr {string} [min] - The earliest date that can be selected, as "yyyy-mm-dd".
  * @attr {string} [next-label] - The next month button's text and so its accessible name. "Next month" when unset.
  * @attr {string} [previous-label] - The previous month button's text and so its accessible name. "Previous month" when unset.
- * @attr {string} [value=''] - The selected date, as "yyyy-mm-dd", or an empty string. Like a native input, the attribute is the default value and the property is the current one.
+ * @attr {boolean} [range=false] - Selects a range of days rather than one.
+ * @attr {string} [value=''] - The selected date, as "yyyy-mm-dd", or with `range` the selected range, as "yyyy-mm-dd/yyyy-mm-dd". Otherwise an empty string. Like a native input, the attribute is the default value and the property is the current one.
  *
  * @readonly
  * @attr {string} [version]
@@ -62,8 +78,11 @@ const DAY = 24 * 60 * 60 * 1000;
  * @csspart header - The month and the buttons that change it
  * @csspart heading - The month and year
  * @csspart next - The button to the next month
+ * @csspart preview - With range, a day from the first one picked to the one focused or hovered, until the last is picked
  * @csspart previous - The button to the previous month
- * @csspart selected - The selected day
+ * @csspart range-end - With range, the last day of the selected range
+ * @csspart range-start - With range, the first day of the selected range
+ * @csspart selected - The selected day, or with range a day of the selected range
  * @csspart today - Today
  * @csspart weekday - A day of the week, above the days
  *
@@ -98,9 +117,15 @@ export default class Calendar extends LitElement {
   previousLabel?: string;
 
   /**
-   * The selected date, as "yyyy-mm-dd", or an empty string. Like a native
-   * input, the attribute is the default value and the property is the current
-   * one.
+   * Selects a range of days rather than one.
+   */
+  @property({ reflect: true, type: Boolean })
+  range = false;
+
+  /**
+   * The selected date, as "yyyy-mm-dd", or with `range` the selected range, as
+   * "yyyy-mm-dd/yyyy-mm-dd". Otherwise an empty string. Like a native input,
+   * the attribute is the default value and the property is the current one.
    */
   @property()
   value = '';
@@ -134,6 +159,7 @@ export default class Calendar extends LitElement {
 
     const formatMonth = this.#format({ month: 'long', year: 'numeric' });
     const formatDay = this.#format({ dateStyle: 'full' });
+    const highlight = this.#highlight;
 
     // ARIA goes on attributes rather than on ElementInternals. Screenreaders
     // read both. But Playwright's role queries and ARIA snapshots, and Axe,
@@ -170,10 +196,13 @@ export default class Calendar extends LitElement {
 
       <table
         aria-labelledby="heading"
+        aria-multiselectable=${this.range ? 'true' : 'false'}
         part="grid"
         role="grid"
         @click=${this.#onGridClick}
         @keydown=${this.#onGridKeydown}
+        @pointerleave=${this.#onGridPointerleave}
+        @pointerover=${this.#onGridPointerover}
         ${ref(this.#gridElementRef)}
       >
         <!-- The days -->
@@ -194,7 +223,9 @@ export default class Calendar extends LitElement {
             (week) =>
               html`<tr>
                 ${week.map((date) =>
-                  date ? this.#renderDay(date, formatDay) : this.#renderEmpty(),
+                  date
+                    ? this.#renderDay(date, formatDay, highlight)
+                    : this.#renderEmpty(),
                 )}
               </tr>`,
           )}
@@ -202,12 +233,21 @@ export default class Calendar extends LitElement {
       </table>`;
   }
 
-  // A `value` the consumer sets moves the tabbable day to it. `min` and `max`
-  // need nothing here, since the tabbable day is kept between them as it's
-  // read.
+  // A `value` the consumer sets, or `range` set to read it as a range, moves
+  // the tabbable day to it, or to the start of its range, and drops a range
+  // half picked. `min` and `max` need nothing here, since the tabbable day is
+  // kept between them as it's read.
   override willUpdate(changes: PropertyValues<this>) {
-    if (changes.has('value') && parse(this.value)) {
-      this.focusedDate = this.value;
+    if (!changes.has('value') && !changes.has('range')) {
+      return;
+    }
+
+    this.anchorDate = '';
+
+    const start = this.#selection?.start;
+
+    if (start) {
+      this.focusedDate = format(start);
     }
   }
 
@@ -219,18 +259,65 @@ export default class Calendar extends LitElement {
     return super.finalizeStyles([styles, subclassStyles ?? []]);
   }
 
+  // With `range`, the first day picked, as "yyyy-mm-dd", until the last is.
+  @state()
+  private anchorDate = '';
+
   // The tabbable day, as "yyyy-mm-dd", until the user or `value` moves it.
   @state()
   private focusedDate = '';
 
+  // The day under the pointer while a range is being picked, which the
+  // preview follows rather than the tabbable day.
+  @state()
+  private hoveredDate = '';
+
   #gridElementRef = createRef<HTMLTableElement>();
 
-  // The tabbable day: where the user moved to, or else the selected day, or
-  // else today, always between `min` and `max`.
+  // The tabbable day: where the user or `value` moved it, or else today,
+  // always between `min` and `max`.
   get #focused(): Date {
-    const date = parse(this.focusedDate) ?? parse(this.value) ?? today();
+    const date = parse(this.focusedDate) ?? today();
 
     return this.#clamp(date);
+  }
+
+  // The days to show as selected, and as previewed. While a range is being
+  // picked, the first day picked is the only one selected, and the preview
+  // runs from it to the hovered day or else the tabbable one. Otherwise it's
+  // `value`.
+  get #highlight(): Highlight {
+    const anchor = parse(this.anchorDate);
+
+    if (anchor) {
+      const other = parse(this.hoveredDate) ?? this.#focused;
+      const [start, end] = other < anchor ? [other, anchor] : [anchor, other];
+
+      return {
+        preview: { end, start },
+        selected: { end: anchor, start: anchor },
+      };
+    }
+
+    return { selected: this.#selection };
+  }
+
+  // `value` as its first and last days, which are the same day without
+  // `range`. `undefined` when it's empty or isn't a date or a range, or when
+  // its range ends before it starts.
+  get #selection(): { end: Date; start: Date } | undefined {
+    if (!this.range) {
+      const date = parse(this.value);
+      return date ? { end: date, start: date } : undefined;
+    }
+
+    const [start, end, ...rest] = this.value.split('/').map((part) => {
+      return parse(part);
+    });
+
+    return start && end && rest.length === 0 && start <= end
+      ? { end, start }
+      : undefined;
   }
 
   // For Intl, in the language of the nearest `lang`, or the browser's.
@@ -280,6 +367,15 @@ export default class Calendar extends LitElement {
       return;
     }
 
+    // Only while a range is being picked, so an Escape that has nothing to
+    // start over is left to whatever the calendar is in, such as a dialog.
+    if (event.key === 'Escape' && this.anchorDate !== '') {
+      event.preventDefault(); // Prevent a dialog or popover from closing
+      this.anchorDate = '';
+
+      return;
+    }
+
     const offset = (focused.getUTCDay() - this.weekStart + 7) % 7;
     const months = event.shiftKey ? 12 : 1;
 
@@ -303,9 +399,32 @@ export default class Calendar extends LitElement {
     event.preventDefault(); // Prevent page scroll
     this.focusedDate = format(this.#clamp(next));
 
+    // The preview follows the keyboard from here.
+    this.hoveredDate = '';
+
     // The tabbable day is rendered anew, and maybe in another month.
     await this.updateComplete;
     this.focus();
+  };
+
+  #onGridPointerleave = () => {
+    this.hoveredDate = '';
+  };
+
+  // Only while a range is being picked, which is all the hovered day is for.
+  // A day that can't be picked doesn't move the preview.
+  #onGridPointerover = (event: PointerEvent) => {
+    if (this.anchorDate === '') {
+      return;
+    }
+
+    const date = parse(
+      event.composedPath().find((target): target is HTMLElement => {
+        return target instanceof HTMLElement && 'date' in target.dataset;
+      })?.dataset.date,
+    );
+
+    this.hoveredDate = date && !this.#isDisabled(date) ? format(date) : '';
   };
 
   #onNextClick = () => {
@@ -378,15 +497,30 @@ export default class Calendar extends LitElement {
     this.focusedDate = format(this.#clamp(addMonths(this.#focused, months)));
   }
 
-  #renderDay(date: Date, formatDay: Intl.DateTimeFormat) {
+  #renderDay(date: Date, formatDay: Intl.DateTimeFormat, highlight: Highlight) {
     const iso = format(date);
     const isDisabled = this.#isDisabled(date);
-    const isSelected = iso === this.value;
     const isToday = iso === format(today());
+
+    const { preview, selected } = highlight;
+
+    const isSelected = Boolean(
+      selected && date >= selected.start && date <= selected.end,
+    );
+
+    const isStart = this.range && selected?.start.getTime() === date.getTime();
+    const isEnd = this.range && selected?.end.getTime() === date.getTime();
+
+    const isPreviewed = Boolean(
+      preview && date >= preview.start && date <= preview.end,
+    );
 
     const parts = [
       'day',
       ...(isSelected ? ['selected'] : []),
+      ...(isStart ? ['range-start'] : []),
+      ...(isEnd ? ['range-end'] : []),
+      ...(isPreviewed ? ['preview'] : []),
       ...(isToday ? ['today'] : []),
       ...(isDisabled ? ['disabled'] : []),
     ].join(' ');
@@ -403,7 +537,10 @@ export default class Calendar extends LitElement {
       <!--
         A day of the month
         @part day - A day of the month
-        @part selected - The selected day
+        @part selected - The selected day, or with range a day of the selected range
+        @part range-start - With range, the first day of the selected range
+        @part range-end - With range, the last day of the selected range
+        @part preview - With range, a day from the first one picked to the one focused or hovered, until the last is picked
         @part today - Today
         @part disabled - A day before the earliest date or after the latest
       -->
@@ -418,7 +555,7 @@ export default class Calendar extends LitElement {
   }
 
   // What Enter, Space and a click on a day do. "change" is only for the
-  // user's selections.
+  // user's selections, and with `range` only once its last day is picked.
   #select(iso: string) {
     const date = parse(iso);
 
@@ -428,8 +565,22 @@ export default class Calendar extends LitElement {
 
     this.focusedDate = iso;
 
-    if (iso !== this.value) {
-      this.value = iso;
+    const anchor = parse(this.anchorDate);
+
+    if (this.range && !anchor) {
+      this.anchorDate = iso;
+      this.hoveredDate = '';
+
+      return;
+    }
+
+    // "yyyy-mm-dd" sorts the way the dates do.
+    const value = anchor ? [format(anchor), iso].sort().join('/') : iso;
+
+    this.anchorDate = '';
+
+    if (value !== this.value) {
+      this.value = value;
 
       this.dispatchEvent(
         new Event('change', { bubbles: true, composed: true }),

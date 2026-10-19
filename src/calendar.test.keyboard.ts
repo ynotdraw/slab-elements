@@ -175,3 +175,125 @@ test(
     expect(await getFocused(page)).toBe('2026-10-15');
   },
 );
+
+test(
+  'selects a range via Enter and Space, previewing it to the focused day',
+  { tag: '@keyboard' },
+  async ({ callMethod, renderTemplate, page }) => {
+    await renderTemplate(
+      () =>
+        html`<slab-calendar
+          range
+          value="2026-10-12/2026-10-16"
+        ></slab-calendar>`,
+    );
+
+    const host = page.locator('slab-calendar');
+
+    await callMethod(host, 'focus');
+    expect(await getFocused(page)).toBe('2026-10-12');
+
+    await page.keyboard.press('ArrowRight');
+
+    // The first day only starts the range.
+    await expect(host).not.toDispatchEvents(
+      () => page.keyboard.press('Enter'),
+      [{ type: 'change' }],
+    );
+
+    await expect(page.locator('[data-date="2026-10-13"]')).toHaveAttribute(
+      'part',
+      'day selected range-start range-end preview',
+    );
+
+    // The range that was selected no longer shows.
+    await expect(page.locator('[data-date="2026-10-15"]')).toHaveAttribute(
+      'aria-selected',
+      'false',
+    );
+
+    // The preview runs back from the first day as well as forward.
+    await page.keyboard.press('ArrowUp');
+
+    await expect(page.locator('[part~="preview"]')).toHaveCount(8);
+    await expect(page.locator('[part~="selected"]')).toHaveCount(1);
+
+    await expect(host).toDispatchEvents(
+      () => page.keyboard.press('Space'),
+      [{ type: 'change', bubbles: true, cancelable: false, composed: true }],
+    );
+
+    await expect(host).toHaveJSProperty('value', '2026-10-06/2026-10-13');
+    await expect(page.locator('[part~="preview"]')).toHaveCount(0);
+    await expect(page.locator('[part~="selected"]')).toHaveCount(8);
+
+    await expect(page.locator('[data-date="2026-10-06"]')).toHaveAttribute(
+      'part',
+      'day selected range-start',
+    );
+
+    await expect(page.locator('[data-date="2026-10-13"]')).toHaveAttribute(
+      'part',
+      'day selected range-end',
+    );
+
+    // One day is a range of one day.
+    await page.keyboard.press('Enter');
+    await page.keyboard.press('Enter');
+    await expect(host).toHaveJSProperty('value', '2026-10-06/2026-10-06');
+
+    // The same range again changes nothing.
+    await page.keyboard.press('Enter');
+
+    await expect(host).not.toDispatchEvents(
+      () => page.keyboard.press('Enter'),
+      [{ type: 'change' }],
+    );
+  },
+);
+
+test(
+  'starts a range over via Escape, and leaves Escape alone otherwise',
+  { tag: '@keyboard' },
+  async ({ callMethod, renderTemplate, page }) => {
+    await renderTemplate(
+      () =>
+        html`<slab-calendar
+          range
+          value="2026-10-12/2026-10-16"
+        ></slab-calendar>`,
+    );
+
+    const host = page.locator('slab-calendar');
+
+    // Whether the last Escape was left to the page.
+    await page.evaluate(() => {
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          document.body.dataset.escape = String(!event.defaultPrevented);
+        }
+      });
+    });
+
+    await callMethod(host, 'focus');
+    await page.keyboard.press('Enter');
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('Escape');
+
+    await expect(page.locator('body')).toHaveAttribute('data-escape', 'false');
+    await expect(page.locator('[part~="preview"]')).toHaveCount(0);
+
+    // The selected range shows again, and is still the value.
+    await expect(page.locator('[part~="selected"]')).toHaveCount(5);
+    await expect(host).toHaveJSProperty('value', '2026-10-12/2026-10-16');
+
+    await page.keyboard.press('Escape');
+    await expect(page.locator('body')).toHaveAttribute('data-escape', 'true');
+
+    // So the next day picked starts a range again.
+    await expect(host).not.toDispatchEvents(
+      () => page.keyboard.press('Enter'),
+      [{ type: 'change' }],
+    );
+  },
+);
