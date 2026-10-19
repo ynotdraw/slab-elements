@@ -32,13 +32,18 @@ const loaders = new Map([
   ),
 ]);
 
-const tags = new Set(
-  [...document.querySelectorAll(':not(:defined)')].map(
-    (element) => element.localName,
-  ),
-);
+// On every page, since navigation swaps in the next without reloading this
+// module. Each page brings its own elements, and those already registered
+// are defined as soon as they're on it.
+document.addEventListener('astro:page-load', () => {
+  const tags = new Set(
+    [...document.querySelectorAll(':not(:defined)')].map(
+      (element) => element.localName,
+    ),
+  );
 
-await Promise.all([...tags].map((tag) => loaders.get(tag)?.()));
+  void Promise.all([...tags].map((tag) => loaders.get(tag)?.()));
+});
 
 // The examples' buttons. Each names the element it acts on by `id`, so the
 // markup shown under an example reads like the markup that runs it.

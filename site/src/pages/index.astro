@@ -462,30 +462,33 @@ const scoped = (id: string, css: string) =>
     import('../../../src/switch.ts'),
   ]);
 
-  const status = document.querySelector('[data-copy-status]');
+  // On every visit to the page, since each brings new buttons.
+  document.addEventListener('astro:page-load', () => {
+    const status = document.querySelector('[data-copy-status]');
 
-  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
-    let timeout: ReturnType<typeof setTimeout>;
+    for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
+      let timeout: ReturnType<typeof setTimeout>;
 
-    button.addEventListener('click', async () => {
-      await navigator.clipboard?.writeText(button.dataset.copy ?? '');
-      button.textContent = 'Copied';
-
-      if (status) {
-        status.textContent = 'Copied!';
-      }
-
-      clearTimeout(timeout);
-
-      timeout = setTimeout(() => {
-        button.textContent = 'Copy';
+      button.addEventListener('click', async () => {
+        await navigator.clipboard?.writeText(button.dataset.copy ?? '');
+        button.textContent = 'Copied';
 
         if (status) {
-          status.textContent = '';
+          status.textContent = 'Copied!';
         }
-      }, 1600);
-    });
-  }
+
+        clearTimeout(timeout);
+
+        timeout = setTimeout(() => {
+          button.textContent = 'Copy';
+
+          if (status) {
+            status.textContent = '';
+          }
+        }, 1600);
+      });
+    }
+  });
 </script>
 
 <style>
@@ -532,9 +535,37 @@ const scoped = (id: string, css: string) =>
     max-inline-size: 46ch;
   }
 
-  /* Before Tabs is registered, only the first panel shows. */
+  /*
+    Before Tabs is registered, its tabs sit in a row as they will in its
+    tablist, the first selected, and only the first panel shows. So nothing
+    moves or changes when it is.
+  */
   slab-tabs:not(:defined) slab-tabs-panel + slab-tabs-panel {
     display: none;
+  }
+
+  .install:not(:defined) {
+    display: flex;
+    flex-wrap: wrap;
+
+    /* The tablist's border, which is open at the bottom. */
+    > slab-tabs-tab {
+      border-block-start: 1px solid var(--ink);
+    }
+
+    > slab-tabs-tab:first-of-type {
+      background-color: var(--ink);
+      border-inline-start: 1px solid var(--ink);
+      color: var(--paper);
+    }
+
+    > slab-tabs-tab:last-of-type {
+      border-inline-end: 1px solid var(--ink);
+    }
+
+    > slab-tabs-panel {
+      flex-basis: 100%;
+    }
   }
 
   .install {
@@ -839,6 +870,12 @@ const scoped = (id: string, css: string) =>
     color: var(--ink);
     color-scheme: light;
     display: grid;
+
+    /*
+      As tall as the tallest look, Brick, so the cards are the same size
+      before Switch is registered, when the switches have no height.
+    */
+    min-block-size: 4.875rem;
     padding: 1.25rem 1rem;
   }
 
@@ -886,6 +923,23 @@ const scoped = (id: string, css: string) =>
     color-scheme: light;
     display: flex;
     flex-direction: column;
+  }
+
+  .usage .frameworks-tabs:not(:defined) {
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    > slab-tabs-tab:first-of-type {
+      background-color: var(--paper);
+      box-shadow: inset 0 -4px 0 var(--ember);
+      color: var(--ink);
+    }
+
+    /* The tablist's rule. */
+    > slab-tabs-panel {
+      border-block-start: 1px solid var(--rule-on-ink);
+      flex-basis: 100%;
+    }
   }
 
   .frameworks-tabs::part(tablist) {

@@ -197,21 +197,26 @@ const tsconfig = `{
 <script>
   import '../../scripts/examples.ts';
 
-  // Each source file's Copy button copies the file as shown.
-  const status = document.querySelector('[data-copy-status]');
+  // Each source file's Copy button copies the file as shown. Listened for on
+  // the document, since navigation swaps in each component's page.
+  document.addEventListener('click', async (event) => {
+    const button =
+      event.target instanceof Element ? event.target.closest('.copy-file') : null;
 
-  for (const button of document.querySelectorAll<HTMLButtonElement>('.copy-file')) {
-    button.addEventListener('click', async () => {
-      const code = button.closest('details')?.querySelector('pre')?.textContent;
-      const name = button.closest('details')?.querySelector('summary')?.textContent;
+    if (!button) {
+      return;
+    }
 
-      await navigator.clipboard?.writeText(code ?? '');
+    const code = button.closest('details')?.querySelector('pre')?.textContent;
+    const name = button.closest('details')?.querySelector('summary')?.textContent;
+    const status = document.querySelector('[data-copy-status]');
 
-      if (status) {
-        status.textContent = `Copied ${name} to the clipboard`;
-      }
-    });
-  }
+    await navigator.clipboard?.writeText(code ?? '');
+
+    if (status) {
+      status.textContent = `Copied ${name} to the clipboard`;
+    }
+  });
 </script>
 
 <style>
@@ -320,9 +325,31 @@ const tsconfig = `{
     opacity: 0;
   }
 
-  /* Before Tabs is registered, only the first panel shows. */
+  /*
+    Before Tabs is registered, its tabs sit in a row as they will in its
+    tablist, the first selected, and only the first panel shows. So nothing
+    moves or changes when it is.
+  */
   slab-tabs:not(:defined) slab-tabs-panel + slab-tabs-panel {
     display: none;
+  }
+
+  .example-tabs:not(:defined) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+
+    > slab-tabs-tab:first-of-type {
+      background-color: var(--ink);
+      color: var(--paper);
+    }
+
+    /* The tablist's rule, then the gap below it. */
+    > slab-tabs-panel {
+      border-block-start: 3px solid var(--ink);
+      flex-basis: 100%;
+      padding-block-start: 1rem;
+    }
   }
 
   .example-tabs {

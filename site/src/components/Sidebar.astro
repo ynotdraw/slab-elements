@@ -41,12 +41,15 @@ const { label, sections } = Astro.props;
 
 <script>
   // Closed on narrow screens, where it sits above the page rather than
-  // beside it. Open by default, so it's open with no script.
-  const sidebar = document.querySelector<HTMLDetailsElement>('.sidebar');
+  // beside it. Open by default, so it's open with no script. On every page,
+  // since each navigation brings a new one.
+  document.addEventListener('astro:page-load', () => {
+    const sidebar = document.querySelector<HTMLDetailsElement>('.sidebar');
 
-  if (sidebar && matchMedia('(width < 56rem)').matches) {
-    sidebar.open = false;
-  }
+    if (sidebar && matchMedia('(width < 56rem)').matches) {
+      sidebar.open = false;
+    }
+  });
 </script>
 
 <style>

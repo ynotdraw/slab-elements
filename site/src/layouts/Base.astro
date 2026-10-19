@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import { version } from '../../../package.json';
 import Logo from '../components/Logo.astro';
 import '../styles/global.css';
@@ -70,6 +71,11 @@ const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.
         if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
       } catch {}
     </script>
+    <!--
+      Navigation swaps the page in place, so the elements a page has
+      registered stay registered on the next, and the header stays put.
+    -->
+    <ClientRouter />
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -133,39 +139,52 @@ const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.
 <script>
   // The OS's preference until someone presses the toggle, then theirs, kept
   // in local storage. The head's inline script applies it on later visits.
-  const button = document.querySelector<HTMLButtonElement>('.theme')!;
   const query = matchMedia('(prefers-color-scheme: dark)');
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const root = document.documentElement;
 
   const isDark = () => (root.dataset.theme ?? (query.matches ? 'dark' : 'light')) === 'dark';
-  const sync = () => button.setAttribute('aria-pressed', String(isDark()));
 
-  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const sync = () =>
+    document.querySelector('.theme')?.setAttribute('aria-pressed', String(isDark()));
 
-  button.addEventListener('click', () => {
-    const theme = isDark() ? 'light' : 'dark';
-
-    try {
-      localStorage.setItem('theme', theme);
-    } catch {}
-
-    const apply = () => {
-      root.dataset.theme = theme;
-      sync();
-    };
-
-    // The page cross-fades between themes where it can, and snaps where it
-    // can't or motion's reduced.
-    if (document.startViewTransition && !reduceMotion.matches) {
-      document.startViewTransition(apply);
-    } else {
-      apply();
+  // A navigation swaps in the next page's root, which has no theme of its own.
+  document.addEventListener('astro:before-swap', ({ newDocument }) => {
+    if (root.dataset.theme) {
+      newDocument.documentElement.dataset.theme = root.dataset.theme;
     }
   });
 
+  // Once per page, since each navigation brings a new header.
+  document.addEventListener('astro:page-load', () => {
+    const button = document.querySelector<HTMLButtonElement>('.theme')!;
+
+    button.addEventListener('click', () => {
+      const theme = isDark() ? 'light' : 'dark';
+
+      try {
+        localStorage.setItem('theme', theme);
+      } catch {}
+
+      const apply = () => {
+        root.dataset.theme = theme;
+        sync();
+      };
+
+      // The page cross-fades between themes where it can, and snaps where it
+      // can't or motion's reduced.
+      if (document.startViewTransition && !reduceMotion.matches) {
+        document.startViewTransition(apply);
+      } else {
+        apply();
+      }
+    });
+
+    sync();
+    button.hidden = false;
+  });
+
   query.addEventListener('change', sync);
-  sync();
-  button.hidden = false;
 </script>
 
 <style>
