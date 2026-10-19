@@ -8278,6 +8278,295 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/splitter.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/splitter.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/splitter.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "Splitter",
+          "cssParts": [
+            {
+              "name": "container",
+              "description": "The panes and the separator"
+            },
+            {
+              "name": "primary",
+              "description": "The primary pane"
+            },
+            {
+              "name": "separator",
+              "description": "The separator between the panes"
+            },
+            {
+              "name": "secondary",
+              "description": "The secondary pane"
+            }
+          ],
+          "slots": [
+            {
+              "name": "primary",
+              "description": "",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "secondary",
+              "description": "",
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the separator. Name it after the primary pane, as the separator\nresizes it.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "100",
+              "description": "The most of the splitter the primary pane can take up, as a percentage.",
+              "attribute": "max",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The least of the splitter the primary pane can take up, as a percentage.\nEnter collapses the primary pane to it.",
+              "attribute": "min",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'vertical'",
+              "description": "The separator's. A vertical one sits between panes side by side, and a\nhorizontal one between panes stacked on top of each other.",
+              "attribute": "orientation",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "5",
+              "description": "How far each arrow key moves the separator, as a percentage.",
+              "attribute": "step",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "default": "50",
+              "description": "How much of the splitter the primary pane takes up, as a percentage. It's\nalways between `min` and `max`.",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the separator. Name it after the primary pane, as the separator\nresizes it.",
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "100",
+              "description": "The most of the splitter the primary pane can take up, as a percentage.",
+              "fieldName": "max"
+            },
+            {
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The least of the splitter the primary pane can take up, as a percentage.\nEnter collapses the primary pane to it.",
+              "fieldName": "min"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'vertical'",
+              "description": "The separator's. A vertical one sits between panes side by side, and a\nhorizontal one between panes stacked on top of each other.",
+              "fieldName": "orientation"
+            },
+            {
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "5",
+              "description": "How far each arrow key moves the separator, as a percentage.",
+              "fieldName": "step"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "default": "50",
+              "description": "How much of the splitter the primary pane takes up, as a percentage. It's\nalways between `min` and `max`.",
+              "fieldName": "value"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-splitter",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "Splitter",
+            "module": "src/splitter.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-splitter",
+          "declaration": {
+            "name": "Splitter",
+            "module": "src/splitter.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/switch.styles.ts",
       "declarations": [],
       "exports": [
