@@ -148,10 +148,19 @@ const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.
   const sync = () =>
     document.querySelector('.theme')?.setAttribute('aria-pressed', String(isDark()));
 
-  // A navigation swaps in the next page's root, which has no theme of its own.
+  // A navigation swaps in the next page's root, which has no theme of its own,
+  // and its toggle, which is hidden and unpressed. They're set before the swap,
+  // so the toggle neither blinks out nor turns its icons.
   document.addEventListener('astro:before-swap', ({ newDocument }) => {
     if (root.dataset.theme) {
       newDocument.documentElement.dataset.theme = root.dataset.theme;
+    }
+
+    const button = newDocument.querySelector<HTMLButtonElement>('.theme');
+
+    if (button) {
+      button.setAttribute('aria-pressed', String(isDark()));
+      button.hidden = false;
     }
   });
 
