@@ -264,6 +264,7 @@ export default class RangeSlider extends LitElement {
         @lostpointercapture=${this.#onLostPointerCapture}
         @pointerdown=${this.#onPointerDown}
         @pointermove=${this.#onPointerMove}
+        @touchstart=${this.#onTouchStart}
         ${ref(this.#trackElementRef)}
       >
         <!-- The thumbs and the range between them -->
@@ -503,11 +504,22 @@ export default class RangeSlider extends LitElement {
     this.#onKeydown(event, 'start');
   };
 
+  // Safari on iOS can still scroll the page while a thumb is dragged, despite
+  // `touch-action: none`. A touch whose "touchstart" is canceled never
+  // scrolls, and canceling it leaves pointer events alone, so the drag still
+  // works.
+  #onTouchStart = (event: TouchEvent) => {
+    if (!this.#isDisabled) {
+      event.preventDefault();
+    }
+  };
+
   #focusThumb(thumb?: Thumb) {
     const element =
       thumb === 'end' ? this.#endElementRef.value : this.#startElementRef.value;
 
-    element?.focus();
+    // Without scrolling, since the thumb is already where the pointer is.
+    element?.focus({ preventScroll: true });
   }
 
   // Moves a thumb, as far as the other thumb, and reports "input" if that

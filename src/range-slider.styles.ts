@@ -33,6 +33,12 @@ export default [
     [part~='end'] {
       inset-block-start: 50%;
       position: absolute;
+
+      /*
+        Set on the thumbs as well as the track because they hang over it, and
+        a touch on the overhang should drag them too.
+      */
+      touch-action: none;
       translate: -50% -50%;
     }
 

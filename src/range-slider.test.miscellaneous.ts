@@ -418,3 +418,38 @@ test(
     ).rejects.toThrow();
   },
 );
+
+// Safari on iOS can scroll the page while a thumb is dragged, despite
+// `touch-action: none`, unless "touchstart" is canceled. A plain event stands
+// in for a touch, since not every browser here has `TouchEvent`.
+test(
+  'cancels "touchstart" on its track so dragging does not scroll the page',
+  { tag: '@miscellaneous' },
+  async ({ renderTemplate, page, setProperty }) => {
+    await renderTemplate(
+      () => html`<slab-range-slider label="Label"></slab-range-slider>`,
+    );
+
+    const track = page.locator('[data-test="track"]');
+
+    const dispatchTouchStart = () => {
+      return track.evaluate((element) => {
+        const event = new Event('touchstart', {
+          bubbles: true,
+          cancelable: true,
+        });
+
+        element.dispatchEvent(event);
+
+        return event.defaultPrevented;
+      });
+    };
+
+    expect(await dispatchTouchStart()).toBe(true);
+
+    // Disabled, there's no drag to protect, so a touch scrolls as usual.
+    await setProperty(page.locator('slab-range-slider'), 'disabled', true);
+
+    expect(await dispatchTouchStart()).toBe(false);
+  },
+);
