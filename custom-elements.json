@@ -7368,6 +7368,461 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/range-slider.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/range-slider.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/range-slider.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "RangeSlider",
+          "cssParts": [
+            {
+              "name": "container",
+              "description": "The label, the track and the description"
+            },
+            {
+              "name": "label",
+              "description": "The label"
+            },
+            {
+              "name": "track",
+              "description": "The thumbs and the range between them"
+            },
+            {
+              "name": "range",
+              "description": "The part of the track between the thumbs"
+            },
+            {
+              "name": "start",
+              "description": "The start thumb"
+            },
+            {
+              "name": "end",
+              "description": "The end thumb"
+            },
+            {
+              "name": "description",
+              "description": "Text about the slider, such as a hint"
+            }
+          ],
+          "slots": [
+            {
+              "name": "description",
+              "description": "Text about the slider, such as a hint",
+              "type": {
+                "text": "Element | string"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the group. Each thumb is named by it and its own label.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "endLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the end thumb, after `label`. \"Maximum\" when unset.",
+              "attribute": "end-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "endValue",
+              "type": {
+                "text": "number"
+              },
+              "description": "Like a native input's `value`, the attribute is the default and the\nproperty is the current value. Between `start-value` and `max`, on a step.\n`max` when unset.",
+              "default": "undefined",
+              "attribute": "end-value"
+            },
+            {
+              "kind": "field",
+              "name": "hideLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hide-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "100",
+              "attribute": "max",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "min",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Submitted twice, with the start value and then the end value.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "startLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the start thumb, after `label`. \"Minimum\" when unset.",
+              "attribute": "start-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "startValue",
+              "type": {
+                "text": "number"
+              },
+              "description": "Like a native input's `value`, the attribute is the default and the\nproperty is the current value. Between `min` and `end-value`, on a step.\n`min` when unset.",
+              "default": "undefined",
+              "attribute": "start-value"
+            },
+            {
+              "kind": "field",
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "attribute": "step",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "HTMLFormElement | null"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isDisabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "string | File | FormData | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the group. Each thumb is named by it and its own label.",
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "end-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the end thumb, after `label`. \"Maximum\" when unset.",
+              "fieldName": "endLabel"
+            },
+            {
+              "name": "end-value",
+              "type": {
+                "text": "number"
+              },
+              "description": "Like a native input's `value`, the attribute is the default and the\nproperty is the current value. Between `start-value` and `max`, on a step.\n`max` when unset.",
+              "default": "undefined",
+              "fieldName": "endValue"
+            },
+            {
+              "name": "hide-label",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hideLabel"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "100",
+              "fieldName": "max"
+            },
+            {
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "min"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Submitted twice, with the start value and then the end value.",
+              "fieldName": "name"
+            },
+            {
+              "name": "start-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the start thumb, after `label`. \"Minimum\" when unset.",
+              "fieldName": "startLabel"
+            },
+            {
+              "name": "start-value",
+              "type": {
+                "text": "number"
+              },
+              "description": "Like a native input's `value`, the attribute is the default and the\nproperty is the current value. Between `min` and `end-value`, on a step.\n`min` when unset.",
+              "default": "undefined",
+              "fieldName": "startValue"
+            },
+            {
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "fieldName": "step"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-range-slider",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "RangeSlider",
+            "module": "src/range-slider.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-range-slider",
+          "declaration": {
+            "name": "RangeSlider",
+            "module": "src/range-slider.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/select.styles.ts",
       "declarations": [],
       "exports": [
