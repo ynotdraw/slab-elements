@@ -164,6 +164,7 @@ export default class Splitter extends LitElement {
         @lostpointercapture=${this.#onLostPointerCapture}
         @pointerdown=${this.#onPointerDown}
         @pointermove=${this.#onPointerMove}
+        @touchstart=${this.#onTouchStart}
         ${ref(this.#separatorElementRef)}
       >
         <!-- The separator between the panes -->
@@ -332,6 +333,16 @@ export default class Splitter extends LitElement {
     const isRtl = isVertical && this.#isRtl;
 
     this.#moveTo(this.#drag.value + (isRtl ? -percentage : percentage));
+  };
+
+  // Safari on iOS can still scroll the page while the separator is dragged,
+  // despite `touch-action: none`, and canceling "pointerdown" doesn't stop it.
+  // A touch whose "touchstart" is canceled never scrolls, and canceling it
+  // leaves pointer events alone, so the drag still works.
+  #onTouchStart = (event: TouchEvent) => {
+    if (!this.disabled) {
+      event.preventDefault();
+    }
   };
 
   #clamp(value: number) {

@@ -296,3 +296,42 @@ test(
     ).rejects.toThrow();
   },
 );
+
+// Safari on iOS can scroll the page while the separator is dragged, despite
+// `touch-action: none`, unless "touchstart" is canceled. A plain event stands
+// in for a touch, since not every browser here has `TouchEvent`.
+test(
+  'cancels "touchstart" on its separator so dragging does not scroll the page',
+  { tag: '@miscellaneous' },
+  async ({ renderTemplate, page, setProperty }) => {
+    await renderTemplate(
+      () =>
+        html`<slab-splitter label="Label">
+          <div slot="primary">Primary</div>
+          <div slot="secondary">Secondary</div>
+        </slab-splitter>`,
+    );
+
+    const separator = page.locator('[data-test="separator"]');
+
+    const dispatchTouchStart = () => {
+      return separator.evaluate((element) => {
+        const event = new Event('touchstart', {
+          bubbles: true,
+          cancelable: true,
+        });
+
+        element.dispatchEvent(event);
+
+        return event.defaultPrevented;
+      });
+    };
+
+    expect(await dispatchTouchStart()).toBe(true);
+
+    // Disabled, there's no drag to protect, so a touch scrolls as usual.
+    await setProperty(page.locator('slab-splitter'), 'disabled', true);
+
+    expect(await dispatchTouchStart()).toBe(false);
+  },
+);

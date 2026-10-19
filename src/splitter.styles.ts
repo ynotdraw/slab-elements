@@ -27,6 +27,7 @@ export default [
 
     /*
       So a touch on the separator drags it rather than scrolling the page.
+      Safari on iOS needs "touchstart" canceled as well, which Splitter does.
     */
     [part~='separator'] {
       touch-action: none;
