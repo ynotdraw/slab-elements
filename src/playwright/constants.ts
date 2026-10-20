@@ -1,6 +1,6 @@
 // The "_" prefix hides it from Annotations pane in Playwright's UI. It showing
 // up in a report is just a distraction.
-export const v8CoverageAttachmentName = '_v8-coverage.json';
+export const v8CoverageAnnotationType = '_v8-coverage';
 
 // Overridable so parallel checkouts, such as worktrees, can each test against
 // their own server. With `reuseExistingServer`, two checkouts on the same

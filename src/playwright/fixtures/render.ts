@@ -3,7 +3,7 @@ import { test } from '@playwright/test';
 import { type TemplateResult } from 'lit';
 import serialize from 'serialize-javascript';
 import customElements from '../../../custom-elements.json' with { type: 'json' };
-import { v8CoverageAttachmentName, viteUrl } from './../constants.js';
+import { v8CoverageAnnotationType, viteUrl } from './../constants.js';
 
 type Context<Type> = Type extends void ? void : Type;
 
@@ -220,14 +220,19 @@ export default test.extend<{
     await use(page);
 
     const v8Coverage = await page.coverage.stopJSCoverage();
-    const v8CoveragePath = testInfo.outputPath(v8CoverageAttachmentName);
+
+    const v8CoveragePath = testInfo.outputPath(
+      `${v8CoverageAnnotationType}.json`,
+    );
 
     await fs.writeFile(v8CoveragePath, JSON.stringify({ result: v8Coverage }));
 
-    testInfo.attachments.push({
-      name: v8CoverageAttachmentName,
-      contentType: 'application/json',
-      path: v8CoveragePath,
+    // An annotation rather than an attachment. The blob reporter copies every
+    // attachment into the test report, and each test's coverage is about a
+    // megabyte that nothing reads from there.
+    testInfo.annotations.push({
+      type: v8CoverageAnnotationType,
+      description: v8CoveragePath,
     });
   },
 });

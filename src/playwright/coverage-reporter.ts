@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { URL } from 'node:url';
 import type {
@@ -22,7 +22,7 @@ import {
 import v8ToIstanbul from 'v8-to-istanbul';
 import { type EncodedSourceMap } from '@jridgewell/trace-mapping';
 import { isMatch } from 'matcher';
-import { v8CoverageAttachmentName } from './constants.js';
+import { v8CoverageAnnotationType } from './constants.js';
 import playwrightConfiguration from './playwright.config.js';
 
 export interface CoverageReporterOptions {
@@ -68,9 +68,8 @@ export default class CoverageReporter implements Reporter {
     }
 
     this.#isSharded = configuration.shard !== null;
-    this.#sourceCode.clear();
-    this.#sourceMaps.clear();
-    this.#v8Coverage = { result: [] };
+    this.#coverageMap = istanbulLibCoverage.createCoverageMap({});
+    this.#pendingConversions = Promise.resolve();
   }
 
   async onEnd(result: FullResult) {
@@ -82,7 +81,9 @@ export default class CoverageReporter implements Reporter {
       return;
     }
 
-    const coverageMap = await this.#convertV8ToIstanbul();
+    await this.#pendingConversions;
+
+    const coverageMap = this.#coverageMap;
 
     const { outputDir } = playwrightConfiguration as FullConfig & {
       // `outputDir` is a valid configuration key. But it's not on the type because, in
@@ -168,15 +169,21 @@ export default class CoverageReporter implements Reporter {
       return;
     }
 
-    const coverageAttachment = result.attachments.find(
-      ({ name }) => name === v8CoverageAttachmentName,
-    );
+    const coveragePath = result.annotations.find(
+      ({ type }) => type === v8CoverageAnnotationType,
+    )?.description;
 
-    // `path` won't be defined in the case of a fatal error or if the browser against
+    // There won't be a path in the case of a fatal error or if the browser against
     // which the test ran isn't Chromium.
-    if (coverageAttachment?.path) {
+    if (coveragePath) {
       this.#wasCoverageCollected = true;
-      this.#addV8Coverage(coverageAttachment.path);
+
+      // Converted as each test ends, one at a time, rather than all at once in
+      // `onEnd()`. Most of the work then happens while other tests are still
+      // running instead of after the last one.
+      this.#pendingConversions = this.#pendingConversions.then(() => {
+        return this.#addV8Coverage(coveragePath);
+      });
     }
   }
 
@@ -184,77 +191,66 @@ export default class CoverageReporter implements Reporter {
     this.#options = options;
   }
 
+  #coverageMap = istanbulLibCoverage.createCoverageMap({});
+
   #isSharded = false;
 
   #options: CoverageReporterOptions;
 
-  #sourceCode = new Map<string, string>();
-
-  #sourceMaps = new Map<string, EncodedSourceMap>();
-
-  #v8Coverage: V8Coverage = { result: [] };
+  #pendingConversions = Promise.resolve();
 
   #wasCoverageCollected = false;
 
-  #addV8Coverage(path: string) {
+  async #addV8Coverage(coveragePath: string) {
     let v8Coverage: V8Coverage;
 
     try {
-      const json = readFileSync(path, 'utf8');
+      const json = await readFile(coveragePath, 'utf8');
       v8Coverage = JSON.parse(json) as V8Coverage;
     } catch {
-      throw new Error(`Failed to read or parse the coverage file at: ${path}.`);
+      throw new Error(
+        `Failed to read or parse the coverage file at: ${coveragePath}.`,
+      );
     }
 
     for (const script of v8Coverage.result) {
-      const sourceMap = convertSourceMap.fromSource(script.source);
-
-      if (sourceMap !== null) {
-        this.#sourceMaps.set(
-          script.url,
-          sourceMap.sourcemap as EncodedSourceMap,
-        );
-
-        this.#sourceCode.set(script.url, script.source);
-      }
-    }
-
-    this.#v8Coverage = {
-      result: [...this.#v8Coverage.result, ...v8Coverage.result],
-    };
-  }
-
-  async #convertV8ToIstanbul() {
-    const coverageMap = istanbulLibCoverage.createCoverageMap({});
-
-    for (const script of this.#v8Coverage.result) {
-      const sourceCode = this.#sourceCode.get(script.url);
-      const sourceMap = this.#sourceMaps.get(script.url);
       const { pathname } = new URL(script.url);
 
-      if (sourceCode && sourceMap) {
-        const convertor = v8ToIstanbul(
-          path.join(path.join(process.cwd(), pathname)),
-          0,
-          {
-            source: sourceCode,
-            sourceMap: { sourcemap: sourceMap },
-          },
-          (filename) => {
-            return !isMatch(
-              path.relative(process.cwd(), filename),
-              this.#options.include,
-            );
-          },
-        );
-
-        await convertor.load();
-
-        convertor.applyCoverage(script.functions);
-        coverageMap.merge(convertor.toIstanbul());
+      // Vite serves each file at its own path. So a script outside of `include`, like
+      // Lit or a stylesheet, can be skipped before the comparatively slow work below.
+      if (!this.#isIncluded(path.join(process.cwd(), pathname))) {
+        continue;
       }
-    }
 
-    return coverageMap;
+      const sourceMap = convertSourceMap.fromSource(script.source);
+
+      if (sourceMap === null) {
+        continue;
+      }
+
+      const convertor = v8ToIstanbul(
+        path.join(process.cwd(), pathname),
+        0,
+        {
+          source: script.source,
+          sourceMap: { sourcemap: sourceMap.sourcemap as EncodedSourceMap },
+        },
+        (filename) => {
+          return !this.#isIncluded(filename);
+        },
+      );
+
+      await convertor.load();
+
+      convertor.applyCoverage(script.functions);
+      this.#coverageMap.merge(convertor.toIstanbul());
+    }
+  }
+
+  #isIncluded(filename: string) {
+    return isMatch(
+      path.relative(process.cwd(), filename),
+      this.#options.include,
+    );
   }
 }

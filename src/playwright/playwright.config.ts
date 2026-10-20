@@ -114,9 +114,15 @@ export default defineConfig({
       } satisfies CoverageReporterOptions,
     ],
   ],
+  // Recording a trace for every test slows the suite by about a fifth, and in
+  // CI nearly every trace is thrown away. So CI retries a failed test once with
+  // a trace instead. `failOnFlakyTests` keeps a test that only passes on retry
+  // from passing the run.
+  failOnFlakyTests: Boolean(process.env.CI),
+  retries: process.env.CI ? 1 : 0,
   use: {
     testIdAttribute: 'data-test',
-    trace: 'retain-on-failure',
+    trace: process.env.CI ? 'on-first-retry' : 'retain-on-failure',
   },
   webServer: process.env.PLAYWRIGHT_NO_WEBSERVER
     ? undefined

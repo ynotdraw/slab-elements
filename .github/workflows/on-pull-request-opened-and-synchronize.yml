@@ -17,19 +17,12 @@ defaults:
   run:
     shell: bash -eu -o pipefail {0}
 
+# Every job installs dependencies itself, from the cached PNPM store. So none
+# waits on a separate install job first.
 jobs:
-  install-dependencies:
-    name: Install
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/pnpm
-
   format:
     name: Format
     runs-on: ubuntu-latest
-    needs:
-      - install-dependencies
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/pnpm
@@ -40,8 +33,6 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
-    needs:
-      - install-dependencies
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/pnpm
@@ -55,8 +46,6 @@ jobs:
   typecheck:
     name: Typecheck
     runs-on: ubuntu-latest
-    needs:
-      - install-dependencies
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/pnpm
@@ -67,8 +56,6 @@ jobs:
   test-lint-rules:
     name: Test (Lint Rules)
     runs-on: ubuntu-latest
-    needs:
-      - install-dependencies
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/pnpm
@@ -80,8 +67,6 @@ jobs:
   test-functionality:
     name: Test (Functionality)
     runs-on: ubuntu-latest
-    needs:
-      - install-dependencies
     outputs:
       failed: ${{ steps.get-test-job-outcome.outputs.failed }}
     strategy:
