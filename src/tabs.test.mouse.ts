@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'selects a Tab when it is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one">One</slab-tabs-tab>
@@ -35,8 +35,8 @@ test(
 test(
   'does not select a disabled Tab when it is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one">One</slab-tabs-tab>

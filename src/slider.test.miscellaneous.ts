@@ -2,23 +2,19 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-slider label="Label"></slab-slider>`);
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-slider label="Label"></slab-slider>`);
 
-    await expect(page.locator('slab-slider')).toBeInTheCustomElementRegistry(
-      'slab-slider',
-    );
-  },
-);
+  await expect(page.locator('slab-slider')).toBeInTheCustomElementRegistry(
+    'slab-slider',
+  );
+});
 
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-slider label="Label"></slab-slider>`);
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-slider label="Label"></slab-slider>`);
 
     await callMethod(page.locator('slab-slider'), 'focus');
 
@@ -29,8 +25,8 @@ test(
 test(
   'takes its value from the attribute and keeps the attribute as stepped',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-slider label="Label" value="25"></slab-slider>`,
     );
 
@@ -50,8 +46,8 @@ test(
 test(
   'passes `min`, `max` and `step` to its input',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-slider
           label="Label"
@@ -72,8 +68,8 @@ test(
 test(
   "falls back to the input's default `step` when the attribute is removed",
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-slider label="Label" step="2"></slab-slider>`,
     );
 
@@ -90,8 +86,8 @@ test(
 test(
   'hides its label visually when `hide-label` is set',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-slider label="Label" hide-label></slab-slider>`,
     );
 
@@ -108,8 +104,8 @@ test(
 test(
   'sets a custom state for each of its states',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`<slab-slider label="Label" disabled></slab-slider>`,
     );
 
@@ -159,9 +155,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-slider></slab-slider>`),
+      render(() => html`<slab-slider></slab-slider>`),
     ).rejects.toThrow();
   },
 );
@@ -169,8 +165,8 @@ test(
 test(
   'can be clicked programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-slider label="Label"></slab-slider>`);
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-slider label="Label"></slab-slider>`);
 
     const host = page.locator('slab-slider');
 

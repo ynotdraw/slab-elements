@@ -3,35 +3,31 @@ import { expect, test } from './playwright/test.js';
 import type Form from './form.js';
 import type Select from './select.js';
 
-test(
-  'has a `form` property',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <form>
-          <slab-select label="Label">
-            <slab-option>One</slab-option>
-          </slab-select>
-        </form>
-      `,
-    );
+test('has a `form` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <form>
+        <slab-select label="Label">
+          <slab-option>One</slab-option>
+        </slab-select>
+      </form>
+    `,
+  );
 
-    const host = page.locator('slab-select');
+  const host = page.locator('slab-select');
 
-    const hasForm = await host.evaluate((element) => {
-      return 'form' in element && element.form instanceof HTMLFormElement;
-    });
+  const hasForm = await host.evaluate((element) => {
+    return 'form' in element && element.form instanceof HTMLFormElement;
+  });
 
-    expect(hasForm).toBe(true);
-  },
-);
+  expect(hasForm).toBe(true);
+});
 
 test(
   'can be reset',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label">
@@ -57,8 +53,8 @@ test(
 test(
   'can be reset to its initial value',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" value="two">
@@ -81,8 +77,8 @@ test(
 test(
   'keeps the last selected option on reset when not multiple',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" multiple>
@@ -107,8 +103,8 @@ test(
 test(
   'has form data when an option is selected',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" name="name">
@@ -126,8 +122,8 @@ test(
 test(
   'has one form data entry per selected option when multiple',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" name="name" multiple>
@@ -146,8 +142,8 @@ test(
 test(
   'has no form data when no option is selected',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" name="name">
@@ -164,8 +160,8 @@ test(
 test(
   'has no form data when its selected option is disabled',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" name="name">
@@ -182,8 +178,8 @@ test(
 test(
   'has no form data when disabled',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" name="name" disabled>
@@ -205,8 +201,8 @@ test(
 test(
   'has no form data when its fieldset is disabled',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <fieldset disabled>
@@ -235,8 +231,8 @@ test(
 test(
   'has no form data when it has no name',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label">
@@ -253,8 +249,8 @@ test(
 test(
   'has no form data when its selected option has an empty value',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" name="name">
@@ -271,8 +267,8 @@ test(
 test(
   'updates its form data when its name is changed',
   { tag: '@forms' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" name="one">
@@ -289,57 +285,53 @@ test(
   },
 );
 
-test(
-  'restores its state',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <form>
-          <slab-select label="Label" name="name" multiple>
-            <slab-option value="one">One</slab-option>
-            <slab-option value="two">Two</slab-option>
-            <slab-option value="three">Three</slab-option>
-          </slab-select>
-        </form>
-      `,
-    );
+test('restores its state', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <form>
+        <slab-select label="Label" name="name" multiple>
+          <slab-option value="one">One</slab-option>
+          <slab-option value="two">Two</slab-option>
+          <slab-option value="three">Three</slab-option>
+        </slab-select>
+      </form>
+    `,
+  );
 
-    const host = page.locator('slab-select');
+  const host = page.locator('slab-select');
 
-    // Browsers call this when restoring a page from history or autofilling.
-    // Neither is practical in a test.
-    await host.evaluate<void, void, Select>((element) => {
-      element.formStateRestoreCallback('two');
-    });
+  // Browsers call this when restoring a page from history or autofilling.
+  // Neither is practical in a test.
+  await host.evaluate<void, void, Select>((element) => {
+    element.formStateRestoreCallback('two');
+  });
 
-    await expect(host).toHaveJSProperty('values', ['two']);
+  await expect(host).toHaveJSProperty('values', ['two']);
 
-    await host.evaluate<void, void, Select>((element) => {
-      const data = new FormData();
+  await host.evaluate<void, void, Select>((element) => {
+    const data = new FormData();
 
-      data.append('name', 'one');
-      data.append('name', 'three');
-      data.append('name', new File([], 'file'));
+    data.append('name', 'one');
+    data.append('name', 'three');
+    data.append('name', new File([], 'file'));
 
-      element.formStateRestoreCallback(data);
-    });
+    element.formStateRestoreCallback(data);
+  });
 
-    await expect(host).toHaveJSProperty('values', ['one', 'three']);
+  await expect(host).toHaveJSProperty('values', ['one', 'three']);
 
-    await host.evaluate<void, void, Select>((element) => {
-      element.formStateRestoreCallback(null);
-    });
+  await host.evaluate<void, void, Select>((element) => {
+    element.formStateRestoreCallback(null);
+  });
 
-    await expect(host).toHaveJSProperty('values', []);
-  },
-);
+  await expect(host).toHaveJSProperty('values', []);
+});
 
 test(
   'is valid when required and an option is selected',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" required>
@@ -367,8 +359,8 @@ test(
 test(
   'is valid when not required and no option is selected',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label">
@@ -388,8 +380,8 @@ test(
 test(
   'is valid when required and made not required programmatically',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page, removeAttribute }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, removeAttribute }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" required>
@@ -412,8 +404,8 @@ test(
 test(
   'is invalid when required and no option is selected',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" required>
@@ -446,8 +438,8 @@ test(
 test(
   'is invalid when required and its only selected option is disabled programmatically',
   { tag: '@forms' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" required>
@@ -468,8 +460,8 @@ test(
 test(
   'is invalid when required and its only selected option is removed',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" required>
@@ -496,8 +488,8 @@ test(
 test(
   'is valid when required and an option is selected via keyboard',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" required>
@@ -520,8 +512,8 @@ test(
 test(
   'is invalid on submit when required and no option is selected',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" required>
@@ -548,8 +540,8 @@ test(
 test(
   'does not take focus on submit when another control is the first invalid one',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" required>
@@ -574,8 +566,8 @@ test(
 test(
   'is both valid and invalid when required but disabled',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" disabled required>
@@ -598,8 +590,8 @@ test(
 test(
   'reports its validity when blurred',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" required>
@@ -631,8 +623,8 @@ test(
 test(
   'supports `setCustomValidity()`',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" required>
@@ -669,8 +661,8 @@ test(
 test(
   'shows a custom validity message as text, not HTML',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" required>
@@ -694,8 +686,8 @@ test(
 test(
   'supports `setValidity()`',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" required>
@@ -730,8 +722,8 @@ test(
 test(
   'supports `resetValidityFeedback()`',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-select label="Label" required>
@@ -755,8 +747,8 @@ test(
 test(
   "doesn't report its validity when its Form's is only checked",
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-select label="Label" required>
@@ -806,8 +798,8 @@ test(
 test(
   'is enabled again when its fieldset is',
   { tag: '@forms' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <fieldset disabled>
@@ -838,8 +830,8 @@ test(
 test(
   'closes when its fieldset is disabled',
   { tag: '@forms' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <fieldset>

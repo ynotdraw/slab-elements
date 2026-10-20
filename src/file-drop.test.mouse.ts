@@ -54,10 +54,8 @@ function isDragOver(element: HTMLElement) {
 test(
   'focuses its input when its label is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-file-drop label="Label"></slab-file-drop>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-file-drop label="Label"></slab-file-drop>`);
 
     await page.locator('[part~="label"]').click();
 
@@ -68,8 +66,8 @@ test(
 test(
   'takes dropped files into its input',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-file-drop label="Label" name="name" multiple>
           <div slot="description">Description</div>
@@ -106,10 +104,8 @@ test(
 test(
   'ignores a drop of several files without `multiple`',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-file-drop label="Label"></slab-file-drop>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-file-drop label="Label"></slab-file-drop>`);
 
     const host = page.locator('slab-file-drop');
 
@@ -133,8 +129,8 @@ test(
 test(
   'leaves out dropped files that do not match `accept`',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-file-drop
           label="Label"
@@ -162,8 +158,8 @@ test(
 test(
   'ignores a drop when none of its files match `accept`',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-file-drop label="Label" accept="image/*"></slab-file-drop>`,
     );
@@ -203,8 +199,8 @@ test(
 test(
   'replaces its files on a second drop',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-file-drop label="Label" multiple></slab-file-drop>`,
     );
 
@@ -228,10 +224,8 @@ test(
 test(
   'ignores a drop with no files',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-file-drop label="Label"></slab-file-drop>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-file-drop label="Label"></slab-file-drop>`);
 
     const host = page.locator('slab-file-drop');
 
@@ -263,8 +257,8 @@ test(
 test(
   'ignores a drop when disabled but still cancels it',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-file-drop label="Label" disabled></slab-file-drop>`,
     );
 
@@ -294,8 +288,8 @@ test(
 test(
   'sets `:state(drag-over)` while something is dragged over it',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-file-drop label="Label">
           <div slot="description">Description</div>

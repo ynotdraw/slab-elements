@@ -1,37 +1,33 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 
-test(
-  'closes on Escape',
-  { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-dialog label="Label" open>
-          <button>Button</button>
-        </slab-dialog>`,
-    );
+test('closes on Escape', { tag: '@keyboard' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-dialog label="Label" open>
+        <button>Button</button>
+      </slab-dialog>`,
+  );
 
-    const host = page.locator('slab-dialog');
+  const host = page.locator('slab-dialog');
 
-    await expect(host).toDispatchEvents(async () => {
-      await page.keyboard.press('Escape');
-    }, [
-      { type: 'cancel', bubbles: false, cancelable: true, composed: false },
-      { type: 'close', bubbles: false, cancelable: false, composed: false },
-    ]);
+  await expect(host).toDispatchEvents(async () => {
+    await page.keyboard.press('Escape');
+  }, [
+    { type: 'cancel', bubbles: false, cancelable: true, composed: false },
+    { type: 'close', bubbles: false, cancelable: false, composed: false },
+  ]);
 
-    await expect(page.getByTestId('dialog')).toBeHidden();
-    await expect(host).toHaveJSProperty('open', false);
-    await expect(host).not.toHaveAttribute('open');
-  },
-);
+  await expect(page.getByTestId('dialog')).toBeHidden();
+  await expect(host).toHaveJSProperty('open', false);
+  await expect(host).not.toHaveAttribute('open');
+});
 
 test(
   'stays open on Escape when "cancel" is canceled',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-dialog label="Label" open>
           <button>Button</button>
@@ -56,8 +52,8 @@ test(
 test(
   'focuses the first focusable element in it when opened',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<button>Outside</button>
 
@@ -73,8 +69,8 @@ test(
 test(
   'focuses the autofocused element in it when opened',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-dialog label="Label">
           <button>One</button>
@@ -98,8 +94,8 @@ test(
 test(
   'passes over content that doesn’t take focus when opened',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-dialog label="Label" open>
           <p>One</p>
@@ -114,8 +110,8 @@ test(
 test(
   'closes through a `<form method="dialog">` with its submitter’s value',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-dialog label="Label" open>
           <form method="dialog">

@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'moves its separator via ArrowLeft and ArrowRight by `step`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-splitter label="Label" step="10">
           <div slot="primary">Primary</div>
@@ -44,8 +44,8 @@ test(
 test(
   'moves its separator via ArrowUp and ArrowDown when `orientation` is "horizontal"',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-splitter label="Label" orientation="horizontal">
           <div slot="primary">Primary</div>
@@ -74,8 +74,8 @@ test(
 test(
   'moves its separator the way the arrow points when right-to-left',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-splitter dir="rtl" label="Label">
           <div slot="primary">Primary</div>
@@ -100,8 +100,8 @@ test(
 test(
   'moves its separator to `min` and `max` via Home and End, and no further',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-splitter label="Label" min="20" max="80">
           <div slot="primary">Primary</div>
@@ -130,8 +130,8 @@ test(
 test(
   'does not dispatch "input" and "change" events when its separator is already where a key would move it',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-splitter label="Label" value="100">
           <div slot="primary">Primary</div>
@@ -158,8 +158,8 @@ test(
 test(
   'collapses its primary pane via Enter, and restores it',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-splitter label="Label" min="10" value="35">
           <div slot="primary">Primary</div>
@@ -189,8 +189,8 @@ test(
 test(
   'restores its primary pane halfway via Enter when it starts out collapsed',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-splitter label="Label" min="20" value="20">
           <div slot="primary">Primary</div>
@@ -205,30 +205,26 @@ test(
   },
 );
 
-test(
-  'ignores other keys',
-  { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-splitter label="Label">
-          <div slot="primary">Primary</div>
-          <div slot="secondary">Secondary</div>
-        </slab-splitter>`,
-    );
+test('ignores other keys', { tag: '@keyboard' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-splitter label="Label">
+        <div slot="primary">Primary</div>
+        <div slot="secondary">Secondary</div>
+      </slab-splitter>`,
+  );
 
-    await page.getByRole('separator').focus();
-    await page.keyboard.press('a');
+  await page.getByRole('separator').focus();
+  await page.keyboard.press('a');
 
-    await expect(page.locator('slab-splitter')).toHaveJSProperty('value', 50);
-  },
-);
+  await expect(page.locator('slab-splitter')).toHaveJSProperty('value', 50);
+});
 
 test(
   'cannot be moved when disabled',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-splitter label="Label" disabled>
           <div slot="primary">Primary</div>

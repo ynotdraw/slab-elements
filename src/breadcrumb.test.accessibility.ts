@@ -1,27 +1,33 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 
+test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <slab-breadcrumb>
+        <a href="#">One</a>
+        <a href="#">Two</a>
+      </slab-breadcrumb>
+    `,
+  );
+
+  await expect(page).toBeAccessible('slab-breadcrumb');
+});
+
 test(
-  'is accessible',
+  'has a navigation',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <slab-breadcrumb>
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-breadcrumb>
           <a href="#">One</a>
           <a href="#">Two</a>
-        </slab-breadcrumb>
-      `,
+          <a href="#">Three</a>
+        </slab-breadcrumb>`,
     );
 
-    await expect(page).toBeAccessible('slab-breadcrumb');
-  },
-);
-
-test('has a navigation', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=breadcrumb--breadcrumb');
-
-  await expect(page.locator('slab-breadcrumb')).toMatchAriaSnapshot(`
+    await expect(page.locator('slab-breadcrumb')).toMatchAriaSnapshot(`
     - navigation "Breadcrumb":
       - list:
         - listitem:
@@ -34,10 +40,18 @@ test('has a navigation', { tag: '@accessibility' }, async ({ page }) => {
           - link "Three":
             - /url: "#"
   `);
-});
+  },
+);
 
-test('label', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=breadcrumb--breadcrumb&args=label:Label');
+test('label', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-breadcrumb label="Label">
+        <a href="#">One</a>
+        <a href="#">Two</a>
+        <a href="#">Three</a>
+      </slab-breadcrumb>`,
+  );
 
   await expect(page.locator('slab-breadcrumb')).toMatchAriaSnapshot(`
     - navigation "Label"

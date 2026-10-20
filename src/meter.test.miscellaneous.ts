@@ -10,23 +10,19 @@ const getRegion = (locator: import('@playwright/test').Locator) => {
   });
 };
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-meter label="Label"></slab-meter>`);
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-meter label="Label"></slab-meter>`);
 
-    await expect(page.locator('slab-meter')).toBeInTheCustomElementRegistry(
-      'slab-meter',
-    );
-  },
-);
+  await expect(page.locator('slab-meter')).toBeInTheCustomElementRegistry(
+    'slab-meter',
+  );
+});
 
 test(
   'passes its values through to the meter',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-meter
           label="Label"
@@ -53,8 +49,8 @@ test(
 test(
   'goes back to the meter’s defaults when its attributes are removed',
   { tag: '@miscellaneous' },
-  async ({ removeAttribute, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ removeAttribute, render, page }) => {
+    await render(
       () =>
         html`<slab-meter
           label="Label"
@@ -85,8 +81,8 @@ test(
 test(
   'sets the state of the region its value is in when the optimum is in the middle',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-meter label="Label" low="0.25" high="0.75"></slab-meter>`,
     );
@@ -107,8 +103,8 @@ test(
 test(
   'sets the state of the region its value is in when low values are best',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-meter
           label="Label"
@@ -133,8 +129,8 @@ test(
 test(
   'sets the state of the region its value is in when high values are best',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-meter
           label="Label"
@@ -183,9 +179,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-meter></slab-meter>`),
+      render(() => html`<slab-meter></slab-meter>`),
     ).rejects.toThrow();
   },
 );

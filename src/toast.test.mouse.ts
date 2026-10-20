@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'pauses its countdown while the pointer is over it',
   { tag: '@mouse' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-toast duration="300">
           <button type="button">Changes saved</button>
@@ -34,8 +34,8 @@ test(
 test(
   'keeps its countdown paused while focus is in it after the pointer leaves',
   { tag: '@mouse' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-toast duration="300">
           Changes saved

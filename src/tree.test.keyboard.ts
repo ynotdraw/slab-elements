@@ -17,8 +17,8 @@ const getItem = (page: import('@playwright/test').Page, label: string) => {
 test(
   'makes the first Tree Item active on focus',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
           <slab-tree-item>
@@ -41,8 +41,8 @@ test(
 test(
   'makes the selected Tree Item active on focus',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
           <slab-tree-item>One</slab-tree-item>
@@ -64,8 +64,8 @@ test(
 test(
   'makes the first Tree Item active on focus when the selected one is hidden',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
           <slab-tree-item>
@@ -84,8 +84,8 @@ test(
 test(
   'expands, collapses and moves via ArrowRight and ArrowLeft',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
           <slab-tree-item>
@@ -130,8 +130,8 @@ test(
 test(
   'moves via ArrowDown, ArrowUp, Home and End through the Tree Items that can be seen',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
           <slab-tree-item>
@@ -170,8 +170,8 @@ test(
 test(
   'moves to the parent when it collapses with a child active',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
           <slab-tree-item>
@@ -197,8 +197,8 @@ test(
 test(
   'moves to a Tree Item via typeahead',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
           <slab-tree-item>
@@ -221,8 +221,8 @@ test(
 test(
   'selects the active Tree Item via Enter and Space',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
           <slab-tree-item>
@@ -268,8 +268,8 @@ test(
 test(
   'leaves modified keys alone',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
           <slab-tree-item>
@@ -293,8 +293,8 @@ test(
 test(
   'stays put via ArrowRight on an expanded Tree Item whose children are disabled',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
           <slab-tree-item expanded>
@@ -314,8 +314,8 @@ test(
 test(
   'expands every Tree Item with children at the active one’s level via *',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
           <slab-tree-item>
@@ -367,8 +367,8 @@ test(
 test(
   'toggles via Enter and Space when `multiple`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label" multiple>
           <slab-tree-item>One</slab-tree-item>
@@ -399,8 +399,8 @@ test(
 test(
   'moves and toggles via Shift+ArrowDown and Shift+ArrowUp when `multiple`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label" multiple>
           <slab-tree-item>One</slab-tree-item>
@@ -429,8 +429,8 @@ test(
 test(
   'selects from the last selected Tree Item to the active one via Shift+Space when `multiple`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label" multiple>
           <slab-tree-item>One</slab-tree-item>
@@ -467,8 +467,8 @@ test(
 test(
   'selects from the active Tree Item to the first or last via Control+Shift+Home and Control+Shift+End when `multiple`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label" multiple>
           <slab-tree-item>One</slab-tree-item>
@@ -503,8 +503,8 @@ test(
 test(
   'selects every enabled Tree Item, or none, via Control+A when `multiple`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label" multiple>
           <slab-tree-item>
@@ -537,8 +537,8 @@ test(
 test(
   'leaves the multiple-selection keys alone when not `multiple`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
           <slab-tree-item>One</slab-tree-item>
@@ -561,8 +561,8 @@ test(
 test(
   'leaves other Control keys alone when `multiple`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label" multiple>
           <slab-tree-item>One</slab-tree-item>
@@ -583,8 +583,8 @@ test(
 test(
   'does nothing via its keys when no Tree Item can be active',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label" multiple>
           <slab-tree-item disabled>
@@ -614,8 +614,8 @@ test(
 test(
   'selects the active Tree Item via Shift+Space when none has been selected',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label" multiple>
           <slab-tree-item>One</slab-tree-item>
@@ -635,8 +635,8 @@ test(
 test(
   'selects only the active Tree Item via Shift+Space when the last selected one is hidden',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label" multiple>
           <slab-tree-item expanded>

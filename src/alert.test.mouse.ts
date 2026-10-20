@@ -4,10 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'is hidden when its dismiss button is clicked via mouse',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-alert dismissible>Message</slab-alert>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-alert dismissible>Message</slab-alert>`);
 
     const host = page.locator('slab-alert');
 
@@ -31,10 +29,8 @@ test(
 test(
   'remains visible when its "dismiss" event is canceled',
   { tag: '@mouse' },
-  async ({ addEventListener, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-alert dismissible>Message</slab-alert>`,
-    );
+  async ({ addEventListener, render, page }) => {
+    await render(() => html`<slab-alert dismissible>Message</slab-alert>`);
 
     const host = page.locator('slab-alert');
 
@@ -53,8 +49,8 @@ test(
 test(
   'returns focus to the element focused before its dismiss button is clicked',
   { tag: '@mouse' },
-  async ({ browserName, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ browserName, render, page }) => {
+    await render(
       () =>
         html`<button>Before</button>
           <slab-alert dismissible>Message</slab-alert>`,
@@ -84,10 +80,8 @@ test(
 test(
   'leaves focus alone when its dismiss button is clicked with nothing focused before',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-alert dismissible>Message</slab-alert>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-alert dismissible>Message</slab-alert>`);
 
     await page.getByRole('button', { name: 'Dismiss' }).click();
 

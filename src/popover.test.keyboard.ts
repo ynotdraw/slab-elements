@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'opens when its anchor is clicked via Enter',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-popover>
           <button slot="anchor">Anchor</button>
@@ -23,8 +23,8 @@ test(
 test(
   'closes on Escape and gives focus back to its anchor',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-popover>
           <button slot="anchor">Anchor</button>

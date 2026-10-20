@@ -8,8 +8,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'moves the nearer thumb to where its track is pressed',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-range-slider {
@@ -77,8 +77,8 @@ test(
 test(
   'moves a thumb when it is dragged',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-range-slider {
@@ -127,8 +127,8 @@ test(
 test(
   'carries on dragging the thumb its track brought to the pointer',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-range-slider {
@@ -172,8 +172,8 @@ test(
 test(
   'does not drag a thumb past the other',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-range-slider {
@@ -224,8 +224,8 @@ test(
 test(
   'drags either thumb out from under the other',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-range-slider {
@@ -299,8 +299,8 @@ test(
 test(
   'does not dispatch "change" when a thumb is pressed and released without moving',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-range-slider {
@@ -345,8 +345,8 @@ test(
 test(
   'sets `:state(dragging)` while a thumb is dragged',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-range-slider {
@@ -401,8 +401,8 @@ test(
 test(
   'drags the other way when right-to-left',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-range-slider {
@@ -456,8 +456,8 @@ test(
 test(
   'cannot be dragged or pressed when disabled',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-range-slider {
@@ -506,8 +506,8 @@ test(
 test(
   'ignores buttons other than the primary one',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-range-slider {

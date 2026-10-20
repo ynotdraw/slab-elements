@@ -2,23 +2,19 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type Dialog from './dialog.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-dialog label="Label"></slab-dialog>`);
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-dialog label="Label"></slab-dialog>`);
 
-    await expect(page.locator('slab-dialog')).toBeInTheCustomElementRegistry(
-      'slab-dialog',
-    );
-  },
-);
+  await expect(page.locator('slab-dialog')).toBeInTheCustomElementRegistry(
+    'slab-dialog',
+  );
+});
 
 test(
   'opens as a modal when `open` is set',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-dialog label="Label" open>Content</slab-dialog>`,
     );
 
@@ -31,10 +27,8 @@ test(
 test(
   'is closed by default',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-dialog label="Label">Content</slab-dialog>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-dialog label="Label">Content</slab-dialog>`);
 
     await expect(page.getByTestId('dialog')).toBeHidden();
   },
@@ -43,10 +37,8 @@ test(
 test(
   'opens when `show()` is called and closes when `open` is unset',
   { tag: '@miscellaneous' },
-  async ({ callMethod, setProperty, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-dialog label="Label">Content</slab-dialog>`,
-    );
+  async ({ callMethod, setProperty, render, page }) => {
+    await render(() => html`<slab-dialog label="Label">Content</slab-dialog>`);
 
     const host = page.locator('slab-dialog');
 
@@ -66,8 +58,8 @@ test(
 test(
   'closes with a return value when `close()` is called',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-dialog label="Label" open>Content</slab-dialog>`,
     );
 
@@ -87,10 +79,8 @@ test(
 test(
   'can have its `returnValue` set',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-dialog label="Label">Content</slab-dialog>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-dialog label="Label">Content</slab-dialog>`);
 
     const host = page.locator('slab-dialog');
 
@@ -112,9 +102,9 @@ test(
 test(
   'keeps a `returnValue` set before it rendered',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
+  async ({ render, page }) => {
     // Rendered only so the element is defined.
-    await renderTemplate(() => html`<slab-dialog label="Label"></slab-dialog>`);
+    await render(() => html`<slab-dialog label="Label"></slab-dialog>`);
 
     const returnValues = await page.evaluate(async () => {
       const dialog = document.createElement('slab-dialog');
@@ -136,8 +126,8 @@ test(
 test(
   'passes `closedby` to its dialog',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-dialog closedby="any" label="Label"></slab-dialog>`,
     );
 
@@ -148,8 +138,8 @@ test(
 test(
   'hides its label visually when `hide-label` is set',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-dialog label="Label" hide-label open></slab-dialog>`,
     );
 

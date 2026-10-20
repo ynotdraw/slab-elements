@@ -3,27 +3,19 @@ import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 import type TimeField from './time-field.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-time-field label="Label"></slab-time-field>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-time-field label="Label"></slab-time-field>`);
 
-    await expect(
-      page.locator('slab-time-field'),
-    ).toBeInTheCustomElementRegistry('slab-time-field');
-  },
-);
+  await expect(page.locator('slab-time-field')).toBeInTheCustomElementRegistry(
+    'slab-time-field',
+  );
+});
 
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-time-field label="Label"></slab-time-field>`,
-    );
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-time-field label="Label"></slab-time-field>`);
 
     await callMethod(page.locator('slab-time-field'), 'focus');
 
@@ -34,8 +26,8 @@ test(
 test(
   'takes its value from the attribute and keeps the attribute as edited',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-time-field label="Label" value="09:30"></slab-time-field>`,
     );
@@ -56,8 +48,8 @@ test(
 test(
   'passes `min`, `max` and `step` to its input',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-time-field
           label="Label"
@@ -79,10 +71,8 @@ test(
 test(
   'takes a value set programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
-      () => html`<slab-time-field label="Label"></slab-time-field>`,
-    );
+  async ({ render, page, setProperty }) => {
+    await render(() => html`<slab-time-field label="Label"></slab-time-field>`);
 
     await setProperty(page.locator('slab-time-field'), 'value', '09:30');
 
@@ -93,8 +83,8 @@ test(
 test(
   'hides its label visually when `hide-label` is set',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-time-field label="Label" hide-label></slab-time-field>`,
     );
 
@@ -111,8 +101,8 @@ test(
 test(
   'sets a custom state for each of its states',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-time-field
           label="Label"
@@ -177,9 +167,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-time-field></slab-time-field>`),
+      render(() => html`<slab-time-field></slab-time-field>`),
     ).rejects.toThrow();
   },
 );
@@ -187,10 +177,8 @@ test(
 test(
   'can be clicked programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-time-field label="Label"></slab-time-field>`,
-    );
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-time-field label="Label"></slab-time-field>`);
 
     const host = page.locator('slab-time-field');
 
@@ -206,10 +194,8 @@ test(
 test(
   'takes "any" as a `step`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-time-field label="Label"></slab-time-field>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-time-field label="Label"></slab-time-field>`);
 
     // `step` is a string so that "any" is one of its values.
     await page
@@ -228,8 +214,8 @@ test(
 test(
   'reads `valueAsDate` from its value',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, setProperty, page }) => {
-    await renderTemplate(
+  async ({ render, setProperty, page }) => {
+    await render(
       () =>
         html`<slab-time-field label="Label" value="09:30"></slab-time-field>`,
     );
@@ -252,10 +238,8 @@ test(
 test(
   'sets its value from `valueAsDate`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-time-field label="Label"></slab-time-field>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-time-field label="Label"></slab-time-field>`);
 
     const host = page.locator('slab-time-field');
 
@@ -290,10 +274,8 @@ test(
 test(
   "opens its input's picker with `showPicker()`",
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-time-field label="Label"></slab-time-field>`,
-    );
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-time-field label="Label"></slab-time-field>`);
 
     const host = page.locator('slab-time-field');
 

@@ -3,28 +3,24 @@ import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 import type Accordion from './accordion.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-accordion>
-          <slab-disclosure label="One">One</slab-disclosure>
-        </slab-accordion>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-accordion>
+        <slab-disclosure label="One">One</slab-disclosure>
+      </slab-accordion>`,
+  );
 
-    await expect(page.locator('slab-accordion')).toBeInTheCustomElementRegistry(
-      'slab-accordion',
-    );
-  },
-);
+  await expect(page.locator('slab-accordion')).toBeInTheCustomElementRegistry(
+    'slab-accordion',
+  );
+});
 
 test(
   'keeps the first open Disclosure when rendered `exclusive`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-accordion exclusive>
           <slab-disclosure label="One">One</slab-disclosure>
@@ -51,8 +47,8 @@ test(
 test(
   'keeps the first open Disclosure when made `exclusive`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-accordion>
           <slab-disclosure label="One" open>One</slab-disclosure>
@@ -72,8 +68,8 @@ test(
 test(
   'leaves open Disclosures open when made not `exclusive`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-accordion exclusive>
           <slab-disclosure label="One" open>One</slab-disclosure>
@@ -94,8 +90,8 @@ test(
 test(
   'closes a Disclosure added open when one is already open and `exclusive`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-accordion exclusive>
           <slab-disclosure label="One">One</slab-disclosure>
@@ -124,8 +120,8 @@ test(
 test(
   'closes the others when a Disclosure added later is opened and `exclusive`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-accordion exclusive>
           <slab-disclosure label="One" open>One</slab-disclosure>
@@ -153,8 +149,8 @@ test(
 test(
   'ignores a Disclosure removed from it',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-accordion exclusive>
             <slab-disclosure label="One" open>One</slab-disclosure>
@@ -191,8 +187,8 @@ test(
 test(
   "ignores a nested Disclosure's toggle",
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-accordion exclusive>
           <slab-disclosure label="One" open>
@@ -295,9 +291,9 @@ test(
 test(
   'throws when it has no Disclosure',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-accordion></slab-accordion>`),
+      render(() => html`<slab-accordion></slab-accordion>`),
     ).rejects.toThrow();
   },
 );
@@ -305,8 +301,8 @@ test(
 test(
   'does nothing when `exclusive` and none is open',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-accordion exclusive>
           <slab-disclosure label="One">One</slab-disclosure>

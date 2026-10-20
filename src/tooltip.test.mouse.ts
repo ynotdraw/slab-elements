@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'opens when its anchor is hovered',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tooltip open-delay="0">
           <span>Content</span>
@@ -35,8 +35,8 @@ test(
 test(
   'waits `open-delay` before opening',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tooltip open-delay="60000">
           <span>Content</span>
@@ -58,8 +58,8 @@ test(
 test(
   'closes when the pointer leaves',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tooltip close-delay="0" open-delay="0">
           <span>Content</span>
@@ -80,8 +80,8 @@ test(
 test(
   'remains open when the pointer moves from its anchor onto it',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-tooltip::part(tooltip) {
@@ -114,8 +114,8 @@ test(
 test(
   'remains open when the pointer leaves its focused anchor',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tooltip close-delay="0" open-delay="0">
           <span>Content</span>
@@ -133,8 +133,8 @@ test(
 test(
   'closes on Escape while hovered',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tooltip open-delay="0">
           <span>Content</span>
@@ -154,8 +154,8 @@ test(
 test(
   'does not open when disabled',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tooltip disabled open-delay="0">
           <span>Content</span>

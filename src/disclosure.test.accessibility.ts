@@ -2,20 +2,18 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type Disclosure from './disclosure.js';
 
-test(
-  'is accessible',
-  { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-disclosure label="Label" open>Content</slab-disclosure>`,
-    );
+test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-disclosure label="Label" open>Content</slab-disclosure>`,
+  );
 
-    await expect(page).toBeAccessible('slab-disclosure');
-  },
-);
+  await expect(page).toBeAccessible('slab-disclosure');
+});
 
-test('open=${true}', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=disclosure--disclosure');
+test('open=${true}', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-disclosure label="Label">Content</slab-disclosure>`,
+  );
 
   await page
     .locator('slab-disclosure')
@@ -31,9 +29,10 @@ test('open=${true}', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('open=${false}', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=disclosure--disclosure');
-  await page.locator('slab-disclosure').waitFor();
+test('open=${false}', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-disclosure label="Label">Content</slab-disclosure>`,
+  );
 
   // Closed content isn't rendered, so it isn't in the tree.
   await expect(page.locator('slab-disclosure')).toMatchAriaSnapshot(`

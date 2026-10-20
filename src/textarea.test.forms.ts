@@ -3,28 +3,24 @@ import { expect, test } from './playwright/test.js';
 import type Form from './form.js';
 import type Textarea from './textarea.js';
 
-test(
-  'has a `form` property',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <form>
-          <slab-textarea label="Label"></slab-textarea>
-        </form>
-      `,
-    );
+test('has a `form` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <form>
+        <slab-textarea label="Label"></slab-textarea>
+      </form>
+    `,
+  );
 
-    const hasForm = await page.locator('slab-textarea').evaluate((element) => {
-      return 'form' in element && element.form instanceof HTMLFormElement;
-    });
+  const hasForm = await page.locator('slab-textarea').evaluate((element) => {
+    return 'form' in element && element.form instanceof HTMLFormElement;
+  });
 
-    expect(hasForm).toBe(true);
-  },
-);
+  expect(hasForm).toBe(true);
+});
 
-test('has form data', { tag: '@forms' }, async ({ renderTemplate, page }) => {
-  await renderTemplate(
+test('has form data', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
     () => html`
       <form>
         <slab-textarea label="Label" name="name" value="value"></slab-textarea>
@@ -38,8 +34,8 @@ test('has form data', { tag: '@forms' }, async ({ renderTemplate, page }) => {
 test(
   'has no form data when disabled',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-textarea
@@ -59,8 +55,8 @@ test(
 test(
   'has no form data when it has no `name`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-textarea label="Label" value="value"></slab-textarea>
@@ -75,8 +71,8 @@ test(
 test(
   'can be reset',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-textarea label="Label" value="One" required></slab-textarea>
@@ -102,8 +98,8 @@ test(
 test(
   'is invalid when `required` and empty',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-textarea label="Label" required></slab-textarea>`,
     );
 
@@ -117,8 +113,8 @@ test(
 test(
   'is valid when `required` and filled',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-textarea
           label="Label"
@@ -139,8 +135,8 @@ test(
 test(
   'is invalid when shorter than `minlength`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-textarea label="Label" minlength="3"></slab-textarea>`,
     );
 
@@ -158,8 +154,8 @@ test(
 test(
   'reports its validity',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-textarea label="Label" required></slab-textarea>`,
     );
 
@@ -181,8 +177,8 @@ test(
 test(
   'checks its validity without reporting it',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-textarea label="Label" required></slab-textarea>`,
     );
 
@@ -200,8 +196,8 @@ test(
 test(
   'clears its validity feedback without changing its validity',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-textarea label="Label" required></slab-textarea>`,
     );
 
@@ -222,10 +218,8 @@ test(
 test(
   'takes a custom validity message',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-textarea label="Label"></slab-textarea>`,
-    );
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-textarea label="Label"></slab-textarea>`);
 
     const host = page.locator('slab-textarea');
 
@@ -247,10 +241,8 @@ test(
 test(
   'shows a custom validity message as text, not HTML',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-textarea label="Label"></slab-textarea>`,
-    );
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-textarea label="Label"></slab-textarea>`);
 
     const host = page.locator('slab-textarea');
     const validityMessage = page.locator('[data-test="validity-message"]');
@@ -266,10 +258,8 @@ test(
 test(
   'gives its validity back when a custom message is cleared',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-textarea label="Label"></slab-textarea>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-textarea label="Label"></slab-textarea>`);
 
     const host = page.locator('slab-textarea');
 
@@ -285,10 +275,8 @@ test(
 test(
   'takes a validity of its own',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-textarea label="Label"></slab-textarea>`,
-    );
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-textarea label="Label"></slab-textarea>`);
 
     const host = page.locator('slab-textarea');
 
@@ -310,8 +298,8 @@ test(
 test(
   'stops mirroring the textarea once a validity of its own is set',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-textarea label="Label" required></slab-textarea>`,
     );
 
@@ -330,41 +318,37 @@ test(
   },
 );
 
-test(
-  'restores its state',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <form>
-          <slab-textarea label="Label" name="name"></slab-textarea>
-        </form>
-      `,
-    );
+test('restores its state', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <form>
+        <slab-textarea label="Label" name="name"></slab-textarea>
+      </form>
+    `,
+  );
 
-    const host = page.locator('slab-textarea');
+  const host = page.locator('slab-textarea');
 
-    // Browsers call this when restoring a page from history or autofilling.
-    // Neither is practical in a test.
-    await host.evaluate<void, void, Textarea>((element) => {
-      element.formStateRestoreCallback('One');
-    });
+  // Browsers call this when restoring a page from history or autofilling.
+  // Neither is practical in a test.
+  await host.evaluate<void, void, Textarea>((element) => {
+    element.formStateRestoreCallback('One');
+  });
 
-    await expect(host).toHaveJSProperty('value', 'One');
+  await expect(host).toHaveJSProperty('value', 'One');
 
-    await host.evaluate<void, void, Textarea>((element) => {
-      element.formStateRestoreCallback(null);
-    });
+  await host.evaluate<void, void, Textarea>((element) => {
+    element.formStateRestoreCallback(null);
+  });
 
-    await expect(host).toHaveJSProperty('value', '');
-  },
-);
+  await expect(host).toHaveJSProperty('value', '');
+});
 
 test(
   'is disabled by its fieldset',
   { tag: '@forms' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <fieldset>
@@ -394,8 +378,8 @@ test(
 test(
   'focuses itself when its form is submitted and it is the first invalid one',
   { tag: '@forms' },
-  async ({ addEventListener, callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-textarea label="Label" required></slab-textarea>
@@ -416,8 +400,8 @@ test(
 test(
   'resets to empty when it has no `value` attribute',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-textarea label="Label"></slab-textarea>
@@ -436,8 +420,8 @@ test(
 test(
   "doesn't report its validity when its Form's is only checked",
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-textarea label="Label" required></slab-textarea>
@@ -485,8 +469,8 @@ test(
 test(
   'is enabled again after its `disabled` is turned off',
   { tag: '@forms' },
-  async ({ browserName, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ browserName, render, page, setProperty }) => {
+    await render(
       () =>
         html`<form>
           <slab-textarea label="Label"></slab-textarea>
@@ -515,8 +499,8 @@ test(
 test(
   'is enabled again after it and its fieldset are enabled together',
   { tag: '@forms' },
-  async ({ browserName, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ browserName, render, page }) => {
+    await render(
       () =>
         html`<form>
           <fieldset disabled>

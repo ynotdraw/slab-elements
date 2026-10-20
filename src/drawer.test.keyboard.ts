@@ -1,37 +1,33 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 
-test(
-  'closes on Escape',
-  { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-drawer label="Label" open>
-          <button>Button</button>
-        </slab-drawer>`,
-    );
+test('closes on Escape', { tag: '@keyboard' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-drawer label="Label" open>
+        <button>Button</button>
+      </slab-drawer>`,
+  );
 
-    const host = page.locator('slab-drawer');
+  const host = page.locator('slab-drawer');
 
-    await expect(host).toDispatchEvents(async () => {
-      await page.keyboard.press('Escape');
-    }, [
-      { type: 'cancel', bubbles: false, cancelable: true, composed: false },
-      { type: 'close', bubbles: false, cancelable: false, composed: false },
-    ]);
+  await expect(host).toDispatchEvents(async () => {
+    await page.keyboard.press('Escape');
+  }, [
+    { type: 'cancel', bubbles: false, cancelable: true, composed: false },
+    { type: 'close', bubbles: false, cancelable: false, composed: false },
+  ]);
 
-    await expect(page.getByTestId('dialog')).toBeHidden();
-    await expect(host).toHaveJSProperty('open', false);
-    await expect(host).not.toHaveAttribute('open');
-  },
-);
+  await expect(page.getByTestId('dialog')).toBeHidden();
+  await expect(host).toHaveJSProperty('open', false);
+  await expect(host).not.toHaveAttribute('open');
+});
 
 test(
   'stays open on Escape when "cancel" is canceled',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-drawer label="Label" open>
           <button>Button</button>
@@ -56,8 +52,8 @@ test(
 test(
   'stays open on Escape with `closedby="none"`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-drawer closedby="none" label="Label" open>
           <button>Button</button>
@@ -74,8 +70,8 @@ test(
 test(
   'focuses the first focusable element in it when opened',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<button>Outside</button>
 
@@ -91,8 +87,8 @@ test(
 test(
   'returns focus to where it was when closed',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<button>Outside</button>
 
@@ -111,27 +107,23 @@ test(
   },
 );
 
-test(
-  'lets focus leave it',
-  { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    // Inputs rather than buttons because Safari only tabs to buttons when the
-    // system says to.
-    await renderTemplate(
-      () =>
-        html`<slab-drawer label="Label" open>
-            <input aria-label="Inside" />
-          </slab-drawer>
+test('lets focus leave it', { tag: '@keyboard' }, async ({ render, page }) => {
+  // Inputs rather than buttons because Safari only tabs to buttons when the
+  // system says to.
+  await render(
+    () =>
+      html`<slab-drawer label="Label" open>
+          <input aria-label="Inside" />
+        </slab-drawer>
 
-          <input aria-label="Outside" />`,
-    );
+        <input aria-label="Outside" />`,
+  );
 
-    await expect(page.getByRole('textbox', { name: 'Inside' })).toBeFocused();
+  await expect(page.getByRole('textbox', { name: 'Inside' })).toBeFocused();
 
-    // A modal dialog would keep focus in it. This one doesn't.
-    await page.keyboard.press('Tab');
+  // A modal dialog would keep focus in it. This one doesn't.
+  await page.keyboard.press('Tab');
 
-    await expect(page.getByRole('textbox', { name: 'Outside' })).toBeFocused();
-    await expect(page.getByTestId('dialog')).toBeVisible();
-  },
-);
+  await expect(page.getByRole('textbox', { name: 'Outside' })).toBeFocused();
+  await expect(page.getByTestId('dialog')).toBeVisible();
+});

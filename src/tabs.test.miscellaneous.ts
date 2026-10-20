@@ -2,28 +2,24 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-tabs label="Label">
-          <slab-tabs-tab panel="one">One</slab-tabs-tab>
-        </slab-tabs>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-tabs label="Label">
+        <slab-tabs-tab panel="one">One</slab-tabs-tab>
+      </slab-tabs>`,
+  );
 
-    await expect(page.locator('slab-tabs')).toBeInTheCustomElementRegistry(
-      'slab-tabs',
-    );
-  },
-);
+  await expect(page.locator('slab-tabs')).toBeInTheCustomElementRegistry(
+    'slab-tabs',
+  );
+});
 
 test(
   'selects the first enabled Tab when none is selected',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one" disabled>One</slab-tabs-tab>
@@ -52,8 +48,8 @@ test(
 test(
   'keeps the last Tab that says it’s selected',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one" selected>One</slab-tabs-tab>
@@ -71,8 +67,8 @@ test(
 test(
   'selects a Tab selected programmatically, without dispatching "change"',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one">One</slab-tabs-tab>
@@ -103,8 +99,8 @@ test(
 test(
   'moves the selection off a Tab that’s disabled programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one">One</slab-tabs-tab>
@@ -124,8 +120,8 @@ test(
 test(
   'settles Tabs and Panels added later',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one">One</slab-tabs-tab>
@@ -162,8 +158,8 @@ test(
 test(
   'selects the first enabled Tab when the selected one is removed',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one">One</slab-tabs-tab>
@@ -189,8 +185,8 @@ test(
 test(
   'shows the Panel a Tab is pointed at programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one">One</slab-tabs-tab>
@@ -219,8 +215,8 @@ test(
 test(
   'ignores Tabs inside other elements',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one">One</slab-tabs-tab>
@@ -240,8 +236,8 @@ test(
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one">One</slab-tabs-tab>
@@ -257,8 +253,8 @@ test(
 test(
   'selects and focuses nothing when every Tab is disabled',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one" disabled>One</slab-tabs-tab>
@@ -317,9 +313,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-tabs>
             <slab-tabs-tab panel="one">One</slab-tabs-tab>
@@ -332,9 +328,9 @@ test(
 test(
   'throws when its "tab" slot is empty',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-tabs label="Label"></slab-tabs>`),
+      render(() => html`<slab-tabs label="Label"></slab-tabs>`),
     ).rejects.toThrow();
   },
 );
@@ -345,8 +341,8 @@ test(
 test(
   'hides the Panels it is not showing even when they are given a `display`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-tabs-panel {

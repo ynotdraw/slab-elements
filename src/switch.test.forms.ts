@@ -2,32 +2,28 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type Switch from './switch.js';
 
-test(
-  'has a `form` property',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<form>
-          <slab-switch label="Label"></slab-switch>
-        </form>`,
-    );
+test('has a `form` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<form>
+        <slab-switch label="Label"></slab-switch>
+      </form>`,
+  );
 
-    const isForm = await page
-      .locator('slab-switch')
-      .evaluate<boolean, void, Switch>((element) => {
-        return element.form instanceof HTMLFormElement;
-      });
+  const isForm = await page
+    .locator('slab-switch')
+    .evaluate<boolean, void, Switch>((element) => {
+      return element.form instanceof HTMLFormElement;
+    });
 
-    expect(isForm).toBe(true);
-  },
-);
+  expect(isForm).toBe(true);
+});
 
 test(
   'adds its value to form data when checked',
   { tag: '@forms' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<form>
           <slab-switch label="Label" name="name"></slab-switch>
@@ -47,8 +43,8 @@ test(
 test(
   'adds its `value` to form data instead of the default',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<form>
           <slab-switch
@@ -67,8 +63,8 @@ test(
 test(
   'resets to its `checked` attribute',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
       () =>
         html`<form>
           <slab-switch label="Label" checked></slab-switch>
@@ -88,8 +84,8 @@ test(
 test(
   'resets to unchecked without a `checked` attribute',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
       () =>
         html`<form>
           <slab-switch label="Label"></slab-switch>
@@ -108,8 +104,8 @@ test(
 test(
   'is invalid when required and unchecked',
   { tag: '@forms' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<form>
           <slab-switch label="Label" required></slab-switch>
@@ -141,8 +137,8 @@ test(
 test(
   'is disabled when its fieldset is',
   { tag: '@forms' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<form>
           <fieldset disabled>
@@ -170,40 +166,36 @@ test(
   },
 );
 
-test(
-  'restores its state',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<form>
-          <slab-switch label="Label"></slab-switch>
-        </form>`,
-    );
+test('restores its state', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<form>
+        <slab-switch label="Label"></slab-switch>
+      </form>`,
+  );
 
-    const host = page.locator('slab-switch');
+  const host = page.locator('slab-switch');
 
-    // Browsers call this when restoring a page from history or autofilling.
-    // Neither is practical in a test.
-    await host.evaluate<void, void, Switch>((element) => {
-      element.formStateRestoreCallback('on');
-    });
+  // Browsers call this when restoring a page from history or autofilling.
+  // Neither is practical in a test.
+  await host.evaluate<void, void, Switch>((element) => {
+    element.formStateRestoreCallback('on');
+  });
 
-    await expect(host).toHaveJSProperty('checked', true);
+  await expect(host).toHaveJSProperty('checked', true);
 
-    await host.evaluate<void, void, Switch>((element) => {
-      element.formStateRestoreCallback(null);
-    });
+  await host.evaluate<void, void, Switch>((element) => {
+    element.formStateRestoreCallback(null);
+  });
 
-    await expect(host).toHaveJSProperty('checked', false);
-  },
-);
+  await expect(host).toHaveJSProperty('checked', false);
+});
 
 test(
   'is enabled again after its `disabled` is turned off',
   { tag: '@forms' },
-  async ({ browserName, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ browserName, render, page, setProperty }) => {
+    await render(
       () =>
         html`<form>
           <slab-switch label="Label"></slab-switch>
@@ -232,8 +224,8 @@ test(
 test(
   'is enabled again after it and its fieldset are enabled together',
   { tag: '@forms' },
-  async ({ browserName, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ browserName, render, page }) => {
+    await render(
       () =>
         html`<form>
           <fieldset disabled>

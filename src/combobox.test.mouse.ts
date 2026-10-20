@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'opens when its input is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
           <slab-option>One</slab-option>
@@ -26,8 +26,8 @@ test(
 test(
   'selects options on click',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
           <slab-option value="one">One</slab-option>
@@ -68,8 +68,8 @@ test(
 test(
   'ignores clicks on disabled options and between options',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
           <slab-option disabled>One</slab-option>
@@ -98,8 +98,8 @@ test(
 test(
   'closes when clicked outside of',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
             <slab-option value="one">One</slab-option>
@@ -127,8 +127,8 @@ test(
 test(
   'toggles options on click and stays open when `multiple`',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" multiple>
           <slab-option value="one">One</slab-option>
@@ -156,8 +156,8 @@ test(
 test(
   'removes a tag on click when `multiple`',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" multiple>
           <slab-option value="one" selected>One</slab-option>

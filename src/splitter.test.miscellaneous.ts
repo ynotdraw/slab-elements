@@ -2,29 +2,25 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-splitter label="Label">
-          <div slot="primary">Primary</div>
-          <div slot="secondary">Secondary</div>
-        </slab-splitter>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-splitter label="Label">
+        <div slot="primary">Primary</div>
+        <div slot="secondary">Secondary</div>
+      </slab-splitter>`,
+  );
 
-    await expect(page.locator('slab-splitter')).toBeInTheCustomElementRegistry(
-      'slab-splitter',
-    );
-  },
-);
+  await expect(page.locator('slab-splitter')).toBeInTheCustomElementRegistry(
+    'slab-splitter',
+  );
+});
 
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-splitter label="Label">
           <div slot="primary">Primary</div>
@@ -41,8 +37,8 @@ test(
 test(
   'sizes its panes by `value`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<style>
             slab-splitter {
@@ -78,8 +74,8 @@ test(
 test(
   'stacks and sizes its panes by `value` when `orientation` is "horizontal"',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-splitter {
@@ -113,8 +109,8 @@ test(
 test(
   'keeps `value` between `min` and `max`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-splitter label="Label" max="80" value="90">
           <div slot="primary">Primary</div>
@@ -144,8 +140,8 @@ test(
 test(
   'rounds `aria-valuenow`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-splitter label="Label" value="33.3333">
           <div slot="primary">Primary</div>
@@ -168,8 +164,8 @@ test(
 test(
   'sets a custom state for each of its states',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<style>
             slab-splitter {
@@ -254,9 +250,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-splitter>
             <div slot="primary">Primary</div>
@@ -270,9 +266,9 @@ test(
 test(
   'throws when its "primary" slot is empty',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-splitter label="Label">
             <div slot="secondary">Secondary</div>
@@ -285,9 +281,9 @@ test(
 test(
   'throws when its "secondary" slot is empty',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-splitter label="Label">
             <div slot="primary">Primary</div>
@@ -303,8 +299,8 @@ test(
 test(
   'cancels "touchstart" on its separator so dragging does not scroll the page',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-splitter label="Label">
           <div slot="primary">Primary</div>

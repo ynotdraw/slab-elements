@@ -3,28 +3,24 @@ import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 import type Popover from './popover.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-popover>
-          <button slot="anchor">Anchor</button>
-        </slab-popover>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-popover>
+        <button slot="anchor">Anchor</button>
+      </slab-popover>`,
+  );
 
-    await expect(page.locator('slab-popover')).toBeInTheCustomElementRegistry(
-      'slab-popover',
-    );
-  },
-);
+  await expect(page.locator('slab-popover')).toBeInTheCustomElementRegistry(
+    'slab-popover',
+  );
+});
 
 test(
   'is a native auto popover',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-popover>
           <button slot="anchor">Anchor</button>
@@ -43,8 +39,8 @@ test(
 test(
   'opens when `open` is set before it renders',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-popover open>
           <button slot="anchor">Anchor</button>
@@ -64,8 +60,8 @@ test(
 test(
   'opens and closes when `open` is set',
   { tag: '@miscellaneous' },
-  async ({ setProperty, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ setProperty, render, page }) => {
+    await render(
       () =>
         html`<slab-popover>
           <button slot="anchor">Anchor</button>
@@ -87,8 +83,8 @@ test(
 test(
   'opens and closes via `show()`, `hide()` and `toggle()`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-popover>
           <button slot="anchor">Anchor</button>
@@ -125,8 +121,8 @@ test(
 test(
   'dispatches its popover\'s "beforetoggle" and "toggle"',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-popover>
           <button slot="anchor">Anchor</button>
@@ -168,8 +164,8 @@ test(
 test(
   'stays closed when closed before its opening "toggle" arrives',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-popover>
           <button slot="anchor">Anchor</button>
@@ -195,8 +191,8 @@ test(
 test(
   'stays closed when "beforetoggle" is cancelled',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-popover>
           <button slot="anchor">Anchor</button>
@@ -229,8 +225,8 @@ test(
 test(
   'sets `aria-expanded` on an anchor slotted later',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-popover open>Content</slab-popover>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-popover open>Content</slab-popover>`);
 
     await page.locator('slab-popover').evaluate((element) => {
       const button = document.createElement('button');
@@ -250,8 +246,8 @@ test(
 test(
   'does nothing when shown or hidden before it renders',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-popover>Content</slab-popover>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-popover>Content</slab-popover>`);
 
     // Created but not connected, so there's no popover yet to open.
     const isOpen = await page.evaluate(() => {
@@ -271,8 +267,8 @@ test(
 test(
   'opens without an anchor',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-popover>Content</slab-popover>`);
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-popover>Content</slab-popover>`);
 
     await callMethod(page.locator('slab-popover'), 'show');
 
@@ -304,10 +300,10 @@ for (const [placement, isPlaced] of Object.entries(placements)) {
   test(
     `placement="${placement}"`,
     { tag: '@miscellaneous' },
-    async ({ renderTemplate, setAttribute, page }) => {
+    async ({ render, setAttribute, page }) => {
       // In the middle of the viewport, so there's room on every side and
       // nothing flips.
-      await renderTemplate(
+      await render(
         () =>
           html`<div
             style="display: grid; place-items: center; block-size: 100vh;"
@@ -334,8 +330,8 @@ for (const [placement, isPlaced] of Object.entries(placements)) {
 test(
   'flips when there is no room on its side',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-popover placement="top" open>
           <button slot="anchor">Anchor</button>

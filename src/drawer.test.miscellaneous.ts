@@ -2,23 +2,19 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type Drawer from './drawer.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-drawer label="Label"></slab-drawer>`);
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-drawer label="Label"></slab-drawer>`);
 
-    await expect(page.locator('slab-drawer')).toBeInTheCustomElementRegistry(
-      'slab-drawer',
-    );
-  },
-);
+  await expect(page.locator('slab-drawer')).toBeInTheCustomElementRegistry(
+    'slab-drawer',
+  );
+});
 
 test(
   'opens without being modal when `open` is set',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-drawer label="Label" open>Content</slab-drawer>`,
     );
 
@@ -32,10 +28,8 @@ test(
 test(
   'is closed by default',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-drawer label="Label">Content</slab-drawer>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-drawer label="Label">Content</slab-drawer>`);
 
     await expect(page.getByTestId('dialog')).toBeHidden();
   },
@@ -44,10 +38,8 @@ test(
 test(
   'opens when `show()` is called and closes when `close()` is called',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-drawer label="Label">Content</slab-drawer>`,
-    );
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-drawer label="Label">Content</slab-drawer>`);
 
     const host = page.locator('slab-drawer');
 
@@ -71,8 +63,8 @@ test(
 test(
   'passes `closedby="closerequest"` to its dialog by default',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-drawer label="Label"></slab-drawer>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-drawer label="Label"></slab-drawer>`);
 
     await expect(page.locator('slab-drawer')).toHaveAttribute(
       'closedby',

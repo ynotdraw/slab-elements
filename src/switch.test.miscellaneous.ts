@@ -2,23 +2,19 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-switch label="Label"></slab-switch>`);
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-switch label="Label"></slab-switch>`);
 
-    const host = page.locator('slab-switch');
+  const host = page.locator('slab-switch');
 
-    await expect(host).toBeInTheCustomElementRegistry('slab-switch');
-  },
-);
+  await expect(host).toBeInTheCustomElementRegistry('slab-switch');
+});
 
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-switch label="Label"></slab-switch>`);
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-switch label="Label"></slab-switch>`);
 
     const host = page.locator('slab-switch');
     const switch$ = page.getByRole('switch');
@@ -62,9 +58,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-switch></slab-switch>`),
+      render(() => html`<slab-switch></slab-switch>`),
     ).rejects.toThrow();
   },
 );

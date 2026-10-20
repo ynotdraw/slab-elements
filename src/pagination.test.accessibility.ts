@@ -1,22 +1,28 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 
+test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-pagination total="10" page="5"></slab-pagination>`,
+  );
+
+  await expect(page).toBeAccessible('slab-pagination');
+});
+
 test(
-  'is accessible',
+  'has a navigation',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-pagination total="10" page="5"></slab-pagination>`,
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-pagination
+          page="1"
+          siblings="1"
+          total="10"
+        ></slab-pagination>`,
     );
 
-    await expect(page).toBeAccessible('slab-pagination');
-  },
-);
-
-test('has a navigation', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=pagination--pagination');
-
-  await expect(page.locator('slab-pagination')).toMatchAriaSnapshot(`
+    await expect(page.locator('slab-pagination')).toMatchAriaSnapshot(`
     - navigation "Pagination":
       - list:
         - listitem:
@@ -37,10 +43,19 @@ test('has a navigation', { tag: '@accessibility' }, async ({ page }) => {
         - listitem:
           - button "Next"
   `);
-});
+  },
+);
 
-test('label', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=pagination--pagination&args=label:Label');
+test('label', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-pagination
+        label="Label"
+        page="1"
+        siblings="1"
+        total="10"
+      ></slab-pagination>`,
+  );
 
   await expect(page.locator('slab-pagination')).toMatchAriaSnapshot(`
     - navigation "Label"
@@ -50,8 +65,8 @@ test('label', { tag: '@accessibility' }, async ({ page }) => {
 test(
   'next-label, previous-label and pageLabel',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-pagination
           next-label="Suivant"

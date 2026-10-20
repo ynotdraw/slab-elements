@@ -4,10 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'can be checked via Space',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-checkbox label="Label"></slab-checkbox>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-checkbox label="Label"></slab-checkbox>`);
 
     const host = page.locator('slab-checkbox');
     const checkbox = page.getByRole('checkbox');
@@ -37,8 +35,8 @@ test(
 test(
   'can be unchecked via Space',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-checkbox label="Label" checked></slab-checkbox>`,
     );
 

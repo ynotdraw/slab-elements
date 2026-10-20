@@ -3,28 +3,24 @@ import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 import type Breadcrumb from './breadcrumb.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-breadcrumb>
-          <a href="#">One</a>
-        </slab-breadcrumb>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-breadcrumb>
+        <a href="#">One</a>
+      </slab-breadcrumb>`,
+  );
 
-    await expect(
-      page.locator('slab-breadcrumb'),
-    ).toBeInTheCustomElementRegistry('slab-breadcrumb');
-  },
-);
+  await expect(page.locator('slab-breadcrumb')).toBeInTheCustomElementRegistry(
+    'slab-breadcrumb',
+  );
+});
 
 test(
   'puts each element in a list item, the last as the current page',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-breadcrumb>
           <a href="#">One</a>
@@ -49,8 +45,8 @@ test(
 test(
   'follows elements that are added, removed and reordered',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-breadcrumb>
           <a href="#">One</a>
@@ -123,8 +119,8 @@ test(
 test(
   'leaves an `aria-current` that is already set',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-breadcrumb>
           <a href="#">One</a>

@@ -20,31 +20,27 @@ function file(name: string) {
   return { name, mimeType: 'text/plain', buffer: Buffer.from(name) };
 }
 
-test(
-  'has a `form` property',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <form>
-          <slab-file-drop label="Label"></slab-file-drop>
-        </form>
-      `,
-    );
+test('has a `form` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <form>
+        <slab-file-drop label="Label"></slab-file-drop>
+      </form>
+    `,
+  );
 
-    const hasForm = await page.locator('slab-file-drop').evaluate((element) => {
-      return 'form' in element && element.form instanceof HTMLFormElement;
-    });
+  const hasForm = await page.locator('slab-file-drop').evaluate((element) => {
+    return 'form' in element && element.form instanceof HTMLFormElement;
+  });
 
-    expect(hasForm).toBe(true);
-  },
-);
+  expect(hasForm).toBe(true);
+});
 
 test(
   'has form data, one entry per file',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-file-drop label="Label" name="name" multiple></slab-file-drop>
@@ -65,8 +61,8 @@ test(
 test(
   'submits an empty file when it has no files',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-file-drop label="Label" name="name"></slab-file-drop>
@@ -96,8 +92,8 @@ test(
 test(
   'has no form data when disabled',
   { tag: '@forms' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <slab-file-drop label="Label" name="name"></slab-file-drop>
@@ -115,8 +111,8 @@ test(
 test(
   'has no form data when it has no `name`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-file-drop label="Label"></slab-file-drop>
@@ -135,8 +131,8 @@ test(
 test(
   'can be reset',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-file-drop label="Label" name="name" required></slab-file-drop>
@@ -171,8 +167,8 @@ test(
 test(
   'is invalid when `required` and empty',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-file-drop label="Label" required></slab-file-drop>`,
     );
 
@@ -186,8 +182,8 @@ test(
 test(
   'is valid when `required` and given a file',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-file-drop label="Label" required></slab-file-drop>`,
     );
 
@@ -203,8 +199,8 @@ test(
 test(
   'reports its validity',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-file-drop label="Label" required></slab-file-drop>`,
     );
 
@@ -226,8 +222,8 @@ test(
 test(
   'checks its validity without reporting it',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-file-drop label="Label" required></slab-file-drop>`,
     );
 
@@ -243,8 +239,8 @@ test(
 test(
   'reports its validity on blur',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-file-drop label="Label" required></slab-file-drop>`,
     );
 
@@ -264,10 +260,8 @@ test(
 test(
   'takes a custom validity message',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-file-drop label="Label"></slab-file-drop>`,
-    );
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-file-drop label="Label"></slab-file-drop>`);
 
     const host = page.locator('slab-file-drop');
 
@@ -289,10 +283,8 @@ test(
 test(
   'shows a custom validity message as text, not HTML',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-file-drop label="Label"></slab-file-drop>`,
-    );
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-file-drop label="Label"></slab-file-drop>`);
 
     const host = page.locator('slab-file-drop');
     const validityMessage = page.locator('[data-test="validity-message"]');
@@ -308,10 +300,8 @@ test(
 test(
   'gives its validity back when a custom message is cleared',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-file-drop label="Label"></slab-file-drop>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-file-drop label="Label"></slab-file-drop>`);
 
     const host = page.locator('slab-file-drop');
 
@@ -327,8 +317,8 @@ test(
 test(
   'takes a validity of its own',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-file-drop label="Label" required></slab-file-drop>`,
     );
 
@@ -355,54 +345,50 @@ test(
   },
 );
 
-test(
-  'restores its state',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <form>
-          <slab-file-drop label="Label" name="name" multiple></slab-file-drop>
-        </form>
-      `,
-    );
+test('restores its state', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <form>
+        <slab-file-drop label="Label" name="name" multiple></slab-file-drop>
+      </form>
+    `,
+  );
 
-    const host = page.locator('slab-file-drop');
+  const host = page.locator('slab-file-drop');
 
-    // Browsers call this when restoring a page from history. That isn't
-    // practical in a test.
-    await host.evaluate<void, void, FileDrop>((element) => {
-      const data = new FormData();
+  // Browsers call this when restoring a page from history. That isn't
+  // practical in a test.
+  await host.evaluate<void, void, FileDrop>((element) => {
+    const data = new FormData();
 
-      data.append('name', new File(['one'], 'one.txt'));
-      data.append('name', 'Not a file');
+    data.append('name', new File(['one'], 'one.txt'));
+    data.append('name', 'Not a file');
 
-      // The empty file submitted when there are none, which isn't restored,
-      // and a file that's only unnamed, which is.
-      data.append('name', new File([], ''));
-      data.append('name', new File(['unnamed'], ''));
-      data.append('other', new File(['two'], 'two.txt'));
+    // The empty file submitted when there are none, which isn't restored,
+    // and a file that's only unnamed, which is.
+    data.append('name', new File([], ''));
+    data.append('name', new File(['unnamed'], ''));
+    data.append('other', new File(['two'], 'two.txt'));
 
-      element.formStateRestoreCallback(data);
-    });
+    element.formStateRestoreCallback(data);
+  });
 
-    expect(
-      await page.locator('form').evaluate(getFormDataFileNames, 'name'),
-    ).toStrictEqual(['one.txt', '']);
+  expect(
+    await page.locator('form').evaluate(getFormDataFileNames, 'name'),
+  ).toStrictEqual(['one.txt', '']);
 
-    await host.evaluate<void, void, FileDrop>((element) => {
-      element.formStateRestoreCallback(null);
-    });
+  await host.evaluate<void, void, FileDrop>((element) => {
+    element.formStateRestoreCallback(null);
+  });
 
-    await expect(host).toHaveJSProperty('files.length', 0);
-  },
-);
+  await expect(host).toHaveJSProperty('files.length', 0);
+});
 
 test(
   'is disabled by its fieldset',
   { tag: '@forms' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <fieldset>
@@ -430,8 +416,8 @@ test(
 test(
   'focuses itself when its form is submitted and it is the first invalid one',
   { tag: '@forms' },
-  async ({ addEventListener, callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-file-drop label="Label" required></slab-file-drop>
@@ -452,8 +438,8 @@ test(
 test(
   'leaves focus alone when another control is the first invalid one',
   { tag: '@forms' },
-  async ({ addEventListener, callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <input aria-label="Other" required />
@@ -474,8 +460,8 @@ test(
 test(
   "doesn't report its validity when its Form's is only checked",
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-file-drop label="Label" required></slab-file-drop>
@@ -523,8 +509,8 @@ test(
 test(
   'is enabled again after its `disabled` is turned off',
   { tag: '@forms' },
-  async ({ browserName, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ browserName, render, page, setProperty }) => {
+    await render(
       () =>
         html`<form>
           <slab-file-drop label="Label"></slab-file-drop>
@@ -553,8 +539,8 @@ test(
 test(
   'is enabled again after it and its fieldset are enabled together',
   { tag: '@forms' },
-  async ({ browserName, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ browserName, render, page }) => {
+    await render(
       () =>
         html`<form>
           <fieldset disabled>

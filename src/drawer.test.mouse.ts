@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'closes through a `<form method="dialog">` with its submitter’s value',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-drawer label="Label" open>
           <form method="dialog">
@@ -30,8 +30,8 @@ test(
 test(
   'leaves the rest of the page interactive and stays open',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<input aria-label="Outside" />
 
@@ -50,8 +50,8 @@ test(
 test(
   'closes when clicked outside with `closedby="any"`',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<button>Outside</button>
 

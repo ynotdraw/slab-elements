@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'opens when its summary is pressed via Enter',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-disclosure label="Label">Content</slab-disclosure>`,
     );
 
@@ -32,8 +32,8 @@ test(
 test(
   'closes when its summary is pressed via Space',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-disclosure label="Label" open>Content</slab-disclosure>`,
     );
 
@@ -57,16 +57,12 @@ test(
   },
 );
 
-test(
-  'is reached via Tab',
-  { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-disclosure label="Label">Content</slab-disclosure>`,
-    );
+test('is reached via Tab', { tag: '@keyboard' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-disclosure label="Label">Content</slab-disclosure>`,
+  );
 
-    await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
 
-    await expect(page.locator('summary')).toBeFocused();
-  },
-);
+  await expect(page.locator('summary')).toBeFocused();
+});

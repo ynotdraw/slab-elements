@@ -37,11 +37,6 @@ type Render = <Type = void>(
  */
 export default test.extend<{
   render: Render;
-
-  /**
-   * The old name for `render()`, kept until every test is moved over.
-   */
-  renderTemplate: Render;
 }>({
   async render({ page }, use, testInfo) {
     await use(async function render<Type = void>(
@@ -206,10 +201,6 @@ export default test.extend<{
         }
       });
     });
-  },
-
-  async renderTemplate({ render }, use) {
-    await use(render);
   },
 
   async page({ page, browser, browserName }, use, testInfo) {

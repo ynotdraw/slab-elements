@@ -1,25 +1,24 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 
-test(
-  'is accessible',
-  { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-calendar
-          max="2026-10-25"
-          min="2026-10-05"
-          value="2026-10-15"
-        ></slab-calendar>`,
-    );
+test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-calendar
+        max="2026-10-25"
+        min="2026-10-05"
+        value="2026-10-15"
+      ></slab-calendar>`,
+  );
 
-    await expect(page).toBeAccessible('slab-calendar');
-  },
-);
+  await expect(page).toBeAccessible('slab-calendar');
+});
 
-test('has a grid', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=calendar--calendar');
+test('has a grid', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-calendar value="2026-10-15" week-start="0"></slab-calendar>`,
+  );
 
   await expect(page.locator('slab-calendar')).toMatchAriaSnapshot(`
     - button "Previous month"
@@ -50,8 +49,8 @@ test('has a grid', { tag: '@accessibility' }, async ({ page }) => {
 test(
   'next-label and previous-label',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-calendar
           next-label="Next"
@@ -71,8 +70,8 @@ test(
 test(
   'is accessible with a range',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-calendar
           range

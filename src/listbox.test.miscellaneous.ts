@@ -3,28 +3,24 @@ import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 import type Listbox from './listbox.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-listbox label="Label">
-          <slab-option>One</slab-option>
-        </slab-listbox>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-listbox label="Label">
+        <slab-option>One</slab-option>
+      </slab-listbox>`,
+  );
 
-    const host = page.locator('slab-listbox');
+  const host = page.locator('slab-listbox');
 
-    await expect(host).toBeInTheCustomElementRegistry('slab-listbox');
-  },
-);
+  await expect(host).toBeInTheCustomElementRegistry('slab-listbox');
+});
 
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option>One</slab-option>
@@ -40,8 +36,8 @@ test(
 test(
   'selects its option when its value is set initially',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label" value="two">
           <slab-option value="one">One</slab-option>
@@ -61,8 +57,8 @@ test(
 test(
   'selects its option when its value is set programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option value="one" selected>One</slab-option>
@@ -93,8 +89,8 @@ test(
 test(
   'selects only the first matching option when its values are set and not multiple',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option value="one">One</slab-option>
@@ -113,8 +109,8 @@ test(
 test(
   'selects every matching option when its values are set and multiple',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label" multiple>
           <slab-option value="one">One</slab-option>
@@ -142,8 +138,8 @@ test(
 test(
   'has its options and its selected options',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label" multiple>
           <slab-option selected>One</slab-option>
@@ -168,8 +164,8 @@ test(
 test(
   'selects an option added after its value was set',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option value="one">One</slab-option>
@@ -196,8 +192,8 @@ test(
 test(
   'does not select an option added after the user has selected one',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option value="one">One</slab-option>
@@ -225,8 +221,8 @@ test(
 test(
   'gives precedence to a selected option over its initial value',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label" value="one">
           <slab-option value="one">One</slab-option>
@@ -243,8 +239,8 @@ test(
 test(
   'keeps the last selected option when more than one is selected initially and not multiple',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option value="one" selected>One</slab-option>
@@ -263,8 +259,8 @@ test(
 test(
   'deselects its other options when one is selected programmatically and not multiple',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option value="one" selected>One</slab-option>
@@ -285,8 +281,8 @@ test(
 test(
   'keeps its last selected option when made not multiple',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label" multiple>
           <slab-option value="one" selected>One</slab-option>
@@ -305,8 +301,8 @@ test(
 test(
   'updates its value when the value of its selected option is changed programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<form>
           <slab-listbox label="Label" name="name">
@@ -327,8 +323,8 @@ test(
 test(
   'updates its value when its selected option is enabled programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option value="one" selected disabled>One</slab-option>
@@ -348,8 +344,8 @@ test(
 test(
   'makes no option active when its active option is disabled',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option>One</slab-option>
@@ -374,8 +370,8 @@ test(
 test(
   'makes no option active when its active option is removed',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option>One</slab-option>
@@ -408,8 +404,8 @@ test(
 test(
   'can have its active option set programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
             <slab-option>One</slab-option>
@@ -458,8 +454,8 @@ test(
 test(
   'sets `:state(disabled)` and disables its options when disabled',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option>One</slab-option>
@@ -496,8 +492,8 @@ test(
 test(
   'disables an option added while it is disabled',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label" disabled>
           <slab-option>One</slab-option>
@@ -518,8 +514,8 @@ test(
 test(
   'sets `:state(required)`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label" required>
           <slab-option>One</slab-option>
@@ -599,9 +595,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-listbox>
             <slab-option>One</slab-option>
@@ -614,9 +610,9 @@ test(
 test(
   'throws when its default slot is the wrong type',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-listbox label="Label">
             <option>One</option>
@@ -630,8 +626,8 @@ test(
 test(
   'ignores options that are not its children',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option value="one">

@@ -1,24 +1,20 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-menu-item>One</slab-menu-item>`);
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-menu-item>One</slab-menu-item>`);
 
-    await expect(page.locator('slab-menu-item')).toBeInTheCustomElementRegistry(
-      'slab-menu-item',
-    );
-  },
-);
+  await expect(page.locator('slab-menu-item')).toBeInTheCustomElementRegistry(
+    'slab-menu-item',
+  );
+});
 
 test(
   'has `text` from its label, or else its text',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, removeAttribute }) => {
-    await renderTemplate(
-      () => html`<slab-menu-item label="Label"> One Two </slab-menu-item>`,
+  async ({ render, page, removeAttribute }) => {
+    await render(
+      () => html`<slab-menu-item label="Label">One Two</slab-menu-item>`,
     );
 
     const host = page.locator('slab-menu-item');
@@ -36,10 +32,8 @@ test(
 test(
   'sets `:state(disabled)` and `aria-disabled`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
-      () => html`<slab-menu-item disabled>One</slab-menu-item>`,
-    );
+  async ({ render, page, setProperty }) => {
+    await render(() => html`<slab-menu-item disabled>One</slab-menu-item>`);
 
     const host = page.locator('slab-menu-item');
 
@@ -62,10 +56,8 @@ test(
 test(
   'stops its own "click" when disabled',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
-      () => html`<slab-menu-item disabled>One</slab-menu-item>`,
-    );
+  async ({ render, page, setProperty }) => {
+    await render(() => html`<slab-menu-item disabled>One</slab-menu-item>`);
 
     const host = page.locator('slab-menu-item');
 

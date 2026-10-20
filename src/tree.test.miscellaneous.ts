@@ -3,28 +3,24 @@ import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 import type Tree from './tree.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-tree label="Label">
-          <slab-tree-item>One</slab-tree-item>
-        </slab-tree>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-tree label="Label">
+        <slab-tree-item>One</slab-tree-item>
+      </slab-tree>`,
+  );
 
-    await expect(page.locator('slab-tree')).toBeInTheCustomElementRegistry(
-      'slab-tree',
-    );
-  },
-);
+  await expect(page.locator('slab-tree')).toBeInTheCustomElementRegistry(
+    'slab-tree',
+  );
+});
 
 test(
   'has every Tree Item in `items`, at every depth',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
           <slab-tree-item>
@@ -53,8 +49,8 @@ test(
 test(
   'selects one Tree Item at a time when they are selected programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
           <slab-tree-item selected>
@@ -78,8 +74,8 @@ test(
 test(
   'ignores Tree Items inside other elements',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
             <slab-tree-item selected>One</slab-tree-item>
@@ -98,8 +94,8 @@ test(
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
           <slab-tree-item>One</slab-tree-item>
@@ -150,9 +146,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-tree>
             <slab-tree-item>One</slab-tree-item>
@@ -165,9 +161,9 @@ test(
 test(
   'throws when its default slot is empty',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-tree label="Label"></slab-tree>`),
+      render(() => html`<slab-tree label="Label"></slab-tree>`),
     ).rejects.toThrow();
   },
 );
@@ -175,8 +171,8 @@ test(
 test(
   'keeps more than one Tree Item selected when `multiple`, and the last when it stops being',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-tree label="Label" multiple>
           <slab-tree-item selected>One</slab-tree-item>
@@ -213,8 +209,8 @@ test(
 test(
   'stays empty when it stops being `multiple` with nothing selected',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-tree label="Label" multiple>
           <slab-tree-item>One</slab-tree-item>

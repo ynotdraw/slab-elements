@@ -2,28 +2,24 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-select label="Label">
-          <slab-option>One</slab-option>
-        </slab-select>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-select label="Label">
+        <slab-option>One</slab-option>
+      </slab-select>`,
+  );
 
-    await expect(page.locator('slab-select')).toBeInTheCustomElementRegistry(
-      'slab-select',
-    );
-  },
-);
+  await expect(page.locator('slab-select')).toBeInTheCustomElementRegistry(
+    'slab-select',
+  );
+});
 
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option>One</slab-option>
@@ -39,8 +35,8 @@ test(
 test(
   'opens in a native auto popover',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" open>
           <slab-option>One</slab-option>
@@ -62,8 +58,8 @@ test(
 test(
   'opens and closes when `open` is set, and via `show()` and `hide()`',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option>One</slab-option>
@@ -120,8 +116,8 @@ test(
 test(
   'opens when `open` is set before it renders',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" open>
           <slab-option>One</slab-option>
@@ -135,8 +131,8 @@ test(
 test(
   'sets `:state(open)`',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option>One</slab-option>
@@ -160,8 +156,8 @@ test(
 test(
   'closes when its combobox loses focus',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
             <slab-option>One</slab-option>
@@ -181,8 +177,8 @@ test(
 test(
   'shows the label of its selected option',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-select label="Label" placeholder="Placeholder">
           <slab-option label="One" value="one">
@@ -221,8 +217,8 @@ test(
 test(
   'shows nothing when no option is selected and it has no placeholder',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option>One</slab-option>
@@ -242,8 +238,8 @@ test(
 test(
   'selects its option when its value is set initially',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" value="two">
           <slab-option value="one">One</slab-option>
@@ -293,8 +289,8 @@ test(
 test(
   'selects its option when its value is set programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option value="one" selected>One</slab-option>
@@ -325,8 +321,8 @@ test(
 test(
   'selects every matching option when its values are set and multiple',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-select label="Label" multiple>
           <slab-option value="one">One</slab-option>
@@ -347,8 +343,8 @@ test(
 test(
   'selects only the first matching option when its values are set and not multiple',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option value="one">One</slab-option>
@@ -367,8 +363,8 @@ test(
 test(
   'has its options and its selected options',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" multiple>
           <slab-option selected>One</slab-option>
@@ -388,8 +384,8 @@ test(
 test(
   'follows options that are added and removed',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" value="two">
           <slab-option value="one">One</slab-option>
@@ -427,8 +423,8 @@ test(
 test(
   'follows a change to the label of its selected option',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option value="one" selected>One</slab-option>
@@ -444,8 +440,8 @@ test(
 test(
   'sets `:state(disabled)` and disables its options when disabled',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-select label="Label" open>
           <slab-option>One</slab-option>
@@ -479,8 +475,8 @@ test(
 test(
   'sets `:state(required)`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" required>
           <slab-option>One</slab-option>
@@ -498,8 +494,8 @@ test(
 test(
   'exposes its listbox as a part',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-select::part(listbox) {
@@ -543,10 +539,10 @@ for (const [placement, isPlaced] of Object.entries(placements)) {
   test(
     `placement="${placement}"`,
     { tag: '@miscellaneous' },
-    async ({ renderTemplate, setAttribute, page }) => {
+    async ({ render, setAttribute, page }) => {
       // In the middle of the viewport, and narrow, so there's room on every
       // side and nothing flips.
-      await renderTemplate(
+      await render(
         () =>
           html`<div
             style="display: grid; place-items: center; block-size: 100vh;"
@@ -607,9 +603,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-select>
             <slab-option>One</slab-option>
@@ -622,9 +618,9 @@ test(
 test(
   'throws when its default slot is the wrong type',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-select label="Label">
             <option>One</option>
@@ -638,8 +634,8 @@ test(
 test(
   'ignores options that are not its children',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option value="one">

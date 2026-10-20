@@ -2,23 +2,19 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type Form from './form.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-form></slab-form>`);
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-form></slab-form>`);
 
-    await expect(page.locator('slab-form')).toBeInTheCustomElementRegistry(
-      'slab-form',
-    );
-  },
-);
+  await expect(page.locator('slab-form')).toBeInTheCustomElementRegistry(
+    'slab-form',
+  );
+});
 
 test(
   'renders its form in the light DOM, with its children inside it',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-text-field label="Label"></slab-text-field>
@@ -43,8 +39,8 @@ test(
 test(
   'moves children added later into its form',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-form></slab-form>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-form></slab-form>`);
 
     const host = page.locator('slab-form');
 
@@ -64,8 +60,8 @@ test(
 test(
   'keeps a single form when it is moved',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <input aria-label="Label" />
@@ -90,8 +86,8 @@ test(
 test(
   'passes its attributes to its form',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form
           action="/action"
@@ -122,8 +118,8 @@ test(
 test(
   'removes an attribute from its form when it is unset',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, removeAttribute }) => {
-    await renderTemplate(
+  async ({ render, page, removeAttribute }) => {
+    await render(
       () => html`<slab-form method="post" label="Label"></slab-form>`,
     );
 
@@ -142,10 +138,8 @@ test(
 test(
   'renders its children',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-form><button>Button</button></slab-form>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-form><button>Button</button></slab-form>`);
 
     await expect(page.getByRole('button')).toBeVisible();
   },

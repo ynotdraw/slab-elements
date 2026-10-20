@@ -14,27 +14,19 @@ function getItems(page: import('@playwright/test').Page) {
     });
 }
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-pagination total="1"></slab-pagination>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-pagination total="1"></slab-pagination>`);
 
-    await expect(
-      page.locator('slab-pagination'),
-    ).toBeInTheCustomElementRegistry('slab-pagination');
-  },
-);
+  await expect(page.locator('slab-pagination')).toBeInTheCustomElementRegistry(
+    'slab-pagination',
+  );
+});
 
 test(
   'shows every page when there are few enough',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-pagination total="7"></slab-pagination>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-pagination total="7"></slab-pagination>`);
 
     expect(await getItems(page)).toStrictEqual([
       'Previous',
@@ -53,10 +45,8 @@ test(
 test(
   'shows an ellipsis in place of the pages that are not shown',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
-      () => html`<slab-pagination total="10"></slab-pagination>`,
-    );
+  async ({ render, page, setProperty }) => {
+    await render(() => html`<slab-pagination total="10"></slab-pagination>`);
 
     const host = page.locator('slab-pagination');
 
@@ -117,8 +107,8 @@ test(
 test(
   'keeps `page` to a page that exists',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`<slab-pagination total="3" page="5"></slab-pagination>`,
     );
 
@@ -174,9 +164,9 @@ test(
 test(
   'throws when `total` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-pagination></slab-pagination>`),
+      render(() => html`<slab-pagination></slab-pagination>`),
     ).rejects.toThrow();
   },
 );
@@ -184,10 +174,8 @@ test(
 test(
   'sets `:state(first)` and `:state(last)`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
-      () => html`<slab-pagination total="2"></slab-pagination>`,
-    );
+  async ({ render, page, setProperty }) => {
+    await render(() => html`<slab-pagination total="2"></slab-pagination>`);
 
     const host = page.locator('slab-pagination');
 

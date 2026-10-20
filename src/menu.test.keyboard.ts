@@ -8,8 +8,8 @@ const isActive = (locator: import('@playwright/test').Locator) => {
 test(
   'opens at the first Menu Item via Enter, Space and ArrowDown on its anchor',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label">
           <button slot="anchor">Anchor</button>
@@ -45,8 +45,8 @@ test(
 test(
   'opens at the last Menu Item via ArrowUp on its anchor',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label">
           <button slot="anchor">Anchor</button>
@@ -69,8 +69,8 @@ test(
 test(
   'leaves modified keys on its anchor alone',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label">
           <button slot="anchor">Anchor</button>
@@ -89,8 +89,8 @@ test(
 test(
   'moves via ArrowDown and ArrowUp, wrapping and skipping disabled Menu Items',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label" open>
           <button slot="anchor">Anchor</button>
@@ -122,8 +122,8 @@ test(
 test(
   'moves to the first and last Menu Items via Home and End',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label" open>
           <button slot="anchor">Anchor</button>
@@ -146,8 +146,8 @@ test(
 test(
   'moves to a Menu Item via typeahead',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label" open>
           <button slot="anchor">Anchor</button>
@@ -173,8 +173,8 @@ test(
 test(
   'clicks the active Menu Item and closes via Enter and Space',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label">
           <button slot="anchor">Anchor</button>
@@ -208,8 +208,8 @@ test(
 test(
   'closes via Tab, and focus moves on from its anchor',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label">
             <button slot="anchor">Anchor</button>
@@ -231,8 +231,8 @@ test(
 test(
   'leaves modified keys in the menu alone',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label" open>
           <button slot="anchor">Anchor</button>
@@ -254,8 +254,8 @@ test(
 test(
   'does nothing via Enter when no Menu Item is active',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label" open>
           <button slot="anchor">Anchor</button>

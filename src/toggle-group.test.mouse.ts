@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'presses a button on click, releasing the one pressed before',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group label="Label">
           <slab-toggle-group-button pressed value="one"
@@ -34,8 +34,8 @@ test(
 test(
   'releases a pressed button on click',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group label="Label">
           <slab-toggle-group-button pressed value="one"
@@ -61,8 +61,8 @@ test(
 test(
   'presses more than one button on click when `multiple`',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group label="Label" multiple>
           <slab-toggle-group-button value="one">One</slab-toggle-group-button>
@@ -88,8 +88,8 @@ test(
 test(
   'presses a button when what is clicked is inside it',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group label="Label">
           <slab-toggle-group-button value="one"
@@ -110,8 +110,8 @@ test(
 test(
   'presses nothing when a click is canceled',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group label="Label">
           <slab-toggle-group-button
@@ -142,8 +142,8 @@ test(
 test(
   'makes a clicked button the tabbable one',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group label="Label">
           <slab-toggle-group-button value="one">One</slab-toggle-group-button>

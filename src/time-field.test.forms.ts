@@ -3,30 +3,24 @@ import { expect, test } from './playwright/test.js';
 import type Form from './form.js';
 import type TimeField from './time-field.js';
 
-test(
-  'has a `form` property',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <form>
-          <slab-time-field label="Label"></slab-time-field>
-        </form>
-      `,
-    );
+test('has a `form` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <form>
+        <slab-time-field label="Label"></slab-time-field>
+      </form>
+    `,
+  );
 
-    const hasForm = await page
-      .locator('slab-time-field')
-      .evaluate((element) => {
-        return 'form' in element && element.form instanceof HTMLFormElement;
-      });
+  const hasForm = await page.locator('slab-time-field').evaluate((element) => {
+    return 'form' in element && element.form instanceof HTMLFormElement;
+  });
 
-    expect(hasForm).toBe(true);
-  },
-);
+  expect(hasForm).toBe(true);
+});
 
-test('has form data', { tag: '@forms' }, async ({ renderTemplate, page }) => {
-  await renderTemplate(
+test('has form data', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
     () => html`
       <form>
         <slab-time-field
@@ -44,8 +38,8 @@ test('has form data', { tag: '@forms' }, async ({ renderTemplate, page }) => {
 test(
   'has no form data when disabled',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-time-field
@@ -65,8 +59,8 @@ test(
 test(
   'has no form data when it has no `name`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-time-field label="Label" value="09:30"></slab-time-field>
@@ -83,8 +77,8 @@ test(
 test(
   'drops a value that is not a time',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-time-field
@@ -104,8 +98,8 @@ test(
 test(
   'can be reset',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-time-field
@@ -135,8 +129,8 @@ test(
 test(
   'is invalid when `required` and empty',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-time-field label="Label" required></slab-time-field>`,
     );
 
@@ -150,8 +144,8 @@ test(
 test(
   'is valid when `required` and filled',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-time-field
           label="Label"
@@ -173,8 +167,8 @@ test(
 test(
   'is invalid when earlier than `min`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-time-field
           label="Label"
@@ -193,8 +187,8 @@ test(
 test(
   'is invalid when later than `max`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-time-field
           label="Label"
@@ -213,8 +207,8 @@ test(
 test(
   'is invalid when it is not a `step` from `min`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-time-field
           label="Label"
@@ -234,8 +228,8 @@ test(
 test(
   'is valid when it is a `step` from `min`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-time-field
           label="Label"
@@ -257,8 +251,8 @@ test(
 test(
   'is valid inside a range across midnight',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-time-field
           label="Label"
@@ -278,8 +272,8 @@ test(
 test(
   'is invalid outside a range across midnight',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-time-field
           label="Label"
@@ -300,8 +294,8 @@ test(
 test(
   'reports its validity',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-time-field label="Label" required></slab-time-field>`,
     );
 
@@ -323,8 +317,8 @@ test(
 test(
   'checks its validity without reporting it',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-time-field label="Label" required></slab-time-field>`,
     );
 
@@ -342,8 +336,8 @@ test(
 test(
   'clears its validity feedback without changing its validity',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-time-field label="Label" required></slab-time-field>`,
     );
 
@@ -364,10 +358,8 @@ test(
 test(
   'takes a custom validity message',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-time-field label="Label"></slab-time-field>`,
-    );
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-time-field label="Label"></slab-time-field>`);
 
     const host = page.locator('slab-time-field');
 
@@ -389,10 +381,8 @@ test(
 test(
   'shows a custom validity message as text, not HTML',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-time-field label="Label"></slab-time-field>`,
-    );
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-time-field label="Label"></slab-time-field>`);
 
     const host = page.locator('slab-time-field');
     const validityMessage = page.locator('[data-test="validity-message"]');
@@ -408,10 +398,8 @@ test(
 test(
   'gives its validity back when a custom message is cleared',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-time-field label="Label"></slab-time-field>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-time-field label="Label"></slab-time-field>`);
 
     const host = page.locator('slab-time-field');
 
@@ -427,10 +415,8 @@ test(
 test(
   'takes a validity of its own',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-time-field label="Label"></slab-time-field>`,
-    );
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-time-field label="Label"></slab-time-field>`);
 
     const host = page.locator('slab-time-field');
 
@@ -452,8 +438,8 @@ test(
 test(
   'stops mirroring the input once a validity of its own is set',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-time-field label="Label" required></slab-time-field>`,
     );
 
@@ -472,41 +458,37 @@ test(
   },
 );
 
-test(
-  'restores its state',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <form>
-          <slab-time-field label="Label" name="name"></slab-time-field>
-        </form>
-      `,
-    );
+test('restores its state', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <form>
+        <slab-time-field label="Label" name="name"></slab-time-field>
+      </form>
+    `,
+  );
 
-    const host = page.locator('slab-time-field');
+  const host = page.locator('slab-time-field');
 
-    // Browsers call this when restoring a page from history or autofilling.
-    // Neither is practical in a test.
-    await host.evaluate<void, void, TimeField>((element) => {
-      element.formStateRestoreCallback('09:30');
-    });
+  // Browsers call this when restoring a page from history or autofilling.
+  // Neither is practical in a test.
+  await host.evaluate<void, void, TimeField>((element) => {
+    element.formStateRestoreCallback('09:30');
+  });
 
-    await expect(host).toHaveJSProperty('value', '09:30');
+  await expect(host).toHaveJSProperty('value', '09:30');
 
-    await host.evaluate<void, void, TimeField>((element) => {
-      element.formStateRestoreCallback(null);
-    });
+  await host.evaluate<void, void, TimeField>((element) => {
+    element.formStateRestoreCallback(null);
+  });
 
-    await expect(host).toHaveJSProperty('value', '');
-  },
-);
+  await expect(host).toHaveJSProperty('value', '');
+});
 
 test(
   'is disabled by its fieldset',
   { tag: '@forms' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <fieldset>
@@ -536,8 +518,8 @@ test(
 test(
   'focuses itself when its form is submitted and it is the first invalid one',
   { tag: '@forms' },
-  async ({ addEventListener, callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-time-field label="Label" required></slab-time-field>
@@ -558,8 +540,8 @@ test(
 test(
   'resets to empty when it has no `value` attribute',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-time-field label="Label"></slab-time-field>
@@ -578,8 +560,8 @@ test(
 test(
   "doesn't report its validity when its Form's is only checked",
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-time-field label="Label" required></slab-time-field>
@@ -627,8 +609,8 @@ test(
 test(
   'is enabled again after its `disabled` is turned off',
   { tag: '@forms' },
-  async ({ browserName, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ browserName, render, page, setProperty }) => {
+    await render(
       () =>
         html`<form>
           <slab-time-field label="Label"></slab-time-field>
@@ -657,8 +639,8 @@ test(
 test(
   'is enabled again after it and its fieldset are enabled together',
   { tag: '@forms' },
-  async ({ browserName, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ browserName, render, page }) => {
+    await render(
       () =>
         html`<form>
           <fieldset disabled>

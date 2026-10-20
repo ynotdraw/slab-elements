@@ -9,8 +9,8 @@ for (const key of ['Enter', ' ', 'ArrowDown', 'ArrowUp', 'Alt+ArrowDown']) {
   test(
     `opens on ${key === ' ' ? 'Space' : key}, making its selected option active`,
     { tag: '@keyboard' },
-    async ({ renderTemplate, page }) => {
-      await renderTemplate(
+    async ({ render, page }) => {
+      await render(
         () =>
           html`<slab-select label="Label">
             <slab-option>One</slab-option>
@@ -50,8 +50,8 @@ for (const key of ['Enter', ' ', 'ArrowDown', 'ArrowUp', 'Alt+ArrowDown']) {
 test(
   'makes its first enabled option active on open when none is selected',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option disabled>One</slab-option>
@@ -69,8 +69,8 @@ test(
 test(
   'opens and moves to its first or last option on Home and End',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option>One</slab-option>
@@ -103,8 +103,8 @@ test(
 test(
   'moves its active option when arrowing while open',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option>One</slab-option>
@@ -149,8 +149,8 @@ test(
 test(
   'moves its active option to the first or last on Home and End while open',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option>One</slab-option>
@@ -179,8 +179,8 @@ test(
 test(
   'moves and toggles on Shift+ArrowDown and Shift+ArrowUp when multiple',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" multiple>
           <slab-option>One</slab-option>
@@ -212,8 +212,8 @@ test(
 test(
   'selects its active option and closes on Enter and Space',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option>One</slab-option>
@@ -251,8 +251,8 @@ test(
 test(
   'closes on Enter when its active option is already selected',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option selected>One</slab-option>
@@ -276,8 +276,8 @@ test(
 test(
   'toggles its active option and stays open on Enter and Space when multiple',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" multiple>
           <slab-option>One</slab-option>
@@ -306,8 +306,8 @@ test(
 test(
   'selects every option on Control+A when multiple',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" multiple>
           <slab-option>One</slab-option>
@@ -334,8 +334,8 @@ test(
 test(
   'closes on Escape without selecting, keeping focus',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option>One</slab-option>
@@ -364,8 +364,8 @@ test(
 test(
   'leaves Escape alone when closed',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<dialog>
           <slab-select label="Label">
@@ -389,9 +389,9 @@ test(
 test(
   'selects its active option and closes on Tab, moving focus on',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
+  async ({ render, page }) => {
     // An input rather than a button, which WebKit leaves out of the Tab order.
-    await renderTemplate(
+    await render(
       () =>
         html`<slab-select label="Label">
             <slab-option>One</slab-option>
@@ -417,8 +417,8 @@ test(
 test(
   'closes on Tab without toggling anything when multiple',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" multiple>
           <slab-option>One</slab-option>
@@ -439,8 +439,8 @@ test(
 test(
   'selects its active option and closes on Alt+ArrowUp',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option>One</slab-option>
@@ -470,10 +470,10 @@ test(
 test(
   'selects by typeahead while closed, without opening',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
+  async ({ render, page }) => {
     await page.clock.install();
 
-    await renderTemplate(
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option>Red</slab-option>
@@ -517,8 +517,8 @@ test(
 test(
   'opens on typeahead while closed when multiple',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" multiple>
           <slab-option>One</slab-option>
@@ -540,8 +540,8 @@ test(
 test(
   'moves its active option by typeahead while open, without selecting',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option>One</slab-option>
@@ -564,8 +564,8 @@ test(
 test(
   'leaves other modified keys alone',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option>One</slab-option>
@@ -587,8 +587,8 @@ test(
 test(
   'is skipped when disabled',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" disabled>
             <slab-option>One</slab-option>
@@ -606,8 +606,8 @@ test(
 test(
   'selects from the last selected option to the active one on Shift+Space when multiple',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" multiple>
           <slab-option>One</slab-option>
@@ -643,8 +643,8 @@ test(
 test(
   'selects only the active option on Shift+Space when multiple and none has been selected',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" multiple>
           <slab-option>One</slab-option>
@@ -666,8 +666,8 @@ test(
 test(
   'selects from the active option to the first or last on Control+Shift+Home and Control+Shift+End when multiple',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" multiple>
           <slab-option>One</slab-option>
@@ -695,8 +695,8 @@ test(
 test(
   'selects nothing on Control+Shift+End when multiple and no option can be active',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" multiple>
           <slab-option disabled>One</slab-option>
@@ -718,8 +718,8 @@ test(
 test(
   'leaves Control+Shift+End alone when closed or not multiple',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-select label="Label" multiple>
           <slab-option>One</slab-option>

@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'selects a Tree Item and expands or collapses it when it is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
           <slab-tree-item>
@@ -51,8 +51,8 @@ test(
 test(
   'does not select a disabled Tree Item when it is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label">
           <slab-tree-item disabled>One</slab-tree-item>
@@ -72,8 +72,8 @@ test(
 test(
   'toggles a Tree Item when it is clicked when `multiple`',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tree label="Label" multiple>
           <slab-tree-item>One</slab-tree-item>

@@ -5,8 +5,8 @@ import type Switch from './switch.js';
 test(
   'is checked when clicked via Space',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-switch label="Label"></slab-switch>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-switch label="Label"></slab-switch>`);
 
     const host = page.locator('slab-switch');
     const switch$ = page.getByRole('switch');
@@ -36,10 +36,8 @@ test(
 test(
   'is unchecked when clicked via Space',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-switch label="Label" checked></slab-switch>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-switch label="Label" checked></slab-switch>`);
 
     const host = page.locator('slab-switch');
     const switch$ = page.getByRole('switch');
@@ -69,8 +67,8 @@ test(
 test(
   'is unchecked after being clicked then forcibly unchecked via a "change" handler',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-switch label="Label"></slab-switch>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-switch label="Label"></slab-switch>`);
 
     const host = page.locator('slab-switch');
     const switch$ = page.getByRole('switch');
@@ -91,8 +89,8 @@ test(
 test(
   'is unchecked after being clicked via Space then forcibly unchecked via an "input" handler',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-switch label="Label"></slab-switch>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-switch label="Label"></slab-switch>`);
 
     const host = page.locator('slab-switch');
     const switch$ = page.getByRole('switch');
@@ -113,10 +111,8 @@ test(
 test(
   'remains checked when its "click" event is canceled',
   { tag: '@keyboard' },
-  async ({ addEventListener, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-switch label="Label" checked></slab-switch>`,
-    );
+  async ({ addEventListener, render, page }) => {
+    await render(() => html`<slab-switch label="Label" checked></slab-switch>`);
 
     const host = page.locator('slab-switch');
     const switch$ = page.getByRole('switch');
@@ -131,8 +127,8 @@ test(
 test(
   'remains unchecked when its "click" event is canceled',
   { tag: '@keyboard' },
-  async ({ addEventListener, renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-switch label="Label"></slab-switch>`);
+  async ({ addEventListener, render, page }) => {
+    await render(() => html`<slab-switch label="Label"></slab-switch>`);
 
     const host = page.locator('slab-switch');
     const switch$ = page.getByRole('switch');

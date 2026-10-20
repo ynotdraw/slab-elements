@@ -3,35 +3,31 @@ import { expect, test } from './playwright/test.js';
 import type Combobox from './combobox.js';
 import type Form from './form.js';
 
-test(
-  'has a `form` property',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <form>
-          <slab-combobox label="Label">
-            <slab-option>One</slab-option>
-          </slab-combobox>
-        </form>
-      `,
-    );
+test('has a `form` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <form>
+        <slab-combobox label="Label">
+          <slab-option>One</slab-option>
+        </slab-combobox>
+      </form>
+    `,
+  );
 
-    const host = page.locator('slab-combobox');
+  const host = page.locator('slab-combobox');
 
-    const hasForm = await host.evaluate((element) => {
-      return 'form' in element && element.form instanceof HTMLFormElement;
-    });
+  const hasForm = await host.evaluate((element) => {
+    return 'form' in element && element.form instanceof HTMLFormElement;
+  });
 
-    expect(hasForm).toBe(true);
-  },
-);
+  expect(hasForm).toBe(true);
+});
 
 test(
   'can be reset to its initial value',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" value="two">
@@ -62,8 +58,8 @@ test(
 test(
   'can be reset to its selected option',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label">
@@ -89,8 +85,8 @@ test(
 test(
   'has form data when an option is selected',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" name="name">
@@ -117,8 +113,8 @@ test(
 test(
   'has no form data without a name',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" value="one">
@@ -135,8 +131,8 @@ test(
 test(
   'has no form data when disabled',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" name="name" value="one" disabled>
@@ -153,8 +149,8 @@ test(
 test(
   'goes back to its selected option when what was typed matches none',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" name="name" value="one">
@@ -184,8 +180,8 @@ test(
 test(
   'clears its value when its input is emptied',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-combobox label="Label" value="one">
           <slab-option value="one">One</slab-option>
@@ -207,8 +203,8 @@ test(
 test(
   'submits what was typed when `allow-custom`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" name="name" allow-custom>
@@ -245,8 +241,8 @@ test(
 test(
   'is invalid when required and empty',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" required>
@@ -287,8 +283,8 @@ test(
 test(
   'is invalid on submit when required and empty',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" required>
@@ -324,8 +320,8 @@ test(
 test(
   'does not take focus on submit when another control is the first invalid one',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" required>
@@ -350,8 +346,8 @@ test(
 test(
   'is both valid and invalid when required but disabled',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" disabled required>
@@ -374,8 +370,8 @@ test(
 test(
   'reports its validity when blurred',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" required>
@@ -407,8 +403,8 @@ test(
 test(
   'supports `setCustomValidity()`',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" required>
@@ -445,8 +441,8 @@ test(
 test(
   'shows a custom validity message as text, not HTML',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" required>
@@ -470,8 +466,8 @@ test(
 test(
   'supports `setValidity()`',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" required value="one">
@@ -504,8 +500,8 @@ test(
 test(
   'supports `resetValidityFeedback()`',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" required>
@@ -526,45 +522,41 @@ test(
   },
 );
 
-test(
-  'restores its state',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <form>
-          <slab-combobox label="Label" name="name">
-            <slab-option value="one">One</slab-option>
-          </slab-combobox>
-        </form>
-      `,
-    );
+test('restores its state', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <form>
+        <slab-combobox label="Label" name="name">
+          <slab-option value="one">One</slab-option>
+        </slab-combobox>
+      </form>
+    `,
+  );
 
-    const host = page.locator('slab-combobox');
+  const host = page.locator('slab-combobox');
 
-    // Browsers call this when restoring a page from history or autofilling.
-    // Neither is practical in a test.
-    await host.evaluate<void, void, Combobox>((element) => {
-      element.formStateRestoreCallback('one');
-    });
+  // Browsers call this when restoring a page from history or autofilling.
+  // Neither is practical in a test.
+  await host.evaluate<void, void, Combobox>((element) => {
+    element.formStateRestoreCallback('one');
+  });
 
-    await expect(host).toHaveJSProperty('value', 'one');
-    await expect(page.getByRole('combobox')).toHaveValue('One');
+  await expect(host).toHaveJSProperty('value', 'one');
+  await expect(page.getByRole('combobox')).toHaveValue('One');
 
-    await host.evaluate<void, void, Combobox>((element) => {
-      element.formStateRestoreCallback(null);
-    });
+  await host.evaluate<void, void, Combobox>((element) => {
+    element.formStateRestoreCallback(null);
+  });
 
-    await expect(host).toHaveJSProperty('value', '');
-    await expect(page.getByRole('combobox')).toHaveValue('');
-  },
-);
+  await expect(host).toHaveJSProperty('value', '');
+  await expect(page.getByRole('combobox')).toHaveValue('');
+});
 
 test(
   'is disabled by its fieldset, and enabled again',
   { tag: '@forms' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <fieldset>
@@ -599,8 +591,8 @@ test(
 test(
   "doesn't report its validity when its Form's is only checked",
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-combobox label="Label" required>
@@ -650,8 +642,8 @@ test(
 test(
   'has one form data entry per value when `multiple`',
   { tag: '@forms' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" name="name" multiple>
@@ -680,8 +672,8 @@ test(
 test(
   'keeps only its first value when `multiple` is removed',
   { tag: '@forms' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" name="name" multiple>
@@ -706,8 +698,8 @@ test(
 test(
   'can be reset to its initial values when `multiple`',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" multiple>
@@ -737,8 +729,8 @@ test(
 test(
   'restores its state when `multiple`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" name="name" multiple>
@@ -768,8 +760,8 @@ test(
 test(
   'is invalid when required, `multiple` and without a value',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" multiple required>
@@ -813,8 +805,8 @@ test(
 test(
   'reports its validity when focus leaves it from a tag',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-combobox label="Label" multiple>

@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'selects Tabs via ArrowRight and ArrowLeft, wrapping and skipping disabled ones',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one">One</slab-tabs-tab>
@@ -48,8 +48,8 @@ test(
 test(
   'selects the first and last Tabs via Home and End',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one">One</slab-tabs-tab>
@@ -75,8 +75,8 @@ test(
 test(
   'uses ArrowDown and ArrowUp when `orientation="vertical"`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label" orientation="vertical">
           <slab-tabs-tab panel="one">One</slab-tabs-tab>
@@ -103,8 +103,8 @@ test(
 test(
   'selects via Space and Enter rather than focus when `manual`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label" manual>
           <slab-tabs-tab panel="one">One</slab-tabs-tab>
@@ -139,8 +139,8 @@ test(
 test(
   'does not dispatch "change" when the selected Tab is selected again',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one">One</slab-tabs-tab>
@@ -161,8 +161,8 @@ test(
 test(
   'does not select a disabled Tab that has focus via Space or Enter',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one">One</slab-tabs-tab>
@@ -191,8 +191,8 @@ test(
 test(
   'leaves modified keys alone',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one">One</slab-tabs-tab>
@@ -214,8 +214,8 @@ test(
 test(
   'moves focus from the selected Tab to its Panel via Tab',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tabs label="Label">
           <slab-tabs-tab panel="one">One</slab-tabs-tab>

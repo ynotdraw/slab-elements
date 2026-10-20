@@ -4,28 +4,24 @@ import { viteUrl } from './playwright/constants.js';
 import type ToggleGroup from './toggle-group.js';
 import type ToggleGroupButton from './toggle-group.button.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-toggle-group label="Label">
-          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
-        </slab-toggle-group>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-toggle-group label="Label">
+        <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+      </slab-toggle-group>`,
+  );
 
-    await expect(
-      page.locator('slab-toggle-group'),
-    ).toBeInTheCustomElementRegistry('slab-toggle-group');
-  },
-);
+  await expect(
+    page.locator('slab-toggle-group'),
+  ).toBeInTheCustomElementRegistry('slab-toggle-group');
+});
 
 test(
   "sets each button's `aria-pressed` and `:state(pressed)`",
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group label="Label">
           <slab-toggle-group-button value="one">One</slab-toggle-group-button>
@@ -51,8 +47,8 @@ test(
 test(
   'keeps only the last button pressed unless `multiple`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group label="Label" multiple>
           <slab-toggle-group-button value="one">One</slab-toggle-group-button>
@@ -120,8 +116,8 @@ test(
 test(
   'presses the buttons named by `value` and `values`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group label="Label">
           <slab-toggle-group-button value="one">One</slab-toggle-group-button>
@@ -179,8 +175,8 @@ test(
 test(
   'makes the first enabled button tabbable',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group label="Label">
           <slab-toggle-group-button disabled value="one"
@@ -209,8 +205,8 @@ test(
 test(
   'moves the tabbable button off one that is disabled or removed',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group label="Label">
           <slab-toggle-group-button value="one">One</slab-toggle-group-button>
@@ -243,8 +239,8 @@ test(
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group label="Label">
           <slab-toggle-group-button disabled value="one"
@@ -294,9 +290,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-toggle-group>
             <slab-toggle-group-button value="one">One</slab-toggle-group-button>
@@ -309,11 +305,9 @@ test(
 test(
   'throws when its default slot is empty',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
-        () => html`<slab-toggle-group label="Label"></slab-toggle-group>`,
-      ),
+      render(() => html`<slab-toggle-group label="Label"></slab-toggle-group>`),
     ).rejects.toThrow();
   },
 );
@@ -321,9 +315,9 @@ test(
 test(
   'throws when its default slot holds something other than a button',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-toggle-group label="Label">
             <div>One</div>

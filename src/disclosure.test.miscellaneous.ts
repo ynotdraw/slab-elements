@@ -3,25 +3,21 @@ import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 import type Disclosure from './disclosure.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-disclosure label="Label">Content</slab-disclosure>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-disclosure label="Label">Content</slab-disclosure>`,
+  );
 
-    await expect(
-      page.locator('slab-disclosure'),
-    ).toBeInTheCustomElementRegistry('slab-disclosure');
-  },
-);
+  await expect(page.locator('slab-disclosure')).toBeInTheCustomElementRegistry(
+    'slab-disclosure',
+  );
+});
 
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-disclosure label="Label">Content</slab-disclosure>`,
     );
 
@@ -34,8 +30,8 @@ test(
 test(
   'renders a native `<details>` and `<summary>`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-disclosure label="Label">Content</slab-disclosure>`,
     );
 
@@ -47,8 +43,8 @@ test(
 test(
   'opens and dispatches "toggle" when `open` is set',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-disclosure label="Label">Content</slab-disclosure>`,
     );
 
@@ -79,8 +75,8 @@ test(
 test(
   'dispatches a "toggle" with the old and new states',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-disclosure label="Label">Content</slab-disclosure>`,
     );
 
@@ -134,8 +130,8 @@ test(
 test(
   'passes `name` to its `<details>`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-disclosure label="Label" name="group">
           Content
@@ -160,8 +156,8 @@ test(
 test(
   'does not close another Disclosure of the same `name`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-disclosure label="One" name="group" open>
             One
@@ -222,9 +218,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-disclosure></slab-disclosure>`),
+      render(() => html`<slab-disclosure></slab-disclosure>`),
     ).rejects.toThrow();
   },
 );

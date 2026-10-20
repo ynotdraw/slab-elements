@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'presses and releases a button via Space and Enter',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group label="Label">
           <slab-toggle-group-button value="one">One</slab-toggle-group-button>
@@ -37,8 +37,8 @@ test(
 test(
   'moves focus via ArrowRight and ArrowLeft without pressing, wrapping and skipping disabled buttons',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group label="Label">
           <slab-toggle-group-button value="one">One</slab-toggle-group-button>
@@ -77,8 +77,8 @@ test(
 test(
   'moves focus to the first and last buttons via Home and End',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group label="Label">
           <slab-toggle-group-button value="one">One</slab-toggle-group-button>
@@ -103,8 +103,8 @@ test(
 test(
   'uses ArrowDown and ArrowUp when `orientation="vertical"`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group label="Label" orientation="vertical">
           <slab-toggle-group-button value="one">One</slab-toggle-group-button>
@@ -129,8 +129,8 @@ test(
 test(
   'returns focus to the most recently focused button via Tab',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<button>Before</button>
 
@@ -156,8 +156,8 @@ test(
 test(
   'leaves modified and cancelled keys alone',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group label="Label">
           <slab-toggle-group-button value="one">One</slab-toggle-group-button>

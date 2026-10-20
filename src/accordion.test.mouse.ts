@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'closes the others when one is opened via click and `exclusive`',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-accordion exclusive>
           <slab-disclosure label="One">One</slab-disclosure>
@@ -35,8 +35,8 @@ test(
 test(
   'can close the open one when `exclusive`',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-accordion exclusive>
           <slab-disclosure label="One" open>One</slab-disclosure>
@@ -57,8 +57,8 @@ test(
 test(
   'leaves the others open when not `exclusive`',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-accordion>
           <slab-disclosure label="One" open>One</slab-disclosure>

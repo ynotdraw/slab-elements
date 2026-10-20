@@ -2,35 +2,31 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type Form from './form.js';
 
-test(
-  'has a `form` property',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <form>
-          <slab-checkbox-group label="Label">
-            <slab-checkbox label="Label"></slab-checkbox>
-          </slab-checkbox-group>
-        </form>
-      `,
-    );
+test('has a `form` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <form>
+        <slab-checkbox-group label="Label">
+          <slab-checkbox label="Label"></slab-checkbox>
+        </slab-checkbox-group>
+      </form>
+    `,
+  );
 
-    const host = page.locator('slab-checkbox-group');
+  const host = page.locator('slab-checkbox-group');
 
-    const hasForm = await host.evaluate((element) => {
-      return 'form' in element && element.form instanceof HTMLFormElement;
-    });
+  const hasForm = await host.evaluate((element) => {
+    return 'form' in element && element.form instanceof HTMLFormElement;
+  });
 
-    expect(hasForm).toBe(true);
-  },
-);
+  expect(hasForm).toBe(true);
+});
 
 test(
   'can be reset',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label">
@@ -61,8 +57,8 @@ test(
 test(
   'has form data when a checkbox is checked',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" name="name">
@@ -83,8 +79,8 @@ test(
 test(
   'has form data when all checkboxes are checked',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" name="name">
@@ -105,8 +101,8 @@ test(
 test(
   'has form data when a checkbox is checked and indeterminate',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" name="name">
@@ -132,8 +128,8 @@ test(
 test(
   'has no form data when all checkboxes are unchecked',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" name="name">
@@ -153,8 +149,8 @@ test(
 test(
   'has no form data when a checkbox is checked and disabled',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" name="name">
@@ -180,8 +176,8 @@ test(
 test(
   'has no form data when it is disabled a checkbox is checked',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" name="name" disabled>
@@ -202,8 +198,8 @@ test(
 test(
   'has no form data when it has no name and a checkbox is checked',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label">
@@ -222,8 +218,8 @@ test(
 test(
   'is valid when required and a checkbox is checked',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" required>
@@ -251,8 +247,8 @@ test(
 test(
   'is valid when not required and no checkbox is checked',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label">
@@ -280,8 +276,8 @@ test(
 test(
   'is valid when required and made not required programmatically and no checkbox is checked',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page, removeAttribute }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, removeAttribute }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" required>
@@ -311,8 +307,8 @@ test(
 test(
   'is both valid and invalid when required but disabled and no checkbox is checked',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" disabled required>
@@ -335,8 +331,8 @@ test(
 test(
   'is valid on submit when required and a checkbox is checked',
   { tag: '@forms' },
-  async ({ addEventListener, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" required>
@@ -367,8 +363,8 @@ test(
 test(
   'is valid when a disabled and checked checkbox is enabled programmatically',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page, removeAttribute }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, removeAttribute }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" required>
@@ -401,8 +397,8 @@ test(
 test(
   'is invalid when an enabled and checked checkbox is disabled programmatically',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" required>
@@ -434,8 +430,8 @@ test(
 test(
   'is invalid when required and no checkbox is checked',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" required>
@@ -463,8 +459,8 @@ test(
 test(
   'is invalid when required and its only checked checkbox is unchecked via click',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" required>
@@ -495,8 +491,8 @@ test(
 test(
   'is invalid on submit when required and no checkbox is checked',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" required>
@@ -526,8 +522,8 @@ test(
 test(
   'focuses its first checkbox on submit when invalid',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" required>
@@ -552,8 +548,8 @@ test(
 test(
   'does not focus its first checkbox on submit when invalid when another checkbox has focus',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" required>
@@ -575,8 +571,8 @@ test(
 test(
   'submits its form on Enter',
   { tag: '@forms' },
-  async ({ addEventListener, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label">
@@ -603,8 +599,8 @@ test(
 test(
   'updates its validity when its last enabled checkbox is blurred',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" required>
@@ -651,8 +647,8 @@ test(
 test(
   'supports `setCustomValidity()`',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" required>
@@ -689,8 +685,8 @@ test(
 test(
   'shows a custom validity message as text, not HTML',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" required>
@@ -714,8 +710,8 @@ test(
 test(
   'supports `setValidity()`',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" required>
@@ -745,8 +741,8 @@ test(
 test(
   'supports `resetValidityFeedback()`',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" required>
@@ -770,8 +766,8 @@ test(
 test(
   'has no form data when its checked checkboxes have no value',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-checkbox-group label="Label" name="name">
@@ -794,8 +790,8 @@ test(
 test(
   "doesn't report its validity when its Form's is only checked",
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-checkbox-group label="Label" required>
@@ -845,8 +841,8 @@ test(
 test(
   'is enabled again after its `disabled` is turned off',
   { tag: '@forms' },
-  async ({ browserName, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ browserName, render, page, setProperty }) => {
+    await render(
       () =>
         html`<form>
           <slab-checkbox-group label="Label"
@@ -877,8 +873,8 @@ test(
 test(
   'is enabled again after it and its fieldset are enabled together',
   { tag: '@forms' },
-  async ({ browserName, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ browserName, render, page }) => {
+    await render(
       () =>
         html`<form>
           <fieldset disabled>

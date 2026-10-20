@@ -2,27 +2,23 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type Splitter from './splitter.js';
 
-test(
-  'is accessible',
-  { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-splitter label="Label">
-          <div slot="primary">Primary</div>
-          <div slot="secondary">Secondary</div>
-        </slab-splitter>`,
-    );
+test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-splitter label="Label">
+        <div slot="primary">Primary</div>
+        <div slot="secondary">Secondary</div>
+      </slab-splitter>`,
+  );
 
-    await expect(page).toBeAccessible('slab-splitter');
-  },
-);
+  await expect(page).toBeAccessible('slab-splitter');
+});
 
 test(
   'is accessible when disabled',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-splitter label="Label" disabled orientation="horizontal">
           <div slot="primary">Primary</div>
@@ -34,8 +30,22 @@ test(
   },
 );
 
-test('has a separator', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=splitter--splitter');
+test('has a separator', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-splitter
+        label="Label"
+        max="100"
+        min="0"
+        orientation="vertical"
+        step="5"
+        style="block-size: 12rem"
+        value="50"
+      >
+        <div slot="primary">Primary</div>
+        <div slot="secondary">Secondary</div>
+      </slab-splitter>`,
+  );
 
   await expect(page.locator('slab-splitter')).toMatchAriaSnapshot(`
     - text: Primary
@@ -56,8 +66,22 @@ test('has a separator', { tag: '@accessibility' }, async ({ page }) => {
 test(
   'orientation="horizontal"',
   { tag: '@accessibility' },
-  async ({ page }) => {
-    await page.goto('?id=splitter--splitter');
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-splitter
+          label="Label"
+          max="100"
+          min="0"
+          orientation="vertical"
+          step="5"
+          style="block-size: 12rem"
+          value="50"
+        >
+          <div slot="primary">Primary</div>
+          <div slot="secondary">Secondary</div>
+        </slab-splitter>`,
+    );
 
     await page
       .locator('slab-splitter')
@@ -79,18 +103,36 @@ test(
   },
 );
 
-test('disabled=${true}', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=splitter--splitter');
+test(
+  'disabled=${true}',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-splitter
+          label="Label"
+          max="100"
+          min="0"
+          orientation="vertical"
+          step="5"
+          style="block-size: 12rem"
+          value="50"
+        >
+          <div slot="primary">Primary</div>
+          <div slot="secondary">Secondary</div>
+        </slab-splitter>`,
+    );
 
-  await page
-    .locator('slab-splitter')
-    .evaluate<void, void, Splitter>((element) => {
-      element.disabled = true;
-    });
+    await page
+      .locator('slab-splitter')
+      .evaluate<void, void, Splitter>((element) => {
+        element.disabled = true;
+      });
 
-  await expect(page.locator('slab-splitter')).toMatchAriaSnapshot(`
+    await expect(page.locator('slab-splitter')).toMatchAriaSnapshot(`
     - text: Primary
     - separator "Label" [disabled]
     - text: Secondary
   `);
-});
+  },
+);

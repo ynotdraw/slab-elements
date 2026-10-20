@@ -3,28 +3,24 @@ import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 import type Combobox from './combobox.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-combobox label="Label">
-          <slab-option>One</slab-option>
-        </slab-combobox>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-combobox label="Label">
+        <slab-option>One</slab-option>
+      </slab-combobox>`,
+  );
 
-    await expect(page.locator('slab-combobox')).toBeInTheCustomElementRegistry(
-      'slab-combobox',
-    );
-  },
-);
+  await expect(page.locator('slab-combobox')).toBeInTheCustomElementRegistry(
+    'slab-combobox',
+  );
+});
 
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
           <slab-option>One</slab-option>
@@ -40,8 +36,8 @@ test(
 test(
   'shows its selected option when its value is set',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" value="two">
           <slab-option value="one">One</slab-option>
@@ -77,8 +73,8 @@ test(
 test(
   'gives precedence to its value over a selected option',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" value="one">
           <slab-option value="one">One</slab-option>
@@ -96,8 +92,8 @@ test(
 test(
   'keeps its input in step with options that are added or renamed',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" value="two">
           <slab-option value="one">One</slab-option>
@@ -126,8 +122,8 @@ test(
 test(
   'leaves what is being typed alone when its options change',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" value="one">
           <slab-option value="one">One</slab-option>
@@ -144,8 +140,8 @@ test(
 test(
   'filters with its `filter`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
           <slab-option>Apple</slab-option>
@@ -171,8 +167,8 @@ test(
 test(
   'can be opened and closed programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" open>
           <slab-option>One</slab-option>
@@ -196,8 +192,8 @@ test(
 test(
   'stays closed when disabled or empty',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" open>
           <slab-option>One</slab-option>
@@ -228,8 +224,8 @@ test(
 test(
   'can have its active option set programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" open>
           <slab-option>One</slab-option>
@@ -257,8 +253,8 @@ test(
 test(
   'drops its active option when it is filtered out',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
           <slab-option>One</slab-option>
@@ -286,8 +282,8 @@ test(
 test(
   'sets `:state(disabled)` and disables its options when disabled',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" disabled>
           <slab-option>One</slab-option>
@@ -310,8 +306,8 @@ test(
 test(
   'opens on the side given by `placement`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<div style="padding-block-start: 300px">
           <slab-combobox label="Label" placement="top" open>
@@ -330,8 +326,8 @@ test(
 test(
   'ignores options that are not its children',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
           <slab-option value="one">
@@ -382,9 +378,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-combobox>
             <slab-option>One</slab-option>
@@ -397,9 +393,9 @@ test(
 test(
   'throws when its default slot is the wrong type',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-combobox label="Label">
             <option>One</option>
@@ -415,8 +411,8 @@ test(
 test(
   'hides the Options it filters out even when they are given a `display`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-option {
@@ -439,8 +435,8 @@ test(
 test(
   'selects the options of its `values` when `multiple`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" multiple>
           <slab-option value="one">One</slab-option>
@@ -462,9 +458,11 @@ test(
     // In the order they were chosen.
     await expect(page.getByRole('button')).toHaveText(['Three', 'One']);
 
-    const selected = await host.evaluate<string[], void, Combobox>((element) => {
-      return element.selectedOptions.map(({ value }) => value);
-    });
+    const selected = await host.evaluate<string[], void, Combobox>(
+      (element) => {
+        return element.selectedOptions.map(({ value }) => value);
+      },
+    );
 
     expect(selected).toStrictEqual(['three', 'one']);
 
@@ -485,8 +483,8 @@ test(
 test(
   'names its tags with `removeLabel`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" multiple>
           <slab-option value="one" selected>One</slab-option>

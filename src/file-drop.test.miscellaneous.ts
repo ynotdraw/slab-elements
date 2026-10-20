@@ -2,27 +2,19 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-file-drop label="Label"></slab-file-drop>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-file-drop label="Label"></slab-file-drop>`);
 
-    await expect(page.locator('slab-file-drop')).toBeInTheCustomElementRegistry(
-      'slab-file-drop',
-    );
-  },
-);
+  await expect(page.locator('slab-file-drop')).toBeInTheCustomElementRegistry(
+    'slab-file-drop',
+  );
+});
 
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-file-drop label="Label"></slab-file-drop>`,
-    );
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-file-drop label="Label"></slab-file-drop>`);
 
     await callMethod(page.locator('slab-file-drop'), 'focus');
 
@@ -33,10 +25,8 @@ test(
 test(
   'has no files before it has rendered',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-file-drop label="Label"></slab-file-drop>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-file-drop label="Label"></slab-file-drop>`);
 
     // Created but not connected, so there's no input yet to hold any.
     const files = await page.evaluate(() => {
@@ -50,8 +40,8 @@ test(
 test(
   'passes `accept` and `multiple` to its input',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-file-drop
           label="Label"
@@ -71,10 +61,8 @@ test(
 test(
   'takes files picked through its input',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-file-drop label="Label"></slab-file-drop>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-file-drop label="Label"></slab-file-drop>`);
 
     const host = page.locator('slab-file-drop');
 
@@ -99,8 +87,8 @@ test(
 test(
   'hides its label visually when `hide-label` is set',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-file-drop label="Label" hide-label></slab-file-drop>`,
     );
 
@@ -117,8 +105,8 @@ test(
 test(
   'sets a custom state for each of its states',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-file-drop label="Label" disabled required></slab-file-drop>`,
     );
@@ -176,9 +164,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-file-drop></slab-file-drop>`),
+      render(() => html`<slab-file-drop></slab-file-drop>`),
     ).rejects.toThrow();
   },
 );
@@ -186,10 +174,8 @@ test(
 test(
   'can be clicked programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-file-drop label="Label"></slab-file-drop>`,
-    );
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-file-drop label="Label"></slab-file-drop>`);
 
     const host = page.locator('slab-file-drop');
 

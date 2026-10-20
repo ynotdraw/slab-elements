@@ -1,23 +1,19 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 
-test(
-  'is accessible',
-  { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-toggle-group-button>Label</slab-toggle-group-button>`,
-    );
+test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-toggle-group-button>Label</slab-toggle-group-button>`,
+  );
 
-    await expect(page).toBeAccessible('slab-toggle-group-button');
-  },
-);
+  await expect(page).toBeAccessible('slab-toggle-group-button');
+});
 
 test(
   'is a button that says whether it is pressed',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-toggle-group-button pressed
           >Label</slab-toggle-group-button
@@ -41,8 +37,8 @@ test(
 test(
   'sets `aria-disabled` when disabled',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-toggle-group-button disabled
           >Label</slab-toggle-group-button
@@ -62,8 +58,8 @@ test(
 test(
   'sets `aria-label` from `label`, and removes it when `label` is',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-toggle-group-button label="Bold">
           <svg aria-hidden="true"></svg>

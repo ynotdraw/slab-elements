@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'checks checkboxes on Space',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-checkbox-group label="Label">
           <slab-checkbox label="One" value="one"></slab-checkbox>

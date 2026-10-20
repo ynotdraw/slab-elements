@@ -1,25 +1,19 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-tabs-tab panel="one">One</slab-tabs-tab>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-tabs-tab panel="one">One</slab-tabs-tab>`);
 
-    await expect(page.locator('slab-tabs-tab')).toBeInTheCustomElementRegistry(
-      'slab-tabs-tab',
-    );
-  },
-);
+  await expect(page.locator('slab-tabs-tab')).toBeInTheCustomElementRegistry(
+    'slab-tabs-tab',
+  );
+});
 
 test(
   'puts itself in the "tab" slot unless it has one',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tabs-tab panel="one">One</slab-tabs-tab>
           <slab-tabs-tab panel="two" slot="other">Two</slab-tabs-tab>`,
@@ -35,10 +29,8 @@ test(
 test(
   'sets its ARIA and states',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
-      () => html`<slab-tabs-tab panel="one">One</slab-tabs-tab>`,
-    );
+  async ({ render, page, setProperty }) => {
+    await render(() => html`<slab-tabs-tab panel="one">One</slab-tabs-tab>`);
 
     const host = page.locator('slab-tabs-tab');
 
@@ -64,10 +56,8 @@ test(
 test(
   'dispatches a "private-panel-change" event when `panel` is changed programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
-      () => html`<slab-tabs-tab panel="one">One</slab-tabs-tab>`,
-    );
+  async ({ render, page, setProperty }) => {
+    await render(() => html`<slab-tabs-tab panel="one">One</slab-tabs-tab>`);
 
     const host = page.locator('slab-tabs-tab');
 
@@ -81,9 +71,9 @@ test(
 test(
   'throws when `panel` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-tabs-tab>One</slab-tabs-tab>`),
+      render(() => html`<slab-tabs-tab>One</slab-tabs-tab>`),
     ).rejects.toThrow();
   },
 );

@@ -2,25 +2,21 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-range-slider label="Label"></slab-range-slider>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-range-slider label="Label"></slab-range-slider>`,
+  );
 
-    await expect(
-      page.locator('slab-range-slider'),
-    ).toBeInTheCustomElementRegistry('slab-range-slider');
-  },
-);
+  await expect(
+    page.locator('slab-range-slider'),
+  ).toBeInTheCustomElementRegistry('slab-range-slider');
+});
 
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-range-slider label="Label"></slab-range-slider>`,
     );
 
@@ -35,8 +31,8 @@ test(
 test(
   'takes its values from the attributes and keeps the attributes as stepped',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -70,8 +66,8 @@ test(
 test(
   'can have its values set programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`<slab-range-slider label="Label"></slab-range-slider>`,
     );
 
@@ -93,8 +89,8 @@ test(
 test(
   'goes back to `min` and `max` when its value attributes are removed',
   { tag: '@miscellaneous' },
-  async ({ removeAttribute, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ removeAttribute, render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -117,8 +113,8 @@ test(
 test(
   'treats an empty or unreadable value attribute as unset',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setAttribute }) => {
-    await renderTemplate(
+  async ({ render, page, setAttribute }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -140,8 +136,8 @@ test(
 test(
   'clamps its values to `min` and `max`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -162,8 +158,8 @@ test(
 test(
   'keeps its start at or before its end',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -182,8 +178,8 @@ test(
 test(
   'snaps its values to a step from `min`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -206,8 +202,8 @@ test(
 test(
   'stops at the last step before `max` when `max` is not on a step',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -228,8 +224,8 @@ test(
 test(
   'rounds to the decimal places of `step` and `min`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -255,8 +251,8 @@ test(
 test(
   'takes a `step` that is not positive as 1',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -278,8 +274,8 @@ test(
 test(
   'takes a `max` below `min` as `min`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -303,8 +299,8 @@ test(
 test(
   'places its thumbs and range along its track',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -333,8 +329,8 @@ test(
 test(
   'hides its label visually when `hide-label` is set',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider label="Label" hide-label></slab-range-slider>`,
     );
@@ -354,8 +350,8 @@ test(
 test(
   'sets a custom state for each of its states',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-range-slider label="Label" disabled></slab-range-slider>`,
     );
@@ -412,9 +408,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-range-slider></slab-range-slider>`),
+      render(() => html`<slab-range-slider></slab-range-slider>`),
     ).rejects.toThrow();
   },
 );
@@ -425,8 +421,8 @@ test(
 test(
   'cancels "touchstart" on its track so dragging does not scroll the page',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`<slab-range-slider label="Label"></slab-range-slider>`,
     );
 

@@ -5,8 +5,8 @@ import type Dialog from './dialog.js';
 test(
   'closes through a `<form method="dialog">` with its submitter’s value',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-dialog label="Label" open>
           <form method="dialog">
@@ -31,8 +31,8 @@ test(
 test(
   'stays open when its backdrop is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-dialog label="Label" open>Content</slab-dialog>`,
     );
 
@@ -46,8 +46,8 @@ test(
 test(
   'closes when its backdrop is clicked with `closedby="any"`',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-dialog closedby="any" label="Label" open>
           Content
@@ -72,8 +72,8 @@ test(
 test(
   'closes through a submitter with `formmethod="dialog"`',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-dialog label="Label" open>
           <form action="javascript:void(0)">
@@ -101,8 +101,8 @@ test(
 test(
   'closes through an input submitter with `formmethod="dialog"`',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-dialog label="Label" open>
           <form action="javascript:void(0)">
@@ -130,8 +130,8 @@ test(
 test(
   'leaves `returnValue` alone when its submitter has no value',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-dialog label="Label" open>
           <form method="dialog">
@@ -156,8 +156,8 @@ test(
 test(
   'stays open when a form submission is canceled',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-dialog label="Label" open>
           <form method="dialog">
@@ -181,8 +181,8 @@ test(
 test(
   'stays open when a form that isn’t `method="dialog"` is submitted',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-dialog label="Label" open>
           <form action="javascript:void(0)">
@@ -205,8 +205,8 @@ test(
 test(
   'stays open when a form closes a dialog inside it',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-dialog label="Label" open>
           <dialog open>

@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'is dismissed via Escape while focus is in it',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-toast duration="0">
           Changes saved <button type="button">Undo</button>
@@ -29,8 +29,8 @@ test(
 test(
   'is not dismissed via Escape while dismissed',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toast duration="0">
           Changes saved <button type="button">Undo</button>
@@ -56,8 +56,8 @@ test(
 test(
   'pauses its countdown while focus is in it',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-toast duration="300">
           Changes saved
@@ -92,8 +92,8 @@ test(
 test(
   'ignores keys other than Escape',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-toast duration="0">
           Changes saved <button type="button">Undo</button>

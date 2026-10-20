@@ -13,8 +13,8 @@ const getFocused = (page: import('@playwright/test').Page) => {
 test(
   'focuses the selected day via Tab',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-calendar value="2026-10-15"></slab-calendar>`,
     );
 
@@ -31,8 +31,8 @@ test(
 test(
   'moves a day or a week via the arrow keys, into the next or previous month',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-calendar value="2026-10-31"></slab-calendar>`,
     );
 
@@ -60,8 +60,8 @@ test(
 test(
   'moves to the start and end of the week via Home and End',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-calendar value="2026-10-15" week-start="1"></slab-calendar>`,
     );
@@ -79,8 +79,8 @@ test(
 test(
   'moves a month via Page Up and Page Down, and a year with Shift',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-calendar value="2026-01-31"></slab-calendar>`,
     );
 
@@ -104,8 +104,8 @@ test(
 test(
   'stays between `min` and `max`',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-calendar
           max="2026-10-20"
@@ -127,8 +127,8 @@ test(
 test(
   'selects the focused day via Enter and Space',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-calendar value="2026-10-15"></slab-calendar>`,
     );
 
@@ -163,8 +163,8 @@ test(
 test(
   'leaves other and modified keys alone',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-calendar value="2026-10-15"></slab-calendar>`,
     );
 
@@ -179,8 +179,8 @@ test(
 test(
   'selects a range via Enter and Space, previewing it to the focused day',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-calendar
           range
@@ -255,8 +255,8 @@ test(
 test(
   'starts a range over via Escape, and leaves Escape alone otherwise',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-calendar
           range

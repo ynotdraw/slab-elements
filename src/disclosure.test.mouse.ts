@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'opens when its summary is clicked via mouse',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-disclosure label="Label">Content</slab-disclosure>`,
     );
 
@@ -31,8 +31,8 @@ test(
 test(
   'closes when its summary is clicked via mouse',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-disclosure label="Label" open>Content</slab-disclosure>`,
     );
 
@@ -48,8 +48,8 @@ test(
 test(
   'opens when clicked via `click()`',
   { tag: '@mouse' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-disclosure label="Label">Content</slab-disclosure>`,
     );
 
@@ -74,8 +74,8 @@ test(
 test(
   'remains closed when its "click" event is canceled',
   { tag: '@mouse' },
-  async ({ addEventListener, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, render, page }) => {
+    await render(
       () => html`<slab-disclosure label="Label">Content</slab-disclosure>`,
     );
 

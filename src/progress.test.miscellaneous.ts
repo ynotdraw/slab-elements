@@ -2,27 +2,19 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-progress label="Label"></slab-progress>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-progress label="Label"></slab-progress>`);
 
-    await expect(page.locator('slab-progress')).toBeInTheCustomElementRegistry(
-      'slab-progress',
-    );
-  },
-);
+  await expect(page.locator('slab-progress')).toBeInTheCustomElementRegistry(
+    'slab-progress',
+  );
+});
 
 test(
   'passes `value` and `max` through, and is indeterminate without a value',
   { tag: '@miscellaneous' },
-  async ({ removeAttribute, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
-      () => html`<slab-progress label="Label"></slab-progress>`,
-    );
+  async ({ removeAttribute, render, page, setProperty }) => {
+    await render(() => html`<slab-progress label="Label"></slab-progress>`);
 
     const host = page.locator('slab-progress');
     const progress = page.getByRole('progressbar');
@@ -84,9 +76,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-progress></slab-progress>`),
+      render(() => html`<slab-progress></slab-progress>`),
     ).rejects.toThrow();
   },
 );

@@ -2,37 +2,33 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type Form from './form.js';
 
-test(
-  'has a `form` property',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <form>
-          <slab-radio-group label="Label">
-            <slab-radio-group-radio label="One"></slab-radio-group-radio>
+test('has a `form` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <form>
+        <slab-radio-group label="Label">
+          <slab-radio-group-radio label="One"></slab-radio-group-radio>
 
-            <slab-radio-group-radio label="Two"></slab-radio-group-radio>
-          </slab-radio-group>
-        </form>
-      `,
-    );
+          <slab-radio-group-radio label="Two"></slab-radio-group-radio>
+        </slab-radio-group>
+      </form>
+    `,
+  );
 
-    const host = page.locator('slab-radio-group');
+  const host = page.locator('slab-radio-group');
 
-    const hasForm = await host.evaluate((element) => {
-      return 'form' in element && element.form instanceof HTMLFormElement;
-    });
+  const hasForm = await host.evaluate((element) => {
+    return 'form' in element && element.form instanceof HTMLFormElement;
+  });
 
-    expect(hasForm).toBe(true);
-  },
-);
+  expect(hasForm).toBe(true);
+});
 
 test(
   'can be reset',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" required>
@@ -62,8 +58,8 @@ test(
 test(
   'has form data when a radio is checked',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" name="name">
@@ -91,8 +87,8 @@ test(
 test(
   'has no form data when no radio is checked',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" name="name">
@@ -119,8 +115,8 @@ test(
 test(
   'has no form data when its checked radio is disabled',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" name="name">
@@ -149,8 +145,8 @@ test(
 test(
   'has no form data when it has no name and a radio is checked',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" value="value">
@@ -178,8 +174,8 @@ test(
 test(
   'has no form data when disabled',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" name="name" disabled>
@@ -207,8 +203,8 @@ test(
 test(
   'is valid when required and a radio is checked',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" required>
@@ -241,8 +237,8 @@ test(
 test(
   'is valid when not required and no radio is checked',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label">
@@ -272,8 +268,8 @@ test(
 test(
   'is valid when required and made not required programmatically and no radio is checked',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page, removeAttribute }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, removeAttribute }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" required>
@@ -305,8 +301,8 @@ test(
 test(
   'is valid on submit when required and a radio is checked',
   { tag: '@forms' },
-  async ({ addEventListener, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" required>
@@ -342,8 +338,8 @@ test(
 test(
   'is invalid when an enabled and checked radio is disabled programmatically',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" required>
@@ -379,8 +375,8 @@ test(
 test(
   'is invalid when required and no radio is checked',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" required>
@@ -416,8 +412,8 @@ test(
 test(
   'is invalid when required and a radio is unchecked programmatically',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" required>
@@ -453,8 +449,8 @@ test(
 test(
   'is invalid on submit when required and no radio is checked',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" required>
@@ -493,8 +489,8 @@ test(
 test(
   'submits its form on Enter',
   { tag: '@forms' },
-  async ({ addEventListener, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label">
@@ -523,8 +519,8 @@ test(
 test(
   'updates its validity on blur',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" required>
@@ -564,8 +560,8 @@ test(
 test(
   'supports `setCustomValidity()`',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" required>
@@ -604,8 +600,8 @@ test(
 test(
   'shows a custom validity message as text, not HTML',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" required>
@@ -631,8 +627,8 @@ test(
 test(
   'supports `setValidity()`',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" required>
@@ -667,8 +663,8 @@ test(
 test(
   'supports `resetValidityFeedback()`',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-radio-group label="Label" required>
@@ -694,8 +690,8 @@ test(
 test(
   "doesn't report its validity when its Form's is only checked",
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-radio-group label="Label" required>
@@ -745,8 +741,8 @@ test(
 test(
   'is enabled again after its `disabled` is turned off',
   { tag: '@forms' },
-  async ({ browserName, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ browserName, render, page, setProperty }) => {
+    await render(
       () =>
         html`<form>
           <slab-radio-group label="Label"
@@ -777,8 +773,8 @@ test(
 test(
   'is enabled again after it and its fieldset are enabled together',
   { tag: '@forms' },
-  async ({ browserName, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ browserName, render, page }) => {
+    await render(
       () =>
         html`<form>
           <fieldset disabled>

@@ -2,26 +2,21 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-radio-group-radio label="Label"></slab-radio-group-radio>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-radio-group-radio label="Label"></slab-radio-group-radio>`,
+  );
 
-    const host = page.locator('slab-radio-group-radio');
+  const host = page.locator('slab-radio-group-radio');
 
-    await expect(host).toBeInTheCustomElementRegistry('slab-radio-group-radio');
-  },
-);
+  await expect(host).toBeInTheCustomElementRegistry('slab-radio-group-radio');
+});
 
 test(
   'dispatches a "private-checked-change" event when checked programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group-radio label="Label"></slab-radio-group-radio>`,
     );
@@ -38,8 +33,8 @@ test(
 test(
   'dispatches a "private-value-change" event when its value is changed programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group-radio
           label="Label"
@@ -93,11 +88,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
-        () => html`<slab-radio-group-radio></slab-radio-group-radio>`,
-      ),
+      render(() => html`<slab-radio-group-radio></slab-radio-group-radio>`),
     ).rejects.toThrow();
   },
 );

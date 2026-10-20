@@ -8,8 +8,8 @@ const isActive = (locator: import('@playwright/test').Locator) => {
 test(
   'makes its first option active on focus when none is selected',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option disabled>One</slab-option>
@@ -32,8 +32,8 @@ test(
 test(
   'makes its selected option active on focus',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option>One</slab-option>
@@ -52,8 +52,8 @@ test(
 test(
   'keeps its active option when focused again',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
             <slab-option>One</slab-option>
@@ -77,8 +77,8 @@ test(
 test(
   'moves its active option when arrowing, stopping at each end and skipping disabled options',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option>One</slab-option>
@@ -121,8 +121,8 @@ test(
 test(
   'moves its active option to either end on Home and End',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option disabled>One</slab-option>
@@ -147,8 +147,8 @@ test(
 test(
   'does nothing on arrow keys when every option is disabled',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option disabled>One</slab-option>
@@ -169,8 +169,8 @@ test(
 test(
   'selects its active option on Space and Enter',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option value="one">One</slab-option>
@@ -221,8 +221,8 @@ test(
 test(
   'toggles its active option on Space and Enter when multiple',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label" multiple>
           <slab-option value="one">One</slab-option>
@@ -255,8 +255,8 @@ test(
 test(
   'moves and toggles on Shift and an arrow key when multiple',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label" multiple>
           <slab-option>One</slab-option>
@@ -290,8 +290,8 @@ test(
 test(
   'only moves on Shift and an arrow key when not multiple',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option>One</slab-option>
@@ -312,8 +312,8 @@ test(
 test(
   'selects every enabled option, then none, on Control+A when multiple',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label" multiple>
           <slab-option>One</slab-option>
@@ -347,8 +347,8 @@ test(
 test(
   'leaves Control+A alone when not multiple',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option>One</slab-option>
@@ -369,10 +369,10 @@ test(
 test(
   'moves its active option to the next option starting with what is typed',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
+  async ({ render, page }) => {
     await page.clock.install();
 
-    await renderTemplate(
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option>Apple</slab-option>
@@ -442,8 +442,8 @@ test(
 test(
   'leaves modified keys and other named keys alone',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option>One</slab-option>
@@ -464,8 +464,8 @@ test(
 test(
   'moves its active option to one starting with what is typed when it has none',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option>One</slab-option>
@@ -490,8 +490,8 @@ test(
 test(
   'selects from the last selected option to the active one on Shift+Space when multiple',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label" multiple>
           <slab-option>One</slab-option>
@@ -532,8 +532,8 @@ test(
 test(
   'selects only the active option on Shift+Space when none has been selected or the last selected is disabled',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label" multiple>
           <slab-option>One</slab-option>
@@ -564,8 +564,8 @@ test(
 test(
   'selects from the active option to the first or last on Control+Shift+Home and Control+Shift+End when multiple',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label" multiple>
           <slab-option>One</slab-option>
@@ -600,8 +600,8 @@ test(
 test(
   'selects nothing on Control+Shift+End when no option can be active',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label" multiple>
           <slab-option disabled>One</slab-option>
@@ -622,8 +622,8 @@ test(
 test(
   'leaves Control+Shift+Home and Control+Shift+End alone when not multiple',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option>One</slab-option>

@@ -8,8 +8,8 @@ const isActive = (locator: import('@playwright/test').Locator) => {
 test(
   'opens and closes when its anchor is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label">
           <button slot="anchor">Anchor</button>
@@ -35,8 +35,8 @@ test(
 test(
   'clicks a Menu Item and closes when the Menu Item is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label" open>
           <button slot="anchor">Anchor</button>
@@ -61,8 +61,8 @@ test(
 test(
   'does not click a disabled Menu Item or close when it is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label" open>
           <button slot="anchor">Anchor</button>
@@ -87,8 +87,8 @@ test(
 test(
   'closes when something outside it is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label" open>
             <button slot="anchor">Anchor</button>
@@ -110,8 +110,8 @@ test(
 test(
   'makes a Menu Item active when it is hovered',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label" open>
           <button slot="anchor">Anchor</button>
@@ -136,8 +136,8 @@ test(
 test(
   'leaves the active Menu Item alone when a disabled one is hovered',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label" open>
           <button slot="anchor">Anchor</button>
@@ -160,8 +160,8 @@ test(
 test(
   'leaves the active Menu Item alone when the menu is hovered between Menu Items',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label" open>
           <button slot="anchor">Anchor</button>

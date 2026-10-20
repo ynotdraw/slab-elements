@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'moves focus via ArrowRight and ArrowLeft, wrapping and skipping disabled controls',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toolbar label="Label">
           <button>One</button>
@@ -39,8 +39,8 @@ test(
 test(
   'moves focus to the first and last controls via Home and End',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toolbar label="Label">
           <button>One</button>
@@ -63,8 +63,8 @@ test(
 test(
   'uses ArrowDown and ArrowUp when `orientation="vertical"`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toolbar label="Label" orientation="vertical">
           <button>One</button>
@@ -89,8 +89,8 @@ test(
 test(
   'returns focus to the most recently focused control via Tab',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<button>Before</button>
 
@@ -116,8 +116,8 @@ test(
 test(
   'leaves the arrow keys to a control that edits text',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toolbar label="Label">
           <input aria-label="Input" value="Text" />
@@ -135,8 +135,8 @@ test(
 test(
   'leaves modified and cancelled keys alone',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toolbar label="Label">
           <button>One</button>

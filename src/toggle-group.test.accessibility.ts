@@ -2,32 +2,28 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type ToggleGroup from './toggle-group.js';
 
-test(
-  'is accessible',
-  { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <slab-toggle-group label="Label">
-          <slab-toggle-group-button pressed value="one"
-            >One</slab-toggle-group-button
-          >
-          <slab-toggle-group-button disabled value="two"
-            >Two</slab-toggle-group-button
-          >
-        </slab-toggle-group>
-      `,
-    );
+test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <slab-toggle-group label="Label">
+        <slab-toggle-group-button pressed value="one"
+          >One</slab-toggle-group-button
+        >
+        <slab-toggle-group-button disabled value="two"
+          >Two</slab-toggle-group-button
+        >
+      </slab-toggle-group>
+    `,
+  );
 
-    await expect(page).toBeAccessible('slab-toggle-group');
-  },
-);
+  await expect(page).toBeAccessible('slab-toggle-group');
+});
 
 test(
   'is accessible when vertical',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-toggle-group label="Label" orientation="vertical">
           <slab-toggle-group-button value="one">One</slab-toggle-group-button>
@@ -39,8 +35,15 @@ test(
   },
 );
 
-test('has a group', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=toggle-group--toggle-group');
+test('has a group', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-toggle-group label="Label" orientation="horizontal">
+        <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+        <slab-toggle-group-button value="two">Two</slab-toggle-group-button>
+        <slab-toggle-group-button value="three">Three</slab-toggle-group-button>
+      </slab-toggle-group>`,
+  );
 
   await expect(page.locator('slab-toggle-group')).toMatchAriaSnapshot(`
     - group "Label":
@@ -50,20 +53,33 @@ test('has a group', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('multiple=${true}', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=toggle-group--toggle-group');
+test(
+  'multiple=${true}',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-toggle-group label="Label" orientation="horizontal">
+          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+          <slab-toggle-group-button value="two">Two</slab-toggle-group-button>
+          <slab-toggle-group-button value="three"
+            >Three</slab-toggle-group-button
+          >
+        </slab-toggle-group>`,
+    );
 
-  await page
-    .locator('slab-toggle-group')
-    .evaluate<void, void, ToggleGroup>((element) => {
-      element.multiple = true;
-      element.values = ['one', 'three'];
-    });
+    await page
+      .locator('slab-toggle-group')
+      .evaluate<void, void, ToggleGroup>((element) => {
+        element.multiple = true;
+        element.values = ['one', 'three'];
+      });
 
-  await expect(page.locator('slab-toggle-group')).toMatchAriaSnapshot(`
+    await expect(page.locator('slab-toggle-group')).toMatchAriaSnapshot(`
     - group "Label":
       - button "One" [pressed]
       - button "Two" [pressed=false]
       - button "Three" [pressed]
   `);
-});
+  },
+);

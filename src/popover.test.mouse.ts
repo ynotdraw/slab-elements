@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'opens and closes when its anchor is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-popover>
           <button slot="anchor">Anchor</button>
@@ -33,8 +33,8 @@ test(
 test(
   'closes when something outside it is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<div>
           <button>Outside</button>
@@ -56,8 +56,8 @@ test(
 test(
   'stays open when its content is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-popover open>
           <button slot="anchor">Anchor</button>

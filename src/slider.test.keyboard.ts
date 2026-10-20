@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'dispatches "input" and "change" events when stepped with the keyboard',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-slider label="Label" value="50"></slab-slider>`,
     );
 
@@ -28,8 +28,8 @@ test(
 test(
   'steps by `step` and stops at `min` and `max`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-slider
           label="Label"
@@ -60,8 +60,8 @@ test(
 test(
   'cannot be stepped when disabled',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-slider label="Label" disabled></slab-slider>`,
     );
 

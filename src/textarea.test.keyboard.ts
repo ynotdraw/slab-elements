@@ -4,10 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'dispatches "input" and "change" events when typed into',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-textarea label="Label"></slab-textarea>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-textarea label="Label"></slab-textarea>`);
 
     const host = page.locator('slab-textarea');
 
@@ -28,8 +26,8 @@ test(
 test(
   'inserts a line break on Enter rather than submitting its form',
   { tag: '@keyboard' },
-  async ({ addEventListener, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-textarea label="Label"></slab-textarea>
@@ -58,8 +56,8 @@ test(
 test(
   'reports its validity on blur',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-textarea label="Label" required></slab-textarea>`,
     );
 
@@ -76,8 +74,8 @@ test(
 test(
   'cannot be typed into when disabled',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-textarea label="Label" disabled></slab-textarea>`,
     );
 
@@ -88,8 +86,8 @@ test(
 test(
   'cannot be typed into when readonly',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-textarea label="Label" readonly></slab-textarea>`,
     );
 

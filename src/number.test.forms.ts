@@ -3,28 +3,24 @@ import { expect, test } from './playwright/test.js';
 import type Form from './form.js';
 import type NumberField from './number.js';
 
-test(
-  'has a `form` property',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <form>
-          <slab-number label="Label"></slab-number>
-        </form>
-      `,
-    );
+test('has a `form` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <form>
+        <slab-number label="Label"></slab-number>
+      </form>
+    `,
+  );
 
-    const hasForm = await page.locator('slab-number').evaluate((element) => {
-      return 'form' in element && element.form instanceof HTMLFormElement;
-    });
+  const hasForm = await page.locator('slab-number').evaluate((element) => {
+    return 'form' in element && element.form instanceof HTMLFormElement;
+  });
 
-    expect(hasForm).toBe(true);
-  },
-);
+  expect(hasForm).toBe(true);
+});
 
-test('has form data', { tag: '@forms' }, async ({ renderTemplate, page }) => {
-  await renderTemplate(
+test('has form data', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
     () => html`
       <form>
         <slab-number label="Label" name="name" value="1"></slab-number>
@@ -38,8 +34,8 @@ test('has form data', { tag: '@forms' }, async ({ renderTemplate, page }) => {
 test(
   'has no form data when disabled',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-number
@@ -59,8 +55,8 @@ test(
 test(
   'has no form data when it has no `name`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-number label="Label" value="1"></slab-number>
@@ -75,8 +71,8 @@ test(
 test(
   'can be reset',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-number label="Label" value="1" required></slab-number>
@@ -102,8 +98,8 @@ test(
 test(
   'is invalid when `required` and empty',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-number label="Label" required></slab-number>`,
     );
 
@@ -117,8 +113,8 @@ test(
 test(
   'is valid when `required` and filled',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-number label="Label" value="1" required></slab-number>`,
     );
 
@@ -134,8 +130,8 @@ test(
 test(
   'is invalid when less than `min`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-number label="Label" min="5" value="1"></slab-number>`,
     );
 
@@ -149,8 +145,8 @@ test(
 test(
   'is invalid when more than `max`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-number label="Label" max="5" value="10"></slab-number>`,
     );
 
@@ -164,8 +160,8 @@ test(
 test(
   'is invalid when not a multiple of `step`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-number label="Label" step="5" value="3"></slab-number>`,
     );
 
@@ -179,8 +175,8 @@ test(
 test(
   'is valid at any value when `step` is "any"',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-number
           label="Label"
@@ -199,8 +195,8 @@ test(
 test(
   'goes back to the default `step` when the attribute is removed',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-number label="Label" step="5" value="3"></slab-number>`,
     );
 
@@ -225,8 +221,8 @@ test(
 test(
   'keeps what was typed when the input cannot make a number of it',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-number label="Label"></slab-number>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-number label="Label"></slab-number>`);
 
     const host = page.locator('slab-number');
     const input = page.getByRole('spinbutton');
@@ -248,8 +244,8 @@ test(
 test(
   'reports its validity',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-number label="Label" required></slab-number>`,
     );
 
@@ -271,8 +267,8 @@ test(
 test(
   'checks its validity without reporting it',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-number label="Label" required></slab-number>`,
     );
 
@@ -290,8 +286,8 @@ test(
 test(
   'clears its validity feedback without changing its validity',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-number label="Label" required></slab-number>`,
     );
 
@@ -312,8 +308,8 @@ test(
 test(
   'takes a custom validity message',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-number label="Label"></slab-number>`);
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-number label="Label"></slab-number>`);
 
     const host = page.locator('slab-number');
 
@@ -335,8 +331,8 @@ test(
 test(
   'shows a custom validity message as text, not HTML',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-number label="Label"></slab-number>`);
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-number label="Label"></slab-number>`);
 
     const host = page.locator('slab-number');
     const validityMessage = page.locator('[data-test="validity-message"]');
@@ -352,8 +348,8 @@ test(
 test(
   'gives its validity back when a custom message is cleared',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-number label="Label"></slab-number>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-number label="Label"></slab-number>`);
 
     const host = page.locator('slab-number');
 
@@ -369,8 +365,8 @@ test(
 test(
   'takes a validity of its own',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-number label="Label"></slab-number>`);
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-number label="Label"></slab-number>`);
 
     const host = page.locator('slab-number');
 
@@ -392,8 +388,8 @@ test(
 test(
   'stops mirroring the input once a validity of its own is set',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-number label="Label" required></slab-number>`,
     );
 
@@ -412,41 +408,37 @@ test(
   },
 );
 
-test(
-  'restores its state',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <form>
-          <slab-number label="Label" name="name"></slab-number>
-        </form>
-      `,
-    );
+test('restores its state', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <form>
+        <slab-number label="Label" name="name"></slab-number>
+      </form>
+    `,
+  );
 
-    const host = page.locator('slab-number');
+  const host = page.locator('slab-number');
 
-    // Browsers call this when restoring a page from history or autofilling.
-    // Neither is practical in a test.
-    await host.evaluate<void, void, NumberField>((element) => {
-      element.formStateRestoreCallback('1');
-    });
+  // Browsers call this when restoring a page from history or autofilling.
+  // Neither is practical in a test.
+  await host.evaluate<void, void, NumberField>((element) => {
+    element.formStateRestoreCallback('1');
+  });
 
-    await expect(host).toHaveJSProperty('value', '1');
+  await expect(host).toHaveJSProperty('value', '1');
 
-    await host.evaluate<void, void, NumberField>((element) => {
-      element.formStateRestoreCallback(null);
-    });
+  await host.evaluate<void, void, NumberField>((element) => {
+    element.formStateRestoreCallback(null);
+  });
 
-    await expect(host).toHaveJSProperty('value', '');
-  },
-);
+  await expect(host).toHaveJSProperty('value', '');
+});
 
 test(
   'is disabled by its fieldset',
   { tag: '@forms' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <fieldset>
@@ -472,8 +464,8 @@ test(
 test(
   'focuses itself when its form is submitted and it is the first invalid one',
   { tag: '@forms' },
-  async ({ addEventListener, callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-number label="Label" required></slab-number>
@@ -494,8 +486,8 @@ test(
 test(
   'resets to empty when it has no `value` attribute',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-number label="Label"></slab-number>
@@ -514,8 +506,8 @@ test(
 test(
   "doesn't report its validity when its Form's is only checked",
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-number label="Label" required></slab-number>
@@ -563,8 +555,8 @@ test(
 test(
   'is enabled again after its `disabled` is turned off',
   { tag: '@forms' },
-  async ({ browserName, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ browserName, render, page, setProperty }) => {
+    await render(
       () =>
         html`<form>
           <slab-number label="Label"></slab-number>
@@ -593,8 +585,8 @@ test(
 test(
   'is enabled again after it and its fieldset are enabled together',
   { tag: '@forms' },
-  async ({ browserName, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ browserName, render, page }) => {
+    await render(
       () =>
         html`<form>
           <fieldset disabled>

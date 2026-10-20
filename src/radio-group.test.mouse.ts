@@ -8,8 +8,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'checks radios on click via mouse',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-radio-group-radio {
@@ -69,8 +69,8 @@ test(
 test(
   'checks radios on click via `click()`',
   { tag: '@mouse' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-radio-group-radio {
@@ -132,8 +132,8 @@ test(
 test(
   'does not check radios on click when disabled',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-radio-group-radio {
@@ -184,8 +184,8 @@ test(
 test(
   'does not dispatch "input" and "change" events when an already selected radio is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-radio-group-radio {
@@ -218,8 +218,8 @@ test(
 test(
   'checks nothing when clicked between radios',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-radio-group::part(radios) {

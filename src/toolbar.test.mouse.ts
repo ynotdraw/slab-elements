@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'makes a clicked control the tabbable one',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toolbar label="Label">
           <button>One</button>

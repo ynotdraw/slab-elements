@@ -4,12 +4,12 @@ import { expect, test } from './playwright/test.js';
 test(
   'dispatches "input" and "change" events when stepped with the arrow keys',
   { tag: '@keyboard' },
-  async ({ browserName, renderTemplate, page }) => {
+  async ({ browserName, render, page }) => {
     // Playwright's WebKit renders a time input without editable segments, so
     // there's nothing for a keystroke to land in.
     test.skip(browserName === 'webkit', 'No time segments in WebKit');
 
-    await renderTemplate(
+    await render(
       () =>
         html`<slab-time-field label="Label" value="09:30"></slab-time-field>`,
     );
@@ -35,14 +35,12 @@ test(
 test(
   'takes its value from what is typed',
   { tag: '@keyboard' },
-  async ({ browserName, renderTemplate, page }) => {
+  async ({ browserName, render, page }) => {
     // Playwright's WebKit renders a time input without editable segments, so
     // there's nothing for a keystroke to land in.
     test.skip(browserName === 'webkit', 'No time segments in WebKit');
 
-    await renderTemplate(
-      () => html`<slab-time-field label="Label"></slab-time-field>`,
-    );
+    await render(() => html`<slab-time-field label="Label"></slab-time-field>`);
 
     await page.locator('[data-test="input"]').pressSequentially('0930P');
 
@@ -57,8 +55,8 @@ test(
 test(
   'submits its form on Enter',
   { tag: '@keyboard' },
-  async ({ addEventListener, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-time-field label="Label"></slab-time-field>
@@ -81,8 +79,8 @@ test(
 test(
   'reports its validity on blur',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-time-field label="Label" required></slab-time-field>`,
     );
 
@@ -99,8 +97,8 @@ test(
 test(
   'cannot be typed into when disabled',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-time-field label="Label" disabled></slab-time-field>`,
     );
 
@@ -111,8 +109,8 @@ test(
 test(
   'cannot be typed into when readonly',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-time-field label="Label" readonly></slab-time-field>`,
     );
 

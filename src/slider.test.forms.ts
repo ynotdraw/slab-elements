@@ -2,28 +2,24 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type Slider from './slider.js';
 
-test(
-  'has a `form` property',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <form>
-          <slab-slider label="Label"></slab-slider>
-        </form>
-      `,
-    );
+test('has a `form` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <form>
+        <slab-slider label="Label"></slab-slider>
+      </form>
+    `,
+  );
 
-    const hasForm = await page.locator('slab-slider').evaluate((element) => {
-      return 'form' in element && element.form instanceof HTMLFormElement;
-    });
+  const hasForm = await page.locator('slab-slider').evaluate((element) => {
+    return 'form' in element && element.form instanceof HTMLFormElement;
+  });
 
-    expect(hasForm).toBe(true);
-  },
-);
+  expect(hasForm).toBe(true);
+});
 
-test('has form data', { tag: '@forms' }, async ({ renderTemplate, page }) => {
-  await renderTemplate(
+test('has form data', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
     () => html`
       <form>
         <slab-slider label="Label" name="name" value="25"></slab-slider>
@@ -38,8 +34,8 @@ test('has form data', { tag: '@forms' }, async ({ renderTemplate, page }) => {
 test(
   'has form data halfway between `min` and `max` when it has no `value`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-slider
@@ -59,8 +55,8 @@ test(
 test(
   'has no form data when disabled',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-slider
@@ -80,8 +76,8 @@ test(
 test(
   'has no form data when it has no `name`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-slider label="Label" value="25"></slab-slider>
@@ -98,8 +94,8 @@ test(
 test(
   'clamps its value to `min` and `max`',
   { tag: '@forms' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-slider
           label="Label"
@@ -121,8 +117,8 @@ test(
 test(
   'does not snap its value when `step` is "any"',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-slider label="Label" step="any" value="33.5"></slab-slider>`,
     );
@@ -134,8 +130,8 @@ test(
 test(
   'snaps its value to `step`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-slider label="Label" step="10" value="34"></slab-slider>`,
     );
@@ -147,8 +143,8 @@ test(
 test(
   'takes a value outside the old range when `max` and `value` change together',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-slider label="Label"></slab-slider>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-slider label="Label"></slab-slider>`);
 
     const host = page.locator('slab-slider');
 
@@ -165,8 +161,8 @@ test(
 test(
   'can be reset',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-slider label="Label" value="25"></slab-slider>
@@ -186,8 +182,8 @@ test(
 test(
   'resets to halfway when it has no `value` attribute',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-slider label="Label"></slab-slider>
@@ -206,8 +202,8 @@ test(
 test(
   'is always valid',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-slider label="Label"></slab-slider>`);
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-slider label="Label"></slab-slider>`);
 
     const host = page.locator('slab-slider');
 
@@ -219,41 +215,37 @@ test(
   },
 );
 
-test(
-  'restores its state',
-  { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <form>
-          <slab-slider label="Label" name="name"></slab-slider>
-        </form>
-      `,
-    );
+test('restores its state', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <form>
+        <slab-slider label="Label" name="name"></slab-slider>
+      </form>
+    `,
+  );
 
-    const host = page.locator('slab-slider');
+  const host = page.locator('slab-slider');
 
-    // Browsers call this when restoring a page from history or autofilling.
-    // Neither is practical in a test.
-    await host.evaluate<void, void, Slider>((element) => {
-      element.formStateRestoreCallback('25');
-    });
+  // Browsers call this when restoring a page from history or autofilling.
+  // Neither is practical in a test.
+  await host.evaluate<void, void, Slider>((element) => {
+    element.formStateRestoreCallback('25');
+  });
 
-    await expect(host).toHaveJSProperty('value', '25');
+  await expect(host).toHaveJSProperty('value', '25');
 
-    await host.evaluate<void, void, Slider>((element) => {
-      element.formStateRestoreCallback(null);
-    });
+  await host.evaluate<void, void, Slider>((element) => {
+    element.formStateRestoreCallback(null);
+  });
 
-    await expect(host).toHaveJSProperty('value', '50');
-  },
-);
+  await expect(host).toHaveJSProperty('value', '50');
+});
 
 test(
   'is disabled by its fieldset',
   { tag: '@forms' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`
         <form>
           <fieldset>
@@ -279,8 +271,8 @@ test(
 test(
   'is enabled again after its `disabled` is turned off',
   { tag: '@forms' },
-  async ({ browserName, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ browserName, render, page, setProperty }) => {
+    await render(
       () =>
         html`<form>
           <slab-slider label="Label"></slab-slider>
@@ -309,8 +301,8 @@ test(
 test(
   'is enabled again after it and its fieldset are enabled together',
   { tag: '@forms' },
-  async ({ browserName, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ browserName, render, page }) => {
+    await render(
       () =>
         html`<form>
           <fieldset disabled>

@@ -4,10 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'goes to a page when its button is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-pagination total="3"></slab-pagination>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-pagination total="3"></slab-pagination>`);
 
     const host = page.locator('slab-pagination');
     const button = page.getByRole('button', { name: 'Page 3' });
@@ -30,10 +28,8 @@ test(
 test(
   'goes to the previous and next pages when Previous and Next are clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-pagination total="2"></slab-pagination>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-pagination total="2"></slab-pagination>`);
 
     const host = page.locator('slab-pagination');
     const previous = page.getByRole('button', { name: 'Previous' });
@@ -69,10 +65,8 @@ test(
 test(
   'does not dispatch "change" when the current page is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-pagination total="2"></slab-pagination>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-pagination total="2"></slab-pagination>`);
 
     await expect(page.locator('slab-pagination')).not.toDispatchEvents(
       () => page.getByRole('button', { name: 'Page 1' }).click(),

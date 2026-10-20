@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'selects a day when it is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-calendar value="2026-10-15"></slab-calendar>`,
     );
 
@@ -30,8 +30,8 @@ test(
 test(
   'does not select a day before `min` or after `max` when it is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-calendar
           max="2026-10-20"
@@ -59,8 +59,8 @@ test(
 test(
   'shows the previous and next months when their buttons are clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-calendar
           max="2026-11-10"
@@ -102,8 +102,8 @@ test(
 test(
   'selects a range when its first and last days are clicked, in either order',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-calendar
           range
@@ -144,8 +144,8 @@ test(
 test(
   'previews a range to the focused day when the hovered one can’t be picked or the pointer leaves',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-calendar
           max="2026-10-20"

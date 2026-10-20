@@ -4,13 +4,13 @@ import { expect, test } from './playwright/test.js';
 test(
   'focuses its input when its label is clicked',
   { tag: '@mouse' },
-  async ({ browserName, renderTemplate, page }) => {
+  async ({ browserName, render, page }) => {
     // Safari doesn't move focus to a range input when its label is clicked,
     // any more than it does to a native one. The input is the platform's, so
     // that's left alone.
     test.skip(browserName === 'webkit');
 
-    await renderTemplate(() => html`<slab-slider label="Label"></slab-slider>`);
+    await render(() => html`<slab-slider label="Label"></slab-slider>`);
 
     await page.locator('[part~="label"]').click();
 
@@ -21,8 +21,8 @@ test(
 test(
   'dispatches "input" and "change" events when clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-slider label="Label" min="0" max="10"></slab-slider>`,
     );
 

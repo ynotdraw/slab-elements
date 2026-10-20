@@ -4,10 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'is hidden when its dismiss button is clicked via Enter',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-alert dismissible>Message</slab-alert>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-alert dismissible>Message</slab-alert>`);
 
     const host = page.locator('slab-alert');
 
@@ -30,10 +28,8 @@ test(
 test(
   'is hidden when its dismiss button is clicked via Space',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-alert dismissible>Message</slab-alert>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-alert dismissible>Message</slab-alert>`);
 
     const host = page.locator('slab-alert');
 
@@ -56,8 +52,8 @@ test(
 test(
   'returns focus to the element focused before its dismiss button when dismissed',
   { tag: '@keyboard' },
-  async ({ browserName, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ browserName, render, page }) => {
+    await render(
       () =>
         html`<button>Before</button>
           <slab-alert dismissible>Message</slab-alert>`,
@@ -77,8 +73,8 @@ test(
 test(
   'leaves focus alone when dismissed if the previously focused element was removed',
   { tag: '@keyboard' },
-  async ({ browserName, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ browserName, render, page }) => {
+    await render(
       () =>
         html`<button>Before</button>
           <slab-alert dismissible>Message</slab-alert>`,
@@ -104,8 +100,8 @@ test(
 test(
   'leaves focus alone when dismissed if a "dismiss" listener moved it',
   { tag: '@keyboard' },
-  async ({ browserName, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ browserName, render, page }) => {
+    await render(
       () =>
         html`<button>Before</button>
           <slab-alert dismissible>Message</slab-alert>
@@ -130,8 +126,8 @@ test(
 test(
   'keeps focus on its dismiss button when its "dismiss" event is canceled',
   { tag: '@keyboard' },
-  async ({ addEventListener, browserName, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, browserName, render, page }) => {
+    await render(
       () =>
         html`<button>Before</button>
           <slab-alert dismissible>Message</slab-alert>`,

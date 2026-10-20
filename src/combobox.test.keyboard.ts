@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'filters its options when typed into, ignoring case',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
           <slab-option>Apple</slab-option>
@@ -47,8 +47,8 @@ test(
 test(
   'closes and matches `:state(empty)` when nothing matches',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
           <slab-option>Apple</slab-option>
@@ -88,8 +88,8 @@ test(
 test(
   'opens and moves its active option when arrowing, stopping at each end and skipping hidden and disabled options',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
           <slab-option>Apple</slab-option>
@@ -145,8 +145,8 @@ test(
 test(
   'opens on its last option on ArrowUp',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
           <slab-option>One</slab-option>
@@ -167,8 +167,8 @@ test(
 test(
   'opens without moving on Alt+ArrowDown and closes on Alt+ArrowUp',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
           <slab-option>One</slab-option>
@@ -194,8 +194,8 @@ test(
 test(
   'selects its active option on Enter',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<form>
           <slab-combobox label="Label">
@@ -240,8 +240,8 @@ test(
 test(
   'commits what was typed on Enter when no option is active',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
           <slab-option value="one">One</slab-option>
@@ -263,8 +263,8 @@ test(
 test(
   'submits its form on Enter when closed',
   { tag: '@keyboard' },
-  async ({ addEventListener, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, render, page }) => {
+    await render(
       () =>
         html`<form>
           <slab-combobox label="Label" name="name">
@@ -294,8 +294,8 @@ test(
 test(
   'closes on Escape and clears itself on a second Escape',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" value="one">
           <slab-option value="one">One</slab-option>
@@ -325,8 +325,8 @@ test(
 test(
   'clears what was typed on a second Escape when nothing is selected',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
           <slab-option>One</slab-option>
@@ -353,8 +353,8 @@ test(
 test(
   'leaves Escape alone when there is nothing to close or clear',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
           <slab-option>One</slab-option>
@@ -388,8 +388,8 @@ test(
 test(
   'leaves Home and End to its input',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
           <slab-option>One</slab-option>
@@ -437,8 +437,8 @@ test(
 test(
   'commits when tabbed away from',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label">
             <slab-option value="one">One</slab-option>
@@ -467,8 +467,8 @@ test(
 test(
   'toggles the active option on Enter and stays open when `multiple`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" multiple>
           <slab-option value="one">One</slab-option>
@@ -524,8 +524,8 @@ test(
 test(
   'adds what is typed on Enter when `multiple`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<form>
           <slab-combobox label="Label" multiple>
@@ -583,8 +583,8 @@ test(
 test(
   'adds text that matches no option when `multiple` and `allow-custom`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" allow-custom multiple>
           <slab-option value="one">One</slab-option>
@@ -609,8 +609,8 @@ test(
 test(
   'removes the last tag on Backspace in an empty input when `multiple`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" multiple>
           <slab-option value="one" selected>One</slab-option>
@@ -644,8 +644,8 @@ test(
 test(
   'moves between its tags with the arrow keys when `multiple`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" multiple>
           <slab-option value="one" selected>One</slab-option>
@@ -695,8 +695,8 @@ test(
 test(
   'removes a focused tag on Backspace, Delete, Enter or Space when `multiple`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" multiple>
           <slab-option value="one" selected>One</slab-option>
@@ -754,8 +754,8 @@ test(
 test(
   'clears only what is typed on a second Escape when `multiple`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" multiple>
           <slab-option value="one" selected>One</slab-option>
@@ -777,8 +777,8 @@ test(
 test(
   'adds what is typed when it loses focus when `multiple`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-combobox label="Label" multiple>
             <slab-option value="one">One</slab-option>

@@ -2,41 +2,29 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-checkbox label="Label"></slab-checkbox>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-checkbox label="Label"></slab-checkbox>`);
 
-    const host = page.locator('slab-checkbox');
+  const host = page.locator('slab-checkbox');
 
-    await expect(host).toBeInTheCustomElementRegistry('slab-checkbox');
-  },
-);
+  await expect(host).toBeInTheCustomElementRegistry('slab-checkbox');
+});
 
-test(
-  'can be disabled',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-checkbox label="Label" disabled></slab-checkbox>`,
-    );
+test('can be disabled', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-checkbox label="Label" disabled></slab-checkbox>`,
+  );
 
-    const host = page.locator('slab-checkbox');
+  const host = page.locator('slab-checkbox');
 
-    await expect(host.waitFor).rejects.toThrow();
-  },
-);
+  await expect(host.waitFor).rejects.toThrow();
+});
 
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-checkbox label="Label"></slab-checkbox>`,
-    );
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-checkbox label="Label"></slab-checkbox>`);
 
     const host = page.locator('slab-checkbox');
     const checkbox = page.getByRole('checkbox');
@@ -50,8 +38,8 @@ test(
 test(
   'dispatches a "private-value-change" event when `value` is set programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`<slab-checkbox label="Label" value="one"></slab-checkbox>`,
     );
 
@@ -97,9 +85,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-checkbox></slab-checkbox>`),
+      render(() => html`<slab-checkbox></slab-checkbox>`),
     ).rejects.toThrow();
   },
 );

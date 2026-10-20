@@ -2,24 +2,21 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type RangeSlider from './range-slider.js';
 
-test(
-  'is accessible',
-  { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-range-slider label="Label">
-          <div slot="description">Description</div>
-        </slab-range-slider>`,
-    );
+test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-range-slider label="Label">
+        <div slot="description">Description</div>
+      </slab-range-slider>`,
+  );
 
-    await expect(page).toBeAccessible('slab-range-slider');
-  },
-);
+  await expect(page).toBeAccessible('slab-range-slider');
+});
 
-test('label', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=range-slider--range-slider');
-  await page.locator('slab-range-slider').waitFor();
+test('label', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-range-slider label="Label"></slab-range-slider>`,
+  );
 
   await expect(page.locator('slab-range-slider')).toMatchAriaSnapshot(`
     - group "Label":
@@ -32,8 +29,10 @@ test('label', { tag: '@accessibility' }, async ({ page }) => {
 test(
   'start-label and end-label',
   { tag: '@accessibility' },
-  async ({ page }) => {
-    await page.goto('?id=range-slider--range-slider');
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-range-slider label="Label"></slab-range-slider>`,
+    );
 
     await page
       .locator('slab-range-slider')
@@ -51,42 +50,54 @@ test(
   },
 );
 
-test('disabled=${true}', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=range-slider--range-slider');
+test(
+  'disabled=${true}',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-range-slider label="Label"></slab-range-slider>`,
+    );
 
-  await page
-    .locator('slab-range-slider')
-    .evaluate<void, void, RangeSlider>((element) => {
-      element.disabled = true;
-    });
+    await page
+      .locator('slab-range-slider')
+      .evaluate<void, void, RangeSlider>((element) => {
+        element.disabled = true;
+      });
 
-  await expect(page.locator('slab-range-slider')).toMatchAriaSnapshot(`
+    await expect(page.locator('slab-range-slider')).toMatchAriaSnapshot(`
     - group "Label":
       - text: Label
       - slider "Label Minimum" [disabled]
       - slider "Label Maximum" [disabled]
   `);
-});
+  },
+);
 
-test('slot="description"', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=range-slider--range-slider');
+test(
+  'slot="description"',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-range-slider label="Label"></slab-range-slider>`,
+    );
 
-  await page.locator('slab-range-slider').evaluate((element) => {
-    const description = document.createElement('div');
+    await page.locator('slab-range-slider').evaluate((element) => {
+      const description = document.createElement('div');
 
-    description.slot = 'description';
-    description.textContent = 'Description';
-    element.append(description);
-  });
+      description.slot = 'description';
+      description.textContent = 'Description';
+      element.append(description);
+    });
 
-  await expect(page.locator('slab-range-slider')).toMatchAriaSnapshot(`
+    await expect(page.locator('slab-range-slider')).toMatchAriaSnapshot(`
     - group "Label":
       - text: Label
       - slider "Label Minimum"
       - slider "Label Maximum"
       - text: Description
   `);
-});
+  },
+);
 
 // Playwright's ARIA snapshots leave out a slider's value unless it's a range
 // input. Each thumb's bounds are the other thumb, so a screenreader can tell
@@ -94,8 +105,8 @@ test('slot="description"', { tag: '@accessibility' }, async ({ page }) => {
 test(
   'bounds each thumb by the other',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"

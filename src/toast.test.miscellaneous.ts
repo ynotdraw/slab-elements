@@ -3,17 +3,13 @@ import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 import type Toast from './toast.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-toast>Changes saved</slab-toast>`);
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-toast>Changes saved</slab-toast>`);
 
-    await expect(page.locator('slab-toast')).toBeInTheCustomElementRegistry(
-      'slab-toast',
-    );
-  },
-);
+  await expect(page.locator('slab-toast')).toBeInTheCustomElementRegistry(
+    'slab-toast',
+  );
+});
 
 // Slab ships no styles, so restyling means subclassing: a consumer extends the
 // class, sets `styles`, and registers the subclass under a tag of their own.
@@ -49,8 +45,8 @@ test(
 test(
   'renders its region in the top layer as soon as it is connected',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-toast>Changes saved</slab-toast>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-toast>Changes saved</slab-toast>`);
 
     const region = page.locator('[data-test="region"]');
 
@@ -69,8 +65,8 @@ test(
 test(
   'puts its content in its region when shown',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-toast>Changes saved</slab-toast>`);
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-toast>Changes saved</slab-toast>`);
 
     const host = page.locator('slab-toast');
 
@@ -92,8 +88,8 @@ test(
 test(
   'dismisses itself after `duration`',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-toast duration="100">Changes saved</slab-toast>`,
     );
 
@@ -121,8 +117,8 @@ test(
 test(
   'stays open when `duration` is 0',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-toast duration="0">Changes saved</slab-toast>`,
     );
 
@@ -143,8 +139,8 @@ test(
 test(
   'can be dismissed programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-toast>Changes saved</slab-toast>`);
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-toast>Changes saved</slab-toast>`);
 
     const host = page.locator('slab-toast');
 
@@ -162,8 +158,8 @@ test(
 test(
   'does not dispatch "dismiss" when dismissed while dismissed',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-toast>Changes saved</slab-toast>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-toast>Changes saved</slab-toast>`);
 
     const count = await page
       .locator('slab-toast')
@@ -188,8 +184,8 @@ test(
 test(
   'reinserts its content when shown while open',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-toast duration="0">Changes saved</slab-toast>`,
     );
 
@@ -220,8 +216,8 @@ test(
 test(
   'is raised above a modal dialog when shown',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<dialog>
           Dialog
@@ -259,8 +255,8 @@ test(
 test(
   'shows its region again when reconnected',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-toast>Changes saved</slab-toast>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-toast>Changes saved</slab-toast>`);
 
     const isOpen = await page
       .locator('slab-toast')
@@ -284,8 +280,8 @@ test(
 test(
   'stops its countdown when disconnected',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-toast duration="100">Changes saved</slab-toast>`,
     );
 

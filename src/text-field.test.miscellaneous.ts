@@ -3,27 +3,19 @@ import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 import type TextField from './text-field.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-text-field label="Label"></slab-text-field>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-text-field label="Label"></slab-text-field>`);
 
-    await expect(
-      page.locator('slab-text-field'),
-    ).toBeInTheCustomElementRegistry('slab-text-field');
-  },
-);
+  await expect(page.locator('slab-text-field')).toBeInTheCustomElementRegistry(
+    'slab-text-field',
+  );
+});
 
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-text-field label="Label"></slab-text-field>`,
-    );
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-text-field label="Label"></slab-text-field>`);
 
     await callMethod(page.locator('slab-text-field'), 'focus');
 
@@ -34,8 +26,8 @@ test(
 test(
   'takes its value from the attribute and keeps the attribute as typed',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-text-field label="Label" value="One"></slab-text-field>`,
     );
 
@@ -55,8 +47,8 @@ test(
 test(
   'renders the type it is given',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-text-field label="Label" type="email"></slab-text-field>`,
     );
@@ -71,8 +63,8 @@ test(
 test(
   'hides its label visually when `hide-label` is set',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-text-field label="Label" hide-label></slab-text-field>`,
     );
 
@@ -89,8 +81,8 @@ test(
 test(
   'sets a custom state for each of its states',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-text-field
           label="Label"
@@ -123,8 +115,8 @@ test(
 test(
   'selects its text',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-text-field label="Label" value="One"></slab-text-field>`,
     );
 
@@ -148,8 +140,8 @@ test(
 test(
   'sets a selection range',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-text-field label="Label" value="One Two"></slab-text-field>`,
     );
@@ -208,9 +200,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-text-field></slab-text-field>`),
+      render(() => html`<slab-text-field></slab-text-field>`),
     ).rejects.toThrow();
   },
 );
@@ -218,10 +210,8 @@ test(
 test(
   'can be clicked programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-text-field label="Label"></slab-text-field>`,
-    );
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-text-field label="Label"></slab-text-field>`);
 
     const host = page.locator('slab-text-field');
 

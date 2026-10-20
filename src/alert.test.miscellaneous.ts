@@ -2,23 +2,19 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-alert>Message</slab-alert>`);
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-alert>Message</slab-alert>`);
 
-    await expect(page.locator('slab-alert')).toBeInTheCustomElementRegistry(
-      'slab-alert',
-    );
-  },
-);
+  await expect(page.locator('slab-alert')).toBeInTheCustomElementRegistry(
+    'slab-alert',
+  );
+});
 
 test(
   'has no dismiss button unless dismissible',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-alert>Message</slab-alert>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-alert>Message</slab-alert>`);
 
     await expect(page.getByRole('button')).toHaveCount(0);
   },
@@ -29,8 +25,8 @@ test(
 test(
   'is hidden when dismissed even when the host is given a `display`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-alert {

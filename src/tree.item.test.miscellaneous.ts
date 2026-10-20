@@ -1,23 +1,19 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-tree-item>One</slab-tree-item>`);
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-tree-item>One</slab-tree-item>`);
 
-    await expect(page.locator('slab-tree-item')).toBeInTheCustomElementRegistry(
-      'slab-tree-item',
-    );
-  },
-);
+  await expect(page.locator('slab-tree-item')).toBeInTheCustomElementRegistry(
+    'slab-tree-item',
+  );
+});
 
 test(
   'is named by its label, or else by its own text',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, removeAttribute }) => {
-    await renderTemplate(
+  async ({ render, page, removeAttribute }) => {
+    await render(
       () =>
         html`<slab-tree-item label="Label">
           One
@@ -40,8 +36,8 @@ test(
 test(
   'puts its children in its "item" slot and sets its states',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-tree-item disabled>
           One
@@ -84,8 +80,8 @@ test(
 test(
   'hides its children while collapsed, whatever a design sets on its group',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<style>
             slab-tree-item::part(group) {

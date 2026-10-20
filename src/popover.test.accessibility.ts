@@ -2,33 +2,40 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type Popover from './popover.js';
 
-test(
-  'is accessible',
-  { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-popover open>
-          <button slot="anchor">Anchor</button>
-          Content
-        </slab-popover>`,
-    );
+test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-popover open>
+        <button slot="anchor">Anchor</button>
+        Content
+      </slab-popover>`,
+  );
 
-    await expect(page).toBeAccessible('slab-popover');
-  },
-);
+  await expect(page).toBeAccessible('slab-popover');
+});
 
-test('open=${false}', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=popover--popover');
-  await page.locator('slab-popover').waitFor();
+test('open=${false}', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-popover placement="bottom">
+        <button slot="anchor">Anchor</button>
+        Content
+      </slab-popover>`,
+  );
 
   await expect(page.locator('slab-popover')).toMatchAriaSnapshot(`
     - button "Anchor" [expanded=false]
   `);
 });
 
-test('open=${true}', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=popover--popover');
+test('open=${true}', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-popover placement="bottom">
+        <button slot="anchor">Anchor</button>
+        Content
+      </slab-popover>`,
+  );
 
   await page
     .locator('slab-popover')

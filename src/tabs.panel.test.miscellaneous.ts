@@ -1,25 +1,19 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-tabs-panel name="one">One</slab-tabs-panel>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-tabs-panel name="one">One</slab-tabs-panel>`);
 
-    await expect(
-      page.locator('slab-tabs-panel'),
-    ).toBeInTheCustomElementRegistry('slab-tabs-panel');
-  },
-);
+  await expect(page.locator('slab-tabs-panel')).toBeInTheCustomElementRegistry(
+    'slab-tabs-panel',
+  );
+});
 
 test(
   'is a focusable tab panel, keeping a consumer’s `tabindex`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tabs-panel name="one">One</slab-tabs-panel>
           <slab-tabs-panel name="two" tabindex="-1">Two</slab-tabs-panel>`,
@@ -36,10 +30,8 @@ test(
 test(
   'dispatches a "private-panel-change" event when `name` is changed programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
-      () => html`<slab-tabs-panel name="one">One</slab-tabs-panel>`,
-    );
+  async ({ render, page, setProperty }) => {
+    await render(() => html`<slab-tabs-panel name="one">One</slab-tabs-panel>`);
 
     const host = page.locator('slab-tabs-panel');
 
@@ -53,9 +45,9 @@ test(
 test(
   'throws when `name` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-tabs-panel>One</slab-tabs-panel>`),
+      render(() => html`<slab-tabs-panel>One</slab-tabs-panel>`),
     ).rejects.toThrow();
   },
 );

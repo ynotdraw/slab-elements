@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'dispatches "input" and "change" events when stepped with the keyboard',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -32,8 +32,8 @@ test(
 test(
   'steps each thumb by `step`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -70,8 +70,8 @@ test(
 test(
   'steps by a tenth of the range with Page Up and Page Down',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -95,8 +95,8 @@ test(
 test(
   'steps by a step with Page Up and Page Down when that is more than a tenth of the range',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -117,8 +117,8 @@ test(
 test(
   'moves each thumb as far as it can go with Home and End',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -148,8 +148,8 @@ test(
 test(
   'does not step a thumb past the other',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -178,8 +178,8 @@ test(
 test(
   'does not step past `min` or `max`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-range-slider label="Label"></slab-range-slider>`,
     );
 
@@ -202,8 +202,8 @@ test(
 test(
   'steps the other way with Left and Right when right-to-left',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"
@@ -228,26 +228,22 @@ test(
   },
 );
 
-test(
-  'ignores other keys',
-  { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-range-slider label="Label"></slab-range-slider>`,
-    );
+test('ignores other keys', { tag: '@keyboard' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-range-slider label="Label"></slab-range-slider>`,
+  );
 
-    await expect(page.locator('slab-range-slider')).not.toDispatchEvents(
-      () => page.getByRole('slider', { name: 'Label Minimum' }).press('a'),
-      [{ type: 'input' }],
-    );
-  },
-);
+  await expect(page.locator('slab-range-slider')).not.toDispatchEvents(
+    () => page.getByRole('slider', { name: 'Label Minimum' }).press('a'),
+    [{ type: 'input' }],
+  );
+});
 
 test(
   'moves focus between the thumbs with Tab',
   { tag: '@keyboard' },
-  async ({ browserName, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ browserName, render, page }) => {
+    await render(
       () => html`<slab-range-slider label="Label"></slab-range-slider>`,
     );
 
@@ -270,8 +266,8 @@ test(
 test(
   'cannot be stepped when disabled',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-range-slider
           label="Label"

@@ -4,12 +4,12 @@ import { expect, test } from './playwright/test.js';
 test(
   'dispatches "input" and "change" events when stepped with the arrow keys',
   { tag: '@keyboard' },
-  async ({ browserName, renderTemplate, page }) => {
+  async ({ browserName, render, page }) => {
     // Playwright's WebKit renders a date input without editable segments, so
     // there's nothing for a keystroke to land in.
     test.skip(browserName === 'webkit', 'No date segments in WebKit');
 
-    await renderTemplate(
+    await render(
       () =>
         html`<slab-date-field
           label="Label"
@@ -38,14 +38,12 @@ test(
 test(
   'takes its value from what is typed',
   { tag: '@keyboard' },
-  async ({ browserName, renderTemplate, page }) => {
+  async ({ browserName, render, page }) => {
     // Playwright's WebKit renders a date input without editable segments, so
     // there's nothing for a keystroke to land in.
     test.skip(browserName === 'webkit', 'No date segments in WebKit');
 
-    await renderTemplate(
-      () => html`<slab-date-field label="Label"></slab-date-field>`,
-    );
+    await render(() => html`<slab-date-field label="Label"></slab-date-field>`);
 
     await page.locator('[data-test="input"]').pressSequentially('09282026');
 
@@ -60,8 +58,8 @@ test(
 test(
   'submits its form on Enter',
   { tag: '@keyboard' },
-  async ({ addEventListener, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-date-field label="Label"></slab-date-field>
@@ -84,8 +82,8 @@ test(
 test(
   'reports its validity on blur',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-date-field label="Label" required></slab-date-field>`,
     );
 
@@ -102,8 +100,8 @@ test(
 test(
   'cannot be typed into when disabled',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-date-field label="Label" disabled></slab-date-field>`,
     );
 
@@ -114,8 +112,8 @@ test(
 test(
   'cannot be typed into when readonly',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-date-field label="Label" readonly></slab-date-field>`,
     );
 

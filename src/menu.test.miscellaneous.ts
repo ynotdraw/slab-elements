@@ -3,53 +3,45 @@ import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 import type Menu from './menu.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-menu label="Label">
-          <button slot="anchor">Anchor</button>
-          <slab-menu-item>One</slab-menu-item>
-        </slab-menu>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-menu label="Label">
+        <button slot="anchor">Anchor</button>
+        <slab-menu-item>One</slab-menu-item>
+      </slab-menu>`,
+  );
 
-    await expect(page.locator('slab-menu')).toBeInTheCustomElementRegistry(
-      'slab-menu',
-    );
-  },
-);
+  await expect(page.locator('slab-menu')).toBeInTheCustomElementRegistry(
+    'slab-menu',
+  );
+});
 
-test(
-  'has `items`',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-menu label="Label">
-          <button slot="anchor">Anchor</button>
-          <slab-menu-item>One</slab-menu-item>
-          <slab-menu-item>
-            Two
-            <slab-menu-item>Nested</slab-menu-item>
-          </slab-menu-item>
-        </slab-menu>`,
-    );
+test('has `items`', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-menu label="Label">
+        <button slot="anchor">Anchor</button>
+        <slab-menu-item>One</slab-menu-item>
+        <slab-menu-item>
+          Two
+          <slab-menu-item>Nested</slab-menu-item>
+        </slab-menu-item>
+      </slab-menu>`,
+  );
 
-    const count = await page
-      .locator('slab-menu')
-      .evaluate<number, void, Menu>((element) => element.items.length);
+  const count = await page
+    .locator('slab-menu')
+    .evaluate<number, void, Menu>((element) => element.items.length);
 
-    expect(count).toBe(2);
-  },
-);
+  expect(count).toBe(2);
+});
 
 test(
   'sets `aria-haspopup` and `aria-expanded` on its anchor',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label">
           <button slot="anchor">Anchor</button>
@@ -67,8 +59,8 @@ test(
 test(
   'opens and closes via `open`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-menu label="Label">
           <button slot="anchor">Anchor</button>
@@ -100,8 +92,8 @@ test(
 test(
   'opens and closes via `show()` and `hide()`',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label">
           <button slot="anchor">Anchor</button>
@@ -130,9 +122,9 @@ test(
 test(
   'does nothing via `show()` and `hide()` before it is rendered',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
+  async ({ render, page }) => {
     // Rendered so Menu is defined, for the one below that isn't.
-    await renderTemplate(
+    await render(
       () =>
         html`<slab-menu label="Label">
           <button slot="anchor">Anchor</button>
@@ -156,8 +148,8 @@ test(
 test(
   'closes when focus leaves it',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label" open>
             <button slot="anchor">Anchor</button>
@@ -179,8 +171,8 @@ test(
 test(
   'stays open when the menu itself is clicked',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-menu label="Label" open>
           <button slot="anchor">Anchor</button>
@@ -201,8 +193,8 @@ test(
 test(
   'moves the active Menu Item off one that is disabled',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-menu label="Label" open>
           <button slot="anchor">Anchor</button>
@@ -270,9 +262,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-menu>
             <button slot="anchor">Anchor</button>
@@ -286,9 +278,9 @@ test(
 test(
   'throws when its "anchor" slot is empty',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-menu label="Label">
             <slab-menu-item>One</slab-menu-item>
@@ -301,9 +293,9 @@ test(
 test(
   'throws when its default slot is empty',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-menu label="Label">
             <button slot="anchor">Anchor</button>

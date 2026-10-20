@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'checks radios when arrowing',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio
@@ -131,8 +131,8 @@ test(
 test(
   'checks radios on Space',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio
@@ -178,8 +178,8 @@ test(
 test(
   'does not check disabled radios on Space',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio
@@ -224,8 +224,8 @@ test(
 test(
   'does nothing on a key that is not an arrow',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio
@@ -254,8 +254,8 @@ test(
 test(
   'skips a disabled radio when arrowing',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio
@@ -289,8 +289,8 @@ test(
 test(
   'does nothing when every radio is disabled',
   { tag: '@keyboard' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio

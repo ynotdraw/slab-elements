@@ -2,23 +2,21 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type Switch from './switch.js';
 
-test(
-  'is accessible',
-  { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-switch label="Label">
-          <div slot="description">Description</div>
-        </slab-switch>`,
-    );
+test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-switch label="Label">
+        <div slot="description">Description</div>
+      </slab-switch>`,
+  );
 
-    await expect(page).toBeAccessible('slab-switch');
-  },
-);
+  await expect(page).toBeAccessible('slab-switch');
+});
 
-test('checked=${true}', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=switch--switch');
+test('checked=${true}', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-switch label="Label" value="on"></slab-switch>`,
+  );
 
   await page.locator('slab-switch').evaluate<void, void, Switch>((element) => {
     element.checked = true;
@@ -30,31 +28,46 @@ test('checked=${true}', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('checked=${false}', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=switch--switch');
-  await page.locator('slab-switch').waitFor();
+test(
+  'checked=${false}',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-switch label="Label" value="on"></slab-switch>`,
+    );
 
-  await expect(page.locator('slab-switch')).toMatchAriaSnapshot(`
+    await expect(page.locator('slab-switch')).toMatchAriaSnapshot(`
     - text: Label
     - switch "Label"
   `);
-});
+  },
+);
 
-test('disabled=${true}', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=switch--switch');
+test(
+  'disabled=${true}',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-switch label="Label" value="on"></slab-switch>`,
+    );
 
-  await page.locator('slab-switch').evaluate<void, void, Switch>((element) => {
-    element.disabled = true;
-  });
+    await page
+      .locator('slab-switch')
+      .evaluate<void, void, Switch>((element) => {
+        element.disabled = true;
+      });
 
-  await expect(page.locator('slab-switch')).toMatchAriaSnapshot(`
+    await expect(page.locator('slab-switch')).toMatchAriaSnapshot(`
     - text: Label
     - switch "Label" [disabled]
   `);
-});
+  },
+);
 
-test('hide-label', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=switch--switch');
+test('hide-label', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-switch label="Label" value="on"></slab-switch>`,
+  );
 
   await page.locator('slab-switch').evaluate<void, void, Switch>((element) => {
     element.hideLabel = true;
@@ -67,8 +80,10 @@ test('hide-label', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('required', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=switch--switch');
+test('required', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-switch label="Label" value="on"></slab-switch>`,
+  );
 
   await page.locator('slab-switch').evaluate<void, void, Switch>((element) => {
     element.required = true;
@@ -80,21 +95,29 @@ test('required', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('slot="description"', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=switch--switch');
+test(
+  'slot="description"',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-switch label="Label" value="on"></slab-switch>`,
+    );
 
-  await page.locator('slab-switch').evaluate<void, void, Switch>((element) => {
-    const div = document.createElement('div');
+    await page
+      .locator('slab-switch')
+      .evaluate<void, void, Switch>((element) => {
+        const div = document.createElement('div');
 
-    div.textContent = 'Description';
-    div.slot = 'description';
+        div.textContent = 'Description';
+        div.slot = 'description';
 
-    element.append(div);
-  });
+        element.append(div);
+      });
 
-  await expect(page.locator('slab-switch')).toMatchAriaSnapshot(`
+    await expect(page.locator('slab-switch')).toMatchAriaSnapshot(`
     - text: Label
     - switch "Label"
     - text: Description
   `);
-});
+  },
+);

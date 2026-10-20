@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'opens and closes when its combobox is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option>One</slab-option>
@@ -33,8 +33,8 @@ test(
 test(
   'selects a clicked option and closes, keeping focus',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option>One</slab-option>
@@ -64,8 +64,8 @@ test(
 test(
   'closes when its selected option is clicked again',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option selected>One</slab-option>
@@ -84,8 +84,8 @@ test(
 test(
   'toggles a clicked option and stays open when multiple',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" multiple>
           <slab-option>One</slab-option>
@@ -111,8 +111,8 @@ test(
 test(
   'stays open when a disabled option is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option disabled>One</slab-option>
@@ -134,8 +134,8 @@ test(
 test(
   'closes when something outside it is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<div>
           <button>Outside</button>
@@ -158,8 +158,8 @@ test(
 test(
   'does not open when disabled',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label" disabled>
           <slab-option>One</slab-option>
@@ -176,8 +176,8 @@ test(
 test(
   'dispatches "input" and "change" from itself',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-select label="Label">
           <slab-option>One</slab-option>

@@ -3,28 +3,24 @@ import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 import type Toolbar from './toolbar.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-toolbar label="Label">
-          <button>One</button>
-        </slab-toolbar>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-toolbar label="Label">
+        <button>One</button>
+      </slab-toolbar>`,
+  );
 
-    await expect(page.locator('slab-toolbar')).toBeInTheCustomElementRegistry(
-      'slab-toolbar',
-    );
-  },
-);
+  await expect(page.locator('slab-toolbar')).toBeInTheCustomElementRegistry(
+    'slab-toolbar',
+  );
+});
 
 test(
   'makes the first enabled control tabbable',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toolbar label="Label">
           <button disabled>One</button>
@@ -49,8 +45,8 @@ test(
 test(
   'moves the tabbable control off one that is disabled or removed',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toolbar label="Label">
           <button>One</button>
@@ -81,8 +77,8 @@ test(
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-toolbar label="Label">
           <button disabled>One</button>
@@ -98,8 +94,8 @@ test(
 test(
   'stops watching for disabled controls when disconnected',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toolbar label="Label">
           <button>One</button>
@@ -159,9 +155,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-toolbar>
             <button>One</button>
@@ -174,9 +170,9 @@ test(
 test(
   'throws when its default slot is empty',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-toolbar label="Label"></slab-toolbar>`),
+      render(() => html`<slab-toolbar label="Label"></slab-toolbar>`),
     ).rejects.toThrow();
   },
 );

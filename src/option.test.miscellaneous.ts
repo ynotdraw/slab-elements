@@ -2,23 +2,19 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-option>Label</slab-option>`);
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-option>Label</slab-option>`);
 
-    const host = page.locator('slab-option');
+  const host = page.locator('slab-option');
 
-    await expect(host).toBeInTheCustomElementRegistry('slab-option');
-  },
-);
+  await expect(host).toBeInTheCustomElementRegistry('slab-option');
+});
 
 test(
   'has its text as its value when it has no value or label',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-option>
           One
@@ -36,10 +32,8 @@ test(
 test(
   'has its label as its value when it has no value',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-option label="Label">Text</slab-option>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-option label="Label">Text</slab-option>`);
 
     const host = page.locator('slab-option');
 
@@ -51,10 +45,8 @@ test(
 test(
   'has its value as its value when it has one',
   { tag: '@miscellaneous' },
-  async ({ removeAttribute, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-option value="value">Text</slab-option>`,
-    );
+  async ({ removeAttribute, render, page }) => {
+    await render(() => html`<slab-option value="value">Text</slab-option>`);
 
     const host = page.locator('slab-option');
 
@@ -69,8 +61,8 @@ test(
 test(
   'sets `:state(selected)` and `:state(disabled)`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(() => html`<slab-option>Label</slab-option>`);
+  async ({ render, page, setProperty }) => {
+    await render(() => html`<slab-option>Label</slab-option>`);
 
     const host = page.locator('slab-option');
 
@@ -105,8 +97,8 @@ test(
 test(
   'dispatches a "private-selected-change" event when selected programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(() => html`<slab-option>Label</slab-option>`);
+  async ({ render, page, setProperty }) => {
+    await render(() => html`<slab-option>Label</slab-option>`);
 
     const host = page.locator('slab-option');
 
@@ -120,10 +112,8 @@ test(
 test(
   'dispatches a "private-value-change" event when its value is changed programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
-      () => html`<slab-option value="one">Label</slab-option>`,
-    );
+  async ({ render, page, setProperty }) => {
+    await render(() => html`<slab-option value="one">Label</slab-option>`);
 
     const host = page.locator('slab-option');
 

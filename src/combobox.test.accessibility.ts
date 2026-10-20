@@ -2,31 +2,27 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type Combobox from './combobox.js';
 
-test(
-  'is accessible',
-  { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <slab-combobox label="Label" name="name" value="one">
-          <slab-option value="one">One</slab-option>
-          <slab-option value="two">Two</slab-option>
-          <slab-option value="three" disabled>Three</slab-option>
+test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <slab-combobox label="Label" name="name" value="one">
+        <slab-option value="one">One</slab-option>
+        <slab-option value="two">Two</slab-option>
+        <slab-option value="three" disabled>Three</slab-option>
 
-          <div slot="description">Description</div>
-        </slab-combobox>
-      `,
-    );
+        <div slot="description">Description</div>
+      </slab-combobox>
+    `,
+  );
 
-    await expect(page).toBeAccessible('slab-combobox');
-  },
-);
+  await expect(page).toBeAccessible('slab-combobox');
+});
 
 test(
   'is accessible when open',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-combobox label="Label">
           <slab-option>One</slab-option>
@@ -42,9 +38,16 @@ test(
   },
 );
 
-test('has a combobox', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=combobox--combobox');
-  await page.locator('slab-combobox').waitFor();
+test('has a combobox', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-combobox label="Label" placement="bottom">
+        <slab-option value="apple">Apple</slab-option>
+        <slab-option value="banana">Banana</slab-option>
+        <slab-option value="cherry">Cherry</slab-option>
+        <slab-option value="grape">Grape</slab-option>
+      </slab-combobox>`,
+  );
 
   // Closed, so the listbox isn't in the tree.
   await expect(page.locator('slab-combobox')).toMatchAriaSnapshot(`
@@ -68,9 +71,16 @@ test('has a combobox', { tag: '@accessibility' }, async ({ page }) => {
   );
 });
 
-test('open', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=combobox--combobox');
-  await page.locator('slab-combobox').waitFor();
+test('open', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-combobox label="Label" placement="bottom">
+        <slab-option value="apple">Apple</slab-option>
+        <slab-option value="banana">Banana</slab-option>
+        <slab-option value="cherry">Cherry</slab-option>
+        <slab-option value="grape">Grape</slab-option>
+      </slab-combobox>`,
+  );
 
   await page.getByRole('combobox').focus();
   await page.keyboard.press('Alt+ArrowDown');
@@ -86,9 +96,16 @@ test('open', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('filtered', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=combobox--combobox');
-  await page.locator('slab-combobox').waitFor();
+test('filtered', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-combobox label="Label" placement="bottom">
+        <slab-option value="apple">Apple</slab-option>
+        <slab-option value="banana">Banana</slab-option>
+        <slab-option value="cherry">Cherry</slab-option>
+        <slab-option value="grape">Grape</slab-option>
+      </slab-combobox>`,
+  );
 
   await page.getByRole('combobox').pressSequentially('an');
 
@@ -101,8 +118,16 @@ test('filtered', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('value', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=combobox--combobox');
+test('value', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-combobox label="Label" placement="bottom">
+        <slab-option value="apple">Apple</slab-option>
+        <slab-option value="banana">Banana</slab-option>
+        <slab-option value="cherry">Cherry</slab-option>
+        <slab-option value="grape">Grape</slab-option>
+      </slab-combobox>`,
+  );
 
   await page
     .locator('slab-combobox')
@@ -129,8 +154,16 @@ test('value', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('disabled', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=combobox--combobox');
+test('disabled', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-combobox label="Label" placement="bottom">
+        <slab-option value="apple">Apple</slab-option>
+        <slab-option value="banana">Banana</slab-option>
+        <slab-option value="cherry">Cherry</slab-option>
+        <slab-option value="grape">Grape</slab-option>
+      </slab-combobox>`,
+  );
 
   await page
     .locator('slab-combobox')
@@ -144,8 +177,16 @@ test('disabled', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('hide-label', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=combobox--combobox');
+test('hide-label', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-combobox label="Label" placement="bottom">
+        <slab-option value="apple">Apple</slab-option>
+        <slab-option value="banana">Banana</slab-option>
+        <slab-option value="cherry">Cherry</slab-option>
+        <slab-option value="grape">Grape</slab-option>
+      </slab-combobox>`,
+  );
 
   await page
     .locator('slab-combobox')
@@ -161,8 +202,16 @@ test('hide-label', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('placeholder', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=combobox--combobox');
+test('placeholder', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-combobox label="Label" placement="bottom">
+        <slab-option value="apple">Apple</slab-option>
+        <slab-option value="banana">Banana</slab-option>
+        <slab-option value="cherry">Cherry</slab-option>
+        <slab-option value="grape">Grape</slab-option>
+      </slab-combobox>`,
+  );
 
   await page
     .locator('slab-combobox')
@@ -176,24 +225,50 @@ test('placeholder', { tag: '@accessibility' }, async ({ page }) => {
   );
 });
 
-test('slot="description"', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=combobox--combobox');
+test(
+  'slot="description"',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label" placement="bottom">
+          <slab-option value="apple">Apple</slab-option>
+          <slab-option value="banana">Banana</slab-option>
+          <slab-option value="cherry">Cherry</slab-option>
+          <slab-option value="grape">Grape</slab-option>
+        </slab-combobox>`,
+    );
 
-  await page.locator('slab-combobox').evaluate((element) => {
-    const description = document.createElement('div');
+    await page.locator('slab-combobox').evaluate((element) => {
+      const description = document.createElement('div');
 
-    description.slot = 'description';
-    description.textContent = 'Description';
-    element.append(description);
-  });
+      description.slot = 'description';
+      description.textContent = 'Description';
+      element.append(description);
+    });
 
-  await expect(page.getByRole('combobox')).toHaveAccessibleDescription(
-    'Description',
+    await expect(page.getByRole('combobox')).toHaveAccessibleDescription(
+      'Description',
+    );
+  },
+);
+
+test('validity', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-combobox label="Label" placement="bottom" required>
+        <slab-option value="apple">Apple</slab-option>
+        <slab-option value="banana">Banana</slab-option>
+        <slab-option value="cherry">Cherry</slab-option>
+        <slab-option value="grape">Grape</slab-option>
+      </slab-combobox>`,
   );
-});
 
-test('validity', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=combobox--with-error');
+  await page
+    .locator('slab-combobox')
+    .evaluate<void, void, Combobox>((element) => {
+      element.reportValidity();
+    });
 
   await expect(page.getByRole('combobox')).toHaveAttribute(
     'aria-invalid',
@@ -207,8 +282,8 @@ test('validity', { tag: '@accessibility' }, async ({ page }) => {
 test(
   'points `aria-activedescendant` at its active option',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-combobox label="Label">
           <slab-option>One</slab-option>
@@ -244,8 +319,8 @@ test(
 test(
   'is accessible when `multiple`',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-combobox label="Label" multiple>
           <slab-option value="one" selected>One</slab-option>
@@ -265,8 +340,8 @@ test(
 test(
   'has tags when `multiple`',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-combobox label="Label" multiple>
           <slab-option value="one" selected>One</slab-option>

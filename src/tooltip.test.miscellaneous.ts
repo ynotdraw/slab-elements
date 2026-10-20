@@ -3,23 +3,19 @@ import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 import type Tooltip from './tooltip.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-tooltip>
-          <span>Content</span>
-          <button slot="anchor">Anchor</button>
-        </slab-tooltip>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-tooltip>
+        <span>Content</span>
+        <button slot="anchor">Anchor</button>
+      </slab-tooltip>`,
+  );
 
-    await expect(page.locator('slab-tooltip')).toBeInTheCustomElementRegistry(
-      'slab-tooltip',
-    );
-  },
-);
+  await expect(page.locator('slab-tooltip')).toBeInTheCustomElementRegistry(
+    'slab-tooltip',
+  );
+});
 
 // Slab ships no styles, so restyling means subclassing: a consumer extends
 // the class, sets `styles`, and registers the subclass under a tag of their
@@ -59,8 +55,8 @@ test(
 test(
   'is open in the top layer when `open` is set',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tooltip open>
           <span>Content</span>
@@ -105,10 +101,10 @@ for (const [placement, isPlaced] of Object.entries(placements)) {
   test(
     `placement="${placement}"`,
     { tag: '@miscellaneous' },
-    async ({ renderTemplate, setAttribute, page }) => {
+    async ({ render, setAttribute, page }) => {
       // In the middle of the viewport, so there's room on every side and
       // nothing flips.
-      await renderTemplate(
+      await render(
         () =>
           html`<div
             style="display: grid; place-items: center; block-size: 100vh;"
@@ -135,8 +131,8 @@ for (const [placement, isPlaced] of Object.entries(placements)) {
 test(
   'flips when there is no room on its side',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tooltip placement="top" open>
           <span>Content</span>
@@ -154,8 +150,8 @@ test(
 test(
   'closes when `open` is removed',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tooltip open>
           <span>Content</span>
@@ -187,8 +183,8 @@ test(
 test(
   'closes when disabled',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tooltip open>
           <span>Content</span>
@@ -210,8 +206,8 @@ test(
 test(
   "keeps its anchor's own `aria-describedby`",
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<p id="hint">Hint</p>
           <slab-tooltip>
@@ -255,8 +251,8 @@ test(
 test(
   'removes `aria-describedby` from an anchor it no longer has',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tooltip>
           <span>Content</span>
@@ -290,8 +286,8 @@ test(
 test(
   'closes when removed while open',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tooltip open>
           <span>Content</span>
@@ -312,8 +308,8 @@ test(
 test(
   'leaves its anchor alone when a consumer has already removed `aria-describedby`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-tooltip>
           <span>Content</span>
@@ -340,9 +336,9 @@ test(
 test(
   'throws without an anchor',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-tooltip>
             <span>Content</span>
@@ -355,9 +351,9 @@ test(
 test(
   'throws without content',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-tooltip>
             <button slot="anchor">Anchor</button>

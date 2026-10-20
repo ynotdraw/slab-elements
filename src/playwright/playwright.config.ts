@@ -4,7 +4,7 @@
 import os from 'node:os';
 import path from 'node:path';
 import { defineConfig, devices } from '@playwright/test';
-import { storybookUrl, viteUrl } from './constants.js';
+import { viteUrl } from './constants.js';
 import { type CoverageReporterOptions } from './coverage-reporter.js';
 
 export default defineConfig({
@@ -115,29 +115,15 @@ export default defineConfig({
     ],
   ],
   use: {
-    // Accessibility tests navigate to a story by id, so their URLs are
-    // relative to Storybook. Every other test navigates to Vite by absolute
-    // URL.
-    baseURL: `${storybookUrl}/iframe.html`,
     testIdAttribute: 'data-test',
     trace: 'retain-on-failure',
   },
   webServer: process.env.PLAYWRIGHT_NO_WEBSERVER
     ? undefined
     : [
-        // Playwright runs these from the directory holding this config. pnpm
+        // Playwright runs this from the directory holding this config. pnpm
         // treats a script run from a subdirectory as a recursive workspace
-        // command and won't find it, so point both at the repository root.
-
-        // For accessibility tests, which navigate to a story by id.
-        {
-          name: 'Storybook',
-          command: 'pnpm start:development:storybook',
-          cwd: path.join(import.meta.dirname, '..', '..'),
-          reuseExistingServer: true,
-          url: storybookUrl,
-        },
-        // For every other test.
+        // command and won't find it, so point it at the repository root.
         {
           name: 'Vite',
           command: 'pnpm test:development:playwright:vite',

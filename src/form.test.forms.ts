@@ -5,8 +5,8 @@ import type Form from './form.js';
 test(
   'is the form of the controls inside it',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-text-field label="Label"></slab-text-field>
@@ -33,8 +33,8 @@ test(
 test(
   'has form data from Slab and native controls alike',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-text-field
@@ -71,8 +71,8 @@ test(
 test(
   'submits with the values of its controls',
   { tag: '@forms' },
-  async ({ addEventListener, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-text-field label="Label" name="text"></slab-text-field>
@@ -103,8 +103,8 @@ test(
 test(
   'can be submitted with `requestSubmit()`',
   { tag: '@forms' },
-  async ({ addEventListener, callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, callMethod, render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-text-field label="Label" name="text"></slab-text-field>
@@ -126,8 +126,8 @@ test(
 test(
   'passes its submitter to `requestSubmit()`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <button name="action" value="save">Save</button>
@@ -160,8 +160,8 @@ test(
 test(
   'is not submitted by `requestSubmit()` when a control is invalid',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-text-field label="Label" required></slab-text-field>
@@ -197,8 +197,8 @@ test(
 test(
   'is submitted by `requestSubmit()` when a control is invalid and `novalidate` is set',
   { tag: '@forms' },
-  async ({ addEventListener, callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, callMethod, render, page }) => {
+    await render(
       () => html`
         <slab-form novalidate>
           <slab-text-field label="Label" required></slab-text-field>
@@ -220,8 +220,8 @@ test(
 test(
   'can be submitted with `submit()`',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <slab-form action="about:blank" target="frame">
           <slab-text-field
@@ -251,8 +251,8 @@ test(
 test(
   'resets its controls',
   { tag: '@forms' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-text-field label="Label" value="One"></slab-text-field>
@@ -292,8 +292,8 @@ test(
 test(
   'is reset by a reset button',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-text-field label="Label" value="One"></slab-text-field>
@@ -315,8 +315,8 @@ test(
 test(
   'is valid when its controls are',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-text-field label="Label" value="One" required></slab-text-field>
@@ -343,8 +343,8 @@ test(
 test(
   'is invalid when one of its controls is',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-text-field label="Label" value="One" required></slab-text-field>
@@ -375,8 +375,8 @@ test(
 test(
   'reports the validity of its controls',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-text-field label="Label" required></slab-text-field>
@@ -406,8 +406,8 @@ test(
 test(
   'has its controls in `elements`',
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-text-field label="Label" name="text"></slab-text-field>
@@ -431,8 +431,8 @@ test(
 test(
   "leaves every other form's checkValidity() alone",
   { tag: '@forms' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-text-field label="Label" required></slab-text-field>

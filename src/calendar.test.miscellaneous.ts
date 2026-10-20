@@ -2,23 +2,19 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-calendar></slab-calendar>`);
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-calendar></slab-calendar>`);
 
-    await expect(page.locator('slab-calendar')).toBeInTheCustomElementRegistry(
-      'slab-calendar',
-    );
-  },
-);
+  await expect(page.locator('slab-calendar')).toBeInTheCustomElementRegistry(
+    'slab-calendar',
+  );
+});
 
 test(
   'shows the month with today in it, and marks today, when there is no value',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-calendar></slab-calendar>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-calendar></slab-calendar>`);
 
     const today = await page.evaluate(() => {
       const now = new Date();
@@ -42,8 +38,8 @@ test(
 test(
   'shows the month of a `value` set programmatically, and ignores one that isn’t a date',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`<slab-calendar value="2026-10-15"></slab-calendar>`,
     );
 
@@ -73,8 +69,8 @@ test(
 test(
   'starts its weeks on `week-start`, with empty cells around the month',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`<slab-calendar value="2026-02-01"></slab-calendar>`,
     );
 
@@ -99,8 +95,8 @@ test(
 test(
   'uses the language of the nearest `lang`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<div lang="fr">
           <slab-calendar value="2026-10-15"></slab-calendar>
@@ -144,8 +140,8 @@ test(
 test(
   'shows the month of a range `value`, and ignores one that isn’t a range',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-calendar
           range
@@ -183,8 +179,8 @@ test(
 test(
   'drops a range half picked when `value` or `range` is set',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-calendar
           range

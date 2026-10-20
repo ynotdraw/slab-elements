@@ -1,24 +1,19 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 
-test(
-  'is accessible',
-  { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-radio-group-radio label="Label"></slab-radio-group-radio>`,
-    );
+test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-radio-group-radio label="Label"></slab-radio-group-radio>`,
+  );
 
-    await expect(page).toBeAccessible('slab-radio-group-radio');
-  },
-);
+  await expect(page).toBeAccessible('slab-radio-group-radio');
+});
 
 test(
   'sets `aria-label` when `label` is set initially',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group-radio label="Label"></slab-radio-group-radio>`,
     );
@@ -32,8 +27,8 @@ test(
 test(
   'sets `aria-label` when `label` is set programmatically',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`<slab-radio-group-radio label="One"></slab-radio-group-radio>`,
     );
 
@@ -48,8 +43,8 @@ test(
 test(
   'sets `aria-checked` when checked initially',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group-radio
           label="Label"
@@ -66,8 +61,8 @@ test(
 test(
   'sets `aria-checked` when checked programmatically',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group-radio label="Label"></slab-radio-group-radio>`,
     );
@@ -83,8 +78,8 @@ test(
 test(
   'sets `aria-checked` when unchecked initially',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group-radio label="Label"></slab-radio-group-radio>`,
     );
@@ -98,8 +93,8 @@ test(
 test(
   'sets `aria-checked` when unchecked programmatically',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group-radio
           label="Label"
@@ -118,8 +113,8 @@ test(
 test(
   'sets `aria-disabled` when enabled initially',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group-radio label="Label"></slab-radio-group-radio>`,
     );
@@ -133,8 +128,8 @@ test(
 test(
   'sets `aria-disabled` when enabled programmatically',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group-radio
           label="Label"
@@ -153,8 +148,8 @@ test(
 test(
   'sets `aria-disabled` when disabled initially',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group-radio
           label="Label"
@@ -171,8 +166,8 @@ test(
 test(
   'sets `aria-disabled` when disabled programmatically',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group-radio label="Label"></slab-radio-group-radio>`,
     );

@@ -2,25 +2,21 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-toggle-group-button>Label</slab-toggle-group-button>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-toggle-group-button>Label</slab-toggle-group-button>`,
+  );
 
-    await expect(
-      page.locator('slab-toggle-group-button'),
-    ).toBeInTheCustomElementRegistry('slab-toggle-group-button');
-  },
-);
+  await expect(
+    page.locator('slab-toggle-group-button'),
+  ).toBeInTheCustomElementRegistry('slab-toggle-group-button');
+});
 
 test(
   'dispatches a "private-pressed-change" event when pressed programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () => html`<slab-toggle-group-button>Label</slab-toggle-group-button>`,
     );
 
@@ -36,8 +32,8 @@ test(
 test(
   'sets `:state(disabled)` when disabled',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-toggle-group-button disabled
           >Label</slab-toggle-group-button

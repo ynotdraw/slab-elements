@@ -3,23 +3,19 @@ import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 import type NumberField from './number.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-number label="Label"></slab-number>`);
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(() => html`<slab-number label="Label"></slab-number>`);
 
-    await expect(page.locator('slab-number')).toBeInTheCustomElementRegistry(
-      'slab-number',
-    );
-  },
-);
+  await expect(page.locator('slab-number')).toBeInTheCustomElementRegistry(
+    'slab-number',
+  );
+});
 
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-number label="Label"></slab-number>`);
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-number label="Label"></slab-number>`);
 
     await callMethod(page.locator('slab-number'), 'focus');
 
@@ -30,8 +26,8 @@ test(
 test(
   'takes its value from the attribute and keeps the attribute as typed',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-number label="Label" value="1"></slab-number>`,
     );
 
@@ -51,8 +47,8 @@ test(
 test(
   'passes `min`, `max` and `step` to its input',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-number
           label="Label"
@@ -74,8 +70,8 @@ test(
 test(
   'hides its label visually when `hide-label` is set',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-number label="Label" hide-label></slab-number>`,
     );
 
@@ -94,8 +90,8 @@ test(
 test(
   'sets a custom state for each of its states',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-number
           label="Label"
@@ -128,8 +124,8 @@ test(
 test(
   'selects its text',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-number label="Label" value="123"></slab-number>`,
     );
 
@@ -178,9 +174,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(() => html`<slab-number></slab-number>`),
+      render(() => html`<slab-number></slab-number>`),
     ).rejects.toThrow();
   },
 );
@@ -188,8 +184,8 @@ test(
 test(
   'can be clicked programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-number label="Label"></slab-number>`);
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-number label="Label"></slab-number>`);
 
     const host = page.locator('slab-number');
 
@@ -205,8 +201,8 @@ test(
 test(
   'reads `valueAsNumber` from its value',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, setProperty, page }) => {
-    await renderTemplate(
+  async ({ render, setProperty, page }) => {
+    await render(
       () => html`<slab-number label="Label" value="12.5"></slab-number>`,
     );
 
@@ -222,8 +218,8 @@ test(
 test(
   'sets its value from `valueAsNumber`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, setProperty, page }) => {
-    await renderTemplate(() => html`<slab-number label="Label"></slab-number>`);
+  async ({ render, setProperty, page }) => {
+    await render(() => html`<slab-number label="Label"></slab-number>`);
 
     const host = page.locator('slab-number');
 
@@ -239,8 +235,8 @@ test(
 test(
   'steps its value with `stepUp()` and `stepDown()` without dispatching events',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-number label="Label" step="5" value="10"></slab-number>`,
     );
 
@@ -270,8 +266,8 @@ test(
 test(
   'throws from `stepUp()` when `step` is "any"',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-number label="Label" step="any" value="1"></slab-number>`,
     );

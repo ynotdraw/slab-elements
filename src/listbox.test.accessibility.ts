@@ -3,31 +3,27 @@ import { expect, test } from './playwright/test.js';
 import type Listbox from './listbox.js';
 import type Option from './option.js';
 
-test(
-  'is accessible',
-  { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`
-        <slab-listbox label="Label" name="name" value="one">
-          <slab-option value="one">One</slab-option>
-          <slab-option value="two">Two</slab-option>
-          <slab-option value="three" disabled>Three</slab-option>
+test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <slab-listbox label="Label" name="name" value="one">
+        <slab-option value="one">One</slab-option>
+        <slab-option value="two">Two</slab-option>
+        <slab-option value="three" disabled>Three</slab-option>
 
-          <div slot="description">Description</div>
-        </slab-listbox>
-      `,
-    );
+        <div slot="description">Description</div>
+      </slab-listbox>
+    `,
+  );
 
-    await expect(page).toBeAccessible('slab-listbox');
-  },
-);
+  await expect(page).toBeAccessible('slab-listbox');
+});
 
 test(
   'is accessible when multiple',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-listbox label="Label" multiple>
           <slab-option selected>One</slab-option>
@@ -40,8 +36,15 @@ test(
   },
 );
 
-test('has a listbox', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=listbox--listbox');
+test('has a listbox', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-listbox label="Label">
+        <slab-option value="one">One</slab-option>
+        <slab-option value="two">Two</slab-option>
+        <slab-option value="three">Three</slab-option>
+      </slab-listbox>`,
+  );
 
   await expect(page.locator('slab-listbox')).toMatchAriaSnapshot(`
     - text: Label
@@ -52,8 +55,15 @@ test('has a listbox', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('value', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=listbox--listbox');
+test('value', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-listbox label="Label">
+        <slab-option value="one">One</slab-option>
+        <slab-option value="two">Two</slab-option>
+        <slab-option value="three">Three</slab-option>
+      </slab-listbox>`,
+  );
 
   await page
     .locator('slab-listbox')
@@ -70,8 +80,15 @@ test('value', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('multiple', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=listbox--multiple');
+test('multiple', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-listbox label="Label" multiple>
+        <slab-option value="one">One</slab-option>
+        <slab-option value="two">Two</slab-option>
+        <slab-option value="three">Three</slab-option>
+      </slab-listbox>`,
+  );
 
   await page
     .locator('slab-listbox')
@@ -93,8 +110,15 @@ test('multiple', { tag: '@accessibility' }, async ({ page }) => {
   );
 });
 
-test('disabled', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=listbox--listbox');
+test('disabled', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-listbox label="Label">
+        <slab-option value="one">One</slab-option>
+        <slab-option value="two">Two</slab-option>
+        <slab-option value="three">Three</slab-option>
+      </slab-listbox>`,
+  );
 
   await page
     .locator('slab-listbox')
@@ -111,8 +135,15 @@ test('disabled', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('hide-label', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=listbox--listbox');
+test('hide-label', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-listbox label="Label">
+        <slab-option value="one">One</slab-option>
+        <slab-option value="two">Two</slab-option>
+        <slab-option value="three">Three</slab-option>
+      </slab-listbox>`,
+  );
 
   await page
     .locator('slab-listbox')
@@ -131,93 +162,144 @@ test('hide-label', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('slot="description"', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=listbox--listbox');
+test(
+  'slot="description"',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-listbox label="Label">
+          <slab-option value="one">One</slab-option>
+          <slab-option value="two">Two</slab-option>
+          <slab-option value="three">Three</slab-option>
+        </slab-listbox>`,
+    );
 
-  await page
-    .locator('slab-listbox')
-    .evaluate<void, void, Listbox>((element) => {
-      const div = document.createElement('div');
+    await page
+      .locator('slab-listbox')
+      .evaluate<void, void, Listbox>((element) => {
+        const div = document.createElement('div');
 
-      div.textContent = 'Description';
-      div.slot = 'description';
+        div.textContent = 'Description';
+        div.slot = 'description';
 
-      element.append(div);
-    });
+        element.append(div);
+      });
 
-  await expect(page.locator('slab-listbox')).toMatchAriaSnapshot(`
+    await expect(page.locator('slab-listbox')).toMatchAriaSnapshot(`
     - text: Label
     - listbox "Label"
     - text: Description
   `);
 
-  await expect(page.getByRole('listbox')).toHaveAccessibleDescription(
-    'Description',
-  );
-});
+    await expect(page.getByRole('listbox')).toHaveAccessibleDescription(
+      'Description',
+    );
+  },
+);
 
-test('<slab-option>.disabled', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=listbox--listbox');
+test(
+  '<slab-option>.disabled',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-listbox label="Label">
+          <slab-option value="one">One</slab-option>
+          <slab-option value="two">Two</slab-option>
+          <slab-option value="three">Three</slab-option>
+        </slab-listbox>`,
+    );
 
-  await page
-    .locator('slab-option')
-    .first()
-    .evaluate<void, void, Option>((element) => {
-      element.disabled = true;
-    });
+    await page
+      .locator('slab-option')
+      .first()
+      .evaluate<void, void, Option>((element) => {
+        element.disabled = true;
+      });
 
-  await expect(page.locator('slab-listbox')).toMatchAriaSnapshot(`
+    await expect(page.locator('slab-listbox')).toMatchAriaSnapshot(`
       - text: Label
       - listbox "Label":
         - option "One" [disabled]
         - option "Two"
         - option "Three"
     `);
-});
+  },
+);
 
-test('<slab-option>.label', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=listbox--listbox');
+test(
+  '<slab-option>.label',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-listbox label="Label">
+          <slab-option value="one">One</slab-option>
+          <slab-option value="two">Two</slab-option>
+          <slab-option value="three">Three</slab-option>
+        </slab-listbox>`,
+    );
 
-  await page
-    .locator('slab-option')
-    .first()
-    .evaluate<void, void, Option>((element) => {
-      element.label = 'Label';
-    });
+    await page
+      .locator('slab-option')
+      .first()
+      .evaluate<void, void, Option>((element) => {
+        element.label = 'Label';
+      });
 
-  await expect(page.locator('slab-listbox')).toMatchAriaSnapshot(`
+    await expect(page.locator('slab-listbox')).toMatchAriaSnapshot(`
       - text: Label
       - listbox "Label":
         - option "Label"
         - option "Two"
         - option "Three"
     `);
-});
+  },
+);
 
-test('<slab-option>.selected', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=listbox--listbox');
+test(
+  '<slab-option>.selected',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-listbox label="Label">
+          <slab-option value="one">One</slab-option>
+          <slab-option value="two">Two</slab-option>
+          <slab-option value="three">Three</slab-option>
+        </slab-listbox>`,
+    );
 
-  await page
-    .locator('slab-option')
-    .nth(2)
-    .evaluate<void, void, Option>((element) => {
-      element.selected = true;
-    });
+    await page
+      .locator('slab-option')
+      .nth(2)
+      .evaluate<void, void, Option>((element) => {
+        element.selected = true;
+      });
 
-  await expect(page.locator('slab-listbox')).toMatchAriaSnapshot(`
+    await expect(page.locator('slab-listbox')).toMatchAriaSnapshot(`
       - text: Label
       - listbox "Label":
         - option "One"
         - option "Two"
         - option "Three" [selected]
     `);
-});
+  },
+);
 
 test(
   'shows its validity message',
   { tag: '@accessibility' },
-  async ({ page }) => {
-    await page.goto('?id=listbox--with-error');
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-listbox label="Label" required>
+          <slab-option value="one">One</slab-option>
+          <slab-option value="two">Two</slab-option>
+          <slab-option value="three">Three</slab-option>
+        </slab-listbox>`,
+    );
 
     await page
       .locator('slab-listbox')
@@ -245,8 +327,8 @@ test(
 test(
   'points `aria-activedescendant` at its active option',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-listbox label="Label">
           <slab-option>One</slab-option>
@@ -277,8 +359,15 @@ test(
 test(
   'points `aria-activedescendant` at an option made active before it rendered',
   { tag: '@accessibility' },
-  async ({ page }) => {
-    await page.goto('?id=listbox--listbox');
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-listbox label="Label">
+          <slab-option value="one">One</slab-option>
+          <slab-option value="two">Two</slab-option>
+          <slab-option value="three">Three</slab-option>
+        </slab-listbox>`,
+    );
 
     const isPointedAt = await page
       .locator('slab-listbox')

@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'checks checkboxes on click via mouse',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-checkbox-group label="Label">
           <slab-checkbox label="One" value="one"></slab-checkbox>
@@ -38,8 +38,8 @@ test(
 test(
   'checks checkboxes on click via `click()`',
   { tag: '@mouse' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-checkbox-group label="Label">
           <slab-checkbox label="One" value="one"></slab-checkbox>

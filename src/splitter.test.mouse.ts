@@ -7,8 +7,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'moves its separator when dragged',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-splitter {
@@ -53,8 +53,8 @@ test(
 test(
   'moves its separator up and down when dragged and `orientation` is "horizontal"',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-splitter {
@@ -89,8 +89,8 @@ test(
 test(
   'moves its separator the way it is dragged when right-to-left',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-splitter {
@@ -126,8 +126,8 @@ test(
 test(
   'stops its separator at `min` and `max` when dragged',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-splitter {
@@ -167,8 +167,8 @@ test(
 test(
   'does not dispatch "change" when pressed and released without moving',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-splitter::part(separator) {
@@ -192,8 +192,8 @@ test(
 test(
   'does not move its separator when dragged with a button other than the main one',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-splitter {
@@ -228,8 +228,8 @@ test(
 test(
   'cannot be dragged when disabled',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-splitter {

@@ -4,10 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'focuses its textarea when its label is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-textarea label="Label"></slab-textarea>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-textarea label="Label"></slab-textarea>`);
 
     await page.locator('[part~="label"]').click();
 
@@ -18,8 +16,8 @@ test(
 test(
   'dispatches "change" on blur after being typed into',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <slab-textarea label="Label"></slab-textarea>
         <button>Elsewhere</button>

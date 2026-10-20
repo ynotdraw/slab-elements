@@ -2,21 +2,14 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type Alert from './alert.js';
 
-test(
-  'is accessible',
-  { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-alert dismissible>Message</slab-alert>`,
-    );
+test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(() => html`<slab-alert dismissible>Message</slab-alert>`);
 
-    await expect(page).toBeAccessible('slab-alert');
-  },
-);
+  await expect(page).toBeAccessible('slab-alert');
+});
 
-test('slot="default"', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=alert--alert');
-  await page.locator('slab-alert').waitFor();
+test('slot="default"', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(() => html`<slab-alert>Message</slab-alert>`);
 
   await expect(page.locator('slab-alert')).toMatchAriaSnapshot(`
     - alert: Message
@@ -29,8 +22,8 @@ test('slot="default"', { tag: '@accessibility' }, async ({ page }) => {
 test(
   'is an alert before it has a message',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-alert></slab-alert>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-alert></slab-alert>`);
 
     await expect(page.locator('slab-alert')).toMatchAriaSnapshot(`
       - alert
@@ -46,8 +39,8 @@ test(
   },
 );
 
-test('dismissible', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=alert--alert');
+test('dismissible', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(() => html`<slab-alert>Message</slab-alert>`);
 
   await page.locator('slab-alert').evaluate<void, void, Alert>((element) => {
     element.dismissible = true;
@@ -60,8 +53,8 @@ test('dismissible', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('dismiss-label', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=alert--alert');
+test('dismiss-label', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(() => html`<slab-alert>Message</slab-alert>`);
 
   await page.locator('slab-alert').evaluate<void, void, Alert>((element) => {
     element.dismissible = true;

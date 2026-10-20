@@ -2,30 +2,26 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-radio-group label="Label">
-          <slab-radio-group-radio label="One"></slab-radio-group-radio>
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-radio-group label="Label">
+        <slab-radio-group-radio label="One"></slab-radio-group-radio>
 
-          <slab-radio-group-radio label="Two"></slab-radio-group-radio>
-        </slab-radio-group>`,
-    );
+        <slab-radio-group-radio label="Two"></slab-radio-group-radio>
+      </slab-radio-group>`,
+  );
 
-    const host = page.locator('slab-radio-group');
+  const host = page.locator('slab-radio-group');
 
-    await expect(host).toBeInTheCustomElementRegistry('slab-radio-group');
-  },
-);
+  await expect(host).toBeInTheCustomElementRegistry('slab-radio-group');
+});
 
 test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio label="One"></slab-radio-group-radio>
@@ -47,8 +43,8 @@ test(
 test(
   'sets its value when a radio is checked initially',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio
@@ -73,8 +69,8 @@ test(
 test(
   'checks its radio when its value is set initially',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label" value="one">
           <slab-radio-group-radio
@@ -99,8 +95,8 @@ test(
 test(
   'sets its value when a radio is checked programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio
@@ -127,8 +123,8 @@ test(
 test(
   'makes its first radio tabbable when none are checked',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio
@@ -152,8 +148,8 @@ test(
 test(
   'enables and makes a radio tabbable when value is set initially',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label" value="one">
           <slab-radio-group-radio
@@ -182,8 +178,8 @@ test(
 test(
   'enables and makes a radio tabbable when value is set programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio
@@ -215,8 +211,8 @@ test(
 test(
   'disables radios when disabled initially',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label" disabled>
           <slab-radio-group-radio
@@ -243,8 +239,8 @@ test(
 test(
   'disables radios when disabled programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio
@@ -273,8 +269,8 @@ test(
 test(
   'makes radios untabbable when disabled programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio
@@ -304,8 +300,8 @@ test(
 test(
   'enables radios when enabled programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label" disabled>
           <slab-radio-group-radio
@@ -335,8 +331,8 @@ test(
 test(
   'makes its first radio tabbable when enabled programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label" disabled>
           <slab-radio-group-radio
@@ -364,8 +360,8 @@ test(
 test(
   'makes its checked radio tabbable when enabled programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label" disabled>
           <slab-radio-group-radio
@@ -394,8 +390,8 @@ test(
 test(
   'makes its next radio tabbable when its checked radio is disabled programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio
@@ -429,8 +425,8 @@ test(
 test(
   'makes its first radio tabbable when its checked radio is the last radio and is disabled programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio
@@ -464,8 +460,8 @@ test(
 test(
   'gives precedence to a checked radio over its initial value',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label" value="one">
           <slab-radio-group-radio
@@ -494,8 +490,8 @@ test(
 test(
   'has an empty value when disabled',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label" disabled>
           <slab-radio-group-radio
@@ -520,8 +516,8 @@ test(
 test(
   'has an empty value when a disabled radio is checked initially',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio
@@ -547,8 +543,8 @@ test(
 test(
   'has an empty value when a checked radio is disabled programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio
@@ -576,8 +572,8 @@ test(
 test(
   'updates its value when the value of its checked radio is changed programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio
@@ -605,8 +601,8 @@ test(
 test(
   'updates its value when its checked radio is enabled programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio
@@ -672,9 +668,9 @@ test(
 test(
   'throws when more than one radio is checked initially',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () => html`
           <slab-radio-group label="Label">
             <slab-radio-group-radio
@@ -696,9 +692,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-radio-group>
             <slab-radio-group-radio label="One"></slab-radio-group-radio>
@@ -713,9 +709,9 @@ test(
 test(
   'throws when its default slot is the wrong type',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-radio-group label="Label">
             <input type="radio" />
@@ -730,8 +726,8 @@ test(
 test(
   'makes its first radio tabbable when its value is cleared',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label" value="two">
           <slab-radio-group-radio
@@ -760,8 +756,8 @@ test(
 test(
   'ignores radios that are not its children',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-radio-group label="Label">
           <slab-radio-group-radio label="One" value="one">

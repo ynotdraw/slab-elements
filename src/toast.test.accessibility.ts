@@ -5,8 +5,8 @@ import type Toast from './toast.js';
 test(
   'is accessible',
   { tag: '@accessibility' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () => html`<slab-toast duration="0">Changes saved</slab-toast>`,
     );
 
@@ -16,8 +16,10 @@ test(
   },
 );
 
-test('open', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=toast--toast');
+test('open', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-toast duration="5000">Changes saved</slab-toast>`,
+  );
 
   await page
     .locator('slab-toast')
@@ -33,9 +35,10 @@ test('open', { tag: '@accessibility' }, async ({ page }) => {
 
 // Empty but still there, so screenreaders already know about it when the
 // next `show()` puts something in it.
-test('dismissed', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=toast--toast');
-  await page.locator('slab-toast').waitFor({ state: 'attached' });
+test('dismissed', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-toast duration="5000">Changes saved</slab-toast>`,
+  );
 
   await expect(page.locator('slab-toast')).toMatchAriaSnapshot(`
     - status

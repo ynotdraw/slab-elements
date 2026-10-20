@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'selects options on click',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option value="one">One</slab-option>
@@ -42,8 +42,8 @@ test(
 test(
   'toggles options on click when multiple',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label" multiple>
           <slab-option value="one">One</slab-option>
@@ -68,8 +68,8 @@ test(
 test(
   'does not select disabled options on click',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label">
           <slab-option value="one" disabled>One</slab-option>
@@ -92,8 +92,8 @@ test(
 test(
   'does not select options on click when disabled',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-listbox label="Label" disabled>
           <slab-option value="one">One</slab-option>
@@ -113,8 +113,8 @@ test(
 test(
   'does nothing on a click that misses its options',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<style>
             slab-listbox::part(listbox) {
@@ -140,8 +140,8 @@ test(
 test(
   'leaves focus alone when "mousedown" is canceled',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<input aria-label="Label" />
 

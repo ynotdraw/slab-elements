@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'is submitted on Enter in a Text Field',
   { tag: '@keyboard' },
-  async ({ addEventListener, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, render, page }) => {
+    await render(
       () => html`
         <slab-form>
           <slab-text-field label="Label"></slab-text-field>

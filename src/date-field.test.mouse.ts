@@ -4,10 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'focuses its input when its label is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-date-field label="Label"></slab-date-field>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-date-field label="Label"></slab-date-field>`);
 
     await page.locator('[part~="label"]').click();
 
@@ -20,8 +18,8 @@ test(
 test(
   'focuses its input when a `<label for>` pointing at it is clicked',
   { tag: '@mouse' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`
         <label for="date-field">Elsewhere</label>
         <slab-date-field id="date-field" label="Label"></slab-date-field>

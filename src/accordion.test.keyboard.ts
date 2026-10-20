@@ -4,8 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'closes the others when one is opened via Enter and `exclusive`',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-accordion exclusive>
           <slab-disclosure label="One" open>One</slab-disclosure>
@@ -27,8 +27,8 @@ test(
 test(
   'moves between summaries via Tab',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-accordion>
           <slab-disclosure label="One">One</slab-disclosure>

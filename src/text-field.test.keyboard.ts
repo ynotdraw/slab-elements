@@ -4,10 +4,8 @@ import { expect, test } from './playwright/test.js';
 test(
   'dispatches "input" and "change" events when typed into',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-text-field label="Label"></slab-text-field>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-text-field label="Label"></slab-text-field>`);
 
     const host = page.locator('slab-text-field');
 
@@ -28,8 +26,8 @@ test(
 test(
   'submits its form on Enter',
   { tag: '@keyboard' },
-  async ({ addEventListener, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ addEventListener, render, page }) => {
+    await render(
       () => html`
         <form>
           <slab-text-field label="Label"></slab-text-field>
@@ -52,8 +50,8 @@ test(
 test(
   'reports its validity on blur',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-text-field label="Label" required></slab-text-field>`,
     );
 
@@ -70,8 +68,8 @@ test(
 test(
   'cannot be typed into when disabled',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-text-field label="Label" disabled></slab-text-field>`,
     );
 
@@ -82,8 +80,8 @@ test(
 test(
   'cannot be typed into when readonly',
   { tag: '@keyboard' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () => html`<slab-text-field label="Label" readonly></slab-text-field>`,
     );
 

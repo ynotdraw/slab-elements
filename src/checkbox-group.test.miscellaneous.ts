@@ -2,28 +2,24 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-checkbox-group label="Label">
-          <slab-checkbox label="Label"></slab-checkbox>
-        </slab-checkbox-group>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-checkbox-group label="Label">
+        <slab-checkbox label="Label"></slab-checkbox>
+      </slab-checkbox-group>`,
+  );
 
-    const host = page.locator('slab-checkbox-group');
+  const host = page.locator('slab-checkbox-group');
 
-    await expect(host).toBeInTheCustomElementRegistry('slab-checkbox-group');
-  },
-);
+  await expect(host).toBeInTheCustomElementRegistry('slab-checkbox-group');
+});
 
 test(
   'disables its checkboxes when disabled initially',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-checkbox-group label="Label" disabled>
           <slab-checkbox label="One"></slab-checkbox>
@@ -41,8 +37,8 @@ test(
 test(
   'disables its checkboxes when disabled programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-checkbox-group label="Label">
           <slab-checkbox label="One"></slab-checkbox>
@@ -63,8 +59,8 @@ test(
 test(
   'enables checkboxes when its value is set initially',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-checkbox-group label="Label" .value=${['one', 'two']}>
           <slab-checkbox label="One" value="one" disabled></slab-checkbox>
@@ -83,8 +79,8 @@ test(
 test(
   'adds the value of a programmatically enabled checkbox to its value',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-checkbox-group label="Label">
           <slab-checkbox
@@ -112,8 +108,8 @@ test(
 test(
   'removes the value of a programmatically disabled checkbox from its value',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-checkbox-group label="Label">
           <slab-checkbox label="One" value="one" checked></slab-checkbox>
@@ -136,8 +132,8 @@ test(
 test(
   'enables checkboxes when its value is set programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-checkbox-group label="Label">
           <slab-checkbox label="One" value="one" disabled></slab-checkbox>
@@ -159,8 +155,8 @@ test(
 test(
   'checks and unchecks checkboxes when its `value` is set programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-checkbox-group label="Label">
           <slab-checkbox label="One" value="one" checked></slab-checkbox>
@@ -182,8 +178,8 @@ test(
 test(
   'updates its value when a checkbox is checked programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-checkbox-group label="Label">
           <slab-checkbox label="One" value="one"></slab-checkbox>
@@ -204,8 +200,8 @@ test(
 test(
   'updates its value when a checkbox is unchecked programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-checkbox-group label="Label">
           <slab-checkbox label="One" value="one" checked></slab-checkbox>
@@ -226,8 +222,8 @@ test(
 test(
   'updates its value when the value of a checkbox is changed programmatically',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-checkbox-group label="Label">
           <slab-checkbox label="One" value="one" checked></slab-checkbox>
@@ -248,8 +244,8 @@ test(
 test(
   'focuses the first enabled checkbox when `focus()` is called',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page }) => {
+    await render(
       () =>
         html`<slab-checkbox-group label="Label">
           <slab-checkbox label="One"></slab-checkbox>
@@ -306,9 +302,9 @@ test(
 test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-checkbox-group>
             <slab-checkbox label="Label"></slab-checkbox>
@@ -321,9 +317,9 @@ test(
 test(
   'throws when its default slot is the wrong type',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate }) => {
+  async ({ render }) => {
     await expect(
-      renderTemplate(
+      render(
         () =>
           html`<slab-checkbox-group label="Label">
             <input type="checkbox" />
@@ -336,8 +332,8 @@ test(
 test(
   'stops setting its own validity once the consumer has set it',
   { tag: '@miscellaneous' },
-  async ({ callMethod, renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-checkbox-group label="Label" required>
           <slab-checkbox label="One" value="one"></slab-checkbox>
@@ -359,8 +355,8 @@ test(
 test(
   'ignores checkboxes that are not its children',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
+  async ({ render, page, setProperty }) => {
+    await render(
       () =>
         html`<slab-checkbox-group label="Label">
           <slab-checkbox label="One" value="one">

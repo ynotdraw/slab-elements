@@ -1,26 +1,22 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 
-test(
-  'is accessible',
-  { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<div role="listbox" aria-label="Label">
-          <slab-option>Label</slab-option>
-        </div>`,
-    );
+test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<div role="listbox" aria-label="Label">
+        <slab-option>Label</slab-option>
+      </div>`,
+  );
 
-    await expect(page).toBeAccessible('slab-option');
-  },
-);
+  await expect(page).toBeAccessible('slab-option');
+});
 
 test(
   'is named by its text',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-option>Label</slab-option>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-option>Label</slab-option>`);
 
     await expect(page.getByRole('option')).toHaveAccessibleName('Label');
   },
@@ -29,10 +25,8 @@ test(
 test(
   'sets `aria-label` when `label` is set initially',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-option label="Label">Text</slab-option>`,
-    );
+  async ({ render, page }) => {
+    await render(() => html`<slab-option label="Label">Text</slab-option>`);
 
     const host = page.locator('slab-option');
 
@@ -43,10 +37,8 @@ test(
 test(
   'sets `aria-label` when `label` is set programmatically',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(
-      () => html`<slab-option label="One">Text</slab-option>`,
-    );
+  async ({ render, page, setProperty }) => {
+    await render(() => html`<slab-option label="One">Text</slab-option>`);
 
     const host = page.locator('slab-option');
 
@@ -59,10 +51,8 @@ test(
 test(
   'removes `aria-label` when `label` is removed programmatically',
   { tag: '@accessibility' },
-  async ({ removeAttribute, renderTemplate, page }) => {
-    await renderTemplate(
-      () => html`<slab-option label="One">Text</slab-option>`,
-    );
+  async ({ removeAttribute, render, page }) => {
+    await render(() => html`<slab-option label="One">Text</slab-option>`);
 
     const host = page.locator('slab-option');
 
@@ -76,8 +66,8 @@ test(
 test(
   'sets `aria-selected` when selected initially',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-option selected>Label</slab-option>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-option selected>Label</slab-option>`);
 
     const host = page.locator('slab-option');
 
@@ -88,8 +78,8 @@ test(
 test(
   'sets `aria-selected` when selected programmatically',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(() => html`<slab-option>Label</slab-option>`);
+  async ({ render, page, setProperty }) => {
+    await render(() => html`<slab-option>Label</slab-option>`);
 
     const host = page.locator('slab-option');
 
@@ -102,8 +92,8 @@ test(
 test(
   'sets `aria-selected` when deselected programmatically',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(() => html`<slab-option selected>Label</slab-option>`);
+  async ({ render, page, setProperty }) => {
+    await render(() => html`<slab-option selected>Label</slab-option>`);
 
     const host = page.locator('slab-option');
 
@@ -116,8 +106,8 @@ test(
 test(
   'sets `aria-disabled` when enabled initially',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-option>Label</slab-option>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-option>Label</slab-option>`);
 
     const host = page.locator('slab-option');
 
@@ -128,8 +118,8 @@ test(
 test(
   'sets `aria-disabled` when disabled initially',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(() => html`<slab-option disabled>Label</slab-option>`);
+  async ({ render, page }) => {
+    await render(() => html`<slab-option disabled>Label</slab-option>`);
 
     const host = page.locator('slab-option');
 
@@ -140,8 +130,8 @@ test(
 test(
   'sets `aria-disabled` when disabled programmatically',
   { tag: '@accessibility' },
-  async ({ renderTemplate, page, setProperty }) => {
-    await renderTemplate(() => html`<slab-option>Label</slab-option>`);
+  async ({ render, page, setProperty }) => {
+    await render(() => html`<slab-option>Label</slab-option>`);
 
     const host = page.locator('slab-option');
 

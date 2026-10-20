@@ -2,33 +2,29 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
-test(
-  'defines itself',
-  { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-field>
-          <label>Label</label>
-          <input slot="control" />
-          <div slot="description">Description</div>
-        </slab-field>`,
-    );
+test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-field>
+        <label>Label</label>
+        <input slot="control" />
+        <div slot="description">Description</div>
+      </slab-field>`,
+  );
 
-    await expect(page.locator('slab-field')).toBeInTheCustomElementRegistry(
-      'slab-field',
-    );
+  await expect(page.locator('slab-field')).toBeInTheCustomElementRegistry(
+    'slab-field',
+  );
 
-    await expect(page.getByRole('textbox', { name: 'Label' })).toBeVisible();
-    await expect(page.getByText('Description')).toBeVisible();
-  },
-);
+  await expect(page.getByRole('textbox', { name: 'Label' })).toBeVisible();
+  await expect(page.getByText('Description')).toBeVisible();
+});
 
 test(
   'sets a custom state for each of its states',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-field disabled error required>
           <label>Label</label>
@@ -64,8 +60,8 @@ test(
 test(
   'renders nothing of its own when required',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-field required>
           <label>Label</label>
@@ -82,8 +78,8 @@ test(
 test(
   'hides its label visually when `hide-label` is set',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-field hide-label>
           <label>Label</label>
@@ -142,8 +138,8 @@ test(
 test(
   'points its label at its control',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-field>
           <label>Label</label>
@@ -164,8 +160,8 @@ test(
 test(
   'leaves a label and control that are already wired alone',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-field>
           <label for="mine">Label</label>
@@ -181,8 +177,8 @@ test(
 test(
   'points its label at a control that already has an ID',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-field>
           <label>Label</label>
@@ -197,8 +193,8 @@ test(
 test(
   'wires nothing when its label is not a `<label>`',
   { tag: '@miscellaneous' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
+  async ({ render, page }) => {
+    await render(
       () =>
         html`<slab-field>
           <span>Label</span>
