@@ -7,10 +7,15 @@ import { v8CoverageAttachmentName, viteUrl } from './../constants.js';
 
 type Context<Type> = Type extends void ? void : Type;
 
+type Render = <Type = void>(
+  template: (context: Type) => TemplateResult | Promise<TemplateResult>,
+  context?: Context<Type>,
+) => Promise<void>;
+
 /**
- * Renders a template:
+ * Renders a template, without Storybook:
  *
- * 1. Navigates to a blank Storybook page.
+ * 1. Navigates to a blank page served by Vite.
  * 2. Renders your template onto the page.
  * 3. Waits for any custom elements in the template to be added to the registry.
  * 4. Waits for each custom element's `updateComplete`.
@@ -22,7 +27,7 @@ type Context<Type> = Type extends void ? void : Type;
  * evaluated in the browser.
  *
  * So you'll get an error, for example, if you reference in your template a
- * variable defined above your `renderTemplate()` call. The variable may appear to be in
+ * variable defined above your `render()` call. The variable may appear to be in
  * scope. But it won't be, and TypeScript won't any know better.
  *
  * This is what the `context` parameter is for. Whatever you pass in as context,
@@ -31,17 +36,19 @@ type Context<Type> = Type extends void ? void : Type;
  * need `context`. `toDispatchEvents()` is probably what you want instead.
  */
 export default test.extend<{
-  renderTemplate: <Type = void>(
-    template: (context: Type) => TemplateResult | Promise<TemplateResult>,
-    context?: Context<Type>,
-  ) => Promise<void>;
+  render: Render;
+
+  /**
+   * The old name for `render()`, kept until every test is moved over.
+   */
+  renderTemplate: Render;
 }>({
-  async renderTemplate({ page }, use, testInfo) {
-    await use(async function renderTemplate<Type = void>(
+  async render({ page }, use, testInfo) {
+    await use(async function render<Type = void>(
       template: (context: Type) => TemplateResult | Promise<TemplateResult>,
       context?: Context<Type>,
     ): Promise<void> {
-      return test.step('renderTemplate()', async () => {
+      return test.step('render()', async () => {
         let pageError: Error | undefined;
 
         page.on('pageerror', (error: Error) => {
@@ -87,8 +94,8 @@ export default test.extend<{
                 // An alternative approach would be to only evaluate the template and let tests
                 // bring themselves whatever they need into scope:
                 //
-                //   test('button', async ({ renderTemplate }) => {
-                //     await renderTemplate(async () => {
+                //   test('button', async ({ render }) => {
+                //     await render(async () => {
                 //       const { html } = await import('lit');
                 //
                 //       return html`<slab-button label="Label"></slab-button>`;
@@ -199,6 +206,10 @@ export default test.extend<{
         }
       });
     });
+  },
+
+  async renderTemplate({ render }, use) {
+    await use(render);
   },
 
   async page({ page, browser, browserName }, use, testInfo) {

@@ -22,7 +22,7 @@ export default {
     //
     // Option, for example, imports Menu, which imports Option:
     //
-    // 1. `renderTemplate()` will programmatically import Option.
+    // 1. `render()` will programmatically import Option.
     // 2. The browser will fetch and execute Menu, whose import specifier for Option
     //    will include the cache busting query parameter.
     // 3. Upon executing Menu, the browser will re-execute Option.

@@ -7,7 +7,7 @@ import {
 } from '@playwright/test';
 import addEventListener from './fixtures/add-event-listener.js';
 import callMethod from './fixtures/call-method.js';
-import renderTemplate from './fixtures/render-template.js';
+import render from './fixtures/render.js';
 import removeAttribute from './fixtures/remove-attribute.js';
 import setAttribute from './fixtures/set-attribute.js';
 import setProperty from './fixtures/set-property.js';
@@ -73,7 +73,7 @@ export const expect = mergeExpects(
 export const test = mergeTests(
   addEventListener,
   callMethod,
-  renderTemplate,
+  render,
   removeAttribute,
   setAttribute,
   setProperty,

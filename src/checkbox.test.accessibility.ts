@@ -1,30 +1,21 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
-import type Checkbox from './checkbox.js';
 
-test(
-  'is accessible',
-  { tag: '@accessibility' },
-  async ({ renderTemplate, page }) => {
-    await renderTemplate(
-      () =>
-        html`<slab-checkbox label="Label">
-          <div slot="description">Description</div>
-        </slab-checkbox>`,
-    );
+test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-checkbox label="Label">
+        <div slot="description">Description</div>
+      </slab-checkbox>`,
+  );
 
-    await expect(page).toBeAccessible('slab-checkbox');
-  },
-);
+  await expect(page).toBeAccessible('slab-checkbox');
+});
 
-test('checked=${true}', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=checkbox--checkbox');
-
-  await page
-    .locator('slab-checkbox')
-    .evaluate<void, void, Checkbox>((element) => {
-      element.checked = true;
-    });
+test('checked=${true}', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-checkbox label="Label" checked></slab-checkbox>`,
+  );
 
   await expect(page.locator('slab-checkbox')).toMatchAriaSnapshot(`
     - checkbox "Label" [checked]
@@ -32,39 +23,38 @@ test('checked=${true}', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('checked=${false}', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=checkbox--checkbox');
-  await page.locator('slab-checkbox').waitFor();
+test(
+  'checked=${false}',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(() => html`<slab-checkbox label="Label"></slab-checkbox>`);
 
-  await expect(page.locator('slab-checkbox')).toMatchAriaSnapshot(`
+    await expect(page.locator('slab-checkbox')).toMatchAriaSnapshot(`
     - checkbox "Label"
     - text: Label
   `);
-});
+  },
+);
 
-test('disabled=${true}', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=checkbox--checkbox');
+test(
+  'disabled=${true}',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-checkbox label="Label" disabled></slab-checkbox>`,
+    );
 
-  await page
-    .locator('slab-checkbox')
-    .evaluate<void, void, Checkbox>((element) => {
-      element.disabled = true;
-    });
-
-  await expect(page.locator('slab-checkbox')).toMatchAriaSnapshot(`
+    await expect(page.locator('slab-checkbox')).toMatchAriaSnapshot(`
     - checkbox "Label" [disabled]
     - text: Label
   `);
-});
+  },
+);
 
-test('hide-label', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=checkbox--checkbox');
-
-  await page
-    .locator('slab-checkbox')
-    .evaluate<void, void, Checkbox>((element) => {
-      element.hideLabel = true;
-    });
+test('hide-label', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-checkbox label="Label" hide-label></slab-checkbox>`,
+  );
 
   // Hidden visually, so it still names the checkbox.
   await expect(page.locator('slab-checkbox')).toMatchAriaSnapshot(`
@@ -73,14 +63,10 @@ test('hide-label', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('indeterminate', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=checkbox--checkbox');
-
-  await page
-    .locator('slab-checkbox')
-    .evaluate<void, void, Checkbox>((element) => {
-      element.indeterminate = true;
-    });
+test('indeterminate', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () => html`<slab-checkbox label="Label" indeterminate></slab-checkbox>`,
+  );
 
   await expect(page.locator('slab-checkbox')).toMatchAriaSnapshot(`
     - checkbox "Label" [checked=mixed]
@@ -88,22 +74,20 @@ test('indeterminate', { tag: '@accessibility' }, async ({ page }) => {
   `);
 });
 
-test('slot="description"', { tag: '@accessibility' }, async ({ page }) => {
-  await page.goto('?id=checkbox--checkbox');
+test(
+  'slot="description"',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-checkbox label="Label">
+          <div slot="description">Description</div>
+        </slab-checkbox>`,
+    );
 
-  await page
-    .locator('slab-checkbox')
-    .evaluate<void, void, Checkbox>((element) => {
-      const div = document.createElement('div');
-
-      div.textContent = 'Description';
-      div.slot = 'description';
-
-      element.append(div);
-    });
-
-  await expect(page.locator('slab-checkbox')).toMatchAriaSnapshot(`
-    - checkbox "Label"
-    - text: Label Description
-  `);
-});
+    await expect(page.locator('slab-checkbox')).toMatchAriaSnapshot(`
+      - checkbox "Label"
+      - text: Label Description
+    `);
+  },
+);
