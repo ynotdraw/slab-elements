@@ -414,7 +414,9 @@ test(
 
     const host = page.locator('slab-carousel');
 
-    await page.getByText('One').hover();
+    // The slides rather than a slide, which can still be scrolling into view
+    // when rotation is this quick, so never stable enough to hover.
+    await page.getByTestId('slides').hover();
 
     await page.evaluate(
       () => new Promise((resolve) => setTimeout(resolve, 500)),
