@@ -45,6 +45,14 @@
   */
   color-scheme: light dark;
 
+  /*
+    Safari on iOS enlarges text it judges too small for a wide block, such
+    as the API tables' signatures, which don't wrap and scroll sideways.
+    Every size here is chosen for small screens already.
+  */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+
   &[data-theme='light'] {
     color-scheme: light;
   }
