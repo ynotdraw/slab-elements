@@ -721,6 +721,347 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/carousel.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/carousel.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/carousel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "Carousel",
+          "cssParts": [
+            {
+              "name": "carousel",
+              "description": "The region"
+            },
+            {
+              "name": "controls",
+              "description": "The rotation, previous and next buttons"
+            },
+            {
+              "name": "rotation",
+              "description": "The button that starts and stops rotation"
+            },
+            {
+              "name": "previous",
+              "description": "The button to the previous slide"
+            },
+            {
+              "name": "next",
+              "description": "The button to the next slide"
+            },
+            {
+              "name": "slides",
+              "description": "The scroll snap container of the slides"
+            },
+            {
+              "name": "markers",
+              "description": "The markers"
+            },
+            {
+              "name": "marker",
+              "description": "Each slide's marker"
+            },
+            {
+              "name": "current",
+              "description": "The current slide's marker"
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The slides",
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the carousel.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "autoplay",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Moves to the next slide every `interval` milliseconds until it's stopped.",
+              "attribute": "autoplay",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "index",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The current slide's, from 0.",
+              "attribute": "index",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "interval",
+              "type": {
+                "text": "number"
+              },
+              "default": "5000",
+              "description": "How long each slide shows for when `autoplay` is set, in milliseconds.",
+              "attribute": "interval",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loop",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Previous and Next wrap from one end to the other.",
+              "attribute": "loop",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "markerLabel",
+              "type": {
+                "text": "(index: number) => string"
+              },
+              "description": "Names each slide's marker, which has no text, from the slide's index.\n\"Slide\" and its number when unset."
+            },
+            {
+              "kind": "field",
+              "name": "nextLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The next button's text and so its accessible name. \"Next slide\" when\nunset.",
+              "attribute": "next-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "previousLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The previous button's text and so its accessible name. \"Previous slide\"\nwhen unset.",
+              "attribute": "previous-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "slideLabel",
+              "type": {
+                "text": "(index: number, total: number) => string"
+              },
+              "description": "Names each slide without a name of its own, from its index and how many\nslides there are. \"1 of 3\" and so on when unset."
+            },
+            {
+              "kind": "field",
+              "name": "startLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The rotation button's text while rotation is stopped. \"Start slide\nrotation\" when unset.",
+              "attribute": "start-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "stopLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The rotation button's text while the slides rotate. \"Stop slide rotation\"\nwhen unset.",
+              "attribute": "stop-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "slides",
+              "type": {
+                "text": "Element[]"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the carousel.",
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "autoplay",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Moves to the next slide every `interval` milliseconds until it's stopped.",
+              "fieldName": "autoplay"
+            },
+            {
+              "name": "index",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The current slide's, from 0.",
+              "fieldName": "index"
+            },
+            {
+              "name": "interval",
+              "type": {
+                "text": "number"
+              },
+              "default": "5000",
+              "description": "How long each slide shows for when `autoplay` is set, in milliseconds.",
+              "fieldName": "interval"
+            },
+            {
+              "name": "loop",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Previous and Next wrap from one end to the other.",
+              "fieldName": "loop"
+            },
+            {
+              "name": "next-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The next button's text and so its accessible name. \"Next slide\" when\nunset.",
+              "fieldName": "nextLabel"
+            },
+            {
+              "name": "previous-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The previous button's text and so its accessible name. \"Previous slide\"\nwhen unset.",
+              "fieldName": "previousLabel"
+            },
+            {
+              "name": "start-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The rotation button's text while rotation is stopped. \"Start slide\nrotation\" when unset.",
+              "fieldName": "startLabel"
+            },
+            {
+              "name": "stop-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The rotation button's text while the slides rotate. \"Stop slide rotation\"\nwhen unset.",
+              "fieldName": "stopLabel"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-carousel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "Carousel",
+            "module": "src/carousel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-carousel",
+          "declaration": {
+            "name": "Carousel",
+            "module": "src/carousel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/checkbox-group.styles.ts",
       "declarations": [],
       "exports": [
