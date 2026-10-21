@@ -7855,6 +7855,415 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/rating.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/rating.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/rating.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "Rating",
+          "cssParts": [
+            {
+              "name": "label",
+              "description": "The label"
+            },
+            {
+              "name": "stars"
+            },
+            {
+              "name": "description",
+              "description": "Text about the rating, and its validity message when it has one"
+            },
+            {
+              "name": "validity-message"
+            }
+          ],
+          "slots": [
+            {
+              "name": "description",
+              "description": "",
+              "type": {
+                "text": "Element | string"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hideLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hide-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "5",
+              "description": "How many radios there are. Anything but a whole number of 1 or more is 5.",
+              "attribute": "max",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "The checked radio's number. Like a native input, the attribute is the\ndefault value and the property is the current one. A value that isn't a\nwhole number from 1 to `max` checks nothing and reads back as an empty\nstring.",
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "HTMLFormElement | null"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isDisabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "string | File | FormData | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resetValidityFeedback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears the validity feedback without changing `validity`."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "flags",
+                  "optional": true,
+                  "type": {
+                    "text": "ValidityStateFlags"
+                  }
+                },
+                {
+                  "name": "message",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "hide-label",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hideLabel"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "5",
+              "description": "How many radios there are. Anything but a whole number of 1 or more is 5.",
+              "fieldName": "max"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "required"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "The checked radio's number. Like a native input, the attribute is the\ndefault value and the property is the current one. A value that isn't a\nwhole number from 1 to `max` checks nothing and reads back as an empty\nstring.",
+              "default": "''",
+              "fieldName": "value"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-rating",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "Rating",
+            "module": "src/rating.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-rating",
+          "declaration": {
+            "name": "Rating",
+            "module": "src/rating.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/select.styles.ts",
       "declarations": [],
       "exports": [

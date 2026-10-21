@@ -1,0 +1,84 @@
+import { css } from 'lit';
+
+export default css`
+  :host {
+    color: var(--ink);
+    display: grid;
+    font-family: var(--font-body);
+  }
+
+  [part~='label'] {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    margin-block-end: 0.5rem;
+  }
+
+  :host(:state(required)) [part~='label']::after {
+    color: var(--ember-deep);
+    content: ' *' / '';
+  }
+
+  [part~='stars'] {
+    display: flex;
+    gap: 0.375rem;
+  }
+
+  [part~='star'] {
+    appearance: none;
+    background-color: var(--paper);
+    block-size: 1.5rem;
+    border: var(--border);
+    border-radius: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    inline-size: 2.75rem;
+    margin: 0;
+
+    &:focus-visible {
+      outline: 3px solid var(--ember);
+      outline-offset: 3px;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  [part~='filled'] {
+    background-color: var(--ember);
+  }
+
+  /*
+    A lighter course while previewing, so what's hovered reads as a
+    preview rather than as the value.
+  */
+  :host(:state(previewing)) [part~='filled'] {
+    background-color: color-mix(in srgb, var(--ember) 55%, var(--paper));
+  }
+
+  /*
+    Spaced by what's in it rather than by a gap, so a description with
+    nothing in it takes no room.
+  */
+  [part~='description'] {
+    color: var(--ash);
+    display: grid;
+    font-size: 0.875rem;
+  }
+
+  ::slotted([slot='description']) {
+    margin-block-start: 0.375rem;
+  }
+
+  [part~='validity-message'] {
+    color: var(--ember-deep);
+    font-weight: 600;
+    margin-block-start: 0.375rem;
+
+    &::before {
+      content: '■ ' / '';
+    }
+  }
+`;
