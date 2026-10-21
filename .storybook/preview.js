@@ -295,6 +295,25 @@ export default {
             }
           }
 
+          if (component === 'menubar') {
+            for (const $anchor of $component.querySelectorAll(
+              '[slot="anchor"]',
+            )) {
+              $anchor.removeAttribute('aria-expanded');
+              $anchor.removeAttribute('aria-haspopup');
+              $anchor.removeAttribute('role');
+              $anchor.removeAttribute('tabindex');
+            }
+
+            for (const $item of $component.querySelectorAll(
+              'slab-menu-item',
+            )) {
+              $item.removeAttribute('aria-disabled');
+              $item.removeAttribute('aria-label');
+              $item.removeAttribute('role');
+            }
+          }
+
           if (component === 'toolbar') {
             for (const $control of $component.children) {
               $control.removeAttribute('tabindex');
