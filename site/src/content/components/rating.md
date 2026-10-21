@@ -16,9 +16,9 @@ Nothing is drawn, so give each `::part(star)` a look, and `::part(filled)` the l
 
 ## Keyboard
 
-| Key                   | What it does                                                         |
-| --------------------- | -------------------------------------------------------------------- |
-| Tab                   | Moves into the rating at the checked radio, or the first, and out.   |
-| Up, Down, Left, Right | Moves to the previous or next radio and checks it, wrapping at ends. |
-| Space                 | Checks the focused radio.                                            |
-| Enter                 | Submits the form, as on a native radio.                              |
+| Key                   | What it does                                                       |
+| --------------------- | ------------------------------------------------------------------ |
+| Tab                   | Moves into the rating at the checked radio, or the first, and out. |
+| Up, Down, Left, Right | Moves to the previous or next radio and checks it.                 |
+| Space                 | Checks the focused radio.                                          |
+| Enter                 | Submits the form, as on a native radio.                            |

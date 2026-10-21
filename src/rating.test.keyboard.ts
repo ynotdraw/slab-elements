@@ -25,9 +25,10 @@ test(
 );
 
 // Nothing here is Slab's: each key is a native radio's own. These are here so
-// a change to the template that loses them is caught.
+// a change to the template that loses them is caught. Whether the arrows wrap
+// at each end is left out, since that differs between browsers.
 test(
-  'moves between its radios with the arrow keys and wraps',
+  'moves between its radios with the arrow keys',
   { tag: '@keyboard' },
   async ({ render, page }) => {
     await render(
@@ -39,11 +40,14 @@ test(
     await page.getByRole('radio', { name: '1' }).press('ArrowDown');
     await expect(host).toHaveJSProperty('value', '2');
 
-    await page.getByRole('radio', { name: '2' }).press('ArrowUp');
-    await expect(host).toHaveJSProperty('value', '1');
-
-    await page.getByRole('radio', { name: '1' }).press('ArrowLeft');
+    await page.getByRole('radio', { name: '2' }).press('ArrowRight');
     await expect(host).toHaveJSProperty('value', '3');
+
+    await page.getByRole('radio', { name: '3' }).press('ArrowUp');
+    await expect(host).toHaveJSProperty('value', '2');
+
+    await page.getByRole('radio', { name: '2' }).press('ArrowLeft');
+    await expect(host).toHaveJSProperty('value', '1');
   },
 );
 
