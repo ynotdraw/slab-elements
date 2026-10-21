@@ -161,7 +161,7 @@ const meta: Meta = {
     swatches: {
       table: {
         type: {
-          summary: 'string[]',
+          summary: 'string',
           detail:
             "// Space-separated colors to pick from. Ones that aren't colors are left out.",
         },

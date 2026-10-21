@@ -84,7 +84,7 @@ const black: Color = { alpha: 100, brightness: 0, hue: 0, saturation: 0 };
  * @attr {string} [hue-label] - Names the hue slider, after `label`. "Hue" when unset.
  * @attr {string} [name='']
  * @attr {string} [saturation-label] - Read before the area's saturation. "Saturation" when unset.
- * @attr {string[]} [swatches=[]] - Space-separated colors to pick from. Ones that aren't colors are left out.
+ * @attr {string} [swatches=''] - Space-separated colors to pick from. Ones that aren't colors are left out.
  * @attr {string} [swatches-label] - Names the swatches, after `label`. "Swatches" when unset.
  * @attr {string} [value='#000000'] - Like a native input's `value`, the attribute is the default and the property is the current value. "#000000" when unset.
  *
@@ -201,15 +201,8 @@ export default class ColorPicker extends LitElement {
   /**
    * Space-separated colors to pick from. Ones that aren't colors are left out.
    */
-  @property({
-    converter: {
-      fromAttribute: (value: string | null) => value?.split(/\s+/) ?? [],
-      toAttribute: (value: string[]) => value.join(' '),
-    },
-    reflect: true,
-    useDefault: true,
-  })
-  swatches: string[] = [];
+  @property({ reflect: true, useDefault: true })
+  swatches = '';
 
   /**
    * Names the swatches, after `label`. "Swatches" when unset.
@@ -530,7 +523,7 @@ export default class ColorPicker extends LitElement {
 
   // Each as `value` would be, without the ones that aren't colors.
   get #swatches() {
-    return this.swatches.flatMap((swatch) => {
+    return this.swatches.split(/\s+/).flatMap((swatch) => {
       const color = parse(swatch);
       return color ? [toHex(color, this.alpha)] : [];
     });

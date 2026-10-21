@@ -247,14 +247,14 @@ test(
 
     await expect(page.getByRole('option')).toHaveCount(2);
 
-    await setProperty(host, 'swatches', ['#0000ff']);
+    await setProperty(host, 'swatches', '#0000ff');
 
     await expect(host).toHaveAttribute('swatches', '#0000ff');
     await expect(page.getByRole('option')).toHaveCount(1);
 
     await removeAttribute(host, 'swatches');
 
-    await expect(host).toHaveJSProperty('swatches', []);
+    await expect(host).toHaveJSProperty('swatches', '');
     await expect(page.getByRole('listbox')).not.toBeAttached();
   },
 );
