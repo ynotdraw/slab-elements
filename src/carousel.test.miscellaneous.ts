@@ -506,11 +506,17 @@ test(
 
     await removeAttribute(host, 'autoplay');
 
+    // It may have rotated once already on a slow machine, before `autoplay`
+    // was removed. What matters is that it doesn't move from there.
+    const index = await host.evaluate(
+      (element: HTMLElementTagNameMap['slab-carousel']) => element.index,
+    );
+
     await page.evaluate(
       () => new Promise((resolve) => setTimeout(resolve, 500)),
     );
 
-    await expect(host).toHaveJSProperty('index', 0);
+    await expect(host).toHaveJSProperty('index', index);
     await expect(page.getByTestId('rotation')).toHaveCount(0);
   },
 );
