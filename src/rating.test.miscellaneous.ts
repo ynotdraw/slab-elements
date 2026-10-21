@@ -288,16 +288,17 @@ test(
   'has whole steps when `step` is anything but 0.5',
   { tag: '@miscellaneous' },
   async ({ render, page, setAttribute }) => {
-    await render(
-      () => html`<slab-rating label="Label" step="0.25"></slab-rating>`,
-    );
+    await render(() => html`<slab-rating label="Label"></slab-rating>`);
 
+    const host = page.locator('slab-rating');
     const radios = page.getByRole('radio');
 
+    // Set as attributes because neither is a `step` the types allow.
+    await setAttribute(host, 'step', '0.25');
     await expect(radios).toHaveCount(5);
     await expect(radios.nth(0)).toHaveAttribute('part', 'star');
 
-    await setAttribute(page.locator('slab-rating'), 'step', '2');
+    await setAttribute(host, 'step', '2');
     await expect(radios).toHaveCount(5);
   },
 );
