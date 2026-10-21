@@ -2124,6 +2124,224 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/context-menu.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/context-menu.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/context-menu.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ContextMenu",
+          "cssParts": [
+            {
+              "name": "popover",
+              "description": "What the menu opens in"
+            },
+            {
+              "name": "menu",
+              "description": "The Menu Items"
+            }
+          ],
+          "slots": [
+            {
+              "name": "target",
+              "description": "Where a right-click, a long-press, or Shift+F10 opens the menu",
+              "required": {
+                "tag": "required",
+                "name": "",
+                "type": "",
+                "optional": false,
+                "description": "",
+                "problems": [],
+                "source": [
+                  {
+                    "number": 3,
+                    "source": "          @required",
+                    "tokens": {
+                      "start": "          ",
+                      "delimiter": "",
+                      "postDelimiter": "",
+                      "tag": "@required",
+                      "postTag": "",
+                      "name": "",
+                      "postName": "",
+                      "type": "",
+                      "postType": "",
+                      "description": "",
+                      "end": "",
+                      "lineEnd": ""
+                    }
+                  }
+                ]
+              },
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "",
+              "description": "",
+              "type": {
+                "text": "MenuItem"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the menu.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "MenuItem[]"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "position",
+                  "optional": true,
+                  "type": {
+                    "text": "{ x: number; y: number }"
+                  }
+                }
+              ],
+              "description": "Opens the menu at `x` and `y`, in the viewport's coordinates, or below\nwhatever in the target has focus when they're left out."
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the menu.",
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "open"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-context-menu",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ContextMenu",
+            "module": "src/context-menu.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-context-menu",
+          "declaration": {
+            "name": "ContextMenu",
+            "module": "src/context-menu.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/date-field.styles.ts",
       "declarations": [],
       "exports": [
