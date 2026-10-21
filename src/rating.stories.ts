@@ -58,6 +58,7 @@ const meta: Meta = {
     'setCustomValidity(message)': '',
     'setValidity(flags, message)': '',
     'slot="description"': '',
+    step: '',
     value: '3',
     version: '',
   },
@@ -99,7 +100,7 @@ const meta: Meta = {
     max: {
       table: {
         defaultValue: { summary: '5' },
-        type: { summary: 'number', detail: '// How many radios there are' },
+        type: { summary: 'number', detail: '// How many stars there are' },
       },
     },
     name: {
@@ -149,13 +150,24 @@ const meta: Meta = {
     'slot="description"': {
       table: { type: { summary: 'Element | string' } },
     },
+    step: {
+      control: 'select',
+      options: ['', '1', '0.5'],
+      table: {
+        defaultValue: { summary: '1' },
+        type: {
+          summary: '1 | 0.5',
+          detail: '// 0.5 for half stars, with two radios to a star',
+        },
+      },
+    },
     value: {
       table: {
         defaultValue: { summary: '""' },
         type: {
           summary: 'string',
           detail:
-            "// The checked radio's number, from 1 to `max`. The attribute is the default value. The property is the current one.",
+            "// The checked radio's number, from `step` to `max`. The attribute is the default value. The property is the current one.",
         },
       },
     },
@@ -173,6 +185,7 @@ const meta: Meta = {
       label=${arguments_.label || nothing}
       max=${arguments_.max || nothing}
       name=${arguments_.name || nothing}
+      step=${arguments_.step || nothing}
       value=${arguments_.value || nothing}
       ?disabled=${arguments_.disabled}
       ?hide-label=${arguments_['hide-label']}

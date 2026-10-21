@@ -567,3 +567,21 @@ test(
     await expect(page.getByRole('radio', { name: '1' })).toBeEnabled();
   },
 );
+
+test(
+  'has a half-step value as form data',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-rating label="Label" name="name" step="0.5"></slab-rating>
+        </form>
+      `,
+    );
+
+    await page.getByRole('radio', { name: '3.5' }).click();
+
+    await expect(page.locator('form')).toHaveFormData('name', '3.5');
+  },
+);

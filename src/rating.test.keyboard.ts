@@ -94,3 +94,30 @@ test(
     }
   },
 );
+
+test(
+  'moves by half a star with the arrow keys when `step` is 0.5',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-rating label="Label" step="0.5" value="2"></slab-rating>`,
+    );
+
+    const host = page.locator('slab-rating');
+
+    await page
+      .getByRole('radio', { name: '2', exact: true })
+      .press('ArrowRight');
+
+    await expect(host).toHaveJSProperty('value', '2.5');
+
+    await page.getByRole('radio', { name: '2.5' }).press('ArrowLeft');
+
+    await page
+      .getByRole('radio', { name: '2', exact: true })
+      .press('ArrowLeft');
+
+    await expect(host).toHaveJSProperty('value', '1.5');
+  },
+);

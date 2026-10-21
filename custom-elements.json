@@ -7881,7 +7881,24 @@
               "description": "The label"
             },
             {
-              "name": "stars"
+              "name": "stars",
+              "description": "The radios"
+            },
+            {
+              "name": "star",
+              "description": "Each radio"
+            },
+            {
+              "name": "filled",
+              "description": "Each radio up to the value, or up to the hovered one"
+            },
+            {
+              "name": "start",
+              "description": "With half steps, the radio for the first half of a star"
+            },
+            {
+              "name": "end",
+              "description": "With half steps, the radio for the second half of a star"
             },
             {
               "name": "description",
@@ -7946,7 +7963,7 @@
                 "text": "number"
               },
               "default": "5",
-              "description": "How many radios there are. Anything but a whole number of 1 or more is 5.",
+              "description": "How many stars there are. Anything but a whole number of 1 or more is 5.",
               "attribute": "max",
               "reflects": true
             },
@@ -7972,11 +7989,22 @@
             },
             {
               "kind": "field",
+              "name": "step",
+              "type": {
+                "text": "1 | 0.5"
+              },
+              "default": "1",
+              "description": "1 for whole stars, or 0.5 for half stars. Anything else is 1.",
+              "attribute": "step",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "value",
               "type": {
                 "text": "string"
               },
-              "description": "The checked radio's number. Like a native input, the attribute is the\ndefault value and the property is the current one. A value that isn't a\nwhole number from 1 to `max` checks nothing and reads back as an empty\nstring.",
+              "description": "The checked radio's number. Like a native input, the attribute is the\ndefault value and the property is the current one. A value that isn't one\nof the radios' numbers, from `step` to `max`, checks nothing and reads\nback as an empty string.",
               "default": "''",
               "attribute": "value"
             },
@@ -8198,7 +8226,7 @@
                 "text": "number"
               },
               "default": "5",
-              "description": "How many radios there are. Anything but a whole number of 1 or more is 5.",
+              "description": "How many stars there are. Anything but a whole number of 1 or more is 5.",
               "fieldName": "max"
             },
             {
@@ -8218,11 +8246,20 @@
               "fieldName": "required"
             },
             {
+              "name": "step",
+              "type": {
+                "text": "1 | 0.5"
+              },
+              "default": "1",
+              "description": "1 for whole stars, or 0.5 for half stars. Anything else is 1.",
+              "fieldName": "step"
+            },
+            {
               "name": "value",
               "type": {
                 "text": "string"
               },
-              "description": "The checked radio's number. Like a native input, the attribute is the\ndefault value and the property is the current one. A value that isn't a\nwhole number from 1 to `max` checks nothing and reads back as an empty\nstring.",
+              "description": "The checked radio's number. Like a native input, the attribute is the\ndefault value and the property is the current one. A value that isn't one\nof the radios' numbers, from `step` to `max`, checks nothing and reads\nback as an empty string.",
               "default": "''",
               "fieldName": "value"
             },

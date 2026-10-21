@@ -237,3 +237,90 @@ test(
     ).rejects.toThrow();
   },
 );
+
+test(
+  'has a radio for each half point when `step` is 0.5',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-rating label="Label" max="2" step="0.5"></slab-rating>`,
+    );
+
+    const radios = page.getByRole('radio');
+
+    await expect(radios).toHaveCount(4);
+    await expect(radios.nth(0)).toHaveAccessibleName('0.5');
+    await expect(radios.nth(3)).toHaveAccessibleName('2');
+
+    // Each star's halves, its first radio and then its second.
+    await expect(radios.nth(0)).toHaveAttribute('part', 'star start');
+    await expect(radios.nth(1)).toHaveAttribute('part', 'star end');
+  },
+);
+
+test(
+  'fills the halves up to a half-step value',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-rating
+          label="Label"
+          max="3"
+          step="0.5"
+          value="1.5"
+        ></slab-rating>`,
+    );
+
+    const host = page.locator('slab-rating');
+
+    await expect(host).toHaveJSProperty('value', '1.5');
+    await expect(page.getByRole('radio', { name: '1.5' })).toBeChecked();
+    await expect(page.locator('[part~="filled"]')).toHaveCount(3);
+
+    await expect(page.locator('[part~="filled"][part~="start"]')).toHaveCount(
+      2,
+    );
+  },
+);
+
+test(
+  'has whole steps when `step` is anything but 0.5',
+  { tag: '@miscellaneous' },
+  async ({ render, page, setAttribute }) => {
+    await render(
+      () => html`<slab-rating label="Label" step="0.25"></slab-rating>`,
+    );
+
+    const radios = page.getByRole('radio');
+
+    await expect(radios).toHaveCount(5);
+    await expect(radios.nth(0)).toHaveAttribute('part', 'star');
+
+    await setAttribute(page.locator('slab-rating'), 'step', '2');
+    await expect(radios).toHaveCount(5);
+  },
+);
+
+test(
+  'loses a half-step value when `step` goes back to 1',
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-rating
+          label="Label"
+          required
+          step="0.5"
+          value="2.5"
+        ></slab-rating>`,
+    );
+
+    const host = page.locator('slab-rating');
+
+    await setProperty(host, 'step', 1);
+
+    await expect(host).toHaveJSProperty('value', '');
+    await expect(host).toHaveJSProperty('validity.valueMissing', true);
+  },
+);

@@ -24,6 +24,7 @@ declare global {
 /**
  * A rating with no visual styles: a row of native radios, one for each point
  * from 1 to `max`, with one label, one value, and one validity for all of them.
+ * With `step="0.5"`, there's one for each half point instead, two to a star.
  *
  * The radios are the platform's, in the shadow root, so they're checked, moved
  * between with the arrow keys, and read the way a native radio group is. Each
@@ -34,7 +35,8 @@ declare global {
  * while one is hovered, those up to it are `filled` instead, so a pointer
  * previews the value it would pick. The host is `:state(previewing)` while it
  * does. Nothing is drawn, so a star, a heart, or a radio button is yours to
- * decide.
+ * decide. With half steps, each star's two radios are its `start` and `end`
+ * halves, so a half-filled star is a filled `start` beside an unfilled `end`.
  *
  * Style it through its parts and through `:state(disabled)`, `:state(error)`,
  * `:state(previewing)`, and `:state(required)`. How the radios are arranged is
@@ -43,10 +45,11 @@ declare global {
  * @attr {string} label
  * @attr {boolean} [disabled=false]
  * @attr {boolean} [hide-label=false]
- * @attr {number} [max=5] - How many radios there are. Anything but a whole number of 1 or more is 5.
+ * @attr {number} [max=5] - How many stars there are. Anything but a whole number of 1 or more is 5.
  * @attr {string} [name='']
  * @attr {boolean} [required=false]
- * @attr {string} [value=''] - The checked radio's number. Like a native input, the attribute is the default value and the property is the current one. A value that isn't a whole number from 1 to `max` checks nothing and reads back as an empty string.
+ * @attr {1|0.5} [step=1] - 1 for whole stars, or 0.5 for half stars. Anything else is 1.
+ * @attr {string} [value=''] - The checked radio's number. Like a native input, the attribute is the default value and the property is the current one. A value that isn't one of the radios' numbers, from `step` to `max`, checks nothing and reads back as an empty string.
  *
  * @readonly
  * @attr {string} [version]
@@ -54,8 +57,12 @@ declare global {
  * @slot {Element | string} [description]
  *
  * @csspart description - Text about the rating, and its validity message when it has one
+ * @csspart end - With half steps, the radio for the second half of a star
+ * @csspart filled - Each radio up to the value, or up to the hovered one
  * @csspart label - The label
- * @csspart stars
+ * @csspart star - Each radio
+ * @csspart stars - The radios
+ * @csspart start - With half steps, the radio for the first half of a star
  * @csspart validity-message
  *
  * @fires {Event} change
@@ -105,7 +112,7 @@ export default class Rating extends LitElement {
   hideLabel = false;
 
   /**
-   * How many radios there are. Anything but a whole number of 1 or more is 5.
+   * How many stars there are. Anything but a whole number of 1 or more is 5.
    */
   @property({ reflect: true, type: Number, useDefault: true })
   max = 5;
@@ -117,10 +124,16 @@ export default class Rating extends LitElement {
   required = false;
 
   /**
+   * 1 for whole stars, or 0.5 for half stars. Anything else is 1.
+   */
+  @property({ reflect: true, type: Number, useDefault: true })
+  step: 1 | 0.5 = 1;
+
+  /**
    * The checked radio's number. Like a native input, the attribute is the
-   * default value and the property is the current one. A value that isn't a
-   * whole number from 1 to `max` checks nothing and reads back as an empty
-   * string.
+   * default value and the property is the current one. A value that isn't one
+   * of the radios' numbers, from `step` to `max`, checks nothing and reads
+   * back as an empty string.
    *
    * @default ''
    */
@@ -207,14 +220,27 @@ export default class Rating extends LitElement {
         @pointerleave=${this.#onPointerLeave}
         @pointerover=${this.#onPointerOver}
       >
+        <!--
+          The radios
+          @part star - Each radio
+          @part filled - Each radio up to the value, or up to the hovered one
+          @part start - With half steps, the radio for the first half of a star
+          @part end - With half steps, the radio for the second half of a star
+        -->
         ${this.#points.map((point) => {
+          const parts = [
+            'star',
+            ...(this.#isHalfSteps ? [point % 1 ? 'start' : 'end'] : []),
+            ...(point <= filled ? ['filled'] : []),
+          ].join(' ');
+
           // Named by its number alone, since what a point is a point of is
           // the label's to say, and a number reads the same in any language.
           return html`<input
             aria-label=${point}
             data-test="star"
             name="rating"
-            part=${point <= filled ? 'star filled' : 'star'}
+            part=${parts}
             type="radio"
             value=${point}
             .checked=${live(String(point) === this.value)}
@@ -295,9 +321,15 @@ export default class Rating extends LitElement {
       this.#setState('required', this.required);
     }
 
-    // `max` is here because the value is one of its radios or nothing, so a
-    // smaller `max` can leave the rating with no value.
-    if (changes.has('max') || changes.has('required') || changes.has('value')) {
+    // `max` and `step` are here because the value is one of its radios or
+    // nothing, so a smaller `max`, or whole steps after half ones, can leave
+    // the rating with no value.
+    if (
+      changes.has('max') ||
+      changes.has('required') ||
+      changes.has('step') ||
+      changes.has('value')
+    ) {
       this.#updateValidity();
     }
 
@@ -377,6 +409,10 @@ export default class Rating extends LitElement {
     return this.disabled || this.isFormDisabled;
   }
 
+  get #isHalfSteps() {
+    return this.step === 0.5;
+  }
+
   get #isShowValidationFeedback() {
     return (
       !this.#isDisabled &&
@@ -393,8 +429,9 @@ export default class Rating extends LitElement {
 
   get #points() {
     const max = Number.isInteger(this.max) && this.max >= 1 ? this.max : 5;
+    const step = this.#isHalfSteps ? 0.5 : 1;
 
-    return Array.from({ length: max }, (_, index) => index + 1);
+    return Array.from({ length: max / step }, (_, index) => (index + 1) * step);
   }
 
   get #radios() {

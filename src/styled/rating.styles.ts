@@ -46,6 +46,21 @@ export default css`
     }
   }
 
+  /*
+    Half steps split each brick in two, butted together across the gap,
+    with a thin seam between the halves.
+  */
+  [part~='start'] {
+    border-inline-end-width: 1px;
+    inline-size: 1.375rem;
+  }
+
+  [part~='end'] {
+    border-inline-start-width: 1px;
+    inline-size: 1.375rem;
+    margin-inline-start: -0.375rem;
+  }
+
   [part~='filled'] {
     background-color: var(--ember);
   }

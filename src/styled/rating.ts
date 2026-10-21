@@ -10,7 +10,8 @@ declare global {
 }
 
 /**
- * Rating, styled: a course of bricks, laid in ember up to the value.
+ * Rating, styled: a course of bricks, laid in ember up to the value. With half
+ * steps, each brick is split in two.
  */
 @customElement('slab-styled-rating')
 export default class StyledRating extends Rating {

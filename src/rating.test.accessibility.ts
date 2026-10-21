@@ -101,3 +101,24 @@ test(
   `);
   },
 );
+
+test('step="0.5"', { tag: '@accessibility' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-rating
+        label="Label"
+        max="2"
+        step="0.5"
+        value="1.5"
+      ></slab-rating>`,
+  );
+
+  await expect(page.locator('slab-rating')).toMatchAriaSnapshot(`
+    - text: Label
+    - radiogroup "Label":
+      - radio "0.5"
+      - radio "1"
+      - radio "1.5" [checked]
+      - radio "2"
+  `);
+});
