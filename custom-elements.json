@@ -721,6 +721,347 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/carousel.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/carousel.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/carousel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "Carousel",
+          "cssParts": [
+            {
+              "name": "carousel",
+              "description": "The region"
+            },
+            {
+              "name": "controls",
+              "description": "The rotation, previous and next buttons"
+            },
+            {
+              "name": "rotation",
+              "description": "The button that starts and stops rotation"
+            },
+            {
+              "name": "previous",
+              "description": "The button to the previous slide"
+            },
+            {
+              "name": "next",
+              "description": "The button to the next slide"
+            },
+            {
+              "name": "slides",
+              "description": "The scroll snap container of the slides"
+            },
+            {
+              "name": "markers",
+              "description": "The markers"
+            },
+            {
+              "name": "marker",
+              "description": "Each slide's marker"
+            },
+            {
+              "name": "current",
+              "description": "The current slide's marker"
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The slides",
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the carousel.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "autoplay",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Moves to the next slide every `interval` milliseconds until it's stopped.",
+              "attribute": "autoplay",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "index",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The current slide's, from 0.",
+              "attribute": "index",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "interval",
+              "type": {
+                "text": "number"
+              },
+              "default": "5000",
+              "description": "How long each slide shows for when `autoplay` is set, in milliseconds.",
+              "attribute": "interval",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loop",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Previous and Next wrap from one end to the other.",
+              "attribute": "loop",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "markerLabel",
+              "type": {
+                "text": "(index: number) => string"
+              },
+              "description": "Names each slide's marker, which has no text, from the slide's index.\n\"Slide\" and its number when unset."
+            },
+            {
+              "kind": "field",
+              "name": "nextLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The next button's text and so its accessible name. \"Next slide\" when\nunset.",
+              "attribute": "next-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "previousLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The previous button's text and so its accessible name. \"Previous slide\"\nwhen unset.",
+              "attribute": "previous-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "slideLabel",
+              "type": {
+                "text": "(index: number, total: number) => string"
+              },
+              "description": "Names each slide without a name of its own, from its index and how many\nslides there are. \"1 of 3\" and so on when unset."
+            },
+            {
+              "kind": "field",
+              "name": "startLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The rotation button's text while rotation is stopped. \"Start slide\nrotation\" when unset.",
+              "attribute": "start-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "stopLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The rotation button's text while the slides rotate. \"Stop slide rotation\"\nwhen unset.",
+              "attribute": "stop-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "slides",
+              "type": {
+                "text": "Element[]"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the carousel.",
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "autoplay",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Moves to the next slide every `interval` milliseconds until it's stopped.",
+              "fieldName": "autoplay"
+            },
+            {
+              "name": "index",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The current slide's, from 0.",
+              "fieldName": "index"
+            },
+            {
+              "name": "interval",
+              "type": {
+                "text": "number"
+              },
+              "default": "5000",
+              "description": "How long each slide shows for when `autoplay` is set, in milliseconds.",
+              "fieldName": "interval"
+            },
+            {
+              "name": "loop",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Previous and Next wrap from one end to the other.",
+              "fieldName": "loop"
+            },
+            {
+              "name": "next-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The next button's text and so its accessible name. \"Next slide\" when\nunset.",
+              "fieldName": "nextLabel"
+            },
+            {
+              "name": "previous-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The previous button's text and so its accessible name. \"Previous slide\"\nwhen unset.",
+              "fieldName": "previousLabel"
+            },
+            {
+              "name": "start-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The rotation button's text while rotation is stopped. \"Start slide\nrotation\" when unset.",
+              "fieldName": "startLabel"
+            },
+            {
+              "name": "stop-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The rotation button's text while the slides rotate. \"Stop slide rotation\"\nwhen unset.",
+              "fieldName": "stopLabel"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-carousel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "Carousel",
+            "module": "src/carousel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-carousel",
+          "declaration": {
+            "name": "Carousel",
+            "module": "src/carousel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/checkbox-group.styles.ts",
       "declarations": [],
       "exports": [
@@ -1554,6 +1895,539 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/color-picker.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/color-picker.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/color-picker.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ColorPicker",
+          "cssParts": [
+            {
+              "name": "container",
+              "description": "The label, the controls and the description"
+            },
+            {
+              "name": "label",
+              "description": "The label"
+            },
+            {
+              "name": "area",
+              "description": "The saturation and brightness area"
+            },
+            {
+              "name": "area-thumb",
+              "description": "The area's thumb"
+            },
+            {
+              "name": "hue",
+              "description": "The hue slider's track"
+            },
+            {
+              "name": "hue-thumb",
+              "description": "The hue slider's thumb"
+            },
+            {
+              "name": "alpha",
+              "description": "The alpha slider's track"
+            },
+            {
+              "name": "alpha-thumb",
+              "description": "The alpha slider's thumb"
+            },
+            {
+              "name": "hex"
+            },
+            {
+              "name": "swatches",
+              "description": "The swatches"
+            },
+            {
+              "name": "swatch",
+              "description": "A swatch"
+            },
+            {
+              "name": "selected",
+              "description": "The swatch that's value"
+            },
+            {
+              "name": "description",
+              "description": "Text about the color picker, such as a hint"
+            }
+          ],
+          "slots": [
+            {
+              "name": "description",
+              "description": "Text about the color picker, such as a hint",
+              "type": {
+                "text": "Element | string"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the group. Each control is named by it and its own label.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "alpha",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds the alpha slider, and `value` is \"#rrggbbaa\" when the color isn't\nopaque.",
+              "attribute": "alpha",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "alphaLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the alpha slider, after `label`. \"Alpha\" when unset.",
+              "attribute": "alpha-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "areaLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the area, after `label`. \"Saturation and brightness\" when unset.",
+              "attribute": "area-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "brightnessLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Read before the area's brightness. \"Brightness\" when unset.",
+              "attribute": "brightness-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hexLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the hex field, after `label`. \"Hex\" when unset.",
+              "attribute": "hex-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hideLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hide-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hueLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the hue slider, after `label`. \"Hue\" when unset.",
+              "attribute": "hue-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "saturationLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Read before the area's saturation. \"Saturation\" when unset.",
+              "attribute": "saturation-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "swatches",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Space-separated colors to pick from. Ones that aren't colors are left out.",
+              "attribute": "swatches",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "swatchesLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the swatches, after `label`. \"Swatches\" when unset.",
+              "attribute": "swatches-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Like a native input's `value`, the attribute is the default and the\nproperty is the current value. \"#000000\" when unset.",
+              "default": "'#000000'",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "HTMLFormElement | null"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isDisabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "string | File | FormData | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the group. Each control is named by it and its own label.",
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "alpha",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds the alpha slider, and `value` is \"#rrggbbaa\" when the color isn't\nopaque.",
+              "fieldName": "alpha"
+            },
+            {
+              "name": "alpha-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the alpha slider, after `label`. \"Alpha\" when unset.",
+              "fieldName": "alphaLabel"
+            },
+            {
+              "name": "area-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the area, after `label`. \"Saturation and brightness\" when unset.",
+              "fieldName": "areaLabel"
+            },
+            {
+              "name": "brightness-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Read before the area's brightness. \"Brightness\" when unset.",
+              "fieldName": "brightnessLabel"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "hex-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the hex field, after `label`. \"Hex\" when unset.",
+              "fieldName": "hexLabel"
+            },
+            {
+              "name": "hide-label",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hideLabel"
+            },
+            {
+              "name": "hue-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the hue slider, after `label`. \"Hue\" when unset.",
+              "fieldName": "hueLabel"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name"
+            },
+            {
+              "name": "saturation-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Read before the area's saturation. \"Saturation\" when unset.",
+              "fieldName": "saturationLabel"
+            },
+            {
+              "name": "swatches",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Space-separated colors to pick from. Ones that aren't colors are left out.",
+              "fieldName": "swatches"
+            },
+            {
+              "name": "swatches-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the swatches, after `label`. \"Swatches\" when unset.",
+              "fieldName": "swatchesLabel"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Like a native input's `value`, the attribute is the default and the\nproperty is the current value. \"#000000\" when unset.",
+              "default": "'#000000'",
+              "fieldName": "value"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-color-picker",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ColorPicker",
+            "module": "src/color-picker.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-color-picker",
+          "declaration": {
+            "name": "ColorPicker",
+            "module": "src/color-picker.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/combobox.styles.ts",
       "declarations": [],
       "exports": [
@@ -2118,6 +2992,224 @@
           "declaration": {
             "name": "Combobox",
             "module": "src/combobox.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/context-menu.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/context-menu.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/context-menu.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ContextMenu",
+          "cssParts": [
+            {
+              "name": "popover",
+              "description": "What the menu opens in"
+            },
+            {
+              "name": "menu",
+              "description": "The Menu Items"
+            }
+          ],
+          "slots": [
+            {
+              "name": "target",
+              "description": "Where a right-click, a long-press, or Shift+F10 opens the menu",
+              "required": {
+                "tag": "required",
+                "name": "",
+                "type": "",
+                "optional": false,
+                "description": "",
+                "problems": [],
+                "source": [
+                  {
+                    "number": 3,
+                    "source": "          @required",
+                    "tokens": {
+                      "start": "          ",
+                      "delimiter": "",
+                      "postDelimiter": "",
+                      "tag": "@required",
+                      "postTag": "",
+                      "name": "",
+                      "postName": "",
+                      "type": "",
+                      "postType": "",
+                      "description": "",
+                      "end": "",
+                      "lineEnd": ""
+                    }
+                  }
+                ]
+              },
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "",
+              "description": "",
+              "type": {
+                "text": "MenuItem"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the menu.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "MenuItem[]"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "position",
+                  "optional": true,
+                  "type": {
+                    "text": "{ x: number; y: number }"
+                  }
+                }
+              ],
+              "description": "Opens the menu at `x` and `y`, in the viewport's coordinates, or below\nwhatever in the target has focus when they're left out."
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the menu.",
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "open"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-context-menu",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ContextMenu",
+            "module": "src/context-menu.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-context-menu",
+          "declaration": {
+            "name": "ContextMenu",
+            "module": "src/context-menu.ts"
           }
         }
       ]
@@ -5197,6 +6289,152 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/menubar.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/menubar.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/menubar.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "Menubar",
+          "cssParts": [
+            {
+              "name": "menubar",
+              "description": "The Menus"
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "",
+              "type": {
+                "text": "Menu"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the menubar.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "menus",
+              "type": {
+                "text": "Menu[]"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the menubar.",
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-menubar",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "Menubar",
+            "module": "src/menubar.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-menubar",
+          "declaration": {
+            "name": "Menubar",
+            "module": "src/menubar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/meter.styles.ts",
       "declarations": [],
       "exports": [
@@ -6455,6 +7693,541 @@
           "declaration": {
             "name": "Pagination",
             "module": "src/pagination.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/pin-input.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/pin-input.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/pin-input.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "PinInput",
+          "cssParts": [
+            {
+              "name": "label",
+              "description": "The label"
+            },
+            {
+              "name": "inputs",
+              "description": "The inputs' container"
+            },
+            {
+              "name": "input",
+              "description": "Each input"
+            },
+            {
+              "name": "filled",
+              "description": "An input with a character in it"
+            },
+            {
+              "name": "description",
+              "description": "Text about the field, and its validity message when it has one"
+            },
+            {
+              "name": "validity-message"
+            }
+          ],
+          "slots": [
+            {
+              "name": "description",
+              "description": "",
+              "type": {
+                "text": "Element | string"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "autocomplete",
+              "type": {
+                "text": "HTMLInputElement['autocomplete'] | undefined"
+              },
+              "description": "Set on the first input. \"one-time-code\" for a code sent by text or email.",
+              "attribute": "autocomplete",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hideLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hide-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "inputLabel",
+              "type": {
+                "text": "(position: number, length: number) => string"
+              },
+              "description": "Names each input from its position, starting at 1, and `length`.\n\"Character 1 of 6\" and so on when unset."
+            },
+            {
+              "kind": "field",
+              "name": "length",
+              "type": {
+                "text": "number"
+              },
+              "default": "6",
+              "description": "How many characters, and so how many inputs.",
+              "attribute": "length",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "mask",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides each character as it's typed, as a password input does.",
+              "attribute": "mask",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Shown in each empty input.",
+              "attribute": "placeholder",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "'numeric' | 'alphanumeric'"
+              },
+              "default": "'numeric'",
+              "description": "\"numeric\" accepts digits and brings up a number pad. \"alphanumeric\"\naccepts letters and digits.",
+              "attribute": "type",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as the field is typed\ninto.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "HTMLFormElement | null"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isDisabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "string | File | FormData | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resetValidityFeedback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears the validity feedback without changing `validity`."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "flags",
+                  "optional": true,
+                  "type": {
+                    "text": "ValidityStateFlags"
+                  }
+                },
+                {
+                  "name": "message",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "complete",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "autocomplete",
+              "type": {
+                "text": "HTMLInputElement['autocomplete'] | undefined"
+              },
+              "description": "Set on the first input. \"one-time-code\" for a code sent by text or email.",
+              "fieldName": "autocomplete"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "hide-label",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hideLabel"
+            },
+            {
+              "name": "length",
+              "type": {
+                "text": "number"
+              },
+              "default": "6",
+              "description": "How many characters, and so how many inputs.",
+              "fieldName": "length"
+            },
+            {
+              "name": "mask",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides each character as it's typed, as a password input does.",
+              "fieldName": "mask"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Shown in each empty input.",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "required"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "'numeric' | 'alphanumeric'"
+              },
+              "default": "'numeric'",
+              "description": "\"numeric\" accepts digits and brings up a number pad. \"alphanumeric\"\naccepts letters and digits.",
+              "fieldName": "type"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as the field is typed\ninto.",
+              "fieldName": "value"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-pin-input",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "PinInput",
+            "module": "src/pin-input.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-pin-input",
+          "declaration": {
+            "name": "PinInput",
+            "module": "src/pin-input.ts"
           }
         }
       ]

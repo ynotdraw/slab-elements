@@ -68,6 +68,30 @@ export default test.extend<{
         // 3. Call Lit's `render()`, passing in the result of the evaluation and call.
         await page.evaluate(
           async ({ context, template }) => {
+            // Errors are also collected here, in the page, rather than only
+            // through "pageerror". A component that throws from a promise,
+            // as `assertSlot()` does once its host has updated, leaves an
+            // unhandled rejection, and "pageerror" can hear of one late, after
+            // this fixture has returned. That's been seen in Firefox in CI,
+            // where a test expecting the throw passed or failed by timing.
+            // The page's own "unhandledrejection" event fires in a task of
+            // its own soon after, which the last step below waits for.
+            const errors: string[] = [];
+
+            Object.assign(window, { slabRenderErrors: errors });
+
+            window.addEventListener('error', (event) => {
+              errors.push(event.message);
+            });
+
+            window.addEventListener('unhandledrejection', (event) => {
+              errors.push(
+                event.reason instanceof Error
+                  ? event.reason.message
+                  : 'Unhandled promise rejection',
+              );
+            });
+
             const { render } = await import('lit');
 
             render(
@@ -186,7 +210,7 @@ export default test.extend<{
           }
         }
 
-        await page.evaluate(async () => {
+        const errorMessage = await page.evaluate(async () => {
           const elements = document.body.querySelectorAll('*');
 
           for (const element of elements) {
@@ -194,10 +218,24 @@ export default test.extend<{
               await element.updateComplete;
             }
           }
+
+          // A rejection is reported in a task queued after the microtasks
+          // that left it unhandled. Waiting out two more tasks gives it room
+          // to run first whatever task source a browser queues it on.
+          await new Promise((resolve) => setTimeout(resolve));
+          await new Promise((resolve) => setTimeout(resolve));
+
+          return (
+            window as unknown as { slabRenderErrors: string[] }
+          ).slabRenderErrors.at(0);
         });
 
         if (pageError) {
           throw pageError;
+        }
+
+        if (errorMessage !== undefined) {
+          throw new Error(errorMessage);
         }
       });
     });
