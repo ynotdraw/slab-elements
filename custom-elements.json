@@ -1554,6 +1554,539 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/color-picker.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/color-picker.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/color-picker.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ColorPicker",
+          "cssParts": [
+            {
+              "name": "container",
+              "description": "The label, the controls and the description"
+            },
+            {
+              "name": "label",
+              "description": "The label"
+            },
+            {
+              "name": "area",
+              "description": "The saturation and brightness area"
+            },
+            {
+              "name": "area-thumb",
+              "description": "The area's thumb"
+            },
+            {
+              "name": "hue",
+              "description": "The hue slider's track"
+            },
+            {
+              "name": "hue-thumb",
+              "description": "The hue slider's thumb"
+            },
+            {
+              "name": "alpha",
+              "description": "The alpha slider's track"
+            },
+            {
+              "name": "alpha-thumb",
+              "description": "The alpha slider's thumb"
+            },
+            {
+              "name": "hex"
+            },
+            {
+              "name": "swatches",
+              "description": "The swatches"
+            },
+            {
+              "name": "swatch",
+              "description": "A swatch"
+            },
+            {
+              "name": "selected",
+              "description": "The swatch that's value"
+            },
+            {
+              "name": "description",
+              "description": "Text about the color picker, such as a hint"
+            }
+          ],
+          "slots": [
+            {
+              "name": "description",
+              "description": "Text about the color picker, such as a hint",
+              "type": {
+                "text": "Element | string"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the group. Each control is named by it and its own label.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "alpha",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds the alpha slider, and `value` is \"#rrggbbaa\" when the color isn't\nopaque.",
+              "attribute": "alpha",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "alphaLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the alpha slider, after `label`. \"Alpha\" when unset.",
+              "attribute": "alpha-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "areaLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the area, after `label`. \"Saturation and brightness\" when unset.",
+              "attribute": "area-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "brightnessLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Read before the area's brightness. \"Brightness\" when unset.",
+              "attribute": "brightness-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hexLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the hex field, after `label`. \"Hex\" when unset.",
+              "attribute": "hex-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hideLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hide-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hueLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the hue slider, after `label`. \"Hue\" when unset.",
+              "attribute": "hue-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "saturationLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Read before the area's saturation. \"Saturation\" when unset.",
+              "attribute": "saturation-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "swatches",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "[]",
+              "description": "Space-separated colors to pick from. Ones that aren't colors are left out.",
+              "attribute": "swatches",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "swatchesLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the swatches, after `label`. \"Swatches\" when unset.",
+              "attribute": "swatches-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Like a native input's `value`, the attribute is the default and the\nproperty is the current value. \"#000000\" when unset.",
+              "default": "'#000000'",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "HTMLFormElement | null"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isDisabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "string | File | FormData | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the group. Each control is named by it and its own label.",
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "alpha",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds the alpha slider, and `value` is \"#rrggbbaa\" when the color isn't\nopaque.",
+              "fieldName": "alpha"
+            },
+            {
+              "name": "alpha-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the alpha slider, after `label`. \"Alpha\" when unset.",
+              "fieldName": "alphaLabel"
+            },
+            {
+              "name": "area-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the area, after `label`. \"Saturation and brightness\" when unset.",
+              "fieldName": "areaLabel"
+            },
+            {
+              "name": "brightness-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Read before the area's brightness. \"Brightness\" when unset.",
+              "fieldName": "brightnessLabel"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "hex-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the hex field, after `label`. \"Hex\" when unset.",
+              "fieldName": "hexLabel"
+            },
+            {
+              "name": "hide-label",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hideLabel"
+            },
+            {
+              "name": "hue-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the hue slider, after `label`. \"Hue\" when unset.",
+              "fieldName": "hueLabel"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name"
+            },
+            {
+              "name": "saturation-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Read before the area's saturation. \"Saturation\" when unset.",
+              "fieldName": "saturationLabel"
+            },
+            {
+              "name": "swatches",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "[]",
+              "description": "Space-separated colors to pick from. Ones that aren't colors are left out.",
+              "fieldName": "swatches"
+            },
+            {
+              "name": "swatches-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the swatches, after `label`. \"Swatches\" when unset.",
+              "fieldName": "swatchesLabel"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Like a native input's `value`, the attribute is the default and the\nproperty is the current value. \"#000000\" when unset.",
+              "default": "'#000000'",
+              "fieldName": "value"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-color-picker",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ColorPicker",
+            "module": "src/color-picker.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-color-picker",
+          "declaration": {
+            "name": "ColorPicker",
+            "module": "src/color-picker.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/combobox.styles.ts",
       "declarations": [],
       "exports": [
