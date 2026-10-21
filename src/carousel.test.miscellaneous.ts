@@ -264,6 +264,50 @@ test(
   },
 );
 
+// As on a busy page, where a smooth scroll can start after the slides have
+// had time to come to rest where they were.
+test(
+  'keeps `index` when its slides are slow to scroll',
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-carousel label="Label">
+          <div>One</div>
+          <div>Two</div>
+        </slab-carousel>`,
+    );
+
+    const host = page.locator('slab-carousel');
+
+    await host.evaluate((element) => {
+      const slides = element.shadowRoot?.querySelector('[part="slides"]');
+
+      if (!(slides instanceof HTMLElement)) {
+        throw new TypeError('Expected the slides.');
+      }
+
+      const scrollTo = slides.scrollTo.bind(slides);
+
+      slides.scrollTo = (...parameters: unknown[]) => {
+        setTimeout(() => {
+          scrollTo(...(parameters as [ScrollToOptions]));
+        }, 300);
+      };
+    });
+
+    await setProperty(host, 'index', 1);
+
+    await page.evaluate(
+      () => new Promise((resolve) => setTimeout(resolve, 200)),
+    );
+
+    await expect(host).toHaveJSProperty('index', 1);
+    await expect(page.getByText('Two')).toBeInViewport({ ratio: 1 });
+    await expect(host).toHaveJSProperty('index', 1);
+  },
+);
+
 test(
   'keeps `index` when it is hidden',
   { tag: '@miscellaneous' },
@@ -418,14 +462,20 @@ test(
     // when rotation is this quick, so never stable enough to hover.
     await page.getByTestId('slides').hover();
 
+    // It may have rotated once already on a slow machine, before it was
+    // hovered. What matters is that it doesn't move from there.
+    const index = await host.evaluate<number, void, Carousel>(
+      (element) => element.index,
+    );
+
     await page.evaluate(
       () => new Promise((resolve) => setTimeout(resolve, 500)),
     );
 
-    await expect(host).toHaveJSProperty('index', 0);
+    await expect(host).toHaveJSProperty('index', index);
 
     await page.mouse.move(0, 0);
-    await expect(host).toHaveJSProperty('index', 1);
+    await expect(host).toHaveJSProperty('index', (index + 1) % 2);
   },
 );
 
@@ -446,17 +496,23 @@ test(
 
     await page.getByRole('button', { name: 'Next slide' }).focus();
 
+    // It may have rotated once already on a slow machine, before it was
+    // focused. What matters is that it doesn't move from there.
+    const index = await host.evaluate<number, void, Carousel>(
+      (element) => element.index,
+    );
+
     // Not when focus moves within it, or while it's hovered once focus has
     // left.
     await page.getByTestId('slides').focus();
-    await page.getByText('One').hover();
+    await page.getByTestId('slides').hover();
     await page.getByRole('button', { name: 'After' }).focus();
 
     await page.evaluate(
       () => new Promise((resolve) => setTimeout(resolve, 500)),
     );
 
-    await expect(host).toHaveJSProperty('index', 0);
+    await expect(host).toHaveJSProperty('index', index);
 
     // Nor when the pointer leaves while it's focused.
     await page.getByTestId('slides').focus();
@@ -466,10 +522,10 @@ test(
       () => new Promise((resolve) => setTimeout(resolve, 500)),
     );
 
-    await expect(host).toHaveJSProperty('index', 0);
+    await expect(host).toHaveJSProperty('index', index);
 
     await page.getByRole('button', { name: 'After' }).focus();
-    await expect(host).toHaveJSProperty('index', 1);
+    await expect(host).toHaveJSProperty('index', (index + 1) % 2);
   },
 );
 
