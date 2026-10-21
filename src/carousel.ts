@@ -237,7 +237,10 @@ export default class Carousel extends LitElement {
         id="slides"
         part="slides"
         tabindex="0"
+        @keydown=${this.#onUserScroll}
+        @pointerdown=${this.#onUserScroll}
         @scroll=${this.#onScroll}
+        @wheel=${this.#onUserScroll}
         ${ref(this.#slidesElementRef)}
       >
         <!-- The scroll snap container of the slides -->
@@ -336,6 +339,11 @@ export default class Carousel extends LitElement {
   #labeled = new Set<Element>();
 
   #rotationTimeout?: ReturnType<typeof setTimeout>;
+
+  // The slide Carousel is scrolling to, until the slides reach it or the user
+  // scrolls them instead. A smooth scroll can start late, or pause, on a busy
+  // page, so coming to rest short of it isn't where the slides were left.
+  #scrollingTo?: number;
 
   #settleTimeout?: ReturnType<typeof setTimeout>;
 
@@ -473,7 +481,11 @@ export default class Carousel extends LitElement {
       }
     }
 
-    if (nearest !== this.index) {
+    if (nearest === this.#scrollingTo) {
+      this.#scrollingTo = undefined;
+    }
+
+    if (nearest !== this.index && this.#scrollingTo === undefined) {
       this.index = nearest;
 
       this.dispatchEvent(
@@ -500,6 +512,12 @@ export default class Carousel extends LitElement {
 
     this.slideCount = this.slides.length;
     this.#scheduleSettle();
+  };
+
+  // Swiping, scrolling, the arrow keys and the scrollbar all start with one
+  // of these, and take the slides from where Carousel was taking them.
+  #onUserScroll = () => {
+    this.#scrollingTo = undefined;
   };
 
   // What the user's clicks and rotation do. Nothing past either end, or on the
@@ -589,6 +607,8 @@ export default class Carousel extends LitElement {
     if (!slidesElement || !slide) {
       return;
     }
+
+    this.#scrollingTo = index;
 
     const container = slidesElement.getBoundingClientRect();
     const rect = slide.getBoundingClientRect();
