@@ -1,0 +1,232 @@
+---
+import { getEntry } from 'astro:content';
+import CodeBlock from '../../components/CodeBlock.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import Base from '../../layouts/Base.astro';
+import { exampleCode, usageCode } from '../../lib/markdown.ts';
+import { inline } from '../../lib/prose.ts';
+import { announcements, isPublished, type Announcement } from '../../lib/releases.ts';
+
+export function getStaticPaths() {
+  return announcements.map((announcement) => ({
+    params: { version: announcement.version },
+    props: { announcement },
+  }));
+}
+
+const { announcement } = Astro.props as { announcement: Announcement };
+const { highlights, intro, summary, version } = announcement;
+const published = isPublished(version);
+const base = import.meta.env.BASE_URL;
+
+// Each highlight with its component's page, for what isn't given by hand.
+const sections = await Promise.all(
+  highlights.map(async (highlight) => {
+    const entry = await getEntry('components', highlight.component);
+
+    if (!entry) {
+      throw new Error(`There's no component page for "${highlight.component}".`);
+    }
+
+    return {
+      ...highlight,
+      example: highlight.example ?? entry.data.example,
+      href: `${base}components/${entry.id}/`,
+      id: highlight.component,
+      usage: usageCode(entry.data.tags, highlight.usage ?? entry.data.usage),
+    };
+  }),
+);
+
+const sidebar = [
+  {
+    heading: `What's new`,
+    links: [
+      ...sections.map(({ id, title }) => ({ href: `#${id}`, text: title })),
+      { href: '#upgrade', text: 'Upgrade' },
+    ],
+  },
+];
+---
+
+<Base description={summary} title={`What's new in Slab ${version} · Slab`}>
+  <div class="layout">
+    <Sidebar label="In this release" sections={sidebar} />
+
+    <article class="doc">
+      <header class="intro">
+        <p class="eyebrow">What's new</p>
+        <h1>Slab {version}</h1>
+        <p class="summary">{summary}</p>
+        <p set:html={inline(intro)} />
+        {
+          !published && (
+            <p class="note">
+              {version} isn't on npm yet. This is what's in it, from <code>main</code>,
+              ahead of the release.
+            </p>
+          )
+        }
+      </header>
+
+      {
+        sections.map(({ example, href, id, text, title, usage }) => (
+          <section aria-labelledby={id} class="highlight">
+            <h2 id={id}>{title}</h2>
+            <p set:html={inline(text)} />
+            <div class="stage" set:html={example} />
+            <details class="markup">
+              <summary>Usage</summary>
+              <CodeBlock code={exampleCode(usage)} label="HTML" lang="html" />
+            </details>
+            <a class="more" href={href}>
+              Read the {title.replace(/ ranges$/, '')} docs
+            </a>
+          </section>
+        ))
+      }
+
+      <section aria-labelledby="upgrade" class="highlight">
+        <h2 id="upgrade">Upgrade</h2>
+        <p>
+          It's a patch release, with nothing to change in what you have.
+          {
+            published && (
+              <>
+                Every change is in <a href={`${base}releases/#v${version}`}>the release notes</a>.
+              </>
+            )
+          }
+        </p>
+        <CodeBlock code={`pnpm add slab-elements@${version}`} label="Install" lang="sh" />
+      </section>
+    </article>
+  </div>
+</Base>
+
+<script>
+  import '../../scripts/examples.ts';
+</script>
+
+<style>
+  /* The same layout as a component's page, the sidebar beside it. */
+  .layout {
+    display: grid;
+    gap: 1rem 3rem;
+    grid-template-columns: minmax(0, 1fr);
+    margin-inline: auto;
+    max-inline-size: 78rem;
+    padding: 1.5rem var(--gutter) 4rem;
+  }
+
+  @media (width >= 56rem) {
+    .layout {
+      grid-template-columns: 12rem minmax(0, 1fr);
+    }
+  }
+
+  .doc {
+    display: grid;
+    gap: 3.5rem;
+    grid-template-columns: minmax(0, 1fr);
+    min-inline-size: 0;
+  }
+
+  .intro {
+    border-block-end: 4px solid var(--ink);
+    display: grid;
+    gap: 0.75rem;
+    padding-block-end: 1.5rem;
+
+    p {
+      margin: 0;
+      max-inline-size: 62ch;
+    }
+
+    .summary {
+      font-size: 1.25rem;
+      max-inline-size: 46ch;
+    }
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 6vw, 3.75rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin: 0;
+  }
+
+  .note {
+    background-color: var(--paper);
+    border: 2px solid var(--ink);
+    border-inline-start: 8px solid var(--ember);
+    padding: 0.75rem 1rem;
+  }
+
+  .highlight {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr);
+    min-inline-size: 0;
+    scroll-margin-block-start: 1.5rem;
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    > p {
+      margin: 0;
+      max-inline-size: 62ch;
+    }
+  }
+
+  /*
+    As on a component's page: room for the examples' hard shadows and their
+    popups, and hidden until every element in it is defined.
+  */
+  .stage {
+    background-color: var(--paper);
+    border: 3px solid var(--ink);
+    min-block-size: 8rem;
+    overflow-x: auto;
+    padding: 2rem clamp(1rem, 4vw, 2.5rem) 2.5rem;
+    transition: opacity 150ms ease-out;
+  }
+
+  .stage:has(:not(:defined)) {
+    opacity: 0;
+  }
+
+  .markup {
+    summary {
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      inline-size: fit-content;
+    }
+
+    &[open] summary {
+      margin-block-end: 0.75rem;
+    }
+  }
+
+  .more {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    inline-size: fit-content;
+
+    &::after {
+      content: ' →';
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stage {
+      transition: none;
+    }
+  }
+</style>

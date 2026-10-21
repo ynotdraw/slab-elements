@@ -44,7 +44,11 @@ const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.
     <meta content={image} property="og:image" />
     <meta content="1200" property="og:image:width" />
     <meta content="630" property="og:image:height" />
+    <meta content={`${title}. ${description}`} property="og:image:alt" />
     <meta content="summary_large_image" name="twitter:card" />
+    <meta content={title} name="twitter:title" />
+    <meta content={description} name="twitter:description" />
+    <meta content={image} name="twitter:image" />
     {
       markdown && (
         <link
@@ -128,6 +132,7 @@ const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.
       <ul>
         <li><a href={`${base}get-started/`}>Get started</a></li>
         <li><a href={`${base}components/`}>Components</a></li>
+        <li><a href={`${base}releases/`}>Releases</a></li>
         <li><a href={`${base}llms.txt`}>llms.txt</a></li>
         <li><a href={github}>GitHub</a></li>
         <li>Apache-2.0</li>
