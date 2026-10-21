@@ -170,13 +170,15 @@ test(
 
     const inputs = page.locator('[data-test="input"]');
 
-    await expect(inputs.nth(0)).toHaveJSProperty(
+    // Attributes rather than properties, since a browser that doesn't know a
+    // token, such as "one-time-code", reads the property as empty.
+    await expect(inputs.nth(0)).toHaveAttribute(
       'autocomplete',
       'one-time-code',
     );
 
     // So a browser doesn't offer the code once for each input.
-    await expect(inputs.nth(1)).toHaveJSProperty('autocomplete', 'off');
+    await expect(inputs.nth(1)).toHaveAttribute('autocomplete', 'off');
 
     await setProperty(
       page.locator('slab-pin-input'),
@@ -184,7 +186,7 @@ test(
       undefined,
     );
 
-    await expect(inputs.nth(0)).toHaveJSProperty('autocomplete', '');
+    await expect(inputs.nth(0)).toHaveAttribute('autocomplete', '');
   },
 );
 

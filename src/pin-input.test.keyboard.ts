@@ -444,3 +444,43 @@ test(
     await expect(inputs.nth(0)).toBeFocused();
   },
 );
+
+test(
+  'replaces the focused character when the input is not selected',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-pin-input
+          label="Label"
+          length="4"
+          value="123"
+        ></slab-pin-input>`,
+    );
+
+    const host = page.locator('slab-pin-input');
+    const input = page.getByRole('textbox').nth(1);
+
+    // The caret after the character, as a click can leave it.
+    await input.focus();
+
+    await input.evaluate<void, void, HTMLInputElement>((element) => {
+      element.setSelectionRange(1, 1);
+    });
+
+    await page.keyboard.type('9');
+
+    await expect(host).toHaveJSProperty('value', '193');
+
+    // And before it.
+    await input.focus();
+
+    await input.evaluate<void, void, HTMLInputElement>((element) => {
+      element.setSelectionRange(0, 0);
+    });
+
+    await page.keyboard.type('8');
+
+    await expect(host).toHaveJSProperty('value', '183');
+  },
+);

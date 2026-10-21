@@ -275,6 +275,7 @@ export default class PinInput extends LitElement {
             @blur=${this.#onInputBlur}
             @click=${this.#onInputClick}
             @focus=${this.#onInputFocus}
+            @beforeinput=${this.#onInputBeforeinput}
             @input=${this.#onInputInput}
             @keydown=${this.#onInputKeydown}
           />`;
@@ -436,6 +437,11 @@ export default class PinInput extends LitElement {
 
   #internals: ElementInternals;
 
+  // Where the input's selection was before an edit, so the edit can be told
+  // apart from the character that was already there. Set only by an edit
+  // that dispatches "beforeinput", which an autofill may not.
+  #selectionBeforeInput?: { end: number; start: number };
+
   // What "change" compares against when focus leaves the inputs, as a native
   // input compares against its value when it was focused.
   #valueOnFocus = '';
@@ -497,6 +503,20 @@ export default class PinInput extends LitElement {
 
   #getIndex(input: HTMLInputElement) {
     return Number(input.dataset.index);
+  }
+
+  #onInputBeforeinput(event: InputEvent) {
+    /* v8 ignore next 3 */
+    if (!(event.target instanceof HTMLInputElement)) {
+      return;
+    }
+
+    // Never null for a text or password input. The fallbacks satisfy the type.
+    /* v8 ignore next 4 */
+    this.#selectionBeforeInput = {
+      end: event.target.selectionEnd ?? event.target.value.length,
+      start: event.target.selectionStart ?? 0,
+    };
   }
 
   #onInputBlur(event: FocusEvent) {
@@ -566,11 +586,27 @@ export default class PinInput extends LitElement {
 
     const input = event.target;
     const index = this.#getIndex(input);
-    const entered = this.#filter(input.value);
+    const previous = this.value.at(index) ?? '';
+    const selection = this.#selectionBeforeInput;
+
+    this.#selectionBeforeInput = undefined;
+
+    // What the edit put in. The input is selected when it's focused or
+    // clicked, so this is usually all of it. But a click can leave a caret
+    // instead, and the character that was there would otherwise be taken for
+    // part of what was typed.
+    const inserted = selection
+      ? input.value.slice(
+          selection.start,
+          input.value.length - (previous.length - selection.end),
+        )
+      : input.value;
+
+    const entered = this.#filter(inserted);
 
     // Something the field doesn't accept, such as a letter when it's numeric.
     // The input is put back the way it was, and nothing has changed.
-    if (input.value !== '' && entered === '') {
+    if (inserted !== '' && entered === '') {
       this.#syncInputs();
       input.select();
 
