@@ -25,6 +25,20 @@ export interface Highlight {
   usage?: string;
 }
 
+// News that isn't a component, such as a change to these docs, after the
+// highlights.
+export interface Note {
+  // A component whose usage is shown in each framework, as an example.
+  component?: string;
+  id: string;
+
+  // A sentence or two, with `code` spans and [links](path) from the site's
+  // root.
+  text: string;
+
+  title: string;
+}
+
 export interface Announcement {
   // For the page's description and its card. One sentence.
   summary: string;
@@ -33,6 +47,7 @@ export interface Announcement {
   intro: string;
 
   highlights: Highlight[];
+  notes?: Note[];
   version: string;
 }
 
@@ -97,6 +112,14 @@ export const announcements: Announcement[] = [
           '<slab-styled-calendar range value="2026-10-19/2026-10-23"></slab-styled-calendar>',
         usage:
           '<slab-calendar range value="2026-03-09/2026-03-13"></slab-calendar>',
+      },
+    ],
+    notes: [
+      {
+        id: 'frameworks',
+        title: 'Docs in your framework',
+        component: 'range-slider',
+        text: "Every component's page now shows its usage in React, Lit, Vue and Svelte, as well as plain HTML. And its styled example, under \"Copy and own it\", comes in each too: the Lit subclass, or the same styles as plain CSS with a small component around the element for React and Vue. Here's [Range Slider](components/range-slider/)'s usage.",
       },
     ],
   },

@@ -1,10 +1,11 @@
 ---
 import { getEntry } from 'astro:content';
 import CodeBlock from '../../components/CodeBlock.astro';
+import FrameworkTabs from '../../components/FrameworkTabs.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import Base from '../../layouts/Base.astro';
-import { usageCode } from '../../lib/frameworks.ts';
-import { exampleCode } from '../../lib/markdown.ts';
+import { frameworks } from '../../lib/frameworks.ts';
+import { html } from '../../lib/get-started.ts';
 import { inline } from '../../lib/prose.ts';
 import { announcements, isPublished, type Announcement } from '../../lib/releases.ts';
 
@@ -16,7 +17,7 @@ export function getStaticPaths() {
 }
 
 const { announcement } = Astro.props as { announcement: Announcement };
-const { highlights, intro, summary, version } = announcement;
+const { highlights, intro, notes = [], summary, version } = announcement;
 const published = isPublished(version);
 const base = import.meta.env.BASE_URL;
 
@@ -34,7 +35,30 @@ const sections = await Promise.all(
       example: highlight.example ?? entry.data.example,
       href: `${base}components/${entry.id}/`,
       id: highlight.component,
-      usage: usageCode(entry.data.tags, highlight.usage ?? entry.data.usage),
+      // In each framework, as on the component's page. Its own versions by
+      // hand, like Toast's, are for its own usage only.
+      usages: frameworks(
+        entry.id,
+        entry.data.tags,
+        highlight.usage ?? entry.data.usage,
+        highlight.usage ? {} : entry.data.frameworks,
+      ),
+    };
+  }),
+);
+
+// Each note with its example's usage in each framework, if it has one.
+const noteSections = await Promise.all(
+  notes.map(async (note) => {
+    const entry = note.component
+      ? await getEntry('components', note.component)
+      : undefined;
+
+    return {
+      ...note,
+      usages:
+        entry &&
+        frameworks(entry.id, entry.data.tags, entry.data.usage, entry.data.frameworks),
     };
   }),
 );
@@ -43,7 +67,10 @@ const sidebar = [
   {
     heading: `What's new`,
     links: [
-      ...sections.map(({ id, title }) => ({ href: `#${id}`, text: title })),
+      ...[...sections, ...noteSections].map(({ id, title }) => ({
+        href: `#${id}`,
+        text: title,
+      })),
       { href: '#upgrade', text: 'Upgrade' },
     ],
   },
@@ -71,18 +98,28 @@ const sidebar = [
       </header>
 
       {
-        sections.map(({ example, href, id, text, title, usage }) => (
+        sections.map(({ example, href, id, text, title, usages }) => (
           <section aria-labelledby={id} class="highlight">
             <h2 id={id}>{title}</h2>
             <p set:html={inline(text)} />
             <div class="stage" set:html={example} />
             <details class="markup">
               <summary>Usage</summary>
-              <CodeBlock code={exampleCode(usage)} label="HTML" lang="html" />
+              <FrameworkTabs frameworks={usages} />
             </details>
             <a class="more" href={href}>
               Read the {title.replace(/ ranges$/, '')} docs
             </a>
+          </section>
+        ))
+      }
+
+      {
+        noteSections.map(({ id, text, title, usages }) => (
+          <section aria-labelledby={id} class="highlight">
+            <h2 id={id}>{title}</h2>
+            <p set:html={html(text, base)} />
+            {usages && <FrameworkTabs frameworks={usages} />}
           </section>
         ))
       }
