@@ -885,6 +885,14 @@ const scoped = (id: string, css: string) =>
     }
   }
 
+  /*
+    An explicit column, since an implicit one grows to fit its widest content,
+    a line of code, and takes the page wider than a phone.
+  */
+  .usage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .usage-copy {
     display: flex;
     flex-direction: column;

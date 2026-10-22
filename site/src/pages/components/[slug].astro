@@ -416,9 +416,15 @@ const tsconfig = `{
     }
   }
 
+  /*
+    Explicit columns here too. The panels are grid items of Tabs, and an open
+    source file's code would otherwise take a panel, and the page, wider than
+    a phone, which iOS Safari zooms out to fit.
+  */
   .example-tabs {
     display: grid;
     gap: 1rem;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .example-tabs::part(tablist) {
@@ -451,6 +457,7 @@ const tsconfig = `{
   .example-tabs > slab-tabs-panel {
     display: grid;
     gap: 1rem;
+    grid-template-columns: minmax(0, 1fr);
 
     > p {
       margin: 0;
