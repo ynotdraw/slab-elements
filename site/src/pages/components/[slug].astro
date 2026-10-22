@@ -7,6 +7,7 @@ import Sidebar from '../../components/Sidebar.astro';
 import Base from '../../layouts/Base.astro';
 import { behavior, styledFiles } from '../../lib/elements.ts';
 import { componentsByGroup } from '../../lib/index-markdown.ts';
+import { styledFrameworks } from '../../lib/styled-frameworks.ts';
 import { frameworks } from '../../lib/frameworks.ts';
 import { exampleCode } from '../../lib/markdown.ts';
 import { paragraphs } from '../../lib/prose.ts';
@@ -36,6 +37,7 @@ const asItShips = example
     '$1="$2-as-it-ships"',
   );
 const files = styledFiles(tags);
+const outside = styledFrameworks(tags);
 const base = import.meta.env.BASE_URL;
 
 // Every component, by group, for the sidebar.
@@ -47,6 +49,8 @@ const sidebar = (await componentsByGroup()).map(({ components, group }) => ({
     text: component.data.title,
   })),
 }));
+
+const frameworkNames = ['React', 'Lit', 'Vue', 'Svelte'];
 
 // What a project that copies the styled examples needs for Lit's decorators.
 const tsconfig = `{
@@ -150,47 +154,104 @@ const tsconfig = `{
         <h2 id="copy">Copy and own it</h2>
         <p>
           <code>&lt;{styledTag}&gt;</code> isn't in the package. It's an example —
-          copy it into your project and change whatever you want. Under the
-          hood, it's just the headless element, subclassed, with
-          <code>styles</code> set. That's it. Keyboard, focus, ARIA, forms, and
-          events all come from the headless element, and the styles only reach
-          in through <code>::part()</code> and <code>:state()</code>, same as
-          yours would.
+          copy it into your project and change whatever you want. Keyboard,
+          focus, ARIA, forms, and events all come from the headless element,
+          and the styles only reach in through <code>::part()</code> and
+          <code>:state()</code>, same as yours would.
         </p>
-        <p>
-          To use it, copy these files, swap the tag in
-          <code>@customElement()</code> for one of your own, and import it.
-          <code>tokens.styles.ts</code> holds the colors and fonts every styled
-          example shares, so you only need it once.
-        </p>
-        <aside aria-labelledby="typescript" class="note">
-          <h3 id="typescript">TypeScript</h3>
-          <p>
-            These files are TypeScript, and <code>@customElement()</code> is one
-            of Lit's decorators (TypeScript's experimental flavor). You'll need
-            two options in your tsconfig, per
-            <a href="https://lit.dev/docs/components/decorators/#decorators-typescript">Lit's docs</a>:
-            <code>experimentalDecorators</code> to compile them, and
-            <code>useDefineForClassFields</code> turned off so class fields
-            don't stomp on the accessors Lit sets up.
-          </p>
-          <CodeBlock code={tsconfig} label="tsconfig.json" lang="json" />
-          <p>
-            Using plain JavaScript? Drop the types and register the class with
-            <code>customElements.define()</code> instead of the decorator.
-          </p>
-        </aside>
-        {
-          files.map((file) => (
-            <details class="file">
-              <summary>{file.name}</summary>
-              <button class="copy-file" type="button">
-                Copy <span class="visually-hidden">{file.name}</span>
-              </button>
-              <CodeBlock code={file.code} lang="ts" />
-            </details>
-          ))
-        }
+
+        <slab-tabs class="example-tabs" label="Framework">
+          {frameworkNames.map((name) => <slab-tabs-tab panel={name}>{name}</slab-tabs-tab>)}
+          {
+            frameworkNames.map((name) =>
+              name === 'Lit' ? (
+                <slab-tabs-panel name={name}>
+                  <p>
+                    Under the hood, it's just the headless element, subclassed,
+                    with <code>styles</code> set. That's it. To use it, copy
+                    these files, swap the tag in <code>@customElement()</code>
+                    for one of your own, and import it.
+                    <code>tokens.styles.ts</code> holds the colors and fonts
+                    every styled example shares, so you only need it once.
+                  </p>
+                  <aside aria-labelledby="typescript" class="note">
+                    <h3 id="typescript">TypeScript</h3>
+                    <p>
+                      These files are TypeScript, and
+                      <code>@customElement()</code> is one of Lit's decorators
+                      (TypeScript's experimental flavor). You'll need two
+                      options in your tsconfig, per
+                      <a href="https://lit.dev/docs/components/decorators/#decorators-typescript">Lit's docs</a>:
+                      <code>experimentalDecorators</code> to compile them, and
+                      <code>useDefineForClassFields</code> turned off so class
+                      fields don't stomp on the accessors Lit sets up.
+                    </p>
+                    <CodeBlock code={tsconfig} label="tsconfig.json" lang="json" />
+                    <p>
+                      Using plain JavaScript? Drop the types and register the
+                      class with <code>customElements.define()</code> instead of
+                      the decorator.
+                    </p>
+                  </aside>
+                  {files.map((file) => (
+                    <details class="file">
+                      <summary>{file.name}</summary>
+                      <button class="copy-file" type="button">
+                        Copy <span class="visually-hidden">{file.name}</span>
+                      </button>
+                      <CodeBlock code={file.code} lang="ts" />
+                    </details>
+                  ))}
+                </slab-tabs-panel>
+              ) : outside ? (
+                <slab-tabs-panel name={name}>
+                  <p>
+                    The same styles, written from outside the element, so
+                    there's nothing to subclass. The CSS styles every
+                    <code>&lt;{tag}&gt;</code> on the page. Import
+                    <code>tokens.css</code>, the colors and fonts every styled
+                    example shares, once, wherever your global styles go.
+                  </p>
+                  {name === 'Svelte' ? (
+                    <p>
+                      Import <code>{outside.svelte[0]!.name}</code> once, such
+                      as in your root layout, and use
+                      <code>&lt;{tag}&gt;</code> as is. A Svelte component
+                      around it would take <code>slot="…"</code> content as its
+                      own slot and drop it.
+                    </p>
+                  ) : (
+                    <p>
+                      Each component registers its headless element and imports
+                      its CSS. Use it like the element: its props are the
+                      element's attributes and properties.
+                    </p>
+                  )}
+                  {outside[name.toLowerCase() as 'react' | 'svelte' | 'vue'].map((file) => (
+                    <details class="file">
+                      <summary>{file.name}</summary>
+                      <button class="copy-file" type="button">
+                        Copy <span class="visually-hidden">{file.name}</span>
+                      </button>
+                      <CodeBlock code={file.code} lang={file.lang} />
+                    </details>
+                  ))}
+                </slab-tabs-panel>
+              ) : (
+                <slab-tabs-panel name={name}>
+                  <p>
+                    This one styles its native control's own pieces, like a
+                    range input's thumb or a meter's bar. Browsers only let
+                    those be styled from inside the element's shadow root, not
+                    through <code>::part()</code>, so it can't be written as
+                    plain CSS. Copy the Lit files instead. They're a custom
+                    element like any other, so they work in {name} as they are.
+                  </p>
+                </slab-tabs-panel>
+              ),
+            )
+          }
+        </slab-tabs>
         <p aria-live="polite" class="visually-hidden" data-copy-status></p>
       </section>
     </article>
@@ -390,6 +451,11 @@ const tsconfig = `{
   .example-tabs > slab-tabs-panel {
     display: grid;
     gap: 1rem;
+
+    > p {
+      margin: 0;
+      max-inline-size: 62ch;
+    }
 
     &:focus-visible {
       outline: 3px solid var(--ember);

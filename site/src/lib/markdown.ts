@@ -4,6 +4,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { api, behavior, styledFiles, type Api } from './elements.ts';
 import { frameworks } from './frameworks.ts';
+import { styledFrameworks } from './styled-frameworks.ts';
 import { cell } from './prose.ts';
 
 /**
@@ -109,6 +110,30 @@ function apiMarkdown(
   ].join('\n\n');
 }
 
+// The styled example's files for React, Vue and Svelte, with the CSS they
+// share given once.
+function outsideMarkdown(tags: string[]) {
+  const outside = styledFrameworks(tags);
+
+  if (!outside) {
+    return [
+      "This one styles its native control's own pieces, like a range input's thumb or a meter's bar. Browsers only let those be styled from inside the element's shadow root, not through `::part()`, so it can't be written as plain CSS. Copy the Lit files instead. They're a custom element like any other, so they work in React, Vue and Svelte as they are.",
+    ];
+  }
+
+  const css = outside.react.filter(({ lang }) => lang === 'css');
+
+  return [
+    `The same styles, written from outside the element, so there's nothing to subclass. The CSS styles every \`<${tags[0]}>\` on the page. Import \`tokens.css\`, the colors and fonts every styled example shares, once, wherever your global styles go.`,
+    "In React and Vue, each component registers its headless element and imports its CSS. Use it like the element: its props are the element's attributes and properties.",
+    `In Svelte, import \`${outside.svelte[0]!.name}\` once, such as in your root layout, and use \`<${tags[0]}>\` as is. A Svelte component around it would take \`slot="…"\` content as its own slot and drop it.`,
+    ...[...outside.react, ...outside.vue, ...outside.svelte]
+      .filter(({ lang }) => lang !== 'css')
+      .concat(css)
+      .flatMap((file) => [`#### ${file.name}`, fence(file.lang, file.code)]),
+  ];
+}
+
 export function componentMarkdown(
   entry: CollectionEntry<'components'>,
 ): string {
@@ -143,9 +168,10 @@ export function componentMarkdown(
     '## API',
     ...tags.map((name) => apiMarkdown(name, api(name))),
     '## Copy and own it',
-    `\`<${tag!.replace('slab-', 'slab-styled-')}>\` isn't in the package. It's an example — copy it into your project and change whatever you want. Under the hood, it's just the headless element, subclassed, with \`styles\` set. That's it. Keyboard, focus, ARIA, forms, and events all come from the headless element, and the styles only reach in through \`::part()\` and \`:state()\`, same as yours would.`,
-    'To use it, copy these files, swap the tag in `@customElement()` for one of your own, and import it. `tokens.styles.ts` holds the colors and fonts every styled example shares, so you only need it once.',
-    '### TypeScript',
+    `\`<${tag!.replace('slab-', 'slab-styled-')}>\` isn't in the package. It's an example — copy it into your project and change whatever you want. Keyboard, focus, ARIA, forms, and events all come from the headless element, and the styles only reach in through \`::part()\` and \`:state()\`, same as yours would.`,
+    '### Lit',
+    "Under the hood, it's just the headless element, subclassed, with `styles` set. That's it. To use it, copy these files, swap the tag in `@customElement()` for one of your own, and import it. `tokens.styles.ts` holds the colors and fonts every styled example shares, so you only need it once.",
+    '#### TypeScript',
     "These files are TypeScript, and `@customElement()` is one of Lit's decorators (TypeScript's experimental flavor). You'll need two options in your tsconfig, per [Lit's docs](https://lit.dev/docs/components/decorators/#decorators-typescript): `experimentalDecorators` to compile them, and `useDefineForClassFields` turned off so class fields don't stomp on the accessors Lit sets up.",
     fence(
       'json',
@@ -153,9 +179,11 @@ export function componentMarkdown(
     ),
     'Using plain JavaScript? Drop the types and register the class with `customElements.define()` instead of the decorator.',
     ...styledFiles(tags).flatMap((file) => [
-      `### ${file.name}`,
+      `#### ${file.name}`,
       fence('ts', file.code),
     ]),
+    '### React, Vue and Svelte',
+    ...outsideMarkdown(tags),
   ]
     .filter(Boolean)
     .join('\n\n')

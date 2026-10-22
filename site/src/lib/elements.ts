@@ -212,6 +212,16 @@ export function api(tag: string): Api {
   };
 }
 
+/** A file in `src/styled` by name, like "tabs.tab.ts", or "" if there's none. */
+export function styledSource(name: string): string {
+  return styledSources[`../../../src/styled/${name}`] ?? '';
+}
+
+/** The module that defines the element, like "tabs.tab" for `slab-tabs-tab`. */
+export function moduleName(tag: string): string {
+  return basename(find(tag).path);
+}
+
 /**
  * The files behind the styled versions of these elements: each subclass, the
  * styles it imports, and last the tokens they all share. Imports of headless
