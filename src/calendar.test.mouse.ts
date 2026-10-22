@@ -1,13 +1,6 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 
-// The tests' dates are in the fall of 2026, and a day that's today has a
-// `today` part too. A fixed today, in a month none of them shows, keeps their
-// parts the same whatever day they run.
-test.beforeEach(async ({ page }) => {
-  await page.clock.setFixedTime(new Date('2026-01-15T12:00:00'));
-});
-
 test(
   'selects a day when it is clicked',
   { tag: '@mouse' },
@@ -110,6 +103,10 @@ test(
   'selects a range when its first and last days are clicked, in either order',
   { tag: '@mouse' },
   async ({ render, page }) => {
+    // A day that's today also has a `today` part. A today in a month this
+    // doesn't show keeps the parts below the same whatever day it runs.
+    await page.clock.setFixedTime(new Date('2026-01-15T12:00:00'));
+
     await render(
       () =>
         html`<slab-calendar
