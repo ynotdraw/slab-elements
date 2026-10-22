@@ -2,6 +2,13 @@ import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
 
+// The tests' dates are in the fall of 2026, and a day that's today has a
+// `today` part too. A fixed today, in a month none of them shows, keeps their
+// parts the same whatever day they run.
+test.beforeEach(async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-01-15T12:00:00'));
+});
+
 test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
   await render(() => html`<slab-calendar></slab-calendar>`);
 
