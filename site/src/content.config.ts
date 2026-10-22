@@ -17,6 +17,18 @@ const components = defineCollection({
     // `slab-styled-*` elements, which the page registers.
     example: z.string(),
 
+    // The usage in a framework, for one that needs script, like Toast's
+    // `show()`. Markup alone is written from `usage` for each.
+    frameworks: z
+      .object({
+        lit: z.string(),
+        react: z.string(),
+        svelte: z.string(),
+        vue: z.string(),
+      })
+      .partial()
+      .optional(),
+
     group: z.enum(groups),
 
     // One sentence, for the index, the page's description and llms.txt.

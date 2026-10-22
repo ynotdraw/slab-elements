@@ -2,11 +2,13 @@
 import { getCollection, render } from 'astro:content';
 import ApiTables from '../../components/ApiTables.astro';
 import CodeBlock from '../../components/CodeBlock.astro';
+import FrameworkTabs from '../../components/FrameworkTabs.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import Base from '../../layouts/Base.astro';
 import { behavior, styledFiles } from '../../lib/elements.ts';
 import { componentsByGroup } from '../../lib/index-markdown.ts';
-import { exampleCode, usageCode } from '../../lib/markdown.ts';
+import { frameworks } from '../../lib/frameworks.ts';
+import { exampleCode } from '../../lib/markdown.ts';
 import { paragraphs } from '../../lib/prose.ts';
 
 export async function getStaticPaths() {
@@ -20,6 +22,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { element, example, group, summary, tags, title, usage } = entry.data;
+const usages = frameworks(entry.id, tags, usage, entry.data.frameworks);
 const { Content } = await render(entry);
 const [tag] = tags;
 const styledTag = tag!.replace('slab-', 'slab-styled-');
@@ -113,7 +116,7 @@ const tsconfig = `{
       <section aria-labelledby="usage">
         <h2 id="usage">Usage</h2>
         <CodeBlock code="pnpm add slab-elements lit" label="Install" lang="sh" />
-        <CodeBlock code={usageCode(tags, usage)} label="HTML" lang="html" />
+        <FrameworkTabs frameworks={usages} />
       </section>
 
       <div class="prose">

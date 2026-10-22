@@ -1,5 +1,6 @@
 ---
 import CodeBlock from '../components/CodeBlock.astro';
+import FrameworkTabs from '../components/FrameworkTabs.astro';
 import Logo from '../components/Logo.astro';
 import Base from '../layouts/Base.astro';
 import { componentsByGroup, description } from '../lib/index-markdown.ts';
@@ -398,19 +399,7 @@ const scoped = (id: string, css: string) =>
       </p>
     </div>
 
-    <slab-tabs class="frameworks-tabs" label="Framework">
-      {frameworks.map(({ name }) => <slab-tabs-tab panel={name}>{name}</slab-tabs-tab>)}
-      {
-        frameworks.map(({ code, file, lang, name, note }) => (
-          <slab-tabs-panel name={name}>
-            <CodeBlock code={code} lang={lang} />
-            <p class="code-note">
-              <span>{file}</span> {note}
-            </p>
-          </slab-tabs-panel>
-        ))
-      }
-    </slab-tabs>
+    <FrameworkTabs frameworks={frameworks} />
   </section>
 
   <section aria-labelledby="elements" class="elements">
@@ -914,93 +903,6 @@ const scoped = (id: string, css: string) =>
       font-size: 1.125rem;
       margin: 0;
       max-inline-size: 42ch;
-    }
-  }
-
-  .usage .frameworks-tabs {
-    background-color: var(--ink);
-    /* Ink in either theme, like the code. */
-    color-scheme: light;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .usage .frameworks-tabs:not(:defined) {
-    flex-direction: row;
-    flex-wrap: wrap;
-
-    > slab-tabs-tab:first-of-type {
-      background-color: var(--paper);
-      box-shadow: inset 0 -4px 0 var(--ember);
-      color: var(--ink);
-    }
-
-    /* The tablist's rule. */
-    > slab-tabs-panel {
-      border-block-start: 1px solid var(--rule-on-ink);
-      flex-basis: 100%;
-    }
-  }
-
-  .frameworks-tabs::part(tablist) {
-    border-block-end: 1px solid var(--rule-on-ink);
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .frameworks-tabs slab-tabs-tab {
-    border-inline-end: 1px solid var(--rule-on-ink);
-    color: var(--dim);
-    cursor: pointer;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    padding: 0.875rem 1.125rem;
-
-    &:hover {
-      color: var(--paper);
-    }
-
-    /* Ink on the logo's ember, at the size of a label. */
-    &:state(selected) {
-      background-color: var(--paper);
-      box-shadow: inset 0 -4px 0 var(--ember);
-      color: var(--ink);
-    }
-
-    &:focus-visible {
-      outline: 3px solid var(--ember);
-      outline-offset: -3px;
-    }
-  }
-
-  .frameworks-tabs slab-tabs-panel {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-
-    &:focus-visible {
-      outline: 3px solid var(--ember);
-      outline-offset: -3px;
-    }
-
-    :global(.code) {
-      border: 0;
-      flex: 1;
-    }
-  }
-
-  .code-note {
-    border-block-start: 1px solid var(--rule-on-ink);
-    color: var(--dim);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.06em;
-    margin: 0;
-    padding: 0.9375rem 1.25rem;
-
-    span {
-      color: var(--paper);
-      margin-inline-end: 0.75rem;
     }
   }
 

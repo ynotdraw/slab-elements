@@ -2,13 +2,8 @@
 // says, from the same sources, in the same order.
 
 import type { CollectionEntry } from 'astro:content';
-import {
-  api,
-  behavior,
-  importPath,
-  styledFiles,
-  type Api,
-} from './elements.ts';
+import { api, behavior, styledFiles, type Api } from './elements.ts';
+import { frameworks } from './frameworks.ts';
 import { cell } from './prose.ts';
 
 /**
@@ -20,15 +15,6 @@ export function exampleCode(example: string): string {
   return example
     .replaceAll(/\s+data-(?:announce|message|open|show)="[^"]*"/g, '')
     .trim();
-}
-
-/** The `<script>` that registers a page's elements, then their markup. */
-export function usageCode(tags: string[], usage: string): string {
-  const imports = tags
-    .map((tag) => `  import '${importPath(tag)}';`)
-    .join('\n');
-
-  return `<script type="module">\n${imports}\n</script>\n\n${usage.trim()}`;
 }
 
 const fence = (lang: string, code: string) =>
@@ -136,7 +122,13 @@ export function componentMarkdown(
     '## Install',
     fence('sh', 'pnpm add slab-elements lit'),
     '## Usage',
-    fence('html', usageCode(tags, usage)),
+    ...frameworks(entry.id, tags, usage, entry.data.frameworks).flatMap(
+      ({ code, file, lang, name, note }) => [
+        `### ${name}`,
+        `\`${file}\`. ${note}`,
+        fence(lang, code),
+      ],
+    ),
     '## Example',
     `Here's a styled version, \`<${tag!.replace('slab-', 'slab-styled-')}>\`. It's not in the package — it's an example of what you can build with the headless element. Copy it and make it yours at the bottom of this page.`,
     fence('html', exampleCode(example)),
