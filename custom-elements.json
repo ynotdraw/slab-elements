@@ -3725,6 +3725,557 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/date-range-field.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/date-range-field.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/date-range-field.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "DateRangeField",
+          "cssParts": [
+            {
+              "name": "container",
+              "description": "The label, the inputs and the description"
+            },
+            {
+              "name": "label",
+              "description": "The label"
+            },
+            {
+              "name": "fields",
+              "description": "Both inputs and their labels"
+            },
+            {
+              "name": "field",
+              "description": "The start input and its label"
+            },
+            {
+              "name": "start-field",
+              "description": "The start input and its label"
+            },
+            {
+              "name": "input-label",
+              "description": "The start input's label"
+            },
+            {
+              "name": "start-label",
+              "description": "The start input's label"
+            },
+            {
+              "name": "input"
+            },
+            {
+              "name": "start"
+            },
+            {
+              "name": "end-field",
+              "description": "The end input and its label"
+            },
+            {
+              "name": "end-label",
+              "description": "The end input's label"
+            },
+            {
+              "name": "end"
+            },
+            {
+              "name": "description",
+              "description": "Text about the field, and its validity message when it has one"
+            },
+            {
+              "name": "validity-message"
+            }
+          ],
+          "slots": [
+            {
+              "name": "description",
+              "description": "",
+              "type": {
+                "text": "Element | string"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the group. Each input is named by it and its own label.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "endLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The end input's label, read after `label`. \"End\" when unset.",
+              "attribute": "end-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "endValue",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The last day of the range, as \"yyyy-mm-dd\". Like a native input's\n`value`, the attribute is the default and the property is the current\nvalue.",
+              "attribute": "end-value"
+            },
+            {
+              "kind": "field",
+              "name": "hideLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hide-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The latest date allowed for either, as \"yyyy-mm-dd\".",
+              "attribute": "max",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The earliest date allowed for either, as \"yyyy-mm-dd\".",
+              "attribute": "min",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Submitted twice, with the start value and then the end value.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requires both dates.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "startLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The start input's label, read after `label`. \"Start\" when unset.",
+              "attribute": "start-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "startValue",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The first day of the range, as \"yyyy-mm-dd\". Like a native input's\n`value`, the attribute is the default and the property is the current\nvalue.",
+              "attribute": "start-value"
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "HTMLFormElement | null"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isDisabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "string | File | FormData | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resetValidityFeedback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears the validity feedback without changing `validity`."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "flags",
+                  "optional": true,
+                  "type": {
+                    "text": "ValidityStateFlags"
+                  }
+                },
+                {
+                  "name": "message",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the group. Each input is named by it and its own label.",
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "end-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The end input's label, read after `label`. \"End\" when unset.",
+              "fieldName": "endLabel"
+            },
+            {
+              "name": "end-value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The last day of the range, as \"yyyy-mm-dd\". Like a native input's\n`value`, the attribute is the default and the property is the current\nvalue.",
+              "fieldName": "endValue"
+            },
+            {
+              "name": "hide-label",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hideLabel"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The latest date allowed for either, as \"yyyy-mm-dd\".",
+              "fieldName": "max"
+            },
+            {
+              "name": "min",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The earliest date allowed for either, as \"yyyy-mm-dd\".",
+              "fieldName": "min"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Submitted twice, with the start value and then the end value.",
+              "fieldName": "name"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requires both dates.",
+              "fieldName": "required"
+            },
+            {
+              "name": "start-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The start input's label, read after `label`. \"Start\" when unset.",
+              "fieldName": "startLabel"
+            },
+            {
+              "name": "start-value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The first day of the range, as \"yyyy-mm-dd\". Like a native input's\n`value`, the attribute is the default and the property is the current\nvalue.",
+              "fieldName": "startValue"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-date-range-field",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "DateRangeField",
+            "module": "src/date-range-field.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-date-range-field",
+          "declaration": {
+            "name": "DateRangeField",
+            "module": "src/date-range-field.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/dialog.styles.ts",
       "declarations": [],
       "exports": [
