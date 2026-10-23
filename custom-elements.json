@@ -5452,6 +5452,276 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/hover-card.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/hover-card.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/hover-card.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "HoverCard",
+          "cssParts": [
+            {
+              "name": "card"
+            }
+          ],
+          "slots": [
+            {
+              "name": "anchor",
+              "description": "The element the card is for, usually a link. It should be one that can be focused.",
+              "required": {
+                "tag": "required",
+                "name": "",
+                "type": "",
+                "optional": false,
+                "description": "",
+                "problems": [],
+                "source": [
+                  {
+                    "number": 3,
+                    "source": "          @required",
+                    "tokens": {
+                      "start": "          ",
+                      "delimiter": "",
+                      "postDelimiter": "",
+                      "tag": "@required",
+                      "postTag": "",
+                      "name": "",
+                      "postName": "",
+                      "type": "",
+                      "postType": "",
+                      "description": "",
+                      "end": "",
+                      "lineEnd": ""
+                    }
+                  }
+                ]
+              },
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "",
+              "description": "The card's content, which can hold links, buttons and anything else that can be focused",
+              "required": {
+                "tag": "required",
+                "name": "",
+                "type": "",
+                "optional": false,
+                "description": "",
+                "problems": [],
+                "source": [
+                  {
+                    "number": 3,
+                    "source": "            @required",
+                    "tokens": {
+                      "start": "            ",
+                      "delimiter": "",
+                      "postDelimiter": "",
+                      "tag": "@required",
+                      "postTag": "",
+                      "name": "",
+                      "postName": "",
+                      "type": "",
+                      "postType": "",
+                      "description": "",
+                      "end": "",
+                      "lineEnd": ""
+                    }
+                  }
+                ]
+              },
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "closeDelay",
+              "type": {
+                "text": "number"
+              },
+              "default": "300",
+              "attribute": "close-delay",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The card doesn't open.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "openDelay",
+              "type": {
+                "text": "number"
+              },
+              "default": "700",
+              "attribute": "open-delay",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "placement",
+              "type": {
+                "text": "'bottom' | 'left' | 'right' | 'top'"
+              },
+              "default": "'bottom'",
+              "description": "The side of its anchor it opens on, when there's room. It flips when there\nisn't.",
+              "attribute": "placement",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "toggle",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "close-delay",
+              "type": {
+                "text": "number"
+              },
+              "default": "300",
+              "fieldName": "closeDelay"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The card doesn't open.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "open-delay",
+              "type": {
+                "text": "number"
+              },
+              "default": "700",
+              "fieldName": "openDelay"
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "open"
+            },
+            {
+              "name": "placement",
+              "type": {
+                "text": "'bottom' | 'left' | 'right' | 'top'"
+              },
+              "default": "'bottom'",
+              "description": "The side of its anchor it opens on, when there's room. It flips when there\nisn't.",
+              "fieldName": "placement"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-hover-card",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "HoverCard",
+            "module": "src/hover-card.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-hover-card",
+          "declaration": {
+            "name": "HoverCard",
+            "module": "src/hover-card.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/listbox.styles.ts",
       "declarations": [],
       "exports": [
