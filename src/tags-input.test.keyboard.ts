@@ -439,18 +439,16 @@ test(
   { tag: '@keyboard' },
   async ({ render, page }) => {
     await render(
-      () =>
-        html`<slab-tags-input label="Label" value="one,two"></slab-tags-input>`,
+      () => html`
+        <input aria-label="Before" />
+        <slab-tags-input label="Label" value="one,two"></slab-tags-input>
+      `,
     );
 
     // Its tags come before the input, but aren't Tab stops.
-    await page.getByRole('textbox').focus();
+    await page.getByRole('textbox', { name: 'Label' }).focus();
     await page.keyboard.press('Shift+Tab');
 
-    await expect(page.getByRole('textbox')).not.toBeFocused();
-
-    await expect(
-      page.getByRole('button', { name: 'Remove two' }),
-    ).not.toBeFocused();
+    await expect(page.getByRole('textbox', { name: 'Before' })).toBeFocused();
   },
 );
