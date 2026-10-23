@@ -15,9 +15,15 @@ export default css`
     padding: 0;
     text-align: center;
 
-    /* The selection would cover the one character, so it's only a caret. */
+    /*
+      The selection would cover the one character, so it's only a caret. The
+      color is the input's own because Chrome otherwise inherits the page's
+      selection color, which can match the input's background and hide the
+      character in the last input, which stays selected as it's typed into.
+    */
     &::selection {
       background-color: transparent;
+      color: currentcolor;
     }
   }
 
