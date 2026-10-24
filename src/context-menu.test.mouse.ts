@@ -400,8 +400,9 @@ test(
         </slab-context-menu>`,
     );
 
-    // Paused, so only `runFor()` moves time on.
-    await page.clock.pauseAt(1000);
+    // Paused, so only `runFor()` moves time on. Far enough ahead that a slow
+    // render, which Firefox on CI can take over a second for, hasn't passed it.
+    await page.clock.pauseAt(60_000);
 
     const host = page.locator('slab-context-menu');
     const target = page.locator('[slot="target"]');
@@ -457,7 +458,7 @@ test(
     );
 
     // Paused, so only `runFor()` moves time on.
-    await page.clock.pauseAt(1000);
+    await page.clock.pauseAt(60_000);
 
     const host = page.locator('slab-context-menu');
     const target = page.locator('[slot="target"]');
@@ -513,7 +514,7 @@ test(
     );
 
     // Paused, so only `runFor()` moves time on.
-    await page.clock.pauseAt(1000);
+    await page.clock.pauseAt(60_000);
 
     const target = page.locator('[slot="target"]');
 
@@ -543,7 +544,7 @@ test(
     );
 
     // Paused, so only `runFor()` moves time on.
-    await page.clock.pauseAt(1000);
+    await page.clock.pauseAt(60_000);
 
     const host = page.locator('slab-context-menu');
     const target = page.locator('[slot="target"]');
