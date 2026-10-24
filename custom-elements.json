@@ -3216,6 +3216,275 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/copy-button.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/copy-button.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/copy-button.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CopyButton",
+          "cssParts": [
+            {
+              "name": "button"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
+            },
+            {
+              "kind": "field",
+              "name": "copiedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copied'",
+              "description": "Announced once the text is copied.",
+              "attribute": "copied-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "failedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Couldn't copy\"",
+              "description": "Announced when the clipboard refuses.",
+              "attribute": "failed-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "feedbackDuration",
+              "type": {
+                "text": "number"
+              },
+              "default": "2000",
+              "description": "Milliseconds the host matches `:state(copied)` or `:state(failed)` for.",
+              "attribute": "feedback-duration",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "from",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The `id` of an element to copy from, instead of `value`.",
+              "attribute": "from",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The text to copy.",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "click"
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "copied",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "copy-error",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "copied-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copied'",
+              "description": "Announced once the text is copied.",
+              "fieldName": "copiedLabel"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "failed-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Couldn't copy\"",
+              "description": "Announced when the clipboard refuses.",
+              "fieldName": "failedLabel"
+            },
+            {
+              "name": "feedback-duration",
+              "type": {
+                "text": "number"
+              },
+              "default": "2000",
+              "description": "Milliseconds the host matches `:state(copied)` or `:state(failed)` for.",
+              "fieldName": "feedbackDuration"
+            },
+            {
+              "name": "from",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The `id` of an element to copy from, instead of `value`.",
+              "fieldName": "from"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The text to copy.",
+              "fieldName": "value"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-copy-button",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "CopyButton",
+            "module": "src/copy-button.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-copy-button",
+          "declaration": {
+            "name": "CopyButton",
+            "module": "src/copy-button.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/date-field.styles.ts",
       "declarations": [],
       "exports": [
