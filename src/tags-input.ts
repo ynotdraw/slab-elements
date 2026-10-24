@@ -13,6 +13,7 @@ import customElement from './library/custom-element.js';
 import afterReflection from './library/after-reflection.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
+import TagsController from './library/tags-controller.js';
 import styles from './tags-input.styles.js';
 
 declare global {
@@ -326,8 +327,6 @@ export default class TagsInput extends LitElement {
   }
 
   override updated() {
-    this.#focusPendingTag();
-
     this.#setState('disabled', this.#isDisabled);
     this.#setState('empty', this.values.length === 0);
     this.#setState('full', this.#isFull);
@@ -394,9 +393,17 @@ export default class TagsInput extends LitElement {
 
   #internals: ElementInternals;
 
-  // Moved to once a tag is removed with the keyboard, so focus isn't lost
-  // with it.
-  #pendingTagFocus?: number;
+  #tags = new TagsController(this, {
+    input: () => this.#inputElementRef.value,
+    isDisabled: () => this.#isDisabled,
+    label: (text) => this.removeLabel(text),
+    onBlur: (event) => {
+      this.#onBlur(event);
+    },
+    onRemove: (index) => {
+      this.#remove(index);
+    },
+  });
 
   #values: string[] = [];
 
@@ -420,12 +427,6 @@ export default class TagsInput extends LitElement {
       !this.validity.valid &&
       this.hasReportedValidityOrSubmitted
     );
-  }
-
-  get #tagElements() {
-    return [
-      ...this.renderRoot.querySelectorAll<HTMLButtonElement>('[part~="tag"]'),
-    ];
   }
 
   // What's in the input, which is only read once there's an input to read.
@@ -512,88 +513,9 @@ export default class TagsInput extends LitElement {
     const input = this.#inputElementRef.value;
     const isAtStart = input?.selectionStart === 0 && input.selectionEnd === 0;
 
-    if (
-      event.key === 'ArrowLeft' &&
-      isAtStart &&
-      this.#tagElements.length > 0
-    ) {
+    if (event.key === 'ArrowLeft' && isAtStart && this.#tags.focusLast()) {
       event.preventDefault();
-      this.#tagElements.at(-1)?.focus();
     }
-  };
-
-  // Not when the tag was removed, which some browsers count as a blur. Focus
-  // is about to move to what takes its place.
-  #onTagBlur = (event: FocusEvent) => {
-    if (this.#pendingTagFocus === undefined) {
-      this.#onBlur(event);
-    }
-  };
-
-  // A click from the keyboard, with Enter or Space, moves focus to what takes
-  // the tag's place. A click from a pointer leaves focus where it was.
-  #onTagClick = (event: MouseEvent) => {
-    // Always a tag. The check is for TypeScript.
-    /* v8 ignore next 3 */
-    if (!(event.currentTarget instanceof HTMLButtonElement)) {
-      return;
-    }
-
-    const isFocused = this.shadowRoot?.activeElement === event.currentTarget;
-
-    this.#removeTag(event.currentTarget, isFocused);
-  };
-
-  #onTagKeydown = (event: KeyboardEvent) => {
-    // Always a tag. The check is for TypeScript.
-    /* v8 ignore next 3 */
-    if (!(event.currentTarget instanceof HTMLButtonElement)) {
-      return;
-    }
-
-    const tags = this.#tagElements;
-    const index = tags.indexOf(event.currentTarget);
-
-    if (event.key === 'Backspace' || event.key === 'Delete') {
-      event.preventDefault(); // So the browser doesn't go back a page
-      this.#removeTag(event.currentTarget, true);
-
-      return;
-    }
-
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault();
-      tags.at(Math.max(index - 1, 0))?.focus();
-
-      return;
-    }
-
-    // Past the last tag is the input, with the caret at its start.
-    if (event.key === 'ArrowRight') {
-      event.preventDefault();
-
-      const next = tags.at(index + 1);
-
-      if (next) {
-        next.focus();
-      } else {
-        this.focus();
-        this.#inputElementRef.value?.setSelectionRange(0, 0);
-      }
-
-      return;
-    }
-
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      this.focus();
-    }
-  };
-
-  // Cancelled so a click on a tag doesn't take focus from the input, and the
-  // user can go on typing.
-  #onTagMousedown = (event: MouseEvent) => {
-    event.preventDefault();
   };
 
   // Adds each tag in `text` that's new and fits, and leaves in the input what
@@ -625,23 +547,6 @@ export default class TagsInput extends LitElement {
     this.#text = '';
   }
 
-  // After the tags have rendered without the one that was removed.
-  #focusPendingTag() {
-    if (this.#pendingTagFocus === undefined) {
-      return;
-    }
-
-    const tag = this.#tagElements.at(this.#pendingTagFocus);
-
-    this.#pendingTagFocus = undefined;
-
-    if (tag) {
-      tag.focus();
-    } else {
-      this.focus();
-    }
-  }
-
   // Only when focus leaves the input and its tags. Moving between them is
   // still being in it, and leaves what's typed where it is.
   #onBlur(event: FocusEvent) {
@@ -665,17 +570,6 @@ export default class TagsInput extends LitElement {
     this.#setValues(this.values.filter((_, other) => other !== index));
   }
 
-  // Focus goes to the tag that takes its place, or else the input.
-  #removeTag(tag: HTMLButtonElement, isMovingFocus: boolean) {
-    const index = this.#tagElements.indexOf(tag);
-
-    if (isMovingFocus) {
-      this.#pendingTagFocus = index;
-    }
-
-    this.#remove(index);
-  }
-
   #renderTags() {
     // The input is described by the tags' text rather than by the tags, whose
     // names each start with "Remove". A `hidden` element can still describe
@@ -683,25 +577,11 @@ export default class TagsInput extends LitElement {
     return html`<span hidden id="values">${this.values.join(', ')}</span>
 
       <div part="tags">
-        <!-- The tags -->
-        ${this.values.map(
-          (value) =>
-            html`<button
-              aria-label=${this.removeLabel(value)}
-              data-test="tag"
-              part="tag"
-              tabindex="-1"
-              type="button"
-              ?disabled=${this.#isDisabled}
-              @blur=${this.#onTagBlur}
-              @click=${this.#onTagClick}
-              @keydown=${this.#onTagKeydown}
-              @mousedown=${this.#onTagMousedown}
-            >
-              <!-- A tag's button, which removes it -->
-              ${value}
-            </button>`,
-        )}
+        <!--
+          The tags
+          @part tag - A tag's button, which removes it
+        -->
+        ${this.#tags.render(this.values.map((value) => ({ text: value, value })))}
       </div>`;
   }
 
