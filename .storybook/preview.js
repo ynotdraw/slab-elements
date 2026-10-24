@@ -243,6 +243,12 @@ export default {
             }
           }
 
+          if (component === 'steps') {
+            for (const $step of $component.children) {
+              $step.removeAttribute('slot');
+            }
+          }
+
           if (component === 'menu') {
             for (const $anchor of $component.querySelectorAll(
               '[slot="anchor"]',

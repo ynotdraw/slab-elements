@@ -12457,6 +12457,428 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/steps.step.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/steps.step.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/steps.step.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "Step",
+          "cssParts": [
+            {
+              "name": "step",
+              "description": "The number, label and status. A button when its Steps is navigable."
+            },
+            {
+              "name": "description",
+              "description": "Holds the description"
+            },
+            {
+              "name": "indicator",
+              "description": "The Step's number, hidden from screenreaders"
+            },
+            {
+              "name": "label",
+              "description": "Holds the label"
+            },
+            {
+              "name": "status",
+              "description": "Its Steps' complete label, hidden visually, on a complete Step"
+            }
+          ],
+          "slots": [
+            {
+              "name": "description",
+              "description": "Shown below the label",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "",
+              "description": "The label",
+              "type": {
+                "text": "Element | string"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Keeps the user from going to it in a `navigable` Steps.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "completeLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Completed'",
+              "description": "Set by its Steps."
+            },
+            {
+              "kind": "field",
+              "name": "index",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Its position, from 1. Set by its Steps."
+            },
+            {
+              "kind": "field",
+              "name": "navigable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Set by its Steps."
+            },
+            {
+              "kind": "field",
+              "name": "status",
+              "type": {
+                "text": "'complete' | 'current' | 'upcoming'"
+              },
+              "default": "'upcoming'",
+              "description": "Set by its Steps."
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "private-connected",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "private-select",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Keeps the user from going to it in a `navigable` Steps.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-steps-step",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "Step",
+            "module": "src/steps.step.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-steps-step",
+          "declaration": {
+            "name": "Step",
+            "module": "src/steps.step.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/steps.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/steps.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/steps.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "Steps",
+          "cssParts": [
+            {
+              "name": "list",
+              "description": "The Steps"
+            },
+            {
+              "name": "item",
+              "description": "Each Step's list item"
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The Steps, in order",
+              "type": {
+                "text": "Step"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the list.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "completeLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Read by screenreaders after each complete Step's label. \"Completed\" when\nunset.",
+              "attribute": "complete-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "navigable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes each Step a button that goes to it.",
+              "attribute": "navigable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "The current Step, from 1. The Steps before it are complete.",
+              "attribute": "step",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "steps",
+              "type": {
+                "text": "Step[]"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "next",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Goes to the next Step, or past the last one, where every Step is\ncomplete. It doesn't dispatch \"change\", which is only for the user's\nclicks."
+            },
+            {
+              "kind": "method",
+              "name": "previous",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Goes to the previous Step, stopping at the first. It doesn't dispatch\n\"change\", which is only for the user's clicks."
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the list.",
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "complete-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Read by screenreaders after each complete Step's label. \"Completed\" when\nunset.",
+              "fieldName": "completeLabel"
+            },
+            {
+              "name": "navigable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes each Step a button that goes to it.",
+              "fieldName": "navigable"
+            },
+            {
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "The current Step, from 1. The Steps before it are complete.",
+              "fieldName": "step"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-steps",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "Steps",
+            "module": "src/steps.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-steps",
+          "declaration": {
+            "name": "Steps",
+            "module": "src/steps.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/switch.styles.ts",
       "declarations": [],
       "exports": [
