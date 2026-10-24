@@ -79,7 +79,7 @@ declare global {
  *
  * @fires {Event} change
  * @fires {Event} input
- * @fires {Event} toggle - When the button is pressed and the password shows or hides
+ * @fires {Event} toggle
  *
  * @readonly
  * @prop {HTMLFormElement | null} form
@@ -129,6 +129,10 @@ export default class PasswordField extends LitElement {
   @required
   label?: string;
 
+  /**
+   * "current-password" on a sign-in form and "new-password" where one is
+   * chosen, so a password manager knows which it is.
+   */
   // The native input's own union rather than `string`, so a typo is caught at
   // the callsite the way it would be on an `<input>`.
   @property({ reflect: true })
@@ -269,6 +273,7 @@ export default class PasswordField extends LitElement {
           ?disabled=${this.#isDisabled}
           @click=${this.#onToggleButtonClick}
         >
+          <!-- The button that shows and hides the password -->
           ${this.toggleLabel ?? 'Show password'}
         </button>
       </div>

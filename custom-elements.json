@@ -8916,7 +8916,8 @@
               "name": "input"
             },
             {
-              "name": "toggle-button"
+              "name": "toggle-button",
+              "description": "The button that shows and hides the password"
             },
             {
               "name": "description",
@@ -8969,6 +8970,7 @@
               "type": {
                 "text": "HTMLInputElement['autocomplete'] | undefined"
               },
+              "description": "\"current-password\" on a sign-in form and \"new-password\" where one is\nchosen, so a password manager knows which it is.",
               "attribute": "autocomplete",
               "reflects": true
             },
@@ -9338,6 +9340,7 @@
               "type": {
                 "text": "HTMLInputElement['autocomplete'] | undefined"
               },
+              "description": "\"current-password\" on a sign-in form and \"new-password\" where one is\nchosen, so a password manager knows which it is.",
               "fieldName": "autocomplete"
             },
             {
