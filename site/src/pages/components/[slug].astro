@@ -485,6 +485,15 @@ const tsconfig = `{
     padding: 2rem clamp(1rem, 4vw, 2.5rem) 2.5rem;
   }
 
+  /*
+    The styled Navigation Menu's content drops down over what's below it
+    rather than being in the top layer, as the popups are. The stage scrolls,
+    so it would cut the content off without room below the menu.
+  */
+  .stage:has(slab-styled-navigation-menu) {
+    min-block-size: 20rem;
+  }
+
   .prose {
     max-inline-size: 70ch;
 
