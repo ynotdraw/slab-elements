@@ -1,0 +1,5 @@
+---
+'slab-elements': patch
+---
+
+Adds Command Palette, `slab-command-palette`: a modal search for commands. It's Dialog, with a Combobox's `<input role="combobox">` and a listbox of slotted Options inside, so it has Dialog's `open`, `show()`, `close()`, `closedby`, label, focus trap and "cancel" and "close". Opening it empties the input and focuses it. Typing filters the Options by `filter`, a case-insensitive substring of their text by default, and makes the first match active, so Enter runs the best one. Up and Down move the active Option. Enter or a click closes the palette with the chosen Option's `value` as `returnValue`, and closing it any other way leaves `returnValue` empty. `query` is what's been typed, and the input's "input" leaves the host, for fetching results as the user types. When nothing matches, the listbox is hidden, the host matches `:state(empty)`, and the `empty` slot is shown in a status region. Style it through `::part(dialog)`, `::part(label)`, `::part(input)`, `::part(listbox)` and `::part(empty)`.

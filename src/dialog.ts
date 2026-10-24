@@ -3,6 +3,7 @@ import {
   LitElement,
   type CSSResultGroup,
   type CSSResultOrNative,
+  type TemplateResult,
 } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property } from 'lit/decorators.js';
@@ -119,6 +120,34 @@ export default class Dialog extends LitElement {
     dialog.returnValue = this.#returnValue;
   }
 
+  // Chrome looks for something to focus in the dialog's flat tree when it's
+  // opened, so it finds slotted content. Firefox and Safari only look in the
+  // dialog's own tree, where nothing is focusable, and leave focus on the
+  // dialog. So this does what Chrome does, in every browser: focus what's
+  // autofocused, or else the first thing that takes focus.
+  //
+  // Trying `focus()` on each element and seeing whether it stuck, rather than
+  // matching a list of focusable selectors, leaves what's focusable to the
+  // browser. Elements that aren't assigned to a slot aren't rendered, so they
+  // don't take focus and are passed over.
+  //
+  // Command Palette overrides it to focus its input, which is in the shadow
+  // root rather than slotted.
+  protected focusContent(): void {
+    const elements = [
+      ...this.querySelectorAll<HTMLElement>('[autofocus]'),
+      ...this.querySelectorAll<HTMLElement>('*'),
+    ];
+
+    for (const element of elements) {
+      element.focus();
+
+      if (this.querySelector(':focus')) {
+        return;
+      }
+    }
+  }
+
   override render() {
     return html`<dialog
       aria-labelledby="label"
@@ -137,10 +166,16 @@ export default class Dialog extends LitElement {
         </slot>
       </div>
 
-      <slot>
-        <!-- @type {Element | string} -->
-      </slot>
+      ${this.renderContent()}
     </dialog>`;
+  }
+
+  // What's in the `<dialog>` below the label. Command Palette overrides it to
+  // put its input and listbox there, and inherits everything else.
+  protected renderContent(): TemplateResult {
+    return html`<slot>
+      <!-- @type {Element | string} -->
+    </slot>`;
   }
 
   show(): void {
@@ -173,7 +208,7 @@ export default class Dialog extends LitElement {
     // update runs, the dialog is already closed.
     if (this.open && !dialog.open) {
       this.showDialog(dialog);
-      this.#focusContent();
+      this.focusContent();
     } else if (!this.open && dialog.open) {
       dialog.close();
     }
@@ -235,31 +270,6 @@ export default class Dialog extends LitElement {
     // natively.
     this.close(submitter?.getAttribute('value') ?? undefined);
   };
-
-  // Chrome looks for something to focus in the dialog's flat tree when it's
-  // opened, so it finds slotted content. Firefox and Safari only look in the
-  // dialog's own tree, where nothing is focusable, and leave focus on the
-  // dialog. So this does what Chrome does, in every browser: focus what's
-  // autofocused, or else the first thing that takes focus.
-  //
-  // Trying `focus()` on each element and seeing whether it stuck, rather than
-  // matching a list of focusable selectors, leaves what's focusable to the
-  // browser. Elements that aren't assigned to a slot aren't rendered, so they
-  // don't take focus and are passed over.
-  #focusContent() {
-    const elements = [
-      ...this.querySelectorAll<HTMLElement>('[autofocus]'),
-      ...this.querySelectorAll<HTMLElement>('*'),
-    ];
-
-    for (const element of elements) {
-      element.focus();
-
-      if (this.querySelector(':focus')) {
-        return;
-      }
-    }
-  }
 
   // Neither event leaves the shadow root: "cancel" and "close" don't bubble or
   // compose. So each is dispatched again from the host, not composed, the way a
