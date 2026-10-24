@@ -5,7 +5,7 @@ element: '<input type=date>'
 tags: [slab-date-range-field]
 summary: 'A start and an end date, each on the native date input, linked so the end is never before the start.'
 example: |
-  <slab-styled-date-range-field label="Pour window" min="2026-10-12" start-value="2026-10-16" end-value="2026-10-20" required>
+  <slab-styled-date-range-field label="Pour window" start-label="Earliest" end-label="Latest" min="2026-10-12" start-value="2026-10-16" end-value="2026-10-20" required>
     <span slot="description">The crew needs at least one dry day in the window.</span>
   </slab-styled-date-range-field>
 usage: |
