@@ -1,4 +1,8 @@
-import { type Module } from 'custom-elements-manifest' with { type: 'json' };
+import {
+  type Module,
+  type Package,
+  type Slot,
+} from 'custom-elements-manifest' with { type: 'json' };
 import { parse as htmlParser, CommentNode } from 'node-html-parser';
 import { parse as commentParser } from 'comment-parser';
 import {
@@ -20,10 +24,37 @@ import getParentClassName from './get-parent-class-name.js';
  * 7. Filter out slots with an `@ignore` tag.
  * 8. Find the corresponding declaration in the manifest.
  * 9. Add each slot to the declaration.
+ *
+ * Then, once inheritance is applied, a slot a subclass renders again in a
+ * template of its own is put back the way the subclass has it. The analyzer
+ * would otherwise give it the superclass's type and mark it inherited, so
+ * Command Palette's default slot would read as Dialog's.
  */
 export default () => {
+  // Each class's own slots, by class name.
+  const ownSlots = new Map<string, Slot[]>();
+
   return {
     name: 'add-slots',
+    packageLinkPhase({
+      customElementsManifest,
+    }: {
+      customElementsManifest: Package;
+    }) {
+      for (const module of customElementsManifest.modules) {
+        for (const declaration of module.declarations ?? []) {
+          const own = ownSlots.get(declaration.name);
+
+          if (!own || !('slots' in declaration) || !declaration.slots) {
+            continue;
+          }
+
+          declaration.slots = declaration.slots.map((slot) => {
+            return own.find(({ name }) => name === slot.name) ?? slot;
+          });
+        }
+      }
+    },
     analyzePhase({ moduleDoc, node }: { moduleDoc: Module; node: Node }) {
       if (
         isTaggedTemplateExpression(node) &&
@@ -81,6 +112,11 @@ export default () => {
             'slots' in declaration &&
             declaration.slots
           ) {
+            ownSlots.set(declaration.name, [
+              ...(ownSlots.get(declaration.name) ?? []),
+              ...slots,
+            ]);
+
             for (const slot of slots) {
               const isNew = declaration.slots.every(
                 ({ name }) => name !== slot.name,
