@@ -53,18 +53,20 @@ declare global {
  * @slot {Element | string} [description]
  *
  * @csspart description - Text about the field
- * @csspart input - The input, while editing
+ * @csspart input
  * @csspart label - The label
  * @csspart preview - The button, while not editing
  *
- * @fires {Event} change - When an edit is committed with a different value.
+ * @fires {Event} change
  *
  * @readonly
  * @prop {HTMLFormElement | null} form
  *
  * @method cancel - Stops editing and discards what's typed.
  * @method commit - Stops editing and keeps what's typed.
+ *
  * @method edit - Starts editing and focuses the input, with its text selected.
+ * @returns Promise<void>
  *
  * @method formDisabledCallback
  * @param {boolean} isDisabled
