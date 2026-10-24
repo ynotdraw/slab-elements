@@ -49,8 +49,8 @@ declare global {
  *
  * @csspart button
  *
- * @fires {Event} copied - The text was written to the clipboard.
- * @fires {Event} copy-error - The clipboard refused, or no element has the `id` in `from`.
+ * @fires {Event} copied
+ * @fires {Event} copy-error
  */
 @customElement('slab-copy-button')
 export default class CopyButton extends LitElement {
