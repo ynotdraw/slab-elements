@@ -7,7 +7,6 @@ import {
 } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import { repeat } from 'lit/directives/repeat.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { when } from 'lit/directives/when.js';
 import packageJson from '../package.json' with { type: 'json' };
@@ -15,6 +14,7 @@ import customElement from './library/custom-element.js';
 import assertSlot from './library/assert-slot.js';
 import afterReflection from './library/after-reflection.js';
 import OptionsController from './library/options-controller.js';
+import TagsController from './library/tags-controller.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
 import Option from './option.js';
@@ -497,7 +497,6 @@ export default class Combobox extends LitElement {
     }
 
     this.#updateText();
-    this.#focusPendingTag();
 
     if (changes.has('open')) {
       this.#togglePopover();
@@ -599,15 +598,23 @@ export default class Combobox extends LitElement {
     slot: () => this.#slotElementRef.value,
   });
 
-  // Moved to once a tag is removed with the keyboard, so focus isn't lost
-  // with it.
-  #pendingTagFocus?: number;
-
-  // What's been typed since the value was last committed, or `undefined` when
   // the input shows the value. Filters the Options while there's something.
   #query?: string;
 
+  // What's been typed since the value was last committed, or `undefined` when
   #slotElementRef = createRef<HTMLSlotElement>();
+
+  #tags = new TagsController(this, {
+    input: () => this.#inputElementRef.value,
+    isDisabled: () => this.#isDisabled,
+    label: (text) => this.removeLabel(text),
+    onBlur: (event) => {
+      this.#onBlur(event);
+    },
+    onRemove: (index) => {
+      this.#remove(this.values[index]);
+    },
+  });
 
   // What `values` was set to. Until it's set, the Options that say they're
   // `selected` are the values, the way a `<select>`'s are.
@@ -617,12 +624,6 @@ export default class Combobox extends LitElement {
   // focus somewhere sensible.
   get #anchor() {
     return this.#inputElementRef.value;
-  }
-
-  get #tagElements() {
-    return [
-      ...this.renderRoot.querySelectorAll<HTMLButtonElement>('[part~="tag"]'),
-    ];
   }
 
   // What's in the input, which is only read once there's an input to read.
@@ -785,10 +786,9 @@ export default class Combobox extends LitElement {
       this.multiple &&
       event.key === 'ArrowLeft' &&
       isAtStart &&
-      this.#tagElements.length > 0
+      this.#tags.focusLast()
     ) {
       event.preventDefault();
-      this.#tagElements.at(-1)?.focus();
 
       return;
     }
@@ -815,80 +815,6 @@ export default class Combobox extends LitElement {
   };
 
   #onListboxMousedown = (event: MouseEvent) => {
-    event.preventDefault();
-  };
-
-  // Not when the tag was removed, which some browsers count as a blur. Focus
-  // is about to move to what takes its place.
-  #onTagBlur = (event: FocusEvent) => {
-    if (this.#pendingTagFocus === undefined) {
-      this.#onBlur(event);
-    }
-  };
-
-  // A click from the keyboard, with Enter or Space, moves focus to what takes
-  // the tag's place. A click from a pointer leaves focus where it was.
-  #onTagClick = (event: MouseEvent) => {
-    // Always a tag. The check is for TypeScript.
-    /* v8 ignore next 3 */
-    if (!(event.currentTarget instanceof HTMLButtonElement)) {
-      return;
-    }
-
-    const isFocused = this.shadowRoot?.activeElement === event.currentTarget;
-
-    this.#removeTag(event.currentTarget, isFocused);
-  };
-
-  #onTagKeydown = (event: KeyboardEvent) => {
-    // Always a tag. The check is for TypeScript.
-    /* v8 ignore next 3 */
-    if (!(event.currentTarget instanceof HTMLButtonElement)) {
-      return;
-    }
-
-    const tags = this.#tagElements;
-    const index = tags.indexOf(event.currentTarget);
-
-    if (event.key === 'Backspace' || event.key === 'Delete') {
-      event.preventDefault(); // So the browser doesn't go back a page
-      this.#removeTag(event.currentTarget, true);
-
-      return;
-    }
-
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault();
-      tags.at(Math.max(index - 1, 0))?.focus();
-
-      return;
-    }
-
-    // Past the last tag is the input, with the caret at its start.
-    if (event.key === 'ArrowRight') {
-      event.preventDefault();
-
-      const next = tags.at(index + 1);
-
-      if (next) {
-        next.focus();
-      } else {
-        this.focus();
-        this.#inputElementRef.value?.setSelectionRange(0, 0);
-      }
-
-      return;
-    }
-
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      this.focus();
-    }
-  };
-
-  // Cancelled so a click on a tag doesn't take focus from the input, which
-  // would close the listbox.
-  #onTagMousedown = (event: MouseEvent) => {
     event.preventDefault();
   };
 
@@ -923,23 +849,6 @@ export default class Combobox extends LitElement {
     this.requestUpdate();
   }
 
-  // After the tags have rendered without the one that was removed.
-  #focusPendingTag() {
-    if (this.#pendingTagFocus === undefined) {
-      return;
-    }
-
-    const tag = this.#tagElements.at(this.#pendingTagFocus);
-
-    this.#pendingTagFocus = undefined;
-
-    if (tag) {
-      tag.focus();
-    } else {
-      this.focus();
-    }
-  }
-
   #isVisible(option: Option) {
     const query = this.#query ?? '';
     const { filter } = this;
@@ -968,17 +877,6 @@ export default class Combobox extends LitElement {
     this.requestUpdate();
   }
 
-  // Focus goes to the tag that takes its place, or else the input.
-  #removeTag(tag: HTMLButtonElement, isMovingFocus: boolean) {
-    const index = this.#tagElements.indexOf(tag);
-
-    if (isMovingFocus) {
-      this.#pendingTagFocus = index;
-    }
-
-    this.#remove(this.values[index]);
-  }
-
   #renderTags() {
     const selected = this.values.map((value) => {
       return {
@@ -995,26 +893,12 @@ export default class Combobox extends LitElement {
       </span>
 
       <div part="tags">
-        <!-- The tags -->
-        ${repeat(
-          selected,
-          ({ value }) => value,
-          ({ text, value }) =>
-            html`<button
-              aria-label=${this.removeLabel(text ?? value)}
-              data-test="tag"
-              part="tag"
-              tabindex="-1"
-              type="button"
-              ?disabled=${this.#isDisabled}
-              @blur=${this.#onTagBlur}
-              @click=${this.#onTagClick}
-              @keydown=${this.#onTagKeydown}
-              @mousedown=${this.#onTagMousedown}
-            >
-              <!-- A selected value's button, which removes it -->
-              ${text ?? value}
-            </button>`,
+        <!--
+          The tags
+          @part tag - A selected value's button, which removes it
+        -->
+        ${this.#tags.render(
+          selected.map(({ text, value }) => ({ text: text ?? value, value })),
         )}
       </div>`;
   }
