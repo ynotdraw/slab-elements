@@ -5721,6 +5721,177 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/feed.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/feed.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/feed.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "Feed",
+          "cssParts": [
+            {
+              "name": "feed",
+              "description": "The articles"
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The articles",
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "busy",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Articles are being added or removed. A screenreader waits until it's\nunset.",
+              "attribute": "busy",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the feed.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "total",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "How many articles there are in all, including those not added yet, or -1\nwhen that's unknown. The number added when unset.",
+              "attribute": "total",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "Element[]"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "busy",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Articles are being added or removed. A screenreader waits until it's\nunset.",
+              "fieldName": "busy"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the feed.",
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "total",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "How many articles there are in all, including those not added yet, or -1\nwhen that's unknown. The number added when unset.",
+              "fieldName": "total"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-feed",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "Feed",
+            "module": "src/feed.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-feed",
+          "declaration": {
+            "name": "Feed",
+            "module": "src/feed.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/field.styles.ts",
       "declarations": [],
       "exports": [
