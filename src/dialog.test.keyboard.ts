@@ -108,6 +108,24 @@ test(
 );
 
 test(
+  'leaves focus on the dialog when nothing in it takes focus',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<button>Outside</button>
+
+          <slab-dialog label="Label" open>
+            <p>Content</p>
+          </slab-dialog>`,
+    );
+
+    await expect(page.getByRole('button')).not.toBeFocused();
+    await expect(page.getByTestId('dialog')).toBeVisible();
+  },
+);
+
+test(
   'closes through a `<form method="dialog">` with its submitter’s value',
   { tag: '@keyboard' },
   async ({ render, page }) => {

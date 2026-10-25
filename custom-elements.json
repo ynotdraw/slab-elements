@@ -2998,6 +2998,453 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/command-palette.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/command-palette.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/command-palette.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CommandPalette",
+          "cssParts": [
+            {
+              "name": "input"
+            },
+            {
+              "name": "close",
+              "description": "Closes the palette with an empty returnValue"
+            },
+            {
+              "name": "listbox",
+              "description": "The Options, below the input"
+            },
+            {
+              "name": "empty",
+              "description": "A status region that shows the \"empty\" slot when no Option matches"
+            },
+            {
+              "name": "dialog",
+              "description": "The native dialog. A modal one's backdrop is its ::backdrop",
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "name": "label",
+              "description": "The label",
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            }
+          ],
+          "slots": [
+            {
+              "name": "close",
+              "description": "What the close button says. \"Close\" when nothing is slotted.",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "",
+              "description": "",
+              "type": {
+                "text": "Option"
+              },
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "name": "empty",
+              "description": "Shown when no Option matches what's been typed, such as \"No results\"",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "label",
+              "description": "",
+              "type": {
+                "text": "Element | string"
+              },
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "filter",
+              "type": {
+                "text": "(option: Option, query: string) => boolean"
+              },
+              "description": "Whether an Option matches what's been typed. A case-insensitive substring\nof its text by default."
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "placeholder",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "activeOption",
+              "type": {
+                "text": "Option | null"
+              },
+              "description": "The Option the user is on, which Enter chooses. It's pointed at rather\nthan focused, so focus stays in the input.",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "Option[]"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "query",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's been typed into the input.",
+              "default": "''",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "focusContent",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderContent",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "closedby",
+              "type": {
+                "text": "'any' | 'closerequest' | 'none' | undefined"
+              },
+              "description": "Passed to the `<dialog>`. \"any\" closes it on a click outside it where the\nbrowser supports that. Browsers that don't ignore it.",
+              "attribute": "closedby",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "hideLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hide-label",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "label",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "open",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "returnValue",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `<dialog>`'s, so `close(returnValue)` and a `<form method=\"dialog\">`\nset it the way they do natively.",
+              "default": "''",
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "close",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "returnValue",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "showDialog",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dialog",
+                  "type": {
+                    "text": "HTMLDialogElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "closedby",
+              "type": {
+                "text": "'any' | 'closerequest' | 'none' | undefined"
+              },
+              "description": "Passed to the `<dialog>`. \"any\" closes it on a click outside it where the\nbrowser supports that. Browsers that don't ignore it.",
+              "fieldName": "closedby",
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "name": "hide-label",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hideLabel",
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "label",
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "open",
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version",
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "Dialog",
+            "module": "/src/dialog.js"
+          },
+          "tagName": "slab-command-palette",
+          "customElement": true,
+          "events": [
+            {
+              "name": "cancel",
+              "type": {
+                "text": "Event"
+              },
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "name": "close",
+              "type": {
+                "text": "Event"
+              },
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "CommandPalette",
+            "module": "src/command-palette.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-command-palette",
+          "declaration": {
+            "name": "CommandPalette",
+            "module": "src/command-palette.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/context-menu.styles.ts",
       "declarations": [],
       "exports": [
@@ -4670,6 +5117,26 @@
             },
             {
               "kind": "method",
+              "name": "focusContent",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderContent",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "show",
               "return": {
                 "type": {
@@ -5167,6 +5634,34 @@
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "focusContent",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderContent",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              },
               "inheritedFrom": {
                 "name": "Dialog",
                 "module": "src/dialog.ts"
