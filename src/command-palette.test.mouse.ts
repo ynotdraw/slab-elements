@@ -92,3 +92,26 @@ test(
     await expect(host).toHaveJSProperty('open', true);
   },
 );
+
+test(
+  'closes with an empty `returnValue` when its close button is clicked',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-command-palette label="Label" open>
+          <slab-option>One</slab-option>
+        </slab-command-palette>`,
+    );
+
+    const host = page.locator('slab-command-palette');
+
+    await expect(host).toDispatchEvents(
+      () => page.getByRole('button', { name: 'Close' }).click(),
+      [{ type: 'close', bubbles: false, cancelable: false, composed: false }],
+    );
+
+    await expect(host).toHaveJSProperty('open', false);
+    await expect(host).toHaveJSProperty('returnValue', '');
+  },
+);

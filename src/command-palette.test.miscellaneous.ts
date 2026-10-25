@@ -267,3 +267,19 @@ test(
     await expect(page.locator('slab-option').nth(1)).toBeVisible();
   },
 );
+
+test(
+  'labels its close button with what is slotted into "close"',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-command-palette label="Label" open>
+          <slab-option>One</slab-option>
+          <span slot="close">Cancel</span>
+        </slab-command-palette>`,
+    );
+
+    await expect(page.getByTestId('close')).toHaveAccessibleName('Cancel');
+  },
+);

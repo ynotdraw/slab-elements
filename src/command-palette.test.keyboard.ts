@@ -267,3 +267,27 @@ test(
     await expect(host).toHaveJSProperty('activeOption.textContent', 'One');
   },
 );
+
+test(
+  'moves focus to its close button on Tab',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-command-palette label="Label" open>
+          <slab-option>One</slab-option>
+        </slab-command-palette>`,
+    );
+
+    const host = page.locator('slab-command-palette');
+
+    await page.keyboard.press('Tab');
+
+    await expect(page.getByRole('button', { name: 'Close' })).toBeFocused();
+
+    await page.keyboard.press('Enter');
+
+    await expect(host).toHaveJSProperty('open', false);
+    await expect(host).toHaveJSProperty('returnValue', '');
+  },
+);

@@ -31,6 +31,7 @@ test('open', { tag: '@accessibility' }, async ({ render, page }) => {
     - dialog "Label":
       - text: Label
       - combobox "Label" [expanded]
+      - button "Close"
       - listbox "Label":
         - option "One"
         - option "Two" [disabled]
@@ -108,6 +109,7 @@ test(
       - dialog "Label":
         - text: Label
         - combobox "Label"
+        - button "Close"
         - status: No results
     `);
 

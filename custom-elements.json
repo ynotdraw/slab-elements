@@ -3023,6 +3023,10 @@
               "name": "input"
             },
             {
+              "name": "close",
+              "description": "Closes the palette with an empty returnValue"
+            },
+            {
               "name": "listbox",
               "description": "The Options, below the input"
             },
@@ -3048,6 +3052,13 @@
             }
           ],
           "slots": [
+            {
+              "name": "close",
+              "description": "What the close button says. \"Close\" when nothing is slotted.",
+              "type": {
+                "text": "Element | string"
+              }
+            },
             {
               "name": "",
               "description": "",

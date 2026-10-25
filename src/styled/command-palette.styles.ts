@@ -3,7 +3,8 @@ import { css } from 'lit';
 /*
   Dialog's styles, then these. It sits in the upper part of the page rather
   than its middle, so the list grows down without the input moving, and the
-  input and list run to the slab's edges.
+  input and list run to the slab's edges. The Close button sits beside the
+  input, in a row of its own, and everything else spans the row.
 */
 export default css`
   [part~='dialog'] {
@@ -12,8 +13,54 @@ export default css`
     padding: 0;
   }
 
+  /*
+    On the open host only. A closed dialog isn't displayed, and "display: grid"
+    would show it.
+  */
+  :host([open]) [part~='dialog'] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  [part~='label'],
+  [part~='listbox'],
+  [part~='empty'] {
+    grid-column: 1 / -1;
+  }
+
   [part~='label'] {
     margin: 0;
+  }
+
+  [part~='close'] {
+    background-color: var(--paper);
+    border: 0;
+    border-block-end: var(--border);
+    border-inline-start: var(--border);
+    border-radius: 0;
+    color: var(--ink);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0 1rem;
+    transition:
+      background-color 100ms,
+      color 100ms;
+
+    &:hover {
+      background-color: var(--chalk);
+    }
+
+    &:focus-visible {
+      background-color: var(--ember-deep);
+      color: var(--paper);
+      outline: 2px solid transparent;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
   }
 
   [part~='input'] {

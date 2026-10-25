@@ -54,6 +54,11 @@ declare global {
  * leaves `returnValue` empty. Home, End and the other caret keys stay the
  * input's.
  *
+ * A Close button follows the input, so it can be closed without a keyboard.
+ * A click on the backdrop closes it only with `closedby="any"`, which iOS
+ * Safari doesn't support. The button says "Close" unless something is slotted
+ * into `close`.
+ *
  * The input's "input" leaves the host as it is, and `query` is what's been
  * typed, so results can be fetched as the user types. Set `filter` to one that
  * always returns `true` to show the Options you give it as they are.
@@ -72,9 +77,11 @@ declare global {
  * @attr {string} [version]
  *
  * @slot {Option}
+ * @slot {Element | string} [close] - What the close button says. "Close" when nothing is slotted.
  * @slot {Element | string} [empty] - Shown when no Option matches what's been typed, such as "No results"
  * @slot {Element | string} [label]
  *
+ * @csspart close - Closes the palette with an empty returnValue
  * @csspart dialog - The native dialog. A modal one's backdrop is its ::backdrop
  * @csspart empty - A status region that shows the "empty" slot when no Option matches
  * @csspart input
@@ -176,6 +183,27 @@ export default class CommandPalette extends Dialog {
         @keydown=${this.#onInputKeydown}
         ${ref(this.#inputElementRef)}
       />
+
+      <!--
+        A way out that doesn't need a keyboard. Escape is the only other one,
+        and a click on the backdrop only closes it with closedby="any", which
+        not every browser supports. iOS Safari doesn't.
+      -->
+      <button
+        data-test="close"
+        part="close"
+        type="button"
+        @click=${this.#onCloseClick}
+      >
+        <!-- Closes the palette with an empty returnValue -->
+        <slot name="close">
+          <!--
+            What the close button says. "Close" when nothing is slotted.
+            @type {Element | string}
+          -->
+          Close
+        </slot>
+      </button>
 
       <!--
         Its "mousedown" is cancelled so a click on an Option doesn't take focus
@@ -285,6 +313,10 @@ export default class CommandPalette extends Dialog {
   get #visible() {
     return this.options.filter((option) => this.#isVisible(option));
   }
+
+  #onCloseClick = () => {
+    this.close();
+  };
 
   // "input" composes, so it leaves the shadow root as the host's, for anyone
   // fetching results as the user types.
