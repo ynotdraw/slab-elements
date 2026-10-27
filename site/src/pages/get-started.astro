@@ -1,5 +1,6 @@
 ---
 import CodeBlock from '../components/CodeBlock.astro';
+import PageActions from '../components/PageActions.astro';
 import Sidebar from '../components/Sidebar.astro';
 import Base from '../layouts/Base.astro';
 import { html, sections, summary, title } from '../lib/get-started.ts';
@@ -24,6 +25,7 @@ const sidebar = [
         <p class="eyebrow">Guide</p>
         <h1>{title}</h1>
         <p>{summary}</p>
+        <PageActions markdown="get-started.md" />
       </header>
 
       {
@@ -77,7 +79,7 @@ const sidebar = [
     gap: 0.75rem;
     padding-block-end: 1.5rem;
 
-    p:last-child {
+    p:last-of-type {
       font-size: 1.25rem;
       margin: 0;
       max-inline-size: 52ch;

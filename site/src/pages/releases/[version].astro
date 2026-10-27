@@ -2,6 +2,7 @@
 import { getEntry } from 'astro:content';
 import CodeBlock from '../../components/CodeBlock.astro';
 import FrameworkTabs from '../../components/FrameworkTabs.astro';
+import PageActions from '../../components/PageActions.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import Base from '../../layouts/Base.astro';
 import { frameworks } from '../../lib/frameworks.ts';
@@ -77,7 +78,11 @@ const sidebar = [
 ];
 ---
 
-<Base description={summary} title={`What's new in Slab ${version} · Slab`}>
+<Base
+  description={summary}
+  markdown={`releases/${version}.md`}
+  title={`What's new in Slab ${version} · Slab`}
+>
   <div class="layout">
     <Sidebar label="In this release" sections={sidebar} />
 
@@ -95,6 +100,7 @@ const sidebar = [
             </p>
           )
         }
+        <PageActions markdown={`releases/${version}.md`} />
       </header>
 
       {

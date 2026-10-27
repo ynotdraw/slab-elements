@@ -149,6 +149,9 @@ export interface Release {
   // Each change, as HTML: one line of text, with `code` spans and links.
   changes: string[];
 
+  // The same changes as Markdown, for the page's twin.
+  markdown: string[];
+
   published: boolean;
   version: string;
 }
@@ -156,9 +159,13 @@ export interface Release {
 // Changesets writes each change as "[#11](…) [`e5b3ee2`](…) Thanks
 // [@ynotdraw](…)! - Combobox takes…". The pull request is kept, and the
 // commit and the thanks are left out.
+const parse = (text: string) => ({
+  body: text.replace(/^.*?Thanks \[@[^\]]+\]\([^)]+\)! - /, ''),
+  pr: /^\[#(\d+)\]\(([^)]+)\)/.exec(text),
+});
+
 const change = (text: string) => {
-  const pr = /^\[#(\d+)\]\(([^)]+)\)/.exec(text);
-  const body = text.replace(/^.*?Thanks \[@[^\]]+\]\([^)]+\)! - /, '');
+  const { body, pr } = parse(text);
 
   // Links in the change itself, after it's escaped.
   const html = inline(body).replaceAll(
@@ -169,6 +176,12 @@ const change = (text: string) => {
   return pr ? `${html} <a class="pr" href="${pr[2]}">#${pr[1]}</a>` : html;
 };
 
+const changeMarkdown = (text: string) => {
+  const { body, pr } = parse(text);
+
+  return pr ? `${body} ([#${pr[1]}](${pr[2]}))` : body;
+};
+
 /** Every release, newest first, with any announced but not out yet first. */
 export function releases(): Release[] {
   const logged = changelog
@@ -177,20 +190,24 @@ export function releases(): Release[] {
     .map((section) => {
       const [version = '', ...lines] = section.split('\n');
 
-      const changes = lines
+      const items = lines
         .join('\n')
         .split(/^- /m)
         .slice(1)
-        .map((item) => change(item.replace(/\n#{3}[^\n]*/g, '').trim()));
+        .map((item) => item.replace(/\n#{3}[^\n]*/g, '').trim());
 
-      return { changes, version: version.trim() };
+      return {
+        changes: items.map(change),
+        markdown: items.map(changeMarkdown),
+        version: version.trim(),
+      };
     });
 
   const upcoming = announcements
     .filter(
       ({ version }) => !logged.some((release) => release.version === version),
     )
-    .map(({ version }) => ({ changes: [], version }));
+    .map(({ version }) => ({ changes: [], markdown: [], version }));
 
   return [...upcoming, ...logged]
     .sort((a, b) => compare(b.version, a.version))
