@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import ApiTables from '../../components/ApiTables.astro';
 import CodeBlock from '../../components/CodeBlock.astro';
 import FrameworkTabs from '../../components/FrameworkTabs.astro';
+import PageActions from '../../components/PageActions.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import Base from '../../layouts/Base.astro';
 import { behavior, styledFiles } from '../../lib/elements.ts';
@@ -83,11 +84,8 @@ const tsconfig = `{
             <dt>Built on</dt>
             <dd><code>{element}</code></dd>
           </div>
-          <div>
-            <dt>As Markdown</dt>
-            <dd><a href={`${base}components/${entry.id}.md`}>{entry.id}.md</a></dd>
-          </div>
         </dl>
+        <PageActions markdown={`components/${entry.id}.md`} />
       </header>
 
       <section aria-labelledby="example">

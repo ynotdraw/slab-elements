@@ -1,4 +1,5 @@
 ---
+import PageActions from '../../components/PageActions.astro';
 import Base from '../../layouts/Base.astro';
 import { componentsByGroup } from '../../lib/index-markdown.ts';
 import { inline } from '../../lib/prose.ts';
@@ -23,6 +24,7 @@ const base = import.meta.env.BASE_URL;
         headless markup, so you can see what's possible — and what's yours to
         decide.
       </p>
+      <PageActions markdown="components.md" />
     </header>
 
     {
@@ -61,7 +63,7 @@ const base = import.meta.env.BASE_URL;
     gap: 0.75rem;
     padding-block-end: 1.5rem;
 
-    p:last-child {
+    p:last-of-type {
       font-size: 1.25rem;
       margin: 0;
       max-inline-size: 52ch;

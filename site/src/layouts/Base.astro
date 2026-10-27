@@ -134,6 +134,7 @@ const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.
         <li><a href={`${base}components/`}>Components</a></li>
         <li><a href={`${base}releases/`}>Releases</a></li>
         <li><a href={`${base}llms.txt`}>llms.txt</a></li>
+        {markdown && <li><a href={`${base}${markdown}`}>This page as Markdown</a></li>}
         <li><a href={github}>GitHub</a></li>
         <li>Apache-2.0</li>
       </ul>

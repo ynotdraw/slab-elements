@@ -1,4 +1,5 @@
 ---
+import PageActions from '../../components/PageActions.astro';
 import Base from '../../layouts/Base.astro';
 import { releases } from '../../lib/releases.ts';
 
@@ -7,7 +8,7 @@ const changelog = 'https://github.com/ynotdraw/slab-elements/blob/main/CHANGELOG
 const description = "Every release of Slab, newest first, with what's changed in each.";
 ---
 
-<Base description={description} title="Releases · Slab">
+<Base description={description} markdown="releases.md" title="Releases · Slab">
   <div class="page">
     <header class="intro">
       <p class="eyebrow">Changelog</p>
@@ -17,6 +18,7 @@ const description = "Every release of Slab, newest first, with what's changed in
         <a href={changelog}>CHANGELOG.md</a>, and the bigger releases have a
         page of their own, with live examples.
       </p>
+      <PageActions markdown="releases.md" />
     </header>
 
     <ol class="releases">
@@ -64,7 +66,7 @@ const description = "Every release of Slab, newest first, with what's changed in
     gap: 0.75rem;
     padding-block-end: 1.5rem;
 
-    p:last-child {
+    p:last-of-type {
       font-size: 1.25rem;
       margin: 0;
       max-inline-size: 52ch;
