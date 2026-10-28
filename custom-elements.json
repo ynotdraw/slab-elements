@@ -15042,13 +15042,16 @@
             },
             {
               "name": "description",
-              "description": "Text about the switch, such as a hint or an error"
+              "description": "Text about the switch, and its validity message when it has one"
+            },
+            {
+              "name": "validity-message"
             }
           ],
           "slots": [
             {
               "name": "description",
-              "description": "Text about the switch, such as a hint or an error",
+              "description": "",
               "type": {
                 "text": "Element | string"
               }
@@ -15162,9 +15165,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },
@@ -15245,6 +15265,58 @@
                   "text": "boolean"
                 }
               }
+            },
+            {
+              "kind": "method",
+              "name": "resetValidityFeedback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears the validity feedback without changing `validity`."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "flags",
+                  "optional": true,
+                  "type": {
+                    "text": "ValidityStateFlags"
+                  }
+                },
+                {
+                  "name": "message",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",

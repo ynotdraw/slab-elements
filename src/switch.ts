@@ -7,11 +7,14 @@ import {
 } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property, state } from 'lit/decorators.js';
+import { when } from 'lit/directives/when.js';
 import packageJson from '../package.json' with { type: 'json' };
 import customElement from './library/custom-element.js';
+import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
 import styles from './switch.styles.js';
 import afterReflection from './library/after-reflection.js';
+import browserValidationMessage from './library/browser-validation-message.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -29,7 +32,7 @@ declare global {
  * switch.
  *
  * Style it through its parts and through `:state(checked)`,
- * `:state(disabled)`, and `:state(required)`. Where the label sits relative to
+ * `:state(disabled)`, `:state(error)`, and `:state(required)`. Where the label sits relative to
  * the switch is layout, so it's left to the styles around it.
  *
  * @attr {string} label
@@ -43,12 +46,13 @@ declare global {
  * @readonly
  * @attr {string} [version]
  *
- * @slot {Element | string} [description] - Text about the switch, such as a hint or an error
+ * @slot {Element | string} [description]
  *
- * @csspart description - Text about the switch, such as a hint or an error
+ * @csspart description - Text about the switch, and its validity message when it has one
  * @csspart input
  * @csspart label - The label
  * @csspart switch - The switch itself
+ * @csspart validity-message
  *
  * @fires {Event} change
  * @fires {Event} input
@@ -58,6 +62,12 @@ declare global {
  *
  * @readonly
  * @prop {ValidityState} validity
+ *
+ * @readonly
+ * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
+ *
+ * @readonly
+ * @prop {boolean} willValidate
  *
  * @method checkValidity
  * @returns boolean
@@ -72,6 +82,15 @@ declare global {
  *
  * @method reportValidity
  * @returns boolean
+ *
+ * @method resetValidityFeedback - Clears the validity feedback without changing `validity`.
+ *
+ * @method setCustomValidity
+ * @param {string} message
+ *
+ * @method setValidity
+ * @param {ValidityStateFlags} [flags]
+ * @param {string} [message]
  */
 @customElement('slab-switch')
 export default class Switch extends LitElement {
@@ -116,16 +135,49 @@ export default class Switch extends LitElement {
     return this.#internals.form;
   }
 
+  /**
+   * What's wrong, as the validity message says it: the message given to
+   * `setCustomValidity()` or `setValidity()`, or else the browser's own.
+   * Empty while it's valid.
+   */
+  get validationMessage(): string {
+    if (this.validity.valid) {
+      return '';
+    }
+
+    if (this.validityMessage) {
+      return this.validityMessage;
+    }
+
+    // The browser's own, or a space where the consumer set a validity without
+    // a message.
+    return this.#internals.validationMessage.trim();
+  }
+
   get validity(): ValidityState {
     return this.#internals.validity;
   }
 
+  get willValidate(): boolean {
+    return this.#internals.willValidate;
+  }
+
   checkValidity(): boolean {
-    return this.#internals.checkValidity();
+    // So the "invalid" handler knows not to take focus. `checkValidity()`
+    // reports nothing to the user, so nothing should move.
+    this.isCheckingValidity = true;
+    const isValid = this.#internals.checkValidity();
+    this.isCheckingValidity = false;
+
+    return isValid;
   }
 
   override click() {
     this.#inputElementRef.value?.click();
+  }
+
+  override firstUpdated() {
+    this.#updateValidity();
   }
 
   override focus(options?: FocusOptions) {
@@ -160,6 +212,7 @@ export default class Switch extends LitElement {
         <input
           aria-checked=${this.checked ? 'true' : 'false'}
           aria-describedby="description"
+          aria-invalid=${this.#isShowValidationFeedback ? 'true' : 'false'}
           id="input"
           part="input"
           role="switch"
@@ -167,22 +220,76 @@ export default class Switch extends LitElement {
           .checked=${this.checked}
           ?disabled=${this.#isDisabled}
           ?required=${this.required}
+          @blur=${this.#onInputBlur}
           @change=${this.#onChangeOrInput}
           @input=${this.#onChangeOrInput}
           ${ref(this.#inputElementRef)}
         />
       </span>
 
-      <slot id="description" name="description" part="description">
-        <!--
-          Text about the switch, such as a hint or an error
-          @type {Element | string}
-        -->
-      </slot>`;
+      <div id="description" part="description">
+        <!-- Text about the switch, and its validity message when it has one -->
+        <slot name="description">
+          <!-- @type {Element | string} -->
+        </slot>
+
+        ${when(
+          this.#isShowValidationFeedback && this.validationMessage,
+          () =>
+            html`<span data-test="validity-message" part="validity-message">
+              ${this.validationMessage}
+            </span>`,
+        )}
+      </div>`;
   }
 
   reportValidity(): boolean {
-    return this.#internals.reportValidity();
+    this.hasReportedValidityOrSubmitted = true;
+
+    const isValid = this.#internals.reportValidity();
+
+    // So anything reading `validity.valid` renders again.
+    this.requestUpdate();
+
+    return isValid;
+  }
+
+  /**
+   * Clears the validity feedback without changing `validity`.
+   */
+  resetValidityFeedback(): void {
+    this.hasReportedValidityOrSubmitted = false;
+  }
+
+  setCustomValidity(message: string): void {
+    this.validityMessage = message;
+
+    if (message === '') {
+      this.#internals.setValidity(
+        { customError: false },
+        '',
+        this.#inputElementRef.value,
+      );
+
+      return;
+    }
+
+    this.#internals.setValidity(
+      {
+        customError: true,
+        valueMissing: this.#internals.validity.valueMissing,
+      },
+      ' ',
+      this.#inputElementRef.value,
+    );
+  }
+
+  setValidity(flags?: ValidityStateFlags, message?: string): void {
+    // From here on the consumer owns validity, so `required` stops setting it.
+    this.#hasCustomValidity = true;
+    this.validityMessage = message;
+
+    this.#internals.setValidity(flags, ' ', this.#inputElementRef.value);
   }
 
   // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
@@ -194,13 +301,16 @@ export default class Switch extends LitElement {
 
     if (changes.has('checked')) {
       this.#setState('checked', this.checked);
+      this.#updateValidity();
     }
 
     if (changes.has('required')) {
       this.#setState('required', this.required);
+      this.#updateValidity();
     }
 
-    this.#updateFormValueAndValidity();
+    this.#internals.setFormValue(this.checked ? this.value : null);
+    this.#setState('error', this.#isShowValidationFeedback);
   }
 
   // Functional styles go in here rather than in `styles`, so a subclass that
@@ -214,10 +324,47 @@ export default class Switch extends LitElement {
   constructor() {
     super();
     this.#internals = this.attachInternals();
+
+    // On the host because the host is what's form-associated, which is also
+    // why a consumer could remove this listener. Nothing better is available.
+    this.addEventListener('invalid', (event) => {
+      event.preventDefault(); // So no native validation bubble is shown.
+
+      // Focus belongs to the user here unless the form was submitted, or
+      // `reportValidity()` was called by something other than a blur.
+      if (
+        this.isCheckingValidity ||
+        this.isBlurring ||
+        isFormCheckingValidity(this.form)
+      ) {
+        return;
+      }
+
+      this.hasReportedValidityOrSubmitted = true;
+
+      // The browser ignores this when another control is the first invalid one.
+      if (this.form?.querySelector(':invalid') === this) {
+        this.focus();
+      }
+    });
   }
 
   @state()
+  private hasReportedValidityOrSubmitted = false;
+
+  @state()
+  private isBlurring = false;
+
+  @state()
+  private isCheckingValidity = false;
+
+  @state()
   private isFormDisabled = false;
+
+  @state()
+  private validityMessage?: string;
+
+  #hasCustomValidity = false;
 
   #inputElementRef = createRef<HTMLInputElement>();
 
@@ -227,11 +374,14 @@ export default class Switch extends LitElement {
     return this.disabled || this.isFormDisabled;
   }
 
-  // Only "change" would need handling if not for consumers who force the
-  // switch back to a state until the user has done something else. They do
-  // that by setting `checked` inside a handler, after awaiting
-  // `updateComplete` so their change isn't reverted by the update this one
-  // causes. Awaiting it requires an update to already be pending, which is why
+  get #isShowValidationFeedback() {
+    return (
+      !this.#isDisabled &&
+      !this.validity.valid &&
+      this.hasReportedValidityOrSubmitted
+    );
+  }
+
   // "input" is handled too rather than only "change".
   #onChangeOrInput(event: Event) {
     if (event.target instanceof HTMLInputElement) {
@@ -258,6 +408,18 @@ export default class Switch extends LitElement {
     }
   }
 
+  #onInputBlur() {
+    this.isBlurring = true;
+    this.reportValidity();
+    this.isBlurring = false;
+  }
+
+  // Only "change" would need handling if not for consumers who force the
+  // switch back to a state until the user has done something else. They do
+  // that by setting `checked` inside a handler, after awaiting
+  // `updateComplete` so their change isn't reverted by the update this one
+  // causes. Awaiting it requires an update to already be pending, which is why
+
   #setState(state: string, isActive: boolean) {
     if (isActive) {
       this.#internals.states.add(state);
@@ -266,17 +428,22 @@ export default class Switch extends LitElement {
     }
   }
 
-  #updateFormValueAndValidity() {
-    this.#internals.setFormValue(this.checked ? this.value : null);
+  #updateValidity() {
+    // The consumer owns validity once they've set it themselves.
+    if (this.#hasCustomValidity) {
+      return;
+    }
 
     if (this.required && !this.checked) {
       this.#internals.setValidity(
-        { valueMissing: true },
-        ' ',
+        { customError: Boolean(this.validityMessage), valueMissing: true },
+        browserValidationMessage('check'),
         this.#inputElementRef.value,
       );
-    } else {
-      this.#internals.setValidity({});
+
+      return;
     }
+
+    this.#internals.setValidity({});
   }
 }
