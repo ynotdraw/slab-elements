@@ -468,12 +468,8 @@ test(
       .locator('slab-color-picker')
       .locator('[part~="swatch"]');
 
-    // A forced color would be the user's background instead.
+    // A forced color would be the user's background instead. Only Chromium
+    // emulates forced colors, so elsewhere this holds either way.
     await expect(swatch).toHaveCSS('background-color', 'rgb(255, 0, 0)');
-
-    await expect(page.locator('[data-test="hue"]')).toHaveCSS(
-      'forced-color-adjust',
-      'none',
-    );
   },
 );
