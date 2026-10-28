@@ -207,3 +207,78 @@ test(
     await expect(page.locator('input')).not.toHaveAttribute('id');
   },
 );
+
+test(
+  'describes its control by its description',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<p id="other">Other</p>
+          <slab-field>
+            <label>Label</label>
+            <input aria-describedby="other" slot="control" />
+            <span slot="description">Hint</span>
+          </slab-field>`,
+    );
+
+    const input = page.getByRole('textbox');
+
+    // After what it was already described by.
+    await expect(input).toHaveAccessibleDescription('Other Hint');
+
+    await page.locator('[slot="description"]').evaluate((element) => {
+      element.textContent = 'Changed';
+      element.setAttribute('slot', '');
+    });
+
+    // Field's own ID is taken away again, and the consumer's kept.
+    await expect(input).toHaveAccessibleDescription('Other');
+
+    await page.locator('input').evaluate((element) => {
+      element.removeAttribute('aria-describedby');
+    });
+
+    await page.locator('slab-field').evaluate((element) => {
+      const description = document.createElement('span');
+
+      description.slot = 'description';
+      description.textContent = 'New';
+      element.append(description);
+    });
+
+    await expect(input).toHaveAccessibleDescription('New');
+
+    // Taken away by something else first, which Field leaves be.
+    await page.locator('input').evaluate((element) => {
+      element.removeAttribute('aria-describedby');
+    });
+
+    await page.locator('[slot="description"]').evaluate((element) => {
+      element.remove();
+    });
+
+    await expect(page.locator('input')).not.toHaveAttribute('aria-describedby');
+  },
+);
+
+test(
+  'marks its control invalid while `error` is set',
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-field error>
+          <label>Label</label>
+          <input slot="control" />
+        </slab-field>`,
+    );
+
+    const input = page.locator('input');
+
+    await expect(input).toHaveAttribute('aria-invalid', 'true');
+
+    await setProperty(page.locator('slab-field'), 'error', false);
+    await expect(input).not.toHaveAttribute('aria-invalid');
+  },
+);
