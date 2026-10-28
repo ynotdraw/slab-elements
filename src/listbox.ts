@@ -256,7 +256,14 @@ export default class Listbox extends LitElement {
     // `aria-activedescendant` is the exception. Its IDREF can't reach the
     // Options, which are slotted from the light DOM, so OptionsController sets
     // it as an element instead.
-    return html`<span id="label" part="label">
+    //
+    // The label is a `<span>` because a `<label>` can only name a labelable
+    // element, which a `[role=listbox]` `<div>` isn't. A click on it focuses
+    // the listbox anyway, as a click on a native select's label does. It needs
+    // no keyboard of its own: it's never focused, and the listbox is.
+    //
+    // eslint-disable-next-line lit-a11y/click-events-have-key-events
+    return html`<span id="label" part="label" @click=${this.#onLabelClick}>
         <!-- The label -->
         ${this.label}
       </span>
@@ -602,6 +609,13 @@ export default class Listbox extends LitElement {
   }
 
   // What Shift with Space and Control with Shift and Home or End do. Where a
+  // Nothing for a disabled one, as for a native select's label.
+  #onLabelClick() {
+    if (!this.#isDisabled) {
+      this.focus();
+    }
+  }
+
   // range starts from stays put, so another starts from the same place.
   #selectRange(from: Option, to: Option) {
     if (this.#options.selectRange(from, to)) {
