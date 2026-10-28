@@ -187,6 +187,11 @@ export default class Checkbox extends LitElement {
     this.checked = state === this.value;
   }
 
+  // instead, which is where a screenreader is when it would hear it.
+  privateSetGroupInvalid(isInvalid: boolean) {
+    this.isGroupInvalid = isInvalid;
+  }
+
   override render() {
     // ARIA goes on attributes rather than on ElementInternals. Screenreaders
     // read both. But Playwright's role queries and ARIA snapshots, and Axe,
@@ -195,7 +200,11 @@ export default class Checkbox extends LitElement {
         <!-- Where a design draws its check or dash -->
         <input
           aria-describedby="description"
-          aria-invalid=${this.#isShowValidationFeedback ? 'true' : 'false'}
+          aria-invalid=${
+            this.#isShowValidationFeedback || this.isGroupInvalid
+              ? 'true'
+              : 'false'
+          }
           data-test="input"
           id="input"
           part="input"
@@ -231,6 +240,9 @@ export default class Checkbox extends LitElement {
         )}
       </div>`;
   }
+
+  // Private because it's only meant to be called by Checkbox Group. ARIA has no
+  // `aria-invalid` for a group, so the Group marks each of its Checkboxes
 
   reportValidity(): boolean {
     this.hasReportedValidityOrSubmitted = true;
@@ -377,6 +389,9 @@ export default class Checkbox extends LitElement {
 
   @state()
   private isFormDisabled = false;
+
+  @state()
+  private isGroupInvalid = false;
 
   @state()
   private validityMessage?: string;
