@@ -13,6 +13,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import packageJson from '../package.json' with { type: 'json' };
 import afterReflection from './library/after-reflection.js';
+import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
 import required from './library/required.js';
 import RovingTabindex from './library/roving-tabindex.js';
@@ -488,9 +489,20 @@ export default class ColorPicker extends LitElement {
   @state()
   private isFormDisabled = false;
 
+  // A consumer's `aria-*`, and Tooltip's, Popover's and Menu's, on the host.
+  // It does its work through the host's lifecycle, so nothing calls it.
   #alphaThumbElementRef = createRef<HTMLDivElement>();
 
-  #areaThumbElementRef = createRef<HTMLDivElement>();
+#areaThumbElementRef = createRef<HTMLDivElement>();
+
+// eslint-disable-next-line no-unused-private-class-members
+  #ariaForwarding = new AriaForwarding(this, {
+    target: () => this.renderRoot.querySelector('[role="group"]'),
+  });
+
+  
+
+  
 
   #color: Color = black;
 

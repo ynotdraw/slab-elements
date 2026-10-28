@@ -10,6 +10,7 @@ import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { when } from 'lit/directives/when.js';
 import packageJson from '../package.json' with { type: 'json' };
+import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
@@ -366,6 +367,13 @@ export default class FileDrop extends LitElement {
   // pointer crosses it, so leaving a child isn't leaving the host. Counting
   // them is the only reliable way to tell: `relatedTarget` is null for drags
   // in some browsers.
+  // A consumer's `aria-*`, and Tooltip's, Popover's and Menu's, on the host.
+  // It does its work through the host's lifecycle, so nothing calls it.
+  // eslint-disable-next-line no-unused-private-class-members
+  #ariaForwarding = new AriaForwarding(this, {
+    target: () => this.#inputElementRef.value,
+  });
+
   #dragDepth = 0;
 
   #hasCustomValidity = false;

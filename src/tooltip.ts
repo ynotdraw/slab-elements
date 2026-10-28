@@ -32,6 +32,8 @@ declare global {
  * The anchor is described by the tooltip's content. ARIA references can't
  * cross a shadow root, so the content is slotted rather than rendered: it
  * stays in the anchor's tree, and the anchor's `aria-describedby` points at it.
+ * A Slab anchor, such as a Copy Button, passes that on to the element in its
+ * shadow root that has focus.
  *
  * It's placed beside its anchor with CSS anchor positioning, as Popover is, and
  * flipped when it would leave the screen. `placement` picks the side and
@@ -280,9 +282,9 @@ export default class Tooltip extends LitElement {
   };
 
   // An attribute rather than `ariaDescribedByElements`. Element reflection
-  // can't reach into a shadow root either, so it buys nothing here, and
-  // Firefox has only just shipped it. And Playwright's role queries and ARIA
-  // snapshots, and Axe, only read the attribute.
+  // can't reach into a shadow root either, so it buys nothing here. A Slab
+  // anchor reflects it onto its own focused element itself. And Playwright's
+  // role queries and ARIA snapshots, and Axe, only read the attribute.
   //
   // The anchor's own IDs are kept, so a consumer can describe it by something
   // else as well.
