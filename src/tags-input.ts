@@ -78,10 +78,13 @@ declare global {
  * @fires {Event} change
  * @fires {Event} input
  *
+ * @prop {(text: string) => string} addedLabel - What screenreaders are told when a tag is added, from the tag. The tag and "added" when unset.
+ *
  * @readonly
  * @prop {HTMLFormElement | null} form
  *
  * @prop {(text: string) => string} removeLabel - Names each tag's button, which shows only the tag, from the tag. "Remove" and the tag when unset.
+ * @prop {(text: string) => string} removedLabel - What screenreaders are told when a tag is removed, from the tag. The tag and "removed" when unset.
  *
  * @readonly
  * @prop {ValidityState} validity

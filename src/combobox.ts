@@ -125,6 +125,8 @@ declare global {
  * @prop {Option[]} options
  *
  * @prop {(text: string) => string} removeLabel - Names each tag's button, which shows only the selected Option's text, from that text. "Remove" and the text when unset.
+ * @prop {(text: string) => string} removedLabel - What screenreaders are told when a tag is removed, from its text. The text and "removed" when unset.
+ * @prop {(count: number) => string} resultsLabel - What screenreaders are told once typing pauses, from how many Options are left. "No results", "1 result" and so on when unset.
  *
  * @readonly
  * @prop {Option | null} selectedOption
