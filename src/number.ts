@@ -75,15 +75,15 @@ declare global {
  * @prop {HTMLFormElement | null} form
  *
  * @readonly
- * @prop {ValidityState} validity
- *
- * @readonly
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
  *
  * @readonly
- * @prop {boolean} willValidate
+ * @prop {ValidityState} validity
  *
  * @prop {number} valueAsNumber - `value` as a number, or `NaN` when empty, as on a native input.
+ *
+ * @readonly
+ * @prop {boolean} willValidate
  *
  * @method checkValidity
  * @returns boolean

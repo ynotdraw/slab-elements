@@ -129,15 +129,15 @@ declare global {
  * @prop {Option[]} selectedOptions - The Options of `values`, in the same order. Values that name no Option are left out.
  *
  * @readonly
- * @prop {ValidityState} validity
- *
- * @readonly
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
  *
  * @readonly
- * @prop {boolean} willValidate
+ * @prop {ValidityState} validity
  *
  * @prop {string[]} values - Every selected value, in the order they were chosen. Only the first when `multiple` isn't set. Setting it selects the Options with those values, and only those.
+ *
+ * @readonly
+ * @prop {boolean} willValidate
  *
  * @method checkValidity
  * @returns boolean
