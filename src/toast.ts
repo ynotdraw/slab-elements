@@ -44,6 +44,17 @@ declare global {
  * over the toast or focus is in it, and starts over when both have left, so no
  * one loses a toast they're reading or about to act on.
  *
+ * A toast with something to act on, such as an Undo button or a link, is never
+ * dismissed on a timer, whatever `duration` says. Someone who needs longer to
+ * get to it, or is getting there by keyboard from across the page, would
+ * otherwise lose the action along with the toast (WCAG 2.2.1). Give it a way
+ * to be dismissed, or dismiss it once it's been acted on.
+ *
+ * A toast is in the top layer, nowhere near where focus usually is, so F6
+ * moves focus to the open toast shown most recently, and F6 from inside it
+ * moves focus back to where it was. That's how react-aria's toasts are
+ * reached. Dismissing a toast with focus in it also moves focus back.
+ *
  * Escape dismisses it while focus is in it.
  *
  * Style it through its part and through `:state(open)`. Where it sits on the
@@ -96,6 +107,7 @@ export default class Toast extends LitElement {
   override disconnectedCallback() {
     super.disconnectedCallback();
     this.#clearTimer();
+    openToasts.delete(this);
   }
 
   dismiss(): void {
@@ -104,13 +116,32 @@ export default class Toast extends LitElement {
     }
 
     this.#clearTimer();
+
     this.isOpen = false;
+    openToasts.delete(this);
+
+    // Its content is about to go, and focus with it. After `isOpen`, so the
+    // "focusout" this causes doesn't start the countdown again.
+    if (this.#isFocusWithin) {
+      this.#returnFocus();
+    }
 
     this.dispatchEvent(new Event('dismiss', { bubbles: true, composed: true }));
   }
 
   override firstUpdated() {
     this.#raise();
+  }
+
+  // Called by the F6 handler below.
+  privateFocus() {
+    this.#returnFocusTo = deepActiveElement();
+    this.#regionElementRef.value?.focus();
+  }
+
+  // Called by the F6 handler below.
+  privateReturnFocus() {
+    this.#returnFocus();
   }
 
   override render() {
@@ -122,6 +153,7 @@ export default class Toast extends LitElement {
     return html`<div
       data-test="region"
       part="region"
+      tabindex="-1"
       .popover=${'manual'}
       role="status"
       ${ref(this.#regionElementRef)}
@@ -158,6 +190,11 @@ export default class Toast extends LitElement {
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
     this.isOpen = true;
+
+    // Moved to the end, so F6 finds the most recent.
+    openToasts.delete(this);
+    openToasts.add(this);
+
     await this.updateComplete;
 
     this.#startTimer();
@@ -237,11 +274,23 @@ export default class Toast extends LitElement {
 
   #regionElementRef = createRef<HTMLDivElement>();
 
+  #returnFocusTo?: HTMLElement;
+
   #timeoutId?: ReturnType<typeof setTimeout>;
 
   #clearTimer() {
     clearTimeout(this.#timeoutId);
     this.#timeoutId = undefined;
+  }
+
+  // Anything a user could act on, which a timer would take away from them.
+  get #hasActions() {
+    return [...this.querySelectorAll('*')].some((element) => {
+      return (
+        element.matches(actionSelector) ||
+        Boolean(element.shadowRoot?.delegatesFocus)
+      );
+    });
   }
 
   // Pausing throws the countdown away, and resuming starts it over from the
@@ -266,12 +315,25 @@ export default class Toast extends LitElement {
     region.showPopover();
   }
 
+  #returnFocus() {
+    // Blurred first, for when there's nowhere to go back to, such as when
+    // nothing had focus before.
+    deepActiveElement()?.blur();
+
+    if (this.#returnFocusTo?.isConnected) {
+      this.#returnFocusTo.focus();
+    }
+
+    this.#returnFocusTo = undefined;
+  }
+
   #startTimer() {
     this.#clearTimer();
 
     if (
       !this.isOpen ||
       this.duration <= 0 ||
+      this.#hasActions ||
       this.#isPointerOver ||
       this.#isFocusWithin
     ) {
@@ -283,3 +345,70 @@ export default class Toast extends LitElement {
     }, this.duration);
   }
 }
+
+const actionSelector = [
+  'a[href]',
+  'area[href]',
+  'button',
+  'input',
+  'select',
+  'textarea',
+  'summary',
+  '[contenteditable]:not([contenteditable="false"])',
+  '[tabindex]',
+].join(', ');
+
+// In the order they were shown, so the last is the most recent.
+const openToasts = new Set<Toast>();
+
+function deepActiveElement() {
+  let element = document.activeElement;
+
+  while (element?.shadowRoot?.activeElement) {
+    element = element.shadowRoot.activeElement;
+  }
+
+  // Only ever not one when there's no focus at all, or an SVG element has it.
+  /* v8 ignore next */
+  return element instanceof HTMLElement ? element : undefined;
+}
+
+// Through any shadow roots between the two, which `contains()` alone can't see
+// past.
+function isFocusIn(toast: Toast) {
+  let node: Node | undefined = deepActiveElement();
+
+  while (node) {
+    if (toast.contains(node) || toast.shadowRoot?.contains(node)) {
+      return true;
+    }
+
+    const root = node.getRootNode();
+    node = root instanceof ShadowRoot ? root.host : undefined;
+  }
+
+  return false;
+}
+
+// One listener for every Toast, so F6 moves focus once rather than once per
+// Toast.
+document.addEventListener('keydown', (event: KeyboardEvent) => {
+  if (event.key !== 'F6' || openToasts.size === 0) {
+    return;
+  }
+
+  // Not `:focus-within`, which doesn't match while the window itself isn't
+  // focused.
+  const focused = [...openToasts].find((toast) => {
+    return isFocusIn(toast);
+  });
+
+  // Otherwise the browser's own F6 moves focus to its address bar.
+  event.preventDefault();
+
+  if (focused) {
+    focused.privateReturnFocus();
+  } else {
+    [...openToasts].at(-1)?.privateFocus();
+  }
+});
