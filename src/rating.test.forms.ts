@@ -236,7 +236,11 @@ test(
 
     await expect(page.getByRole('radio', { name: '1' })).toBeFocused();
     await expect(host).toHaveJSProperty('validity.valueMissing', true);
-    await expect(page.locator('[data-test="validity-message"]')).toBeHidden();
+
+    // The browser's own message, since none was given.
+    await expect(page.locator('[data-test="validity-message"]')).toHaveText(
+      /\S/,
+    );
   },
 );
 
@@ -583,5 +587,41 @@ test(
     await page.getByRole('radio', { name: '3.5' }).click();
 
     await expect(page.locator('form')).toHaveFormData('name', '3.5');
+  },
+);
+
+test(
+  "shows the browser's own validity message when it's given none",
+  { tag: '@forms' },
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<form>
+          <slab-rating label="Label" required></slab-rating>
+        </form>`,
+    );
+
+    const host = page.locator('slab-rating');
+    const validityMessage = page.locator('[data-test="validity-message"]');
+
+    const getValidationMessage = () => {
+      return host.evaluate(
+        (element: HTMLElement & { validationMessage: string }) => {
+          return element.validationMessage;
+        },
+      );
+    };
+
+    await expect(host).toHaveJSProperty('willValidate', true);
+    await callMethod(host, 'reportValidity');
+
+    const message = await getValidationMessage();
+
+    // Worded by the browser, so it differs between them.
+    expect(message.trim()).not.toBe('');
+    await expect(validityMessage).toHaveText(message);
+
+    await setProperty(host, 'required', false);
+    expect(await getValidationMessage()).toBe('');
   },
 );

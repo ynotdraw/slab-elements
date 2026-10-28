@@ -542,3 +542,58 @@ test(
     ).toBe(true);
   },
 );
+
+test(
+  "shows the browser's own validity message when it's given none",
+  { tag: '@forms' },
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<form>
+          <slab-textarea label="Label" required></slab-textarea>
+        </form>`,
+    );
+
+    const host = page.locator('slab-textarea');
+    const validityMessage = page.locator('[data-test="validity-message"]');
+
+    const getValidationMessage = () => {
+      return host.evaluate(
+        (element: HTMLElement & { validationMessage: string }) => {
+          return element.validationMessage;
+        },
+      );
+    };
+
+    await expect(host).toHaveJSProperty('willValidate', true);
+    await callMethod(host, 'reportValidity');
+
+    const message = await getValidationMessage();
+
+    // Worded by the browser, so it differs between them.
+    expect(message.trim()).not.toBe('');
+    await expect(validityMessage).toHaveText(message);
+
+    await setProperty(host, 'required', false);
+    expect(await getValidationMessage()).toBe('');
+  },
+);
+
+test(
+  "has no validity message while it's disabled",
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<form>
+          <slab-textarea label="Label" disabled required></slab-textarea>
+        </form>`,
+    );
+
+    const host = page.locator('slab-textarea');
+
+    // A disabled control isn't validated, so the browser gives it no message.
+    await expect(host).toHaveJSProperty('willValidate', false);
+    await expect(host).toHaveJSProperty('validationMessage', '');
+  },
+);

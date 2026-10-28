@@ -15,6 +15,7 @@ import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
 import TagsController from './library/tags-controller.js';
 import styles from './tags-input.styles.js';
+import browserValidationMessage from './library/browser-validation-message.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -84,6 +85,12 @@ declare global {
  *
  * @readonly
  * @prop {ValidityState} validity
+ *
+ * @readonly
+ * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
+ *
+ * @readonly
+ * @prop {boolean} willValidate
  *
  * @prop {string[]} values - Every tag, in the order they were added.
  *
@@ -197,8 +204,31 @@ export default class TagsInput extends LitElement {
     return this.#internals.form;
   }
 
+  /**
+   * What's wrong, as the validity message says it: the message given to
+   * `setCustomValidity()` or `setValidity()`, or else the browser's own.
+   * Empty while it's valid.
+   */
+  get validationMessage(): string {
+    if (this.validity.valid) {
+      return '';
+    }
+
+    if (this.validityMessage) {
+      return this.validityMessage;
+    }
+
+    // The browser's own, or a space where the consumer set a validity without
+    // a message.
+    return this.#internals.validationMessage.trim();
+  }
+
   get validity(): ValidityState {
     return this.#internals.validity;
+  }
+
+  get willValidate(): boolean {
+    return this.#internals.willValidate;
   }
 
   checkValidity(): boolean {
@@ -272,10 +302,10 @@ export default class TagsInput extends LitElement {
         </slot>
 
         ${when(
-          this.#isShowValidationFeedback && this.validityMessage,
+          this.#isShowValidationFeedback && this.validationMessage,
           () =>
             html`<span data-test="validity-message" part="validity-message">
-              ${this.validityMessage}
+              ${this.validationMessage}
             </span>`,
         )}
       </div>`;
@@ -642,7 +672,7 @@ export default class TagsInput extends LitElement {
     if (customError || valueMissing) {
       this.#internals.setValidity(
         { customError, valueMissing },
-        ' ',
+        browserValidationMessage('fill'),
         this.#anchor,
       );
 

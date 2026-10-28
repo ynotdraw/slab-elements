@@ -918,3 +918,41 @@ test(
     ).toBe(true);
   },
 );
+
+test(
+  "shows the browser's own validity message when it's given none",
+  { tag: '@forms' },
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<form>
+          <slab-checkbox-group label="Label" required>
+            <slab-checkbox label="One"></slab-checkbox>
+          </slab-checkbox-group>
+        </form>`,
+    );
+
+    const host = page.locator('slab-checkbox-group');
+    const validityMessage = page.locator('[data-test="validity-message"]');
+
+    const getValidationMessage = () => {
+      return host.evaluate(
+        (element: HTMLElement & { validationMessage: string }) => {
+          return element.validationMessage;
+        },
+      );
+    };
+
+    await expect(host).toHaveJSProperty('willValidate', true);
+    await callMethod(host, 'reportValidity');
+
+    const message = await getValidationMessage();
+
+    // Worded by the browser, so it differs between them.
+    expect(message.trim()).not.toBe('');
+    await expect(validityMessage).toHaveText(message);
+
+    await setProperty(host, 'required', false);
+    expect(await getValidationMessage()).toBe('');
+  },
+);
