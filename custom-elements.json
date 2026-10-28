@@ -2620,6 +2620,14 @@
             },
             {
               "kind": "field",
+              "name": "removedLabel",
+              "type": {
+                "text": "(text: string) => string"
+              },
+              "description": "What screenreaders are told when a tag is removed, from its text. The text\nand \"removed\" when unset."
+            },
+            {
+              "kind": "field",
               "name": "required",
               "type": {
                 "text": "boolean"
@@ -2627,6 +2635,14 @@
               "default": "false",
               "attribute": "required",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "resultsLabel",
+              "type": {
+                "text": "(count: number) => string"
+              },
+              "description": "What screenreaders are told once typing pauses, from how many Options are\nleft. \"No results\", \"1 result\" and so on when unset."
             },
             {
               "kind": "field",
@@ -15836,6 +15852,22 @@
                 "text": "(text: string) => string"
               },
               "description": "Names each tag's button, which shows only the tag, from the tag. \"Remove\"\nand the tag when unset."
+            },
+            {
+              "kind": "field",
+              "name": "removedLabel",
+              "type": {
+                "text": "(text: string) => string"
+              },
+              "description": "What screenreaders are told when a tag is removed, from the tag. The tag\nand \"removed\" when unset."
+            },
+            {
+              "kind": "field",
+              "name": "addedLabel",
+              "type": {
+                "text": "(text: string) => string"
+              },
+              "description": "What screenreaders are told when a tag is added, from the tag. The tag\nand \"added\" when unset."
             },
             {
               "kind": "field",

@@ -452,3 +452,21 @@ test(
     await expect(page.getByRole('textbox', { name: 'Before' })).toBeFocused();
   },
 );
+
+test(
+  'tells screenreaders which tag was added or removed',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(() => html`<slab-tags-input label="Label"></slab-tags-input>`);
+
+    const textbox = page.getByRole('textbox');
+    const region = page.locator('[data-slab-announcer="polite"]');
+
+    await textbox.fill('one');
+    await textbox.press('Enter');
+    await expect(region).toHaveText('one added');
+
+    await textbox.press('Backspace');
+    await expect(region).toContainText('one removed');
+  },
+);

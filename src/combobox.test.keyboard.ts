@@ -799,3 +799,55 @@ test(
     await expect(page.getByRole('button', { name: 'Button' })).toBeFocused();
   },
 );
+
+test(
+  'tells screenreaders how many Options are left once typing pauses',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label">
+          <slab-option>Apple</slab-option>
+          <slab-option>Banana</slab-option>
+          <slab-option>Grape</slab-option>
+        </slab-combobox>`,
+    );
+
+    const region = page.locator('[data-slab-announcer="polite"]');
+    const combobox = page.getByRole('combobox');
+
+    await combobox.pressSequentially('ap');
+    await expect(region).toHaveText('2 results');
+
+    await combobox.pressSequentially('p');
+    await expect(region).toContainText('1 result');
+
+    await combobox.pressSequentially('z');
+    await expect(region).toContainText('No results');
+  },
+);
+
+test(
+  'tells screenreaders which tag was removed',
+  { tag: '@keyboard' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label" multiple>
+          <slab-option value="apple">Apple</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+    const region = page.locator('[data-slab-announcer="polite"]');
+
+    // One value that names an Option, and one that doesn't.
+    await setProperty(host, 'values', ['custom', 'apple']);
+
+    await page.getByRole('combobox').press('Backspace');
+    await expect(region).toHaveText('Apple removed');
+
+    await page.getByRole('combobox').press('Backspace');
+    await expect(region).toContainText('custom removed');
+  },
+);
