@@ -20,7 +20,7 @@ export default css`
   /*
     Checkbox and radio Menu Items keep room for their mark whether or not
     they're checked, so their labels line up. The mark is decoration: the
-    state is read from \`aria-checked\`.
+    state is read from aria-checked.
   */
   :host([type='checkbox']),
   :host([type='radio']) {
