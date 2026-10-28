@@ -162,3 +162,52 @@ test(
     await expect(input).toHaveAttribute('type', 'password');
   },
 );
+
+test(
+  'submits nothing on Enter while an input method is composing',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-password-field label="Label"></slab-password-field>
+        </form>
+      `,
+    );
+
+    const isSubmitted = await page
+      .locator('slab-password-field input')
+      .evaluate((input) => {
+        let isSubmitted = false;
+
+        document.addEventListener('submit', (event) => {
+          event.preventDefault();
+          isSubmitted = true;
+        });
+
+        // Chrome and Firefox mark the Enter that ends a composition with
+        // \`isComposing\`. Safari doesn't, but gives it a \`keyCode\` of 229.
+        input.dispatchEvent(
+          new KeyboardEvent('keydown', {
+            bubbles: true,
+            composed: true,
+            isComposing: true,
+            key: 'Enter',
+          }),
+        );
+
+        const safariEnter = new KeyboardEvent('keydown', {
+          bubbles: true,
+          composed: true,
+          key: 'Enter',
+        });
+
+        Object.defineProperty(safariEnter, 'keyCode', { value: 229 });
+        input.dispatchEvent(safariEnter);
+
+        return isSubmitted;
+      });
+
+    expect(isSubmitted).toBe(false);
+  },
+);
