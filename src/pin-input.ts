@@ -85,10 +85,10 @@ declare global {
  * @prop {(position: number, length: number) => string} inputLabel - Names each input from its position, starting at 1, and `length`. "Character 1 of 6" and so on when unset.
  *
  * @readonly
- * @prop {ValidityState} validity
+ * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
  *
  * @readonly
- * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
+ * @prop {ValidityState} validity
  *
  * @readonly
  * @prop {boolean} willValidate

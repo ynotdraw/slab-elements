@@ -84,15 +84,15 @@ declare global {
  * @prop {(text: string) => string} removeLabel - Names each tag's button, which shows only the tag, from the tag. "Remove" and the tag when unset.
  *
  * @readonly
- * @prop {ValidityState} validity
- *
- * @readonly
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
  *
  * @readonly
- * @prop {boolean} willValidate
+ * @prop {ValidityState} validity
  *
  * @prop {string[]} values - Every tag, in the order they were added.
+ *
+ * @readonly
+ * @prop {boolean} willValidate
  *
  * @method checkValidity
  * @returns boolean

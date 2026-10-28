@@ -98,15 +98,15 @@ declare global {
  * @prop {Option[]} selectedOptions - Selected and enabled Options, in the order they appear.
  *
  * @readonly
- * @prop {ValidityState} validity
- *
- * @readonly
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
  *
  * @readonly
- * @prop {boolean} willValidate
+ * @prop {ValidityState} validity
  *
  * @prop {string[]} values - The value of every selected and enabled Option, in the order they appear. Setting it selects the Options with those values, and only those.
+ *
+ * @readonly
+ * @prop {boolean} willValidate
  *
  * @method checkValidity
  * @returns boolean
