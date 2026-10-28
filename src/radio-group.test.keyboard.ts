@@ -320,3 +320,41 @@ test(
     await expect(radios.nth(1)).toHaveJSProperty('checked', false);
   },
 );
+
+test(
+  'swaps ArrowLeft and ArrowRight when right to left',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<div dir="rtl">
+          <slab-radio-group label="Label">
+            <slab-radio-group-radio
+              label="One"
+              value="one"
+            ></slab-radio-group-radio>
+
+            <slab-radio-group-radio
+              label="Two"
+              value="two"
+            ></slab-radio-group-radio>
+
+            <slab-radio-group-radio
+              label="Three"
+              value="three"
+            ></slab-radio-group-radio>
+          </slab-radio-group>
+        </div>`,
+    );
+
+    const host = page.locator('slab-radio-group');
+
+    await page.keyboard.press('Tab');
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(host).toHaveJSProperty('value', 'two');
+
+    await page.keyboard.press('ArrowRight');
+    await expect(host).toHaveJSProperty('value', 'one');
+  },
+);

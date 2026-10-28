@@ -40,7 +40,8 @@ interface Highlight {
  * when they reach an end. Home and End go to the start and end of the week,
  * Page Up and Page Down go back and forward a month, and with Shift a year.
  * Enter, Space and a click select the day and dispatch "change". Days before
- * `min` or after `max` can't be reached or selected.
+ * `min` or after `max` can't be reached or selected. In a right-to-left page,
+ * Left goes forward a day and Right back.
  *
  * With `range`, two days are picked rather than one: the first and the last
  * of a range, in either order. "change" is dispatched once both are, and
@@ -379,10 +380,13 @@ export default class Calendar extends LitElement {
     const offset = (focused.getUTCDay() - this.weekStart + 7) % 7;
     const months = event.shiftKey ? 12 : 1;
 
+    // A right-to-left week runs right to left, so Left goes forward a day.
+    const isRtl = getComputedStyle(this).direction === 'rtl';
+
     const moves: Record<string, (() => Date) | undefined> = {
       ArrowDown: () => addDays(focused, 7),
-      ArrowLeft: () => addDays(focused, -1),
-      ArrowRight: () => addDays(focused, 1),
+      ArrowLeft: () => addDays(focused, isRtl ? 1 : -1),
+      ArrowRight: () => addDays(focused, isRtl ? -1 : 1),
       ArrowUp: () => addDays(focused, -7),
       End: () => addDays(focused, 6 - offset),
       Home: () => addDays(focused, -offset),

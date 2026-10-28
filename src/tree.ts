@@ -35,7 +35,8 @@ declare global {
  * moves to the parent of one that isn't. `*` expands every Tree Item with
  * children at the active one's level. Typing moves to the next Tree Item whose
  * label starts with what was typed. Enter, Space and a click select the active
- * Tree Item, and a click expands or collapses one that has children.
+ * Tree Item, and a click expands or collapses one that has children. In a
+ * right-to-left tree, Left expands and Right collapses.
  *
  * When `multiple` is set, Enter, Space and a click toggle the Tree Item
  * instead, and Shift with the Down or Up arrow moves and toggles. Shift with
@@ -311,7 +312,13 @@ export default class Tree extends LitElement {
       return;
     }
 
-    if (event.key === 'ArrowRight' && active) {
+    // Right expands and Left collapses, swapped where the tree is right to
+    // left, so the key always points the way the children are indented.
+    const isRtl = getComputedStyle(this).direction === 'rtl';
+    const expandKey = isRtl ? 'ArrowLeft' : 'ArrowRight';
+    const collapseKey = isRtl ? 'ArrowRight' : 'ArrowLeft';
+
+    if (event.key === expandKey && active) {
       event.preventDefault(); // Prevent page scroll
 
       if (active.items.length > 0 && !active.expanded) {
@@ -324,7 +331,7 @@ export default class Tree extends LitElement {
       return;
     }
 
-    if (event.key === 'ArrowLeft' && active) {
+    if (event.key === collapseKey && active) {
       event.preventDefault(); // Prevent page scroll
 
       if (active.expanded) {
