@@ -2481,7 +2481,7 @@
               "name": "",
               "description": "",
               "type": {
-                "text": "Option"
+                "text": "Option | OptionGroup"
               }
             },
             {
@@ -7631,7 +7631,7 @@
               "name": "",
               "description": "",
               "type": {
-                "text": "Option"
+                "text": "Option | OptionGroup"
               }
             },
             {
@@ -9917,6 +9917,155 @@
           "declaration": {
             "name": "NumberField",
             "module": "src/number.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/option-group.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/option-group.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/option-group.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "OptionGroup",
+          "cssParts": [
+            {
+              "name": "label",
+              "description": "The label"
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "",
+              "type": {
+                "text": "Option"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hideLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hide-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "private-group-change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "hide-label",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hideLabel"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-option-group",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "OptionGroup",
+            "module": "src/option-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-option-group",
+          "declaration": {
+            "name": "OptionGroup",
+            "module": "src/option-group.ts"
           }
         }
       ]
@@ -13407,7 +13556,7 @@
               "name": "",
               "description": "",
               "type": {
-                "text": "Option"
+                "text": "Option | OptionGroup"
               }
             },
             {

@@ -640,3 +640,33 @@ test(
     await expect(host).toHaveJSProperty('activeOption.textContent', 'One');
   },
 );
+
+test(
+  'moves through and selects the Options in an Option Group as the rest',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-listbox label="Label">
+          <slab-option value="none">None</slab-option>
+          <slab-option-group label="Fruit">
+            <slab-option value="apple">Apple</slab-option>
+            <slab-option value="banana">Banana</slab-option>
+          </slab-option-group>
+        </slab-listbox>`,
+    );
+
+    const host = page.locator('slab-listbox');
+
+    await page.getByRole('listbox').focus();
+    await page.keyboard.press('End');
+    await page.keyboard.press('Enter');
+
+    await expect(host).toHaveJSProperty('value', 'banana');
+
+    await page.keyboard.press('a');
+    await page.keyboard.press('Enter');
+
+    await expect(host).toHaveJSProperty('value', 'apple');
+  },
+);

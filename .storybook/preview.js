@@ -368,6 +368,14 @@ export default {
               $option.removeAttribute('aria-selected');
               $option.removeAttribute('role');
             }
+
+            for (const $group of $component.querySelectorAll(
+              'slab-option-group',
+            )) {
+              $group.removeAttribute('aria-label');
+              $group.removeAttribute('hidden');
+              $group.removeAttribute('role');
+            }
           }
 
           // Clean up boolean attributes before returning: `disabled=""` → `disabled`.

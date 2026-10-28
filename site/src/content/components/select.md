@@ -20,7 +20,7 @@ usage: |
   </slab-select>
 ---
 
-Its Options are the same ones [Listbox](../listbox/) uses.
+Its Options, and Option Groups, are the same ones [Listbox](../listbox/) uses.
 
 ## Keyboard
 
