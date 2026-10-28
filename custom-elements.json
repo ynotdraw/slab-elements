@@ -3515,7 +3515,7 @@
               "name": "",
               "description": "",
               "type": {
-                "text": "MenuItem"
+                "text": "MenuItem | MenuGroup"
               }
             }
           ],
@@ -8039,6 +8039,155 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/menu.group.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/menu.group.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/menu.group.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "MenuGroup",
+          "cssParts": [
+            {
+              "name": "label",
+              "description": "The label"
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "",
+              "type": {
+                "text": "MenuItem"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hideLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hide-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "private-group-change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "hide-label",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hideLabel"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-menu-group",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "MenuGroup",
+            "module": "src/menu.group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-menu-group",
+          "declaration": {
+            "name": "MenuGroup",
+            "module": "src/menu.group.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/menu.item.styles.ts",
       "declarations": [],
       "exports": [
@@ -8081,12 +8230,33 @@
             },
             {
               "kind": "field",
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether a checkbox or radio Menu Item is checked. Ignored for any other.",
+              "attribute": "checked",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "disabled",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "'checkbox' | 'item' | 'radio'"
+              },
+              "default": "'item'",
+              "attribute": "type",
               "reflects": true
             },
             {
@@ -8153,12 +8323,29 @@
               "fieldName": "label"
             },
             {
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether a checkbox or radio Menu Item is checked. Ignored for any other.",
+              "fieldName": "checked"
+            },
+            {
               "name": "disabled",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
               "fieldName": "disabled"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "'checkbox' | 'item' | 'radio'"
+              },
+              "default": "'item'",
+              "fieldName": "type"
             },
             {
               "name": "version",
@@ -8268,7 +8455,7 @@
               "name": "",
               "description": "",
               "type": {
-                "text": "MenuItem"
+                "text": "MenuItem | MenuGroup"
               }
             }
           ],

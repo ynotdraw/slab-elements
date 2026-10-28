@@ -13,6 +13,7 @@ import customElement from './library/custom-element.js';
 import assertSlot from './library/assert-slot.js';
 import ItemsController from './library/items-controller.js';
 import required from './library/required.js';
+import MenuGroup from './menu.group.js';
 import MenuItem from './menu.item.js';
 import styles from './menu.styles.js';
 
@@ -52,7 +53,7 @@ declare global {
  * @readonly
  * @attr {string} [version]
  *
- * @slot {MenuItem}
+ * @slot {MenuItem | MenuGroup}
  * @slot {Element} anchor - What opens the menu, usually a `<button>`
  *
  * @csspart menu - The Menu Items
@@ -146,8 +147,11 @@ export default class Menu extends LitElement {
           ${ref(this.#menuElementRef)}
         >
           <!-- The Menu Items -->
-          <slot ${assertSlot([MenuItem])} ${ref(this.#slotElementRef)}>
-            <!-- @type {MenuItem} -->
+          <slot
+            ${assertSlot([MenuItem, MenuGroup])}
+            ${ref(this.#slotElementRef)}
+          >
+            <!-- @type {MenuItem | MenuGroup} -->
           </slot>
         </div>
       </div>`;
@@ -188,7 +192,7 @@ export default class Menu extends LitElement {
 
   #anchorSlotElementRef = createRef<HTMLSlotElement>();
 
-#internals: ElementInternals;
+  #internals: ElementInternals;
 
   #isOpenOnAnchorPointerDown = false;
 
@@ -197,6 +201,7 @@ export default class Menu extends LitElement {
   #items = new ItemsController(this, {
     activeDescendantElement: () => this.#menuElementRef.value,
     isActiveDescendantShown: () => this.#isPopoverOpen,
+    groupClass: MenuGroup,
     itemClass: MenuItem,
     onChange: () => {
       this.requestUpdate();
@@ -209,8 +214,6 @@ export default class Menu extends LitElement {
   #popoverElementRef = createRef<HTMLDivElement>();
 
   #slotElementRef = createRef<HTMLSlotElement>();
-
-  
 
   get #isPopoverOpen() {
     return this.#popoverElementRef.value?.matches(':popover-open') ?? false;
@@ -229,8 +232,8 @@ export default class Menu extends LitElement {
     this.#anchor?.setAttribute('aria-expanded', String(this.open));
   };
 
-// it never gets a click.
-#onAnchorSlotClick = (event: MouseEvent) => {
+  // it never gets a click.
+  #onAnchorSlotClick = (event: MouseEvent) => {
     // A pointer's click comes after light dismiss has already closed the
     // popover on "pointerup", as it does with Popover's anchor. Opening here
     // would open it straight back up, so what counts is whether it was open
@@ -244,8 +247,8 @@ export default class Menu extends LitElement {
     this.show();
   };
 
-// Item. Enter and Space click the anchor, which does the rest.
-#onAnchorSlotKeydown = (event: KeyboardEvent) => {
+  // Item. Enter and Space click the anchor, which does the rest.
+  #onAnchorSlotKeydown = (event: KeyboardEvent) => {
     if (event.altKey || event.ctrlKey || event.metaKey) {
       return;
     }
@@ -256,12 +259,12 @@ export default class Menu extends LitElement {
     }
   };
 
-// A Down or Up arrow on the anchor opens the menu at the first or last Menu
-#onAnchorSlotPointerDown = () => {
+  // A Down or Up arrow on the anchor opens the menu at the first or last Menu
+  #onAnchorSlotPointerDown = () => {
     this.#isOpenOnAnchorPointerDown = this.#isPopoverOpen;
   };
 
-#onMenuBlur = () => {
+  #onMenuBlur = () => {
     // Focus only leaves the menu when the user is done with it.
     this.hide();
   };
@@ -372,18 +375,8 @@ export default class Menu extends LitElement {
     this.#sync(this.#isPopoverOpen);
   };
 
-  
-
   // On the slot rather than the anchor, so an anchor swapped for another
   // doesn't need listeners moved. A disabled button never gets here, because
-  
-  
-
-  
-  
-  
-
-  
 
   #setState(state: string, isActive: boolean) {
     if (isActive) {

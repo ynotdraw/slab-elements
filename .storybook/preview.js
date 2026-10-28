@@ -260,9 +260,17 @@ export default {
             for (const $item of $component.querySelectorAll(
               'slab-menu-item',
             )) {
+              $item.removeAttribute('aria-checked');
               $item.removeAttribute('aria-disabled');
               $item.removeAttribute('aria-label');
               $item.removeAttribute('role');
+            }
+
+            for (const $group of $component.querySelectorAll(
+              'slab-menu-group',
+            )) {
+              $group.removeAttribute('aria-label');
+              $group.removeAttribute('role');
             }
           }
 
@@ -314,9 +322,17 @@ export default {
             for (const $item of $component.querySelectorAll(
               'slab-menu-item',
             )) {
+              $item.removeAttribute('aria-checked');
               $item.removeAttribute('aria-disabled');
               $item.removeAttribute('aria-label');
               $item.removeAttribute('role');
+            }
+
+            for (const $group of $component.querySelectorAll(
+              'slab-menu-group',
+            )) {
+              $group.removeAttribute('aria-label');
+              $group.removeAttribute('role');
             }
           }
 
