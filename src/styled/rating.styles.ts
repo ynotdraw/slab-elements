@@ -74,6 +74,17 @@ export default css`
   }
 
   /*
+    Forced colors replace a mix, which isn't a system color, so a preview is
+    the highlight with a dashed edge instead.
+  */
+  @media (forced-colors: active) {
+    :host(:state(previewing)) [part~='filled'] {
+      background-color: var(--ember);
+      border-style: dashed;
+    }
+  }
+
+  /*
     Spaced by what's in it rather than by a gap, so a description with
     nothing in it takes no room.
   */

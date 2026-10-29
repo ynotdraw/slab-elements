@@ -26,6 +26,11 @@ declare global {
  * `id` and points the label's `for` at it. A `for` or an `id` that's already
  * set is left alone, so a consumer who wants to wire it themselves can.
  *
+ * The control is described by each element slotted into `description`,
+ * through its `aria-describedby`, after any IDs it already has. And `error`
+ * sets its `aria-invalid`, so a screenreader says it's invalid and reads the
+ * description that says why.
+ *
  * Beyond that, what Field provides is a place for each piece and custom states
  * for what a design needs to know about them: `:state(disabled)`,
  * `:state(error)`, and `:state(required)`.
@@ -87,7 +92,7 @@ export default class Field extends LitElement {
 
       <div part="description">
         <!-- Text about the control, such as a hint or an error -->
-        <slot name="description">
+        <slot name="description" @slotchange=${this.#onSlotChange}>
           <!-- @type {Element | string} -->
         </slot>
       </div>`;
@@ -100,6 +105,7 @@ export default class Field extends LitElement {
 
     if (changes.has('error')) {
       this.#setState('error', this.error);
+      this.#markInvalid();
     }
 
     if (changes.has('required')) {
@@ -120,14 +126,84 @@ export default class Field extends LitElement {
     this.#internals = this.attachInternals();
   }
 
+  // The control Field described, and the IDs it added to its
+  // `aria-describedby`, so it's only ever those that it takes away again.
+  #described?: { control: Element; ids: string[] };
+
   #internals: ElementInternals;
+
+  // The control Field set `aria-invalid` on, so it's only ever that one it
+  // takes it off again.
+  #invalidated?: Element;
+
+  get #control() {
+    return this.querySelector('[slot="control"]');
+  }
+
+  // The descriptions are slotted, as the control is, so they're in the same
+  // tree and an ID reaches across. The control's own IDs are kept, so a
+  // consumer can describe it by something else as well.
+  #describe() {
+    if (this.#described) {
+      const { control, ids } = this.#described;
+
+      const kept = (control.getAttribute('aria-describedby') ?? '')
+        .split(' ')
+        .filter((id) => id && !ids.includes(id));
+
+      if (kept.length > 0) {
+        control.setAttribute('aria-describedby', kept.join(' '));
+      } else {
+        control.removeAttribute('aria-describedby');
+      }
+
+      this.#described = undefined;
+    }
+
+    const control = this.#control;
+    const descriptions = this.querySelectorAll('[slot="description"]');
+
+    if (!control || descriptions.length === 0) {
+      return;
+    }
+
+    const ids = [...descriptions].map((description) => {
+      description.id ||= uniqueId();
+      return description.id;
+    });
+
+    const own = (control.getAttribute('aria-describedby') ?? '')
+      .split(' ')
+      .filter(Boolean);
+
+    control.setAttribute('aria-describedby', [...own, ...ids].join(' '));
+    this.#described = { control, ids };
+  }
+
+  #markInvalid() {
+    this.#invalidated?.removeAttribute('aria-invalid');
+    this.#invalidated = undefined;
+
+    const control = this.#control;
+
+    if (this.error && control) {
+      control.setAttribute('aria-invalid', 'true');
+      this.#invalidated = control;
+    }
+  }
+
+  #onSlotChange() {
+    this.#pointLabel();
+    this.#describe();
+    this.#markInvalid();
+  }
 
   // The label and the control are both slotted, so they're in the same tree and
   // a plain `for` reaches across. Only an unwired pair is touched: a consumer
   // who set `for` or `id` themselves meant it.
-  #onSlotChange() {
+  #pointLabel() {
     const label = this.querySelector('label:not([slot])');
-    const control = this.querySelector('[slot="control"]');
+    const control = this.#control;
 
     if (!label || !control || label.hasAttribute('for')) {
       return;

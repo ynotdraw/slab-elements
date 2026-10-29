@@ -71,6 +71,7 @@ usage: |
 
 ## Keyboard
 
-| Key    | What it does                              |
-| ------ | ----------------------------------------- |
-| Escape | Dismisses the toast while focus is in it. |
+| Key    | What it does                                                                                    |
+| ------ | ----------------------------------------------------------------------------------------------- |
+| F6     | Moves focus to the open toast shown most recently, and from inside it, back to where focus was. |
+| Escape | Dismisses the toast while focus is in it, and moves focus back to where it was.                 |

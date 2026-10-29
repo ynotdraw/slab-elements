@@ -6,7 +6,7 @@ import {
   type PropertyValues,
 } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
+import { live } from 'lit/directives/live.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import packageJson from '../package.json' with { type: 'json' };
@@ -41,7 +41,10 @@ interface Drag {
  *
  * A range input has only one thumb, so the thumbs are elements of their own
  * rather than two range inputs on top of each other, which can't report each
- * other as their bounds and fight over the pointer where they overlap.
+ * other as their bounds and fight over the pointer where they overlap. Inside
+ * each is a visually hidden range input, which is what's focused and what a
+ * screenreader reads. A range input is what screenreaders on phones know how to
+ * adjust, with a swipe up or down, which they can't do to a `[role=slider]`.
  *
  * `start-value` and `end-value` are the range, and they're always between
  * `min` and `max`, on a `step` from `min`, and in order. Unset, they're `min`
@@ -58,7 +61,8 @@ interface Drag {
  * slider does, so that's functional and done here: each thumb is centered on
  * its value, and the range spans from one to the other. Give the track a size,
  * and style the rest through its parts and through `:state(disabled)` and
- * `:state(dragging)`.
+ * `:state(dragging)`. Focus is on the input inside a thumb, so a thumb whose
+ * input has visible focus has a `focus-visible` part for a focus ring.
  *
  * @attr {string} label - Names the group. Each thumb is named by it and its own label.
  * @attr {boolean} [disabled=false]
@@ -79,10 +83,9 @@ interface Drag {
  *
  * @csspart container - The label, the track and the description
  * @csspart description - Text about the slider, such as a hint
- * @csspart end - The end thumb
+ * @csspart focus-visible - The thumb whose input has visible focus
  * @csspart label - The label
  * @csspart range - The part of the track between the thumbs
- * @csspart start - The start thumb
  * @csspart track - The thumbs and the range between them
  *
  * @fires {Event} change
@@ -216,7 +219,7 @@ export default class RangeSlider extends LitElement {
   }
 
   override focus(options?: FocusOptions) {
-    this.#startElementRef.value?.focus(options);
+    this.#startInputElementRef.value?.focus(options);
   }
 
   formDisabledCallback(isDisabled: boolean): void {
@@ -250,7 +253,9 @@ export default class RangeSlider extends LitElement {
     // read both. But Playwright's role queries and ARIA snapshots, and Axe,
     // only read attributes, which would leave the ARIA untested.
     //
-    // Each thumb is named by the label and then by itself, through its own
+    // There's no `role` or `aria-value*` on the thumbs. Each one's range input
+    // is a slider to the platform already, with its value, minimum and
+    // maximum. Each is named by the label and then by itself, through its own
     // `aria-label`, so a screenreader reads which thumb it's on along with
     // what the slider is for.
     return html`<div aria-labelledby="label" part="container" role="group">
@@ -281,43 +286,60 @@ export default class RangeSlider extends LitElement {
         </div>
 
         <div
-          aria-describedby="description"
-          aria-disabled=${ifDefined(this.#isDisabled ? 'true' : undefined)}
-          aria-label=${this.startLabel ?? this.#strings.value.rangeSliderMinimum}
-          aria-labelledby="label start"
-          aria-valuemax=${end}
-          aria-valuemin=${this.min}
-          aria-valuenow=${start}
           data-test="start"
-          id="start"
-          part="start"
-          role="slider"
+          part=${this.focusVisibleThumb === 'start' ? 'start focus-visible' : 'start'}
           style=${styleMap({ insetInlineStart: `${startPercentage}%` })}
-          tabindex=${this.#isDisabled ? -1 : 0}
-          @keydown=${this.#onStartKeydown}
           ${ref(this.#startElementRef)}
         >
-          <!-- The start thumb -->
+          <!--
+            The start thumb
+            @part focus-visible - The thumb whose input has visible focus
+          -->
+          <input
+            aria-describedby="description"
+            aria-label=${this.startLabel ?? this.#strings.value.rangeSliderMinimum}
+            aria-labelledby="label start"
+            id="start"
+            max=${end}
+            min=${this.min}
+            step=${this.#step}
+            type="range"
+            .value=${live(String(start))}
+            ?disabled=${this.#isDisabled}
+            @blur=${this.#onInputBlur}
+            @change=${this.#onInputChange}
+            @focus=${this.#onInputFocus}
+            @input=${this.#onStartInput}
+            @keydown=${this.#onStartKeydown}
+            ${ref(this.#startInputElementRef)}
+          />
         </div>
 
         <div
-          aria-describedby="description"
-          aria-disabled=${ifDefined(this.#isDisabled ? 'true' : undefined)}
-          aria-label=${this.endLabel ?? this.#strings.value.rangeSliderMaximum}
-          aria-labelledby="label end"
-          aria-valuemax=${this.#max}
-          aria-valuemin=${start}
-          aria-valuenow=${end}
           data-test="end"
-          id="end"
-          part="end"
-          role="slider"
+          part=${this.focusVisibleThumb === 'end' ? 'end focus-visible' : 'end'}
           style=${styleMap({ insetInlineStart: `${endPercentage}%` })}
-          tabindex=${this.#isDisabled ? -1 : 0}
-          @keydown=${this.#onEndKeydown}
           ${ref(this.#endElementRef)}
         >
           <!-- The end thumb -->
+          <input
+            aria-describedby="description"
+            aria-label=${this.endLabel ?? this.#strings.value.rangeSliderMaximum}
+            aria-labelledby="label end"
+            id="end"
+            max=${this.#max}
+            min=${start}
+            step=${this.#step}
+            type="range"
+            .value=${live(String(end))}
+            ?disabled=${this.#isDisabled}
+            @blur=${this.#onInputBlur}
+            @change=${this.#onInputChange}
+            @focus=${this.#onInputFocus}
+            @input=${this.#onEndInput}
+            @keydown=${this.#onEndKeydown}
+            ${ref(this.#endInputElementRef)}
+          />
         </div>
       </div>
 
@@ -357,31 +379,39 @@ export default class RangeSlider extends LitElement {
     this.#internals = this.attachInternals();
   }
 
+  // Which thumb's input has focus that's visible, for its `focus-visible`
+  // part. A thumb isn't focused itself, so it can't match `:focus-visible`.
+  @state()
+  private focusVisibleThumb?: Thumb;
+
   @state()
   private isFormDisabled = false;
 
-  // Which thumb is being dragged, where the drag started, in pixels along the
-  // track, and the value it started from. `thumb` is undefined while the
-  // thumbs are on top of each other and the drag hasn't gone either way yet.
-  // `start` and `end` are what they were before the pointer went down, to
+  // A consumer's `aria-*`, and Tooltip's, Popover's and Menu's, on the host.
+  // It does its work through the host's lifecycle, so nothing calls it.
   // eslint-disable-next-line no-unused-private-class-members
   #ariaForwarding = new AriaForwarding(this, {
     target: () => this.renderRoot.querySelector('[role="group"]'),
   });
 
+  // Which thumb is being dragged, where the drag started, in pixels along the
+  // track, and the value it started from. `thumb` is undefined while the
+  // thumbs are on top of each other and the drag hasn't gone either way yet.
+  // `start` and `end` are what they were before the pointer went down, to
   // tell whether the drag changed anything.
   #drag?: Drag;
 
-  // A consumer's `aria-*`, and Tooltip's, Popover's and Menu's, on the host.
-  // It does its work through the host's lifecycle, so nothing calls it.
-
   #endElementRef = createRef<HTMLDivElement>();
+
+  #endInputElementRef = createRef<HTMLInputElement>();
 
   #endValue?: number;
 
   #internals: ElementInternals;
 
   #startElementRef = createRef<HTMLDivElement>();
+
+  #startInputElementRef = createRef<HTMLInputElement>();
 
   #startValue?: number;
 
@@ -407,12 +437,36 @@ export default class RangeSlider extends LitElement {
     return this.step > 0 ? this.step : 1;
   }
 
+  #onEndInput = (event: Event) => {
+    this.#onInput(event, 'end');
+  };
+
   #onEndKeydown = (event: KeyboardEvent) => {
     this.#onKeydown(event, 'end');
   };
 
   // After "pointerup" and "pointercancel" both, so a drag the browser takes
   // over, such as to scroll, still ends.
+  #onInputBlur = () => {
+    this.focusVisibleThumb = undefined;
+  };
+
+  // The input's own "change" doesn't compose, so it never leaves the shadow
+  // root, and the host's is dispatched with each "input" instead.
+  #onInputChange = (event: Event) => {
+    event.stopPropagation();
+  };
+
+  #onInputFocus = (event: FocusEvent) => {
+    const input = event.target as HTMLInputElement;
+
+    this.focusVisibleThumb = input.matches(':focus-visible')
+      ? input === this.#startInputElementRef.value
+        ? 'start'
+        : 'end'
+      : undefined;
+  };
+
   #onLostPointerCapture = () => {
     const isChanged =
       this.#drag?.start !== this.startValue || this.#drag.end !== this.endValue;
@@ -442,12 +496,13 @@ export default class RangeSlider extends LitElement {
     const start = this.startValue;
     const end = this.endValue;
 
-    const thumb =
-      event.target === this.#startElementRef.value
-        ? 'start'
-        : event.target === this.#endElementRef.value
-          ? 'end'
-          : undefined;
+    const target = event.target as Node;
+
+    const thumb = this.#startElementRef.value?.contains(target)
+      ? 'start'
+      : this.#endElementRef.value?.contains(target)
+        ? 'end'
+        : undefined;
 
     let drag: Drag;
 
@@ -512,6 +567,10 @@ export default class RangeSlider extends LitElement {
     }
   };
 
+  #onStartInput = (event: Event) => {
+    this.#onInput(event, 'start');
+  };
+
   #onStartKeydown = (event: KeyboardEvent) => {
     this.#onKeydown(event, 'start');
   };
@@ -528,7 +587,9 @@ export default class RangeSlider extends LitElement {
 
   #focusThumb(thumb?: Thumb) {
     const element =
-      thumb === 'end' ? this.#endElementRef.value : this.#startElementRef.value;
+      thumb === 'end'
+        ? this.#endInputElementRef.value
+        : this.#startInputElementRef.value;
 
     // Without scrolling, since the thumb is already where the pointer is.
     element?.focus({ preventScroll: true });
@@ -563,11 +624,29 @@ export default class RangeSlider extends LitElement {
     return true;
   }
 
-  #onKeydown(event: KeyboardEvent, thumb: Thumb) {
-    if (this.#isDisabled) {
-      return;
+  // Only from a screenreader, such as one on a phone after a swipe up or down:
+  // the arrow keys are handled below, and the input is hidden from the
+  // pointer. Each is a step taken and let go of, like a key, so it reports
+  // "change" as well.
+  #onInput(event: Event, thumb: Thumb) {
+    // "input" composes, so it would escape alongside the host's own.
+    event.stopPropagation();
+
+    const input = event.target as HTMLInputElement;
+
+    if (this.#moveTo(thumb, Number(input.value))) {
+      this.dispatchEvent(
+        new Event('change', { bubbles: true, composed: true }),
+      );
     }
 
+    // Rendered again even when nothing moved, so the input goes back to the
+    // value it's kept to.
+    this.requestUpdate();
+  }
+
+  // Never while disabled, since a disabled input gets no key events.
+  #onKeydown(event: KeyboardEvent, thumb: Thumb) {
     const value = thumb === 'start' ? this.startValue : this.endValue;
     const step = this.#step;
 

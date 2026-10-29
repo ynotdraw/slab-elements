@@ -11,6 +11,13 @@ export default [
   `,
   css`
     /*
+      Functional, not visual. Each thumb's range input is what's focused and
+      what screenreaders read, while the thumb is what's seen and dragged.
+    */
+    ${visuallyHidden('input')}
+  `,
+  css`
+    /*
       Functional, not visual. The thumbs and the range are placed along the
       track by how far along their values are, which is set as they move. Each
       thumb is centered on its value, along the track and across it.

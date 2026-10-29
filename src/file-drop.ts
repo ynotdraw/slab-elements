@@ -74,7 +74,13 @@ declare global {
  * @prop {HTMLFormElement | null} form
  *
  * @readonly
+ * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
+ *
+ * @readonly
  * @prop {ValidityState} validity
+ *
+ * @readonly
+ * @prop {boolean} willValidate
  *
  * @method checkValidity
  * @returns boolean
@@ -149,8 +155,31 @@ export default class FileDrop extends LitElement {
     return this.#internals.form;
   }
 
+  /**
+   * What's wrong, as the validity message says it: the message given to
+   * `setCustomValidity()` or `setValidity()`, or else the browser's own.
+   * Empty while it's valid.
+   */
+  get validationMessage(): string {
+    if (this.validity.valid) {
+      return '';
+    }
+
+    if (this.validityMessage) {
+      return this.validityMessage;
+    }
+
+    // The browser's own, or a space where the consumer set a validity without
+    // a message.
+    return this.#internals.validationMessage.trim();
+  }
+
   get validity(): ValidityState {
     return this.#internals.validity;
+  }
+
+  get willValidate(): boolean {
+    return this.#internals.willValidate;
   }
 
   checkValidity(): boolean {
@@ -227,10 +256,10 @@ export default class FileDrop extends LitElement {
         </slot>
 
         ${when(
-          this.#isShowValidationFeedback && this.validityMessage,
+          this.#isShowValidationFeedback && this.validationMessage,
           () =>
             html`<span data-test="validity-message" part="validity-message">
-              ${this.validityMessage}
+              ${this.validationMessage}
             </span>`,
         )}
       </div>`;
@@ -585,7 +614,9 @@ export default class FileDrop extends LitElement {
 
     this.#internals.setValidity(
       { valueMissing: input.validity.valueMissing },
-      ' ',
+      // A space when the browser has no message for it, as when it's
+      // disabled, since one that's invalid has to have a message.
+      input.validationMessage || ' ',
       input,
     );
   }

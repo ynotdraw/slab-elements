@@ -433,7 +433,11 @@ test(
       await callMethod(host, 'reportValidity');
 
       await expect(host).toHaveJSProperty('validity.customError', false);
-      await expect(validityMessage).toBeHidden();
+
+      // Still required, so the browser's own message takes its place.
+      await expect(host).toHaveJSProperty('validity.valueMissing', true);
+      await expect(validityMessage).not.toHaveText('message');
+      await expect(validityMessage).toHaveText(/\S/);
     });
   },
 );
@@ -832,6 +836,74 @@ test(
     await expect(page.getByRole('combobox')).toHaveAttribute(
       'aria-invalid',
       'true',
+    );
+  },
+);
+
+test(
+  "shows the browser's own validity message when it's given none",
+  { tag: '@forms' },
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<form>
+          <slab-combobox label="Label" required>
+            <slab-option>One</slab-option>
+          </slab-combobox>
+        </form>`,
+    );
+
+    const host = page.locator('slab-combobox');
+    const validityMessage = page.locator('[data-test="validity-message"]');
+
+    const getValidationMessage = () => {
+      return host.evaluate(
+        (element: HTMLElement & { validationMessage: string }) => {
+          return element.validationMessage;
+        },
+      );
+    };
+
+    await expect(host).toHaveJSProperty('willValidate', true);
+    await callMethod(host, 'reportValidity');
+
+    const message = await getValidationMessage();
+
+    // Worded by the browser, so it differs between them.
+    expect(message.trim()).not.toBe('');
+    await expect(validityMessage).toHaveText(message);
+
+    await setProperty(host, 'required', false);
+    expect(await getValidationMessage()).toBe('');
+  },
+);
+
+test(
+  'asks for text instead of a choice when `allow-custom`',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-combobox label="Label" allow-custom required>
+            <slab-option value="one">One</slab-option>
+          </slab-combobox>
+
+          <input required />
+        </form>
+      `,
+    );
+
+    // Worded by the browser, so it's compared with a native input's.
+    const expected = await page
+      .locator('input:not([role])')
+      .evaluate((input: HTMLInputElement) => input.validationMessage);
+
+    expect(expected).not.toBe('');
+
+    await expect(page.locator('slab-combobox')).toHaveJSProperty(
+      'validationMessage',
+      expected,
     );
   },
 );

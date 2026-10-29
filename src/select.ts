@@ -17,7 +17,9 @@ import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
 import OptionsController from './library/options-controller.js';
 import Option from './option.js';
+import OptionGroup from './option-group.js';
 import styles from './select.styles.js';
+import browserValidationMessage from './library/browser-validation-message.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -73,7 +75,7 @@ declare global {
  * @readonly
  * @attr {string} [version]
  *
- * @slot {Option}
+ * @slot {Option | OptionGroup}
  * @slot {Element | string} [description]
  *
  * @csspart combobox - What opens the Options and shows what's selected
@@ -97,9 +99,15 @@ declare global {
  * @prop {Option[]} selectedOptions - Selected and enabled Options, in the order they appear.
  *
  * @readonly
+ * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
+ *
+ * @readonly
  * @prop {ValidityState} validity
  *
  * @prop {string[]} values - The value of every selected and enabled Option, in the order they appear. Setting it selects the Options with those values, and only those.
+ *
+ * @readonly
+ * @prop {boolean} willValidate
  *
  * @method checkValidity
  * @returns boolean
@@ -202,8 +210,31 @@ export default class Select extends LitElement {
     return this.#options.selectedOptions;
   }
 
+  /**
+   * What's wrong, as the validity message says it: the message given to
+   * `setCustomValidity()` or `setValidity()`, or else the browser's own.
+   * Empty while it's valid.
+   */
+  get validationMessage(): string {
+    if (this.validity.valid) {
+      return '';
+    }
+
+    if (this.validityMessage) {
+      return this.validityMessage;
+    }
+
+    // The browser's own, or a space where the consumer set a validity without
+    // a message.
+    return this.#internals.validationMessage.trim();
+  }
+
   get validity(): ValidityState {
     return this.#internals.validity;
+  }
+
+  get willValidate(): boolean {
+    return this.#internals.willValidate;
   }
 
   /**
@@ -340,8 +371,11 @@ export default class Select extends LitElement {
           @click=${this.#onListboxClick}
         >
           <!-- The Options -->
-          <slot ${assertSlot([Option])} ${ref(this.#slotElementRef)}>
-            <!-- @type {Option} -->
+          <slot
+            ${assertSlot([Option, OptionGroup])}
+            ${ref(this.#slotElementRef)}
+          >
+            <!-- @type {Option | OptionGroup} -->
           </slot>
         </div>
       </div>
@@ -353,10 +387,10 @@ export default class Select extends LitElement {
         </slot>
 
         ${when(
-          this.#isShowValidationFeedback && this.validityMessage,
+          this.#isShowValidationFeedback && this.validationMessage,
           () =>
             html`<span data-test="validity-message" part="validity-message">
-              ${this.validityMessage}
+              ${this.validationMessage}
             </span>`,
         )}
       </div>`;
@@ -534,6 +568,7 @@ export default class Select extends LitElement {
   // and only while it's open, when the Options can be seen.
   #options = new OptionsController(this, {
     activeDescendantElement: () => this.#comboboxElementRef.value,
+    groupClass: OptionGroup,
     isActiveDescendantShown: () => this.#isPopoverOpen,
     isDisabled: () => this.#isDisabled,
     isMultiple: () => this.multiple,
@@ -904,7 +939,7 @@ export default class Select extends LitElement {
     if (this.required && this.selectedOptions.length === 0) {
       this.#internals.setValidity(
         { customError: Boolean(this.validityMessage), valueMissing: true },
-        ' ',
+        browserValidationMessage('select'),
         this.#anchor,
       );
 

@@ -279,7 +279,6 @@ test(
     const host = page.locator('slab-range-slider');
     const start = page.getByRole('slider', { name: 'Label Minimum' });
 
-    await expect(start).toHaveAttribute('tabindex', '-1');
     await expect(start).toBeDisabled();
 
     // Focused programmatically, since it can't be tabbed to.
@@ -291,5 +290,39 @@ test(
     );
 
     await expect(host).toHaveJSProperty('startValue', 20);
+  },
+);
+
+test(
+  'marks the thumb whose input has visible focus',
+  { tag: '@keyboard' },
+  async ({ browserName, render, page }) => {
+    await render(
+      () =>
+        html`<button type="button">Before</button>
+          <slab-range-slider label="Label"></slab-range-slider>`,
+    );
+
+    const start = page.locator('[data-test="start"]');
+    const end = page.locator('[data-test="end"]');
+
+    const tab = browserName === 'webkit' ? 'Alt+Tab' : 'Tab';
+
+    await page.getByRole('button').focus();
+    await page.keyboard.press(tab);
+
+    await expect(start).toHaveAttribute('part', 'start focus-visible');
+    await expect(end).toHaveAttribute('part', 'end');
+
+    await page.keyboard.press(tab);
+
+    await expect(start).toHaveAttribute('part', 'start');
+    await expect(end).toHaveAttribute('part', 'end focus-visible');
+
+    await page.keyboard.press(`Shift+${tab}`);
+    await page.keyboard.press(`Shift+${tab}`);
+
+    await expect(start).toHaveAttribute('part', 'start');
+    await expect(end).toHaveAttribute('part', 'end');
   },
 );

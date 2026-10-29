@@ -107,7 +107,7 @@ test(
 
     const host = page.locator('slab-range-slider');
     const start = page.getByRole('slider', { name: 'Label Minimum' });
-    const box = await start.boundingBox();
+    const box = await page.locator('[data-test="start"]').boundingBox();
     const x = (box?.x ?? 0) + (box?.width ?? 0) / 2;
     const y = (box?.y ?? 0) + (box?.height ?? 0) / 2;
 
@@ -202,9 +202,7 @@ test(
 
     const host = page.locator('slab-range-slider');
 
-    const box = await page
-      .getByRole('slider', { name: 'Label Minimum' })
-      .boundingBox();
+    const box = await page.locator('[data-test="start"]').boundingBox();
 
     const x = (box?.x ?? 0) + (box?.width ?? 0) / 2;
     const y = (box?.y ?? 0) + (box?.height ?? 0) / 2;
@@ -254,9 +252,7 @@ test(
 
     const host = page.locator('slab-range-slider');
 
-    const box = await page
-      .getByRole('slider', { name: 'Label Maximum' })
-      .boundingBox();
+    const box = await page.locator('[data-test="end"]').boundingBox();
 
     const x = (box?.x ?? 0) + (box?.width ?? 0) / 2;
     const y = (box?.y ?? 0) + (box?.height ?? 0) / 2;
@@ -327,9 +323,7 @@ test(
           ></slab-range-slider>`,
     );
 
-    const box = await page
-      .getByRole('slider', { name: 'Label Maximum' })
-      .boundingBox();
+    const box = await page.locator('[data-test="end"]').boundingBox();
 
     await expect(page.locator('slab-range-slider')).not.toDispatchEvents(
       () =>
@@ -375,9 +369,7 @@ test(
 
     const host = page.locator('slab-range-slider');
 
-    const box = await page
-      .getByRole('slider', { name: 'Label Minimum' })
-      .boundingBox();
+    const box = await page.locator('[data-test="start"]').boundingBox();
 
     await page.mouse.move(
       (box?.x ?? 0) + (box?.width ?? 0) / 2,
@@ -436,9 +428,10 @@ test(
     const y = (track?.y ?? 0) + (track?.height ?? 0) / 2;
 
     // The start is on the right, so 20 is 40 pixels in from the right.
-    await expect(
-      page.getByRole('slider', { name: 'Label Minimum' }),
-    ).toHaveJSProperty('style.insetInlineStart', '20%');
+    await expect(page.locator('[data-test="start"]')).toHaveJSProperty(
+      'style.insetInlineStart',
+      '20%',
+    );
 
     await page.mouse.move(right - 40, y);
     await page.mouse.down();

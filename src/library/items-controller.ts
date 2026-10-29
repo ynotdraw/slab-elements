@@ -42,6 +42,14 @@ export interface ItemsControllerConfig<T extends Item> {
   isShown?: (item: T) => boolean;
 
   /**
+   * The class of an element that groups items, such as a Menu Group. The items
+   * in a group that's assigned to `slot` count as the host's own. A group
+   * dispatches "private-group-change" when its items change, since its
+   * "slotchange" doesn't leave its own shadow root.
+   */
+  groupClass?: abstract new (...arguments_: never[]) => HTMLElement;
+
+  /**
    * The class the items are found by, so a renamed subclass still counts.
    */
   itemClass: abstract new (...arguments_: never[]) => T;
@@ -124,11 +132,13 @@ export default class ItemsController<
       return this.#config.items();
     }
 
-    const slot = this.#config.slot();
+    const elements = this.#assignedElements.flatMap((element) => {
+      const { groupClass } = this.#config;
 
-    const elements = slot
-      ? slot.assignedElements({ flatten: true })
-      : [...this.#host.children];
+      return groupClass && element instanceof groupClass
+        ? [...element.children]
+        : [element];
+    });
 
     return elements.filter((element): element is T => {
       return element instanceof this.#config.itemClass;
@@ -157,6 +167,10 @@ export default class ItemsController<
   hostConnected() {
     this.#host.addEventListener('private-connected', this.#onConnected);
     this.#host.addEventListener('private-disabled-change', this.#onDisabled);
+
+    if (this.#config.groupClass) {
+      this.#host.addEventListener('private-group-change', this.#onGroupChange);
+    }
 
     // "slotchange" doesn't leave the shadow root, so it's heard there.
     this.#host.renderRoot.addEventListener('slotchange', this.#onSlotChange);
@@ -294,17 +308,28 @@ export default class ItemsController<
     this.#config.onChange();
   };
 
-  #onSlotChange = (event: Event) => {
-    if (event.target !== this.#config.slot()) {
-      return;
+  // Only listened for when there's a `groupClass`. A group that isn't one of
+  // the host's own, such as one in a nested Menu, is left to its own host.
+  #onGroupChange = (event: Event) => {
+    // Bubbled from a group, so the target is always an element.
+    if (this.#assignedElements.includes(event.target as Element)) {
+      this.#onItemsChange();
     }
-
-    if (this.#activeItem && !this.items.includes(this.#activeItem)) {
-      this.activeItem = null;
-    }
-
-    this.settle();
   };
+
+  #onSlotChange = (event: Event) => {
+    if (event.target === this.#config.slot()) {
+      this.#onItemsChange();
+    }
+  };
+
+  get #assignedElements() {
+    const slot = this.#config.slot();
+
+    return slot
+      ? slot.assignedElements({ flatten: true })
+      : [...this.#host.children];
+  }
 
   #indexIn(items: T[]) {
     return this.#activeItem ? items.indexOf(this.#activeItem) : -1;
@@ -324,6 +349,14 @@ export default class ItemsController<
     }
 
     return this.#activeItem;
+  }
+
+  #onItemsChange() {
+    if (this.#activeItem && !this.items.includes(this.#activeItem)) {
+      this.activeItem = null;
+    }
+
+    this.settle();
   }
 
   // Set as an element rather than as an ID. An IDREF resolves in the tree it's
