@@ -31,7 +31,8 @@ declare global {
  * Radios are found by class rather than by tag name, so your subclass of Radio
  * can be named anything. The group does what native radios do for each other:
  * exactly one is checked, exactly one is tabbable, and the arrow keys move
- * between them, wrapping at each end and skipping disabled ones.
+ * between them, wrapping at each end and skipping disabled ones. In a
+ * right-to-left page, Left and Right swap, as they do for native radios.
  *
  * Style it through its parts and through `:state(disabled)`, `:state(error)`,
  * and `:state(required)`. How the Radios are arranged is layout, so it's left
@@ -226,6 +227,7 @@ export default class RadioGroup extends LitElement {
       </span>
 
       <div
+        aria-invalid=${this.#isShowValidationFeedback ? 'true' : 'false'}
         aria-labelledby="label description"
         aria-required=${this.required ? 'true' : 'false'}
         part="radios"

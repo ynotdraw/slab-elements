@@ -856,3 +856,33 @@ test(
     expect(await getValidationMessage()).toBe('');
   },
 );
+
+test(
+  'is marked invalid while it shows it is',
+  { tag: '@forms' },
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-radio-group label="Label" required>
+            <slab-radio-group-radio
+              label="One"
+              value="one"
+            ></slab-radio-group-radio>
+          </slab-radio-group>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-radio-group');
+    const radioGroup = page.getByRole('radiogroup');
+
+    await expect(radioGroup).toHaveAttribute('aria-invalid', 'false');
+
+    await callMethod(host, 'reportValidity');
+    await expect(radioGroup).toHaveAttribute('aria-invalid', 'true');
+
+    await setProperty(host, 'value', 'one');
+    await expect(radioGroup).toHaveAttribute('aria-invalid', 'false');
+  },
+);

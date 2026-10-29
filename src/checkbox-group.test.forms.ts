@@ -956,3 +956,42 @@ test(
     expect(await getValidationMessage()).toBe('');
   },
 );
+
+test(
+  'marks its checkboxes invalid while it shows it is',
+  { tag: '@forms' },
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-checkbox-group label="Label" required>
+            <slab-checkbox label="One" value="one"></slab-checkbox>
+          </slab-checkbox-group>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-checkbox-group');
+    const checkboxes = page.getByRole('checkbox');
+
+    await expect(checkboxes).toHaveJSProperty('ariaInvalid', 'false');
+
+    await callMethod(host, 'reportValidity');
+    await expect(checkboxes).toHaveJSProperty('ariaInvalid', 'true');
+
+    await test.step('a checkbox added later', async () => {
+      await host.evaluate((element) => {
+        const checkbox = document.createElement('slab-checkbox');
+        checkbox.label = 'Two';
+        checkbox.value = 'two';
+        element.append(checkbox);
+      });
+
+      await expect(checkboxes.nth(1)).toHaveJSProperty('ariaInvalid', 'true');
+    });
+
+    await setProperty(page.locator('slab-checkbox').first(), 'checked', true);
+    await expect(checkboxes.first()).toHaveJSProperty('ariaInvalid', 'false');
+    await expect(checkboxes.nth(1)).toHaveJSProperty('ariaInvalid', 'false');
+  },
+);

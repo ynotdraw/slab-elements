@@ -183,3 +183,33 @@ test(
     await expect(one).toBeFocused();
   },
 );
+
+test(
+  'swaps ArrowLeft and ArrowRight when right to left',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<div dir="rtl">
+          <slab-toggle-group label="Label">
+            <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+            <slab-toggle-group-button value="two">Two</slab-toggle-group-button>
+            <slab-toggle-group-button value="three">
+              Three
+            </slab-toggle-group-button>
+          </slab-toggle-group>
+        </div>`,
+    );
+
+    const buttons = page.locator('slab-toggle-group-button');
+
+    await page.keyboard.press('Tab');
+    await expect(buttons.nth(0)).toBeFocused();
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(buttons.nth(1)).toBeFocused();
+
+    await page.keyboard.press('ArrowRight');
+    await expect(buttons.nth(0)).toBeFocused();
+  },
+);

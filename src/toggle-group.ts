@@ -41,7 +41,7 @@ declare global {
  * that isn't disabled. Left and Right, or Up and Down when `orientation` is
  * `"vertical"`, move focus between them, wrapping at each end and skipping
  * disabled ones, and Home and End go to the first and last. Moving focus
- * doesn't press anything.
+ * doesn't press anything. In a right-to-left page, Left and Right swap.
  *
  * Style it through its part, and the buttons through their
  * `:state(pressed)` and `:state(disabled)`.

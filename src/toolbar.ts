@@ -34,7 +34,8 @@ declare global {
  * `"vertical"`, move focus between them, wrapping at each end and skipping
  * disabled ones, and Home and End go to the first and last. A control that
  * edits text, such as a text `<input>`, keeps its arrow keys, and so does one
- * that handles a key itself and cancels it.
+ * that handles a key itself and cancels it. In a right-to-left page, Left and
+ * Right swap.
  *
  * Controls are focused directly, so put ones that take focus themselves in it,
  * such as `<button>`s, `<input>`s and links. A custom element whose focusable

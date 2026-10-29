@@ -340,3 +340,42 @@ test(
     await expect(page.locator('button').nth(0)).toBeFocused();
   },
 );
+
+test(
+  'swaps ArrowLeft and ArrowRight when right to left',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<div dir="rtl">
+          <slab-menubar label="Label">
+            <slab-menu label="File">
+              <button slot="anchor">File</button>
+              <slab-menu-item>New</slab-menu-item>
+            </slab-menu>
+
+            <slab-menu label="Edit">
+              <button slot="anchor">Edit</button>
+              <slab-menu-item>Undo</slab-menu-item>
+            </slab-menu>
+
+            <slab-menu label="View">
+              <button slot="anchor">View</button>
+              <slab-menu-item>Zoom</slab-menu-item>
+            </slab-menu>
+          </slab-menubar>
+        </div>`,
+    );
+
+    const anchors = page.locator('button');
+
+    await page.keyboard.press('Tab');
+    await expect(anchors.nth(0)).toBeFocused();
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(anchors.nth(1)).toBeFocused();
+
+    await page.keyboard.press('ArrowRight');
+    await expect(anchors.nth(0)).toBeFocused();
+  },
+);
