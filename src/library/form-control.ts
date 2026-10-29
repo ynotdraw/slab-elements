@@ -6,8 +6,10 @@ export default interface FormControl {
   name: string;
   required: boolean;
   summary?: string;
+  validationMessage: string;
   validity: ValidityState;
   value: string | string[] | number[];
+  willValidate: boolean;
   checkValidity(): boolean;
   formResetCallback(): void;
   reportValidity(): boolean;

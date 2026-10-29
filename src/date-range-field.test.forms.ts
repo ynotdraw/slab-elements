@@ -742,3 +742,64 @@ test(
     ).toBe(true);
   },
 );
+
+test(
+  "shows the browser's own validity message when it's given none",
+  { tag: '@forms' },
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<form>
+          <slab-date-range-field label="Label" required></slab-date-range-field>
+        </form>`,
+    );
+
+    const host = page.locator('slab-date-range-field');
+    const validityMessage = page.locator('[data-test="validity-message"]');
+
+    const getValidationMessage = () => {
+      return host.evaluate(
+        (element: HTMLElement & { validationMessage: string }) => {
+          return element.validationMessage;
+        },
+      );
+    };
+
+    await expect(host).toHaveJSProperty('willValidate', true);
+    await callMethod(host, 'reportValidity');
+
+    const message = await getValidationMessage();
+
+    // Worded by the browser, so it differs between them.
+    expect(message.trim()).not.toBe('');
+    await expect(validityMessage).toHaveText(message);
+
+    await setProperty(host, 'required', false);
+    expect(await getValidationMessage()).toBe('');
+  },
+);
+
+test(
+  "shows the browser's own message for its end when only its start has a value",
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<slab-date-range-field
+          label="Label"
+          start-value="2026-10-01"
+          required
+        ></slab-date-range-field>`,
+    );
+
+    const host = page.locator('slab-date-range-field');
+
+    await callMethod(host, 'reportValidity');
+
+    await expect(host).toHaveJSProperty('validity.valueMissing', true);
+
+    await expect(page.locator('[data-test="validity-message"]')).toHaveText(
+      /\S/,
+    );
+  },
+);

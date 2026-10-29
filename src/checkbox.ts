@@ -15,6 +15,7 @@ import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
 import styles from './checkbox.styles.js';
 import afterReflection from './library/after-reflection.js';
+import browserValidationMessage from './library/browser-validation-message.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -64,7 +65,13 @@ declare global {
  * @prop {HTMLFormElement | null} form
  *
  * @readonly
+ * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
+ *
+ * @readonly
  * @prop {ValidityState} validity
+ *
+ * @readonly
+ * @prop {boolean} willValidate
  *
  * @method checkValidity
  * @returns boolean
@@ -141,8 +148,31 @@ export default class Checkbox extends LitElement {
     return this.#internals.form;
   }
 
+  /**
+   * What's wrong, as the validity message says it: the message given to
+   * `setCustomValidity()` or `setValidity()`, or else the browser's own.
+   * Empty while it's valid.
+   */
+  get validationMessage(): string {
+    if (this.validity.valid) {
+      return '';
+    }
+
+    if (this.validityMessage) {
+      return this.validityMessage;
+    }
+
+    // The browser's own, or a space where the consumer set a validity without
+    // a message.
+    return this.#internals.validationMessage.trim();
+  }
+
   get validity(): ValidityState {
     return this.#internals.validity;
+  }
+
+  get willValidate(): boolean {
+    return this.#internals.willValidate;
   }
 
   checkValidity(): boolean {
@@ -233,10 +263,10 @@ export default class Checkbox extends LitElement {
         </slot>
 
         ${when(
-          this.#isShowValidationFeedback && this.validityMessage,
+          this.#isShowValidationFeedback && this.validationMessage,
           () =>
             html`<span data-test="validity-message" part="validity-message">
-              ${this.validityMessage}
+              ${this.validationMessage}
             </span>`,
         )}
       </div>`;
@@ -495,7 +525,7 @@ export default class Checkbox extends LitElement {
     if (this.required && !this.checked) {
       this.#internals.setValidity(
         { customError: Boolean(this.validityMessage), valueMissing: true },
-        ' ',
+        browserValidationMessage('check'),
         this.#inputElementRef.value,
       );
 
