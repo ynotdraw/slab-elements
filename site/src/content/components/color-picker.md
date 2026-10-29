@@ -1,7 +1,7 @@
 ---
 title: Color Picker
 group: Form
-element: '[role=slider]'
+element: '<input type=range>'
 tags: [slab-color-picker]
 summary: 'A color picker with a saturation and brightness area, hue and alpha sliders, a hex field and swatches.'
 example: |
@@ -12,7 +12,9 @@ usage: |
   <slab-color-picker label="Fill" name="fill" value="#3399ff" swatches="#ff0000 #00ff00 #0000ff" alpha></slab-color-picker>
 ---
 
-The area, the hue slider and the alpha slider are each a `[role=slider]`, named by `label` and then their own label, so a screenreader reads "Fill Hue". The area's value text reads both of its values, "Saturation 60%, Brightness 100%". Give the area and the sliders a size, since their thumbs are placed along them. The form gets `value` under `name`.
+Each thumb holds a visually hidden range input, named by `label` and then its own label, so a screenreader reads "Fill Hue". It's what has focus and what a screenreader reads, which lets screenreaders on phones adjust it with a swipe up or down. The area's input is its saturation, and its value text reads both of its values, "Saturation 60%, Brightness 100%". The area has a second input for its brightness, "Fill Brightness", which is left out of the tab order since the arrow keys already change both. Give the area and the sliders a size, since their thumbs are placed along them. The form gets `value` under `name`.
+
+Since a thumb isn't focused itself, it can't match `:focus-visible`. Style its focus ring through `::part(focus-visible)`, which the thumb has while its input's focus is visible.
 
 The hex field commits when it's blurred or Enter is pressed, with or without the "#", and goes back to `value` when what's typed isn't a color. The swatches are a listbox whose selection follows focus.
 

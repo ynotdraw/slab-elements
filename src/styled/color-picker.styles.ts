@@ -69,11 +69,13 @@ export default css`
     border: 2px solid var(--paper);
     box-shadow: 0 0 0 2px var(--ink);
     box-sizing: border-box;
+  }
 
-    &:focus-visible {
-      outline: 3px solid var(--ember);
-      outline-offset: 3px;
-    }
+  [part~='area-thumb'][part~='focus-visible'],
+  [part~='hue-thumb'][part~='focus-visible'],
+  [part~='alpha-thumb'][part~='focus-visible'] {
+    outline: 3px solid var(--ember);
+    outline-offset: 3px;
   }
 
   [part~='area-thumb'] {

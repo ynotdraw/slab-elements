@@ -116,32 +116,32 @@ test(
 
     await hue.press('ArrowRight');
     await hue.press('ArrowUp');
-    await expect(hue).toHaveAttribute('aria-valuenow', '2');
+    await expect(hue).toHaveValue('2');
 
     await hue.press('ArrowLeft');
     await hue.press('ArrowDown');
-    await expect(hue).toHaveAttribute('aria-valuenow', '0');
+    await expect(hue).toHaveValue('0');
 
     // A tenth of 360.
     await hue.press('PageUp');
-    await expect(hue).toHaveAttribute('aria-valuenow', '36');
+    await expect(hue).toHaveValue('36');
 
     await hue.press('PageDown');
-    await expect(hue).toHaveAttribute('aria-valuenow', '0');
+    await expect(hue).toHaveValue('0');
 
     // Red again, at the far end of the spectrum.
     await hue.press('End');
-    await expect(hue).toHaveAttribute('aria-valuenow', '360');
+    await expect(hue).toHaveValue('360');
     await expect(host).toHaveJSProperty('value', '#ff0000');
 
     await hue.press('Home');
 
     await alpha.press('ArrowLeft');
-    await expect(alpha).toHaveAttribute('aria-valuenow', '99');
+    await expect(alpha).toHaveValue('99');
     await expect(host).toHaveJSProperty('value', '#ff0000fc');
 
     await alpha.press('PageDown');
-    await expect(alpha).toHaveAttribute('aria-valuenow', '89');
+    await expect(alpha).toHaveValue('89');
 
     await alpha.press('Home');
     await expect(host).toHaveJSProperty('value', '#ff000000');
@@ -180,11 +180,11 @@ test(
     );
 
     await hue.press('ArrowLeft');
-    await expect(hue).toHaveAttribute('aria-valuenow', '0');
+    await expect(hue).toHaveValue('0');
 
     await hue.press('End');
     await hue.press('ArrowRight');
-    await expect(hue).toHaveAttribute('aria-valuenow', '360');
+    await expect(hue).toHaveValue('360');
 
     await expect(host).toHaveJSProperty('value', '#ffffff');
   },
@@ -208,16 +208,16 @@ test(
     const hue = page.getByRole('slider', { name: 'Label Hue' });
 
     await area.press('ArrowLeft');
-    await expect(area).toHaveAttribute('aria-valuenow', '1');
+    await expect(area).toHaveValue('1');
 
     await area.press('ArrowRight');
-    await expect(area).toHaveAttribute('aria-valuenow', '0');
+    await expect(area).toHaveValue('0');
 
     await hue.press('ArrowLeft');
-    await expect(hue).toHaveAttribute('aria-valuenow', '1');
+    await expect(hue).toHaveValue('1');
 
     await hue.press('ArrowRight');
-    await expect(hue).toHaveAttribute('aria-valuenow', '0');
+    await expect(hue).toHaveValue('0');
   },
 );
 
@@ -490,5 +490,38 @@ test(
     await expect(
       page.getByRole('textbox', { name: 'Label Hex' }),
     ).toBeDisabled();
+  },
+);
+
+test(
+  'marks the thumb whose input has visible focus',
+  { tag: '@keyboard' },
+  async ({ browserName, render, page }) => {
+    await render(
+      () =>
+        html`<button type="button">Before</button>
+          <slab-color-picker label="Label"></slab-color-picker>`,
+    );
+
+    const tab = browserName === 'webkit' ? 'Alt+Tab' : 'Tab';
+    const area = page.locator('[part~="area-thumb"]');
+    const hue = page.locator('[part~="hue-thumb"]');
+
+    await page.getByRole('button').focus();
+    await page.keyboard.press(tab);
+
+    await expect(area).toHaveAttribute('part', 'area-thumb focus-visible');
+    await expect(hue).toHaveAttribute('part', 'hue-thumb');
+
+    // Past the area's brightness, which the arrow keys already change.
+    await page.keyboard.press(tab);
+
+    await expect(area).toHaveAttribute('part', 'area-thumb');
+    await expect(hue).toHaveAttribute('part', 'hue-thumb focus-visible');
+
+    await page.keyboard.press(tab);
+
+    await expect(area).toHaveAttribute('part', 'area-thumb');
+    await expect(hue).toHaveAttribute('part', 'hue-thumb');
   },
 );
