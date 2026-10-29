@@ -197,6 +197,7 @@ export default class RadioGroup extends LitElement {
       </span>
 
       <div
+        aria-invalid=${this.#isShowValidationFeedback ? 'true' : 'false'}
         aria-labelledby="label description"
         aria-required=${this.required ? 'true' : 'false'}
         part="radios"
