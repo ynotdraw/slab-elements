@@ -19,6 +19,7 @@ import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
 import Option from './option.js';
 import styles from './combobox.styles.js';
+import isComposing from './library/is-composing.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -682,6 +683,12 @@ export default class Combobox extends LitElement {
   };
 
   #onInputKeydown = (event: KeyboardEvent) => {
+    // Enter, Escape and the arrows belong to an input method while it's
+    // composing.
+    if (isComposing(event)) {
+      return;
+    }
+
     const options = this.#options;
     const active = options.activeOption;
 
