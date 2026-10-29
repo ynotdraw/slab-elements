@@ -31,7 +31,7 @@ usage: |
   </slab-carousel>
 ---
 
-Each child is a slide. The sliding and snapping are CSS scroll snap, which every browser has, so swiping and scrolling work without a script. The buttons are real `<button>`s rather than Chromium's `::scroll-button()` and `::scroll-marker`, so they're named and styled the same way in every browser. Set `autoplay` only when rotation is worth the interruption: it pauses while the carousel is hovered or focused, and its first button stops it.
+Each child is a slide. The sliding and snapping are CSS scroll snap, which every browser has, so swiping and scrolling work without a script. The buttons are real `<button>`s rather than Chromium's `::scroll-button()` and `::scroll-marker`, so they're named and styled the same way in every browser. Set `autoplay` only when rotation is worth the interruption: it pauses while the carousel is hovered, stops once focus moves into it, doesn't start under reduced motion, and its first button stops and starts it.
 
 ## Keyboard
 
