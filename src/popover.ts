@@ -39,7 +39,8 @@ declare global {
  * is more than a slot: `aria-expanded` on the anchor, focus going back to it
  * from slotted content (which the platform doesn't count as inside the
  * popover), and a second click on the anchor closing the popover rather than
- * light dismiss closing it and the click opening it again.
+ * light dismiss closing it and the click opening it again. A Slab anchor, such
+ * as a Copy Button, passes `aria-expanded` on to its own button.
  *
  * `open` reflects whether the popover is open, however it got there or went
  * away, and setting it opens or closes the popover. "beforetoggle" and

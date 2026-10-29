@@ -42,8 +42,10 @@ declare global {
  * `aria-current="true"`.
  *
  * `autoplay` moves to the next slide every `interval` milliseconds, wrapping
- * at the end. It pauses while the pointer is over the carousel or focus is in
- * it, and the rotation button stops and starts it. The slides are an
+ * at the end, unless the user prefers reduced motion. It pauses while the
+ * pointer is over the carousel, and stops for good once focus moves into it,
+ * as the APG's carousel does, so a keyboard user isn't moved along mid-slide.
+ * The rotation button stops and starts it. The slides are an
  * `aria-live` region while it's stopped, so moving to a slide announces it.
  *
  * Laying out the slides and snapping them is what a carousel does, so that's
@@ -183,7 +185,6 @@ export default class Carousel extends LitElement {
       aria-roledescription="carousel"
       part="carousel"
       @focusin=${this.#onFocusIn}
-      @focusout=${this.#onFocusOut}
       @pointerenter=${this.#onPointerEnter}
       @pointerleave=${this.#onPointerLeave}
     >
@@ -294,8 +295,11 @@ export default class Carousel extends LitElement {
 
   // Kept to a slide that exists, however `index` was set.
   override willUpdate(changes: PropertyValues) {
+    // Not under reduced motion, where the rotation button still starts it.
     if (changes.has('autoplay')) {
-      this.isRotating = this.autoplay;
+      this.isRotating =
+        this.autoplay &&
+        !matchMedia('(prefers-reduced-motion: reduce)').matches;
     }
 
     this.index = Math.min(
@@ -312,8 +316,8 @@ export default class Carousel extends LitElement {
     return super.finalizeStyles([styles, subclassStyles ?? []]);
   }
 
-  // Whether the pointer is over the carousel or focus is in it, which pauses
-  // rotation until it leaves.
+  // Whether the pointer is over the carousel, which pauses rotation until it
+  // leaves.
   @state()
   private isPaused = false;
 
@@ -357,26 +361,15 @@ export default class Carousel extends LitElement {
     return !this.loop && this.index >= this.slideCount - 1;
   }
 
+  // Stopped rather than paused, so it doesn't start again when focus leaves.
+  // Not by focusing the rotation button, as clicking it does, which would
+  // stop the rotation that it starts.
   #onFocusIn = (event: FocusEvent) => {
-    // So focusing the rotation button, as clicking it does, doesn't pause the
-    // rotation that it starts.
     if (
       !(event.target instanceof HTMLElement) ||
       event.target.dataset.test !== 'rotation'
     ) {
-      this.isPaused = true;
-    }
-  };
-
-  #onFocusOut = (event: FocusEvent) => {
-    // Focus moving to a slide or between the buttons stays in the carousel.
-    const isLeaving =
-      !(event.relatedTarget instanceof Node) ||
-      (!this.shadowRoot?.contains(event.relatedTarget) &&
-        !this.contains(event.relatedTarget));
-
-    if (isLeaving && !this.matches(':hover')) {
-      this.isPaused = false;
+      this.isRotating = false;
     }
   };
 
@@ -407,9 +400,7 @@ export default class Carousel extends LitElement {
   };
 
   #onPointerLeave = () => {
-    if (!this.matches(':focus-within')) {
-      this.isPaused = false;
-    }
+    this.isPaused = false;
   };
 
   #onPreviousClick = () => {
@@ -424,7 +415,7 @@ export default class Carousel extends LitElement {
     this.isRotating = !this.isRotating;
 
     // Started from the button, rotation starts now rather than once the
-    // pointer or focus leaves.
+    // pointer leaves.
     if (this.isRotating) {
       this.isPaused = false;
     }

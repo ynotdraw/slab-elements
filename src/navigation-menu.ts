@@ -33,8 +33,9 @@ declare global {
  *
  * Each element slotted into it gets an `<li>` of its own, as in Breadcrumb.
  * Opening one Item closes the others, and the arrow keys are a shortcut on top
- * of Tab: Left and Right move between the links and Items' buttons in the
- * row, wrapping at each end, and Home and End go to the first and last.
+ * of Tab: Left and Right move between the links and Items' buttons in the row,
+ * wrapping at each end, and Home and End go to the first and last. In a
+ * right-to-left page, Left and Right swap.
  *
  * Mark the link to the current page with `aria-current="page"`.
  *

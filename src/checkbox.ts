@@ -9,6 +9,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { property, state } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
 import packageJson from '../package.json' with { type: 'json' };
+import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
@@ -217,6 +218,11 @@ export default class Checkbox extends LitElement {
     this.checked = state === this.value;
   }
 
+  // instead, which is where a screenreader is when it would hear it.
+  privateSetGroupInvalid(isInvalid: boolean) {
+    this.isGroupInvalid = isInvalid;
+  }
+
   override render() {
     // ARIA goes on attributes rather than on ElementInternals. Screenreaders
     // read both. But Playwright's role queries and ARIA snapshots, and Axe,
@@ -225,7 +231,11 @@ export default class Checkbox extends LitElement {
         <!-- Where a design draws its check or dash -->
         <input
           aria-describedby="description"
-          aria-invalid=${this.#isShowValidationFeedback ? 'true' : 'false'}
+          aria-invalid=${
+            this.#isShowValidationFeedback || this.isGroupInvalid
+              ? 'true'
+              : 'false'
+          }
           data-test="input"
           id="input"
           part="input"
@@ -261,6 +271,9 @@ export default class Checkbox extends LitElement {
         )}
       </div>`;
   }
+
+  // Private because it's only meant to be called by Checkbox Group. ARIA has no
+  // `aria-invalid` for a group, so the Group marks each of its Checkboxes
 
   reportValidity(): boolean {
     this.hasReportedValidityOrSubmitted = true;
@@ -409,7 +422,17 @@ export default class Checkbox extends LitElement {
   private isFormDisabled = false;
 
   @state()
+  private isGroupInvalid = false;
+
+  @state()
   private validityMessage?: string;
+
+  // A consumer's `aria-*`, and Tooltip's, Popover's and Menu's, on the host.
+  // It does its work through the host's lifecycle, so nothing calls it.
+  // eslint-disable-next-line no-unused-private-class-members
+  #ariaForwarding = new AriaForwarding(this, {
+    target: () => this.#inputElementRef.value,
+  });
 
   #hasCustomValidity = false;
 

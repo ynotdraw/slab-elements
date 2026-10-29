@@ -32,9 +32,9 @@ declare global {
  * Exactly one Tab is selected and exactly one is tabbable: the selected one.
  * The arrow keys move focus between Tabs, wrapping at each end and skipping
  * disabled ones: Left and Right, or Up and Down when `orientation` is
- * `"vertical"`. Home and End go to the first and last. Focus selects the Tab
- * it lands on, unless `manual` is set, where Space and Enter do. A click
- * selects either way.
+ * `"vertical"`. Home and End go to the first and last. Focus selects the Tab it
+ * lands on, unless `manual` is set, where Space and Enter do. A click selects
+ * either way. In a right-to-left page, Left and Right swap.
  *
  * Each Tab is wired to the Panel whose `name` matches its `panel` with
  * `aria-controls` and `aria-labelledby`, and every other Panel is `hidden`.
