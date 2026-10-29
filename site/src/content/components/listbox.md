@@ -2,7 +2,7 @@
 title: Listbox
 group: Selection
 element: '[role=listbox]'
-tags: [slab-listbox, slab-option]
+tags: [slab-listbox, slab-option, slab-option-group]
 summary: 'A list of Options to pick one or more from, right on the page instead of in a popup.'
 example: |
   <slab-styled-listbox label="Crew" multiple>
@@ -22,6 +22,21 @@ usage: |
 
 Option, documented here, is also what [Select](../select/) and
 [Combobox](../combobox/) use.
+
+To group Options under a heading, put them in a `slab-option-group` with a `label`. It's a `[role=group]` named by its label, and its Options are still the Listbox's, so the keys and selection work across groups as across the rest. Select and Combobox take Option Groups too, and Combobox hides one while its filter hides every Option in it.
+
+```html
+<slab-listbox label="Produce">
+  <slab-option-group label="Fruit">
+    <slab-option>Apple</slab-option>
+    <slab-option>Banana</slab-option>
+  </slab-option-group>
+
+  <slab-option-group label="Vegetables">
+    <slab-option>Carrot</slab-option>
+  </slab-option-group>
+</slab-listbox>
+```
 
 ## Keyboard
 

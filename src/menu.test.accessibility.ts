@@ -74,3 +74,32 @@ test('open', { tag: '@accessibility' }, async ({ render, page }) => {
       - menuitem "Three"
   `);
 });
+
+test(
+  'is accessible when open with checkbox and radio Menu Items in a Menu Group',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <slab-menu label="Label" open>
+          <button slot="anchor">Anchor</button>
+          <slab-menu-item type="checkbox" checked>Bold</slab-menu-item>
+          <slab-menu-group label="Size">
+            <slab-menu-item type="radio" checked>Small</slab-menu-item>
+            <slab-menu-item type="radio">Large</slab-menu-item>
+          </slab-menu-group>
+        </slab-menu>
+      `,
+    );
+
+    await expect(page).toBeAccessible('slab-menu');
+
+    await expect(page.getByRole('menu')).toMatchAriaSnapshot(`
+      - menu "Label":
+        - menuitemcheckbox "Bold" [checked]
+        - group "Size":
+          - menuitemradio "Small" [checked]
+          - menuitemradio "Large"
+    `);
+  },
+);

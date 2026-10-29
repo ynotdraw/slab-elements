@@ -938,3 +938,42 @@ test(
     await expect(page.getByRole('listbox')).toBeVisible();
   },
 );
+
+test(
+  'hides an Option Group while it filters out every Option in it',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label">
+          <slab-option>Plain</slab-option>
+          <slab-option-group label="Fruit">
+            <slab-option>Apple</slab-option>
+            <slab-option>Banana</slab-option>
+          </slab-option-group>
+          <slab-option-group label="Vegetables">
+            <slab-option>Carrot</slab-option>
+          </slab-option-group>
+        </slab-combobox>`,
+    );
+
+    const fruit = page.getByRole('group', { name: 'Fruit' });
+    const vegetables = page.getByRole('group', { name: 'Vegetables' });
+
+    await page.getByRole('combobox').pressSequentially('ban');
+
+    await expect(fruit).toBeVisible();
+    await expect(vegetables).toBeHidden();
+
+    await page.keyboard.press('ArrowDown');
+
+    await expect(page.locator('slab-combobox')).toHaveJSProperty(
+      'activeOption.textContent',
+      'Banana',
+    );
+
+    await page.getByRole('combobox').fill('');
+
+    await expect(vegetables).toBeVisible();
+  },
+);

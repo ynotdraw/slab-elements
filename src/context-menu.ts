@@ -13,6 +13,7 @@ import customElement from './library/custom-element.js';
 import assertSlot from './library/assert-slot.js';
 import ItemsController from './library/items-controller.js';
 import required from './library/required.js';
+import MenuGroup from './menu.group.js';
 import MenuItem from './menu.item.js';
 import styles from './context-menu.styles.js';
 
@@ -80,7 +81,7 @@ function fit(point: number, size: number, viewport: number, isAfter: boolean) {
  * @readonly
  * @attr {string} [version]
  *
- * @slot {MenuItem}
+ * @slot {MenuItem | MenuGroup}
  * @slot {Element} target - Where a right-click, a long-press, or Shift+F10 opens the menu
  *
  * @csspart menu - The Menu Items
@@ -174,8 +175,11 @@ export default class ContextMenu extends LitElement {
           ${ref(this.#menuElementRef)}
         >
           <!-- The Menu Items -->
-          <slot ${assertSlot([MenuItem])} ${ref(this.#slotElementRef)}>
-            <!-- @type {MenuItem} -->
+          <slot
+            ${assertSlot([MenuItem, MenuGroup])}
+            ${ref(this.#slotElementRef)}
+          >
+            <!-- @type {MenuItem | MenuGroup} -->
           </slot>
         </div>
       </div>`;
@@ -230,6 +234,7 @@ export default class ContextMenu extends LitElement {
   #items = new ItemsController(this, {
     activeDescendantElement: () => this.#menuElementRef.value,
     isActiveDescendantShown: () => this.#isPopoverOpen,
+    groupClass: MenuGroup,
     itemClass: MenuItem,
     onChange: () => {
       this.requestUpdate();

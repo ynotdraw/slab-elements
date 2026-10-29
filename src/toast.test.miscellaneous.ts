@@ -305,3 +305,47 @@ test(
     expect(count).toBe(0);
   },
 );
+
+test(
+  'is not dismissed after `duration` when it has something to act on',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<slab-toast data-test="native" duration="100">
+            Deleted <button type="button">Undo</button>
+          </slab-toast>
+          <slab-toast data-test="custom" duration="100">
+            Deleted <x-delegating-action></x-delegating-action>
+          </slab-toast>`,
+    );
+
+    // A custom element whose shadow root delegates focus counts too.
+    await page.evaluate(() => {
+      customElements.define(
+        'x-delegating-action',
+        class extends HTMLElement {
+          constructor() {
+            super();
+            this.attachShadow({ delegatesFocus: true, mode: 'open' });
+          }
+        },
+      );
+    });
+
+    const native = page.locator('[data-test="native"]');
+    const custom = page.locator('[data-test="custom"]');
+
+    await callMethod(native, 'show');
+    await callMethod(custom, 'show');
+
+    // Real time rather than a mocked clock: the countdown is a plain
+    // `setTimeout()`, and what's under test is whether it fires.
+    await page.evaluate(
+      () => new Promise((resolve) => setTimeout(resolve, 300)),
+    );
+
+    await expect(native).toHaveJSProperty('open', true);
+    await expect(custom).toHaveJSProperty('open', true);
+  },
+);

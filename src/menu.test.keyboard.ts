@@ -269,3 +269,107 @@ test(
     await expect(page.locator('slab-menu')).toHaveJSProperty('open', true);
   },
 );
+
+test(
+  'moves through the Menu Items in a Menu Group as through the rest',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-menu label="Label">
+          <button slot="anchor">Anchor</button>
+          <slab-menu-item>One</slab-menu-item>
+          <slab-menu-group label="Size">
+            <slab-menu-item type="radio">Small</slab-menu-item>
+            <slab-menu-item type="radio">Large</slab-menu-item>
+          </slab-menu-group>
+        </slab-menu>`,
+    );
+
+    const host = page.locator('slab-menu');
+    const large = page.getByRole('menuitemradio', { name: 'Large' });
+
+    await page.getByRole('button').focus();
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('ArrowDown');
+
+    await expect.poll(() => isActive(large)).toBe(true);
+
+    await page.keyboard.press('Enter');
+
+    await expect(host).toHaveJSProperty('open', false);
+
+    await expect(
+      page.locator('slab-menu-item', { hasText: 'Large' }),
+    ).toHaveAttribute('aria-checked', 'true');
+
+    await page.keyboard.press('ArrowUp');
+    await page.keyboard.press('s');
+
+    await expect
+      .poll(() => isActive(page.getByRole('menuitemradio', { name: 'Small' })))
+      .toBe(true);
+  },
+);
+
+test(
+  'keeps up with Menu Items added to and removed from a Menu Group',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-menu label="Label" open>
+          <button slot="anchor">Anchor</button>
+          <slab-menu-group label="Size">
+            <slab-menu-item>One</slab-menu-item>
+          </slab-menu-group>
+        </slab-menu>`,
+    );
+
+    const host = page.locator('slab-menu');
+
+    await page.getByRole('menu').focus();
+    await page.keyboard.press('Home');
+    await expect.poll(() => isActive(page.getByRole('menuitem'))).toBe(true);
+
+    await page.locator('slab-menu-group').evaluate((group) => {
+      group.querySelector('slab-menu-item')?.remove();
+
+      const item = document.createElement('slab-menu-item');
+      item.textContent = 'Two';
+      group.append(item);
+    });
+
+    await expect
+      .poll(() => {
+        return host.evaluate((element: HTMLElement & { items: Element[] }) => {
+          return element.items.map(({ textContent }) => textContent);
+        });
+      })
+      .toStrictEqual(['Two']);
+
+    // The removed Menu Item can't still be pointed at.
+    expect(
+      await page
+        .getByRole('menu')
+        .evaluate((menu) => menu.ariaActiveDescendantElement),
+    ).toBeNull();
+
+    // Somewhere other than its own Menu, which a group outside it is.
+    await page.evaluate(() => {
+      const group = document.createElement('slab-menu-group');
+      group.label = 'Elsewhere';
+      document.body.append(group);
+      group.append(document.createElement('slab-menu-item'));
+    });
+
+    await expect
+      .poll(() => {
+        return host.evaluate(
+          (element: HTMLElement & { items: Element[] }) => element.items.length,
+        );
+      })
+      .toBe(1);
+  },
+);

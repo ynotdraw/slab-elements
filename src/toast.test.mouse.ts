@@ -6,16 +6,13 @@ test(
   { tag: '@mouse' },
   async ({ callMethod, render, page }) => {
     await render(
-      () =>
-        html`<slab-toast duration="300">
-          <button type="button">Changes saved</button>
-        </slab-toast>`,
+      () => html`<slab-toast duration="300">Changes saved</slab-toast>`,
     );
 
     const host = page.locator('slab-toast');
 
     await callMethod(host, 'show');
-    await page.getByRole('button').hover();
+    await page.locator('[data-test="region"]').hover();
 
     // Real time rather than a mocked clock: the countdown is a plain
     // `setTimeout()`, and what's under test is whether it fires.
@@ -36,18 +33,14 @@ test(
   { tag: '@mouse' },
   async ({ callMethod, render, page }) => {
     await render(
-      () =>
-        html`<slab-toast duration="300">
-          Changes saved
-          <input aria-label="Note" />
-        </slab-toast>`,
+      () => html`<slab-toast duration="300">Changes saved</slab-toast>`,
     );
 
     const host = page.locator('slab-toast');
 
     await callMethod(host, 'show');
-    // An input rather than a button, which a click doesn't focus in WebKit.
-    await page.getByRole('textbox').click();
+    // Its region takes focus when clicked, as anything with a `tabindex` does.
+    await page.locator('[data-test="region"]').click();
     await page.mouse.move(0, 0);
 
     // Real time rather than a mocked clock: the countdown is a plain

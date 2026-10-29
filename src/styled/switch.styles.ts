@@ -66,11 +66,32 @@ export default css`
     }
   }
 
+  :host(:state(error)) [part~='input'] {
+    border-color: var(--ember-deep);
+    box-shadow: 2px 2px 0 var(--ember-deep);
+  }
+
   [part~='description'] {
     color: var(--ash);
     display: block;
     font-size: 0.875rem;
     grid-column: 1 / -1;
+  }
+
+  [part~='validity-message'] {
+    color: var(--ember-deep);
+    display: block;
+    font-weight: 600;
+  }
+
+  /*
+    Forced colors drop gradients, and the thumb is one. Its colors are system
+    colors there, so it can keep them.
+  */
+  @media (forced-colors: active) {
+    [part~='input'] {
+      forced-color-adjust: none;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -24,13 +24,24 @@ declare global {
  * Space, the way a button is clicked from the keyboard, and closes once it
  * has. A disabled Menu Item isn't clicked, again like a button.
  *
+ * `type="checkbox"` makes it a `menuitemcheckbox`, which a click checks or
+ * unchecks. `type="radio"` makes it a `menuitemradio`, which a click checks,
+ * unchecking the other radio Menu Items beside it. Put each set of radios in a
+ * Menu Group, so they're named together and kept apart from the rest. Either
+ * way, it's checked or unchecked before any "click" listener hears the click,
+ * as a native checkbox is, so a listener reads the new `checked`.
+ *
  * It's never focused. Focus stays on its Menu, which points at the active Menu
  * Item with `aria-activedescendant`.
  *
- * Its Menu sets `:state(active)`. It sets `:state(disabled)` itself.
+ * Its Menu sets `:state(active)`. It sets `:state(checked)` and
+ * `:state(disabled)` itself. Nothing is drawn for a check: that's a mark a
+ * design makes.
  *
+ * @attr {boolean} [checked=false] - Whether a checkbox or radio Menu Item is checked. Ignored for any other.
  * @attr {boolean} [disabled=false]
  * @attr {string} [label] - Names the Menu Item in place of its text, and is what typeahead matches against.
+ * @attr {'checkbox'|'item'|'radio'} [type='item']
  *
  * @readonly
  * @attr {string} [version]
@@ -49,8 +60,17 @@ export default class MenuItem extends LitElement {
   @property({ reflect: true })
   label?: string;
 
+  /**
+   * Whether a checkbox or radio Menu Item is checked. Ignored for any other.
+   */
+  @property({ reflect: true, type: Boolean })
+  checked = false;
+
   @property({ reflect: true, type: Boolean })
   disabled = false;
+
+  @property({ reflect: true, useDefault: true })
+  type: 'checkbox' | 'item' | 'radio' = 'item';
 
   @property({ reflect: true })
   readonly version: string = packageJson.version;
@@ -73,7 +93,9 @@ export default class MenuItem extends LitElement {
     // ARIA goes on attributes rather than on ElementInternals. Screenreaders
     // read both. But Playwright's role queries and ARIA snapshots, and Axe,
     // only read attributes, which would leave the ARIA untested.
-    this.setAttribute('role', 'menuitem');
+    //
+    // Set here as well as on update, so it has a role from the start.
+    this.#updateRole();
   }
 
   override firstUpdated() {
@@ -99,6 +121,11 @@ export default class MenuItem extends LitElement {
   }
 
   override updated(changes: PropertyValues<this>) {
+    if (changes.has('checked') || changes.has('type')) {
+      this.#updateRole();
+      this.#setState('checked', this.type !== 'item' && this.checked);
+    }
+
     if (changes.has('disabled')) {
       this.setAttribute('aria-disabled', this.disabled ? 'true' : 'false');
       this.#setState('disabled', this.disabled);
@@ -144,6 +171,22 @@ export default class MenuItem extends LitElement {
   #onClick = (event: MouseEvent) => {
     if (this.disabled) {
       event.stopImmediatePropagation();
+
+      return;
+    }
+
+    if (this.type === 'checkbox') {
+      this.checked = !this.checked;
+    } else if (this.type === 'radio' && !this.checked) {
+      // The radios beside it, which share its Menu Group or, without one, its
+      // Menu.
+      for (const sibling of this.parentElement?.children ?? []) {
+        if (sibling instanceof MenuItem && sibling.type === 'radio') {
+          sibling.checked = false;
+        }
+      }
+
+      this.checked = true;
     }
   };
 
@@ -152,6 +195,22 @@ export default class MenuItem extends LitElement {
       this.#internals.states.add(state);
     } else {
       this.#internals.states.delete(state);
+    }
+  }
+
+  #updateRole() {
+    const role = {
+      checkbox: 'menuitemcheckbox',
+      item: 'menuitem',
+      radio: 'menuitemradio',
+    }[this.type];
+
+    this.setAttribute('role', role);
+
+    if (this.type === 'item') {
+      this.removeAttribute('aria-checked');
+    } else {
+      this.setAttribute('aria-checked', this.checked ? 'true' : 'false');
     }
   }
 }
