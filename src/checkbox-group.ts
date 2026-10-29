@@ -290,6 +290,10 @@ export default class CheckboxGroup extends LitElement {
     }
 
     this.#setState('error', this.#isShowValidationFeedback);
+
+    for (const checkbox of this.#checkboxes) {
+      checkbox.privateSetGroupInvalid(this.#isShowValidationFeedback);
+    }
   }
 
   // Functional styles go in here rather than in `styles`, so a subclass that
@@ -408,6 +412,11 @@ export default class CheckboxGroup extends LitElement {
   #onConnectedOrValueChange = (event: Event) => {
     if (!this.#isOwn(event)) {
       return;
+    }
+
+    // A Checkbox that arrives while the Group is showing it's invalid.
+    if (event.target instanceof Checkbox) {
+      event.target.privateSetGroupInvalid(this.#isShowValidationFeedback);
     }
 
     this.#deriveValue();

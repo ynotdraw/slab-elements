@@ -162,3 +162,31 @@ test(
     await expect(one).toBeFocused();
   },
 );
+
+test(
+  'swaps ArrowLeft and ArrowRight when right to left',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<div dir="rtl">
+          <slab-toolbar label="Label">
+            <button>One</button>
+            <button>Two</button>
+            <button>Three</button>
+          </slab-toolbar>
+        </div>`,
+    );
+
+    const buttons = page.locator('button');
+
+    await page.keyboard.press('Tab');
+    await expect(buttons.nth(0)).toBeFocused();
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(buttons.nth(1)).toBeFocused();
+
+    await page.keyboard.press('ArrowRight');
+    await expect(buttons.nth(0)).toBeFocused();
+  },
+);

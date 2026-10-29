@@ -665,3 +665,38 @@ test(
     await expect(getItem(page, 'Four')).toHaveJSProperty('selected', true);
   },
 );
+
+test(
+  'expands via ArrowLeft and collapses via ArrowRight when right to left',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<div dir="rtl">
+          <slab-tree label="Label">
+            <slab-tree-item>
+              One
+              <slab-tree-item>Two</slab-tree-item>
+            </slab-tree-item>
+          </slab-tree>
+        </div>`,
+    );
+
+    const one = getItem(page, 'One');
+    const two = getItem(page, 'Two');
+
+    await page.keyboard.press('Tab');
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(one).toHaveAttribute('aria-expanded', 'true');
+
+    await page.keyboard.press('ArrowLeft');
+    await expect.poll(() => isActive(two)).toBe(true);
+
+    await page.keyboard.press('ArrowRight');
+    await expect.poll(() => isActive(one)).toBe(true);
+
+    await page.keyboard.press('ArrowRight');
+    await expect(one).toHaveAttribute('aria-expanded', 'false');
+  },
+);

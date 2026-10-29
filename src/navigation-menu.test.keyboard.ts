@@ -463,3 +463,31 @@ test(
     await expect(pouring).toBeFocused();
   },
 );
+
+test(
+  'swaps ArrowLeft and ArrowRight when right to left',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<div dir="rtl">
+          <slab-navigation-menu label="Main">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+          </slab-navigation-menu>
+        </div>`,
+    );
+
+    const home = page.getByRole('link', { name: 'Home' });
+    const about = page.getByRole('link', { name: 'About' });
+
+    await home.focus();
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(about).toBeFocused();
+
+    await page.keyboard.press('ArrowRight');
+    await expect(home).toBeFocused();
+  },
+);

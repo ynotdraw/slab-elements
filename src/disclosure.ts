@@ -7,6 +7,7 @@ import {
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property } from 'lit/decorators.js';
 import packageJson from '../package.json' with { type: 'json' };
+import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
 import required from './library/required.js';
 import styles from './disclosure.styles.js';
@@ -108,6 +109,13 @@ export default class Disclosure extends LitElement {
   ): CSSResultOrNative[] {
     return super.finalizeStyles([styles, subclassStyles ?? []]);
   }
+
+  // A consumer's `aria-*`, and Tooltip's, Popover's and Menu's, on the host.
+  // It does its work through the host's lifecycle, so nothing calls it.
+  // eslint-disable-next-line no-unused-private-class-members
+  #ariaForwarding = new AriaForwarding(this, {
+    target: () => this.#summaryElementRef.value,
+  });
 
   #summaryElementRef = createRef<HTMLElement>();
 

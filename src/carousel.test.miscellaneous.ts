@@ -480,7 +480,7 @@ test(
 );
 
 test(
-  'pauses rotation while focused',
+  'stops rotating once focused',
   { tag: '@miscellaneous' },
   async ({ render, page }) => {
     await render(
@@ -502,10 +502,12 @@ test(
       (element) => element.index,
     );
 
-    // Not when focus moves within it, or while it's hovered once focus has
-    // left.
-    await page.getByTestId('slides').focus();
-    await page.getByTestId('slides').hover();
+    // Stopped, as the APG's carousel is, so it doesn't start again once focus
+    // leaves.
+    await expect(
+      page.getByRole('button', { name: 'Start slide rotation' }),
+    ).toBeVisible();
+
     await page.getByRole('button', { name: 'After' }).focus();
 
     await page.evaluate(
@@ -514,18 +516,36 @@ test(
 
     await expect(host).toHaveJSProperty('index', index);
 
-    // Nor when the pointer leaves while it's focused.
-    await page.getByTestId('slides').focus();
-    await page.mouse.move(0, 0);
-
-    await page.evaluate(
-      () => new Promise((resolve) => setTimeout(resolve, 500)),
-    );
-
-    await expect(host).toHaveJSProperty('index', index);
-
-    await page.getByRole('button', { name: 'After' }).focus();
+    await page.getByRole('button', { name: 'Start slide rotation' }).click();
     await expect(host).toHaveJSProperty('index', (index + 1) % 2);
+  },
+);
+
+test(
+  'does not rotate when the user prefers reduced motion',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+
+    await render(
+      () =>
+        html`<slab-carousel autoplay interval="200" label="Label">
+          <div>One</div>
+          <div>Two</div>
+        </slab-carousel>`,
+    );
+
+    const host = page.locator('slab-carousel');
+
+    await page.evaluate(
+      () => new Promise((resolve) => setTimeout(resolve, 500)),
+    );
+
+    await expect(host).toHaveJSProperty('index', 0);
+
+    // The user can still start it.
+    await page.getByRole('button', { name: 'Start slide rotation' }).click();
+    await expect(host).toHaveJSProperty('index', 1);
   },
 );
 
