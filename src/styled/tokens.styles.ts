@@ -61,4 +61,23 @@ export default css`
     /* The hard, offset shadow a raised surface casts. */
     --shadow: 4px 4px 0 var(--ink);
   }
+
+  /*
+    Forced colors, such as Windows' contrast themes, replace every color that
+    isn't a system color, so ember fills and paper marks all become the same
+    background, and a checked Checkbox looks like an unchecked one. The palette
+    becomes the user's system colors instead, which are kept. Ember is the
+    highlight, the color of what's selected, and ember-deep, being for text and
+    for paper text on it, is the text color.
+  */
+  @media (forced-colors: active) {
+    :host {
+      --ash: GrayText;
+      --chalk: Canvas;
+      --ember: Highlight;
+      --ember-deep: CanvasText;
+      --ink: CanvasText;
+      --paper: Canvas;
+    }
+  }
 `;

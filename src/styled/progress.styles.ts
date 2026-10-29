@@ -77,6 +77,16 @@ export default css`
     }
   }
 
+  /*
+    Forced colors drop gradients, and the bricks are one. Their colors are
+    system colors there, so they can keep them.
+  */
+  @media (forced-colors: active) {
+    [part~='progress'] {
+      forced-color-adjust: none;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     :host(:state(indeterminate)) [part~='progress'] {
       animation: none;
