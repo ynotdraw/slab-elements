@@ -84,6 +84,16 @@ export default css`
     font-weight: 600;
   }
 
+  /*
+    Forced colors drop gradients, and the thumb is one. Its colors are system
+    colors there, so it can keep them.
+  */
+  @media (forced-colors: active) {
+    [part~='input'] {
+      forced-color-adjust: none;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     [part~='input'] {
       transition: none;

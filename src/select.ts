@@ -310,8 +310,13 @@ export default class Select extends LitElement {
     //
     // The listbox is never focused, so its keyboard is the combobox's.
     //
+    // The label is a `<span>` because a `<label>` can only name a labelable
+    // element, which a `[role=combobox]` `<div>` isn't. A click on it focuses
+    // the combobox anyway, as a click on a native select's label does. It
+    // needs no keyboard of its own: it's never focused, and the combobox is.
+    //
     /* eslint-disable lit-a11y/click-events-have-key-events */
-    return html`<span id="label" part="label">
+    return html`<span id="label" part="label" @click=${this.#onLabelClick}>
         <!-- The label -->
         ${this.label}
       </span>
@@ -852,6 +857,13 @@ export default class Select extends LitElement {
 
   // What Enter does when open: select the active Option, and dispatch "input"
   // and "change" if that changed anything. Not when `multiple`, where Enter
+  // Nothing for a disabled one, as for a native select's label.
+  #onLabelClick() {
+    if (!this.#isDisabled) {
+      this.focus();
+    }
+  }
+
   // toggles, and leaving the Select shouldn't.
   #selectActive() {
     if (!this.multiple && this.#options.activeOption) {

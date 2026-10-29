@@ -449,3 +449,27 @@ test(
     expect(await dispatchTouchStart()).toBe(false);
   },
 );
+
+test(
+  'keeps the colors being picked from in forced colors',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await page.emulateMedia({ forcedColors: 'active' });
+
+    await render(
+      () =>
+        html`<slab-color-picker
+          label="Label"
+          swatches="#ff0000"
+        ></slab-color-picker>`,
+    );
+
+    const swatch = page
+      .locator('slab-color-picker')
+      .locator('[part~="swatch"]');
+
+    // A forced color would be the user's background instead. Only Chromium
+    // emulates forced colors, so elsewhere this holds either way.
+    await expect(swatch).toHaveCSS('background-color', 'rgb(255, 0, 0)');
+  },
+);

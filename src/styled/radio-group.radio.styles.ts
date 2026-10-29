@@ -61,6 +61,16 @@ export default css`
     border-color: var(--ember);
   }
 
+  /*
+    Forced colors drop gradients, and the dot is one. Its colors are system
+    colors there, so it can keep them.
+  */
+  @media (forced-colors: active) {
+    :host::before {
+      forced-color-adjust: none;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     :host {
       transition: none;

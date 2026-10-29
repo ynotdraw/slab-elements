@@ -208,3 +208,28 @@ test(
     expect(targets).toStrictEqual(['input slab-select', 'change slab-select']);
   },
 );
+
+test(
+  'is focused by a click on its label, unless it is disabled',
+  { tag: '@mouse' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-select label="Label">
+          <slab-option>One</slab-option>
+        </slab-select>`,
+    );
+
+    const host = page.locator('slab-select');
+    const combobox = page.getByRole('combobox');
+
+    await page.getByText('Label').click();
+    await expect(combobox).toBeFocused();
+
+    await combobox.blur();
+    await setProperty(host, 'disabled', true);
+    await page.getByText('Label').click();
+
+    await expect(combobox).not.toBeFocused();
+  },
+);
