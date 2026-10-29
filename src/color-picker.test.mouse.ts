@@ -133,9 +133,9 @@ test(
 
     await expect(page.getByRole('slider', { name: 'Label Hue' })).toBeFocused();
 
-    await expect(
-      page.getByRole('slider', { name: 'Label Hue' }),
-    ).toHaveAttribute('aria-valuenow', '180');
+    await expect(page.getByRole('slider', { name: 'Label Hue' })).toHaveValue(
+      '180',
+    );
   },
 );
 
@@ -248,9 +248,9 @@ test(
 
     await page.mouse.click((hue?.x ?? 0) + 150, (hue?.y ?? 0) + 5);
 
-    await expect(
-      page.getByRole('slider', { name: 'Label Hue' }),
-    ).toHaveAttribute('aria-valuenow', '90');
+    await expect(page.getByRole('slider', { name: 'Label Hue' })).toHaveValue(
+      '90',
+    );
   },
 );
 

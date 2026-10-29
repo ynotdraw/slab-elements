@@ -1963,24 +1963,16 @@
               "description": "The saturation and brightness area"
             },
             {
-              "name": "area-thumb",
-              "description": "The area's thumb"
+              "name": "focus-visible",
+              "description": "The thumb whose input has visible focus"
             },
             {
               "name": "hue",
               "description": "The hue slider's track"
             },
             {
-              "name": "hue-thumb",
-              "description": "The hue slider's thumb"
-            },
-            {
               "name": "alpha",
               "description": "The alpha slider's track"
-            },
-            {
-              "name": "alpha-thumb",
-              "description": "The alpha slider's thumb"
             },
             {
               "name": "hex"
@@ -2067,7 +2059,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the area, after `label`. \"Saturation and brightness\" in English when\nunset.",
+              "description": "Names the area, after `label`. \"Saturation and brightness\" in English when unset.",
               "attribute": "area-label",
               "reflects": true
             },
@@ -2339,7 +2331,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the area, after `label`. \"Saturation and brightness\" in English when\nunset.",
+              "description": "Names the area, after `label`. \"Saturation and brightness\" in English when unset.",
               "fieldName": "areaLabel"
             },
             {

@@ -15,9 +15,9 @@ import packageJson from '../package.json' with { type: 'json' };
 import afterReflection from './library/after-reflection.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
-import StringsController from './library/strings.js';
 import required from './library/required.js';
 import RovingTabindex from './library/roving-tabindex.js';
+import StringsController from './library/strings.js';
 import styles from './color-picker.styles.js';
 
 declare global {
@@ -42,6 +42,14 @@ interface Color {
 // is upgraded as the class is defined.
 const black: Color = { alpha: 100, brightness: 0, hue: 0, saturation: 0 };
 
+// The thumb each channel's range input is in.
+const controls: Record<keyof Color, Control> = {
+  alpha: 'alpha',
+  brightness: 'area',
+  hue: 'hue',
+  saturation: 'area',
+};
+
 /**
  * A color picker with no visual styles: a two-dimensional area for saturation
  * and brightness, a hue slider, an optional alpha slider, a hex field, and
@@ -53,13 +61,18 @@ const black: Color = { alpha: 100, brightness: 0, hue: 0, saturation: 0 };
  * takes it. Like a native input's `value`, the attribute is the default and the
  * property is the current value.
  *
- * The area is a `[role=slider]` whose value is its saturation and whose value
- * text is its saturation and brightness. Left and Right change saturation, and
- * Up and Down change brightness. The hue and alpha sliders are
- * `[role=slider]`s as well. Each is named by `label` and its own label, so a
- * screenreader reads "Fill Hue". The arrow keys step by one, Page Up and Page
- * Down by a tenth, and Home and End go as far as they can. Drag a thumb, or
- * press anywhere along a slider or the area to move it there.
+ * Each thumb holds a visually hidden range input, which is what's focused and
+ * what a screenreader reads. A range input is what screenreaders on phones
+ * know how to adjust, with a swipe up or down, which they can't do to a
+ * `[role=slider]`. The area's input is its saturation, and its value text is
+ * its saturation and brightness. Left and Right change saturation, and Up and
+ * Down change brightness. The area has a second input for its brightness, left
+ * out of the tab order since the arrow keys already change both, so a
+ * screenreader on a phone can swipe to it. Each input is named by `label` and
+ * its own label, so a screenreader reads "Fill Hue". The arrow keys step by
+ * one, Page Up and Page Down by a tenth, and Home and End go as far as they
+ * can. Drag a thumb, or press anywhere along a slider or the area to move it
+ * there.
  *
  * The hex field commits on "change", when it's blurred or Enter is pressed,
  * and goes back to `value` when what's typed isn't a color. `swatches` is a
@@ -71,7 +84,9 @@ const black: Color = { alpha: 100, brightness: 0, hue: 0, saturation: 0 };
  * black. The hue slider is the spectrum, the alpha slider is clear to opaque,
  * and each thumb and swatch is placed and colored. Give the area and the
  * sliders a size, and style the rest through its parts and through
- * `:state(disabled)` and `:state(dragging)`. The container sets
+ * `:state(disabled)` and `:state(dragging)`. A thumb isn't focused itself, so
+ * one whose input has visible focus has a `focus-visible` part for a focus
+ * ring. The container sets
  * `--color-picker-hue`, `--color-picker-opaque` and `--color-picker-value`,
  * and each swatch `--color-picker-swatch`, for styles of your own.
  *
@@ -96,14 +111,12 @@ const black: Color = { alpha: 100, brightness: 0, hue: 0, saturation: 0 };
  * @slot {Element | string} [description] - Text about the color picker, such as a hint
  *
  * @csspart alpha - The alpha slider's track
- * @csspart alpha-thumb - The alpha slider's thumb
  * @csspart area - The saturation and brightness area
- * @csspart area-thumb - The area's thumb
  * @csspart container - The label, the controls and the description
  * @csspart description - Text about the color picker, such as a hint
+ * @csspart focus-visible - The thumb whose input has visible focus
  * @csspart hex
  * @csspart hue - The hue slider's track
- * @csspart hue-thumb - The hue slider's thumb
  * @csspart label - The label
  * @csspart selected - The swatch that's value
  * @csspart swatch - A swatch
@@ -162,8 +175,7 @@ export default class ColorPicker extends LitElement {
   alphaLabel?: string;
 
   /**
-   * Names the area, after `label`. "Saturation and brightness" in English when
-   * unset.
+   * Names the area, after `label`. "Saturation and brightness" in English when unset.
    */
   @property({ attribute: 'area-label', reflect: true })
   areaLabel?: string;
@@ -250,7 +262,7 @@ export default class ColorPicker extends LitElement {
   }
 
   override focus(options?: FocusOptions) {
-    this.#areaThumbElementRef.value?.focus(options);
+    this.#areaInputElementRef.value?.focus(options);
   }
 
   formDisabledCallback(isDisabled: boolean): void {
@@ -273,7 +285,6 @@ export default class ColorPicker extends LitElement {
     const { alpha, brightness, hue, saturation } = this.#color;
     const value = this.value;
     const opaque = toHex({ ...this.#color, alpha: 100 }, false);
-    const tabindex = this.#isDisabled ? -1 : 0;
     const saturationText = `${this.saturationLabel ?? this.#strings.value.colorPickerSaturation} ${Math.round(saturation)}%`;
     const brightnessText = `${this.brightnessLabel ?? this.#strings.value.colorPickerBrightness} ${Math.round(brightness)}%`;
     const areaText = `${saturationText}, ${brightnessText}`;
@@ -281,10 +292,16 @@ export default class ColorPicker extends LitElement {
     // ARIA goes on attributes rather than on ElementInternals. Screenreaders
     // read both. But Playwright's role queries and ARIA snapshots, and Axe,
     // only read attributes, which would leave the ARIA untested.
+    //
+    // There's no `role` or `aria-value*` on the thumbs. Each one's range input
+    // is a slider to the platform already, with its value, minimum and
+    // maximum.
     return html`<div
       aria-labelledby="label"
       part="container"
       role="group"
+      @focusin=${this.#onFocusIn}
+      @focusout=${this.#onFocusOut}
       style=${styleMap({
         '--color-picker-hue': String(hue),
         '--color-picker-opaque': opaque,
@@ -308,26 +325,48 @@ export default class ColorPicker extends LitElement {
       >
         <!-- The saturation and brightness area -->
         <div
-          aria-describedby="description"
-          aria-disabled=${ifDefined(this.#isDisabled ? 'true' : undefined)}
-          aria-label=${this.areaLabel ?? this.#strings.value.colorPickerArea}
-          aria-labelledby="label area-thumb"
-          aria-valuemax="100"
-          aria-valuemin="0"
-          aria-valuenow=${Math.round(saturation)}
-          aria-valuetext=${areaText}
-          id="area-thumb"
-          part="area-thumb"
-          role="slider"
+          part=${thumbPart('area', this.focusVisibleThumb)}
           style=${styleMap({
             insetBlockStart: `${100 - brightness}%`,
             insetInlineStart: `${saturation}%`,
           })}
-          tabindex=${tabindex}
           @keydown=${this.#onAreaKeydown}
-          ${ref(this.#areaThumbElementRef)}
         >
-          <!-- The area's thumb -->
+          <!--
+            The area's thumb
+            @part focus-visible - The thumb whose input has visible focus
+          -->
+          <input
+            aria-describedby="description"
+            aria-label=${this.areaLabel ?? this.#strings.value.colorPickerArea}
+            aria-labelledby="label area-thumb"
+            aria-valuetext=${areaText}
+            data-channel="saturation"
+            id="area-thumb"
+            max="100"
+            min="0"
+            type="range"
+            .value=${live(String(Math.round(saturation)))}
+            ?disabled=${this.#isDisabled}
+            @input=${this.#onRangeInput}
+            ${ref(this.#areaInputElementRef)}
+          />
+
+          <input
+            aria-describedby="description"
+            aria-label=${this.brightnessLabel ?? this.#strings.value.colorPickerBrightness}
+            aria-labelledby="label brightness-thumb"
+            aria-valuetext=${brightnessText}
+            data-channel="brightness"
+            id="brightness-thumb"
+            max="100"
+            min="0"
+            tabindex="-1"
+            type="range"
+            .value=${live(String(Math.round(brightness)))}
+            ?disabled=${this.#isDisabled}
+            @input=${this.#onRangeInput}
+          />
         </div>
       </div>
 
@@ -342,22 +381,25 @@ export default class ColorPicker extends LitElement {
       >
         <!-- The hue slider's track -->
         <div
-          aria-describedby="description"
-          aria-disabled=${ifDefined(this.#isDisabled ? 'true' : undefined)}
-          aria-label=${this.hueLabel ?? this.#strings.value.colorPickerHue}
-          aria-labelledby="label hue-thumb"
-          aria-valuemax="360"
-          aria-valuemin="0"
-          aria-valuenow=${Math.round(hue)}
-          id="hue-thumb"
-          part="hue-thumb"
-          role="slider"
+          part=${thumbPart('hue', this.focusVisibleThumb)}
           style=${styleMap({ insetInlineStart: `${(hue / 360) * 100}%` })}
-          tabindex=${tabindex}
           @keydown=${this.#onHueKeydown}
-          ${ref(this.#hueThumbElementRef)}
         >
           <!-- The hue slider's thumb -->
+          <input
+            aria-describedby="description"
+            aria-label=${this.hueLabel ?? this.#strings.value.colorPickerHue}
+            aria-labelledby="label hue-thumb"
+            data-channel="hue"
+            id="hue-thumb"
+            max="360"
+            min="0"
+            type="range"
+            .value=${live(String(Math.round(hue)))}
+            ?disabled=${this.#isDisabled}
+            @input=${this.#onRangeInput}
+            ${ref(this.#hueInputElementRef)}
+          />
         </div>
       </div>
 
@@ -374,23 +416,26 @@ export default class ColorPicker extends LitElement {
             >
               <!-- The alpha slider's track -->
               <div
-                aria-describedby="description"
-                aria-disabled=${ifDefined(this.#isDisabled ? 'true' : undefined)}
-                aria-label=${this.alphaLabel ?? this.#strings.value.colorPickerAlpha}
-                aria-labelledby="label alpha-thumb"
-                aria-valuemax="100"
-                aria-valuemin="0"
-                aria-valuenow=${Math.round(alpha)}
-                aria-valuetext=${String(Math.round(alpha)) + '%'}
-                id="alpha-thumb"
-                part="alpha-thumb"
-                role="slider"
+                part=${thumbPart('alpha', this.focusVisibleThumb)}
                 style=${styleMap({ insetInlineStart: `${alpha}%` })}
-                tabindex=${tabindex}
                 @keydown=${this.#onAlphaKeydown}
-                ${ref(this.#alphaThumbElementRef)}
               >
                 <!-- The alpha slider's thumb -->
+                <input
+                  aria-describedby="description"
+                  aria-label=${this.alphaLabel ?? this.#strings.value.colorPickerAlpha}
+                  aria-labelledby="label alpha-thumb"
+                  aria-valuetext=${String(Math.round(alpha)) + '%'}
+                  data-channel="alpha"
+                  id="alpha-thumb"
+                  max="100"
+                  min="0"
+                  type="range"
+                  .value=${live(String(Math.round(alpha)))}
+                  ?disabled=${this.#isDisabled}
+                  @input=${this.#onRangeInput}
+                  ${ref(this.#alphaInputElementRef)}
+                />
               </div>
             </div>`
           : nothing
@@ -488,15 +533,20 @@ export default class ColorPicker extends LitElement {
     this.#internals = this.attachInternals();
   }
 
+  // Which thumb's input has focus that's visible, for its `focus-visible`
+  // part. A thumb isn't focused itself, so it can't match `:focus-visible`.
+  @state()
+  private focusVisibleThumb?: Control;
+
   @state()
   private isFormDisabled = false;
 
+  #alphaInputElementRef = createRef<HTMLInputElement>();
+
+  #areaInputElementRef = createRef<HTMLInputElement>();
+
   // A consumer's `aria-*`, and Tooltip's, Popover's and Menu's, on the host.
   // It does its work through the host's lifecycle, so nothing calls it.
-  #alphaThumbElementRef = createRef<HTMLDivElement>();
-
-  #areaThumbElementRef = createRef<HTMLDivElement>();
-
   // eslint-disable-next-line no-unused-private-class-members
   #ariaForwarding = new AriaForwarding(this, {
     target: () => this.renderRoot.querySelector('[role="group"]'),
@@ -508,7 +558,7 @@ export default class ColorPicker extends LitElement {
   // tell whether the drag changed anything.
   #drag?: { control: Control; value: string };
 
-  #hueThumbElementRef = createRef<HTMLDivElement>();
+  #hueInputElementRef = createRef<HTMLInputElement>();
 
   #internals: ElementInternals;
 
@@ -564,6 +614,19 @@ export default class ColorPicker extends LitElement {
     };
 
     this.#onKeydown(event, changes[event.key]);
+  };
+
+  #onFocusIn = (event: FocusEvent) => {
+    const channel = channelOf(event.target);
+
+    this.focusVisibleThumb =
+      channel && (event.target as HTMLElement).matches(':focus-visible')
+        ? controls[channel]
+        : undefined;
+  };
+
+  #onFocusOut = () => {
+    this.focusVisibleThumb = undefined;
   };
 
   // The "#" is optional, since it's easy to leave off.
@@ -627,9 +690,9 @@ export default class ColorPicker extends LitElement {
     this.#moveTo(event, track, control);
 
     const thumbs = {
-      alpha: this.#alphaThumbElementRef,
-      area: this.#areaThumbElementRef,
-      hue: this.#hueThumbElementRef,
+      alpha: this.#alphaInputElementRef,
+      area: this.#areaInputElementRef,
+      hue: this.#hueInputElementRef,
     };
 
     // Without scrolling, since the thumb is already where the pointer is.
@@ -644,6 +707,28 @@ export default class ColorPicker extends LitElement {
         this.#drag.control,
       );
     }
+  };
+
+  // Only from a screenreader, such as one on a phone after a swipe up or down:
+  // the arrow keys are handled on the thumbs, and the inputs are hidden from
+  // the pointer. Each is a step taken and let go of, like a key, so it reports
+  // "change" as well.
+  #onRangeInput = (event: Event) => {
+    const input = event.target as HTMLInputElement;
+    const channel = input.dataset.channel as keyof Color;
+
+    // "input" composes, so it would escape alongside the host's own.
+    event.stopPropagation();
+
+    if (this.#change({ [channel]: Number(input.value) })) {
+      this.dispatchEvent(
+        new Event('change', { bubbles: true, composed: true }),
+      );
+    }
+
+    // Rendered again even when nothing changed, so the input goes back to the
+    // value it's kept to.
+    this.requestUpdate();
   };
 
   #onSwatchesClick = (event: MouseEvent) => {
@@ -820,6 +905,21 @@ export default class ColorPicker extends LitElement {
       this.#isDisabled || this.name === '' ? null : this.value,
     );
   }
+}
+
+// A thumb's parts, with `focus-visible` while its input's focus is visible.
+function thumbPart(control: Control, focusVisible?: Control) {
+  return control === focusVisible
+    ? `${control}-thumb focus-visible`
+    : `${control}-thumb`;
+}
+
+// The channel a thumb's range input changes, or undefined for any other
+// element, such as the hex field.
+function channelOf(target: EventTarget | null) {
+  return target instanceof HTMLInputElement && target.type === 'range'
+    ? (target.dataset.channel as keyof Color)
+    : undefined;
 }
 
 function clamp(value: number, low: number, high: number) {
