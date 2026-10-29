@@ -10,6 +10,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { when } from 'lit/directives/when.js';
 import packageJson from '../package.json' with { type: 'json' };
+import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
 import assertSlot from './library/assert-slot.js';
 import afterReflection from './library/after-reflection.js';
@@ -575,6 +576,13 @@ export default class Combobox extends LitElement {
 
   @state()
   private validityMessage?: string;
+
+  // A consumer's `aria-*`, and Tooltip's, Popover's and Menu's, on the host.
+  // It does its work through the host's lifecycle, so nothing calls it.
+  // eslint-disable-next-line no-unused-private-class-members
+  #ariaForwarding = new AriaForwarding(this, {
+    target: () => this.#inputElementRef.value,
+  });
 
   #hasCustomValidity = false;
 

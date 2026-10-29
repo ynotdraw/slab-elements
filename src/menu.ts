@@ -30,6 +30,8 @@ declare global {
  * a `[role=menu]` element in a native `[popover="auto"]`, opened from
  * whatever is slotted into `anchor`. A click on the anchor, or Enter or Space,
  * opens it at the first Menu Item, and the Up arrow opens it at the last.
+ * The anchor gets `aria-haspopup` and `aria-expanded`, which a Slab anchor,
+ * such as a Copy Button, passes on to its own button.
  *
  * Focus moves to the menu while it's open, and its `aria-activedescendant`
  * points at the active Menu Item. The Up and Down arrows move through the Menu

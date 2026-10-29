@@ -11,6 +11,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import packageJson from '../package.json' with { type: 'json' };
 import afterReflection from './library/after-reflection.js';
+import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
 import required from './library/required.js';
 import styles from './range-slider.styles.js';
@@ -362,8 +363,18 @@ export default class RangeSlider extends LitElement {
   // track, and the value it started from. `thumb` is undefined while the
   // thumbs are on top of each other and the drag hasn't gone either way yet.
   // `start` and `end` are what they were before the pointer went down, to
-  // tell whether the drag changed anything.
+  // eslint-disable-next-line no-unused-private-class-members
+#ariaForwarding = new AriaForwarding(this, {
+    target: () => this.renderRoot.querySelector('[role="group"]'),
+  });
+
+// tell whether the drag changed anything.
   #drag?: Drag;
+
+  // A consumer's `aria-*`, and Tooltip's, Popover's and Menu's, on the host.
+  // It does its work through the host's lifecycle, so nothing calls it.
+  
+  
 
   #endElementRef = createRef<HTMLDivElement>();
 
