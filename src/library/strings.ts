@@ -29,6 +29,8 @@ export interface Strings {
   colorPickerSaturation: string;
   colorPickerSwatches: string;
   comboboxRemove: (text: string) => string;
+  comboboxRemoved: (text: string) => string;
+  comboboxResults: (count: number) => string;
   copyButtonCopied: string;
   copyButtonFailed: string;
   dateRangeFieldEnd: string;
@@ -42,7 +44,9 @@ export interface Strings {
   rangeSliderMaximum: string;
   rangeSliderMinimum: string;
   stepsComplete: string;
+  tagsInputAdded: (text: string) => string;
   tagsInputRemove: (text: string) => string;
+  tagsInputRemoved: (text: string) => string;
 }
 
 const english: Strings = {
@@ -65,6 +69,9 @@ const english: Strings = {
   colorPickerSaturation: 'Saturation',
   colorPickerSwatches: 'Swatches',
   comboboxRemove: (text) => `Remove ${text}`,
+  comboboxRemoved: (text) => `${text} removed`,
+  comboboxResults: (count) =>
+    count === 0 ? 'No results' : count === 1 ? '1 result' : `${count} results`,
   copyButtonCopied: 'Copied',
   copyButtonFailed: "Couldn't copy",
   dateRangeFieldEnd: 'End',
@@ -78,7 +85,9 @@ const english: Strings = {
   rangeSliderMaximum: 'Maximum',
   rangeSliderMinimum: 'Minimum',
   stepsComplete: 'Completed',
+  tagsInputAdded: (text) => `${text} added`,
   tagsInputRemove: (text) => `Remove ${text}`,
+  tagsInputRemoved: (text) => `${text} removed`,
 };
 
 // Kept under a registered symbol rather than in this module, so more than one

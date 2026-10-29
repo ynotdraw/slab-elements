@@ -801,41 +801,100 @@ test(
 );
 
 test(
-  'hides an Option Group while it filters out every Option in it',
+  'tells screenreaders how many Options are left once typing pauses',
   { tag: '@keyboard' },
   async ({ render, page }) => {
     await render(
       () =>
         html`<slab-combobox label="Label">
-          <slab-option>Plain</slab-option>
-          <slab-option-group label="Fruit">
-            <slab-option>Apple</slab-option>
-            <slab-option>Banana</slab-option>
-          </slab-option-group>
-          <slab-option-group label="Vegetables">
-            <slab-option>Carrot</slab-option>
-          </slab-option-group>
+          <slab-option>Apple</slab-option>
+          <slab-option>Banana</slab-option>
+          <slab-option>Grape</slab-option>
         </slab-combobox>`,
     );
 
-    const fruit = page.getByRole('group', { name: 'Fruit' });
-    const vegetables = page.getByRole('group', { name: 'Vegetables' });
+    // A stand-in for `ariaNotify()`, since not every browser has one, and a
+    // real one can't be listened to.
+    await page.evaluate(() => {
+      const announcements: string[] = [];
 
-    await page.getByRole('combobox').pressSequentially('ban');
+      Object.assign(globalThis, { announcements });
 
-    await expect(fruit).toBeVisible();
-    await expect(vegetables).toBeHidden();
+      Object.defineProperty(Element.prototype, 'ariaNotify', {
+        configurable: true,
+        value(message: string) {
+          announcements.push(message);
+        },
+      });
+    });
 
-    await page.keyboard.press('ArrowDown');
+    const announcements = () =>
+      page.evaluate(
+        () =>
+          (globalThis as unknown as { announcements: string[] }).announcements,
+      );
 
-    await expect(page.locator('slab-combobox')).toHaveJSProperty(
-      'activeOption.textContent',
-      'Banana',
+    const combobox = page.getByRole('combobox');
+
+    await combobox.pressSequentially('ap');
+    await expect.poll(announcements).toStrictEqual(['2 results']);
+
+    await combobox.pressSequentially('p');
+    await expect.poll(announcements).toStrictEqual(['2 results', '1 result']);
+
+    await combobox.pressSequentially('z');
+
+    await expect
+      .poll(announcements)
+      .toStrictEqual(['2 results', '1 result', 'No results']);
+  },
+);
+
+test(
+  'tells screenreaders which tag was removed',
+  { tag: '@keyboard' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label" multiple>
+          <slab-option value="apple">Apple</slab-option>
+        </slab-combobox>`,
     );
 
-    await page.getByRole('combobox').fill('');
+    const host = page.locator('slab-combobox');
 
-    await expect(vegetables).toBeVisible();
+    // A stand-in for `ariaNotify()`, since not every browser has one, and a
+    // real one can't be listened to.
+    await page.evaluate(() => {
+      const announcements: string[] = [];
+
+      Object.assign(globalThis, { announcements });
+
+      Object.defineProperty(Element.prototype, 'ariaNotify', {
+        configurable: true,
+        value(message: string) {
+          announcements.push(message);
+        },
+      });
+    });
+
+    const announcements = () =>
+      page.evaluate(
+        () =>
+          (globalThis as unknown as { announcements: string[] }).announcements,
+      );
+
+    // One value that names an Option, and one that doesn't.
+    await setProperty(host, 'values', ['custom', 'apple']);
+
+    await page.getByRole('combobox').press('Backspace');
+    await expect.poll(announcements).toStrictEqual(['Apple removed']);
+
+    await page.getByRole('combobox').press('Backspace');
+
+    await expect
+      .poll(announcements)
+      .toStrictEqual(['Apple removed', 'custom removed']);
   },
 );
 
@@ -877,5 +936,44 @@ test(
 
     await expect(page.locator('slab-combobox')).toHaveJSProperty('value', '');
     await expect(page.getByRole('listbox')).toBeVisible();
+  },
+);
+
+test(
+  'hides an Option Group while it filters out every Option in it',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label">
+          <slab-option>Plain</slab-option>
+          <slab-option-group label="Fruit">
+            <slab-option>Apple</slab-option>
+            <slab-option>Banana</slab-option>
+          </slab-option-group>
+          <slab-option-group label="Vegetables">
+            <slab-option>Carrot</slab-option>
+          </slab-option-group>
+        </slab-combobox>`,
+    );
+
+    const fruit = page.getByRole('group', { name: 'Fruit' });
+    const vegetables = page.getByRole('group', { name: 'Vegetables' });
+
+    await page.getByRole('combobox').pressSequentially('ban');
+
+    await expect(fruit).toBeVisible();
+    await expect(vegetables).toBeHidden();
+
+    await page.keyboard.press('ArrowDown');
+
+    await expect(page.locator('slab-combobox')).toHaveJSProperty(
+      'activeOption.textContent',
+      'Banana',
+    );
+
+    await page.getByRole('combobox').fill('');
+
+    await expect(vegetables).toBeVisible();
   },
 );

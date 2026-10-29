@@ -19,11 +19,15 @@ import OptionsController from './library/options-controller.js';
 import TagsController from './library/tags-controller.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
+import announce from './library/announce.js';
 import Option from './option.js';
 import OptionGroup from './option-group.js';
 import styles from './combobox.styles.js';
 import browserValidationMessage from './library/browser-validation-message.js';
 import isComposing from './library/is-composing.js';
+
+// How long typing has to pause before the number of results is announced.
+const announceDelay = 500;
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -52,7 +56,8 @@ declare global {
  * Option's text unless it's replaced, and opens the listbox. An Option that
  * doesn't match is hidden, so it's out of the accessibility tree and skipped by
  * the arrow keys. With none left, the listbox closes and the host matches
- * `:state(empty)`, for a "no results" message of your own.
+ * `:state(empty)`, for a "no results" message of your own. Screenreaders are
+ * told how many Options are left once typing pauses, from `resultsLabel`.
  *
  * ArrowDown and ArrowUp open the listbox and move the active Option, stopping
  * at each end and skipping disabled Options. Alt with ArrowDown opens it
@@ -125,6 +130,8 @@ declare global {
  * @prop {Option[]} options
  *
  * @prop {(text: string) => string} removeLabel - Names each tag's button, which shows only the selected Option's text, from that text. "Remove" and the text in English when unset.
+ * @prop {(text: string) => string} removedLabel - What screenreaders are told when a tag is removed, from its text. The text and "removed" in English when unset.
+ * @prop {(count: number) => string} resultsLabel - What screenreaders are told once typing pauses, from how many Options are left. "No results", "1 result" and so on in English when unset.
  *
  * @readonly
  * @prop {Option | null} selectedOption
@@ -231,8 +238,24 @@ export default class Combobox extends LitElement {
   removeLabel: (text: string) => string = (text) =>
     this.#strings.value.comboboxRemove(text);
 
+  /**
+   * What screenreaders are told when a tag is removed, from its text. The text
+   * and "removed" in English when unset.
+   */
+  @property({ attribute: false })
+  removedLabel: (text: string) => string = (text) =>
+    this.#strings.value.comboboxRemoved(text);
+
   @property({ reflect: true, type: Boolean })
   required = false;
+
+  /**
+   * What screenreaders are told once typing pauses, from how many Options are
+   * left. "No results", "1 result" and so on in English when unset.
+   */
+  @property({ attribute: false })
+  resultsLabel: (count: number) => string = (count) =>
+    this.#strings.value.comboboxResults(count);
 
   /**
    * The selected Option's value, or the typed text when `allow-custom` is set
@@ -624,6 +647,8 @@ export default class Combobox extends LitElement {
   @state()
   private validityMessage?: string;
 
+  #announceTimeout?: ReturnType<typeof setTimeout>;
+
   // A consumer's `aria-*`, and Tooltip's, Popover's and Menu's, on the host.
   // It does its work through the host's lifecycle, so nothing calls it.
   // eslint-disable-next-line no-unused-private-class-members
@@ -738,6 +763,14 @@ export default class Combobox extends LitElement {
     this.activeOption = null;
     this.open = true;
     this.requestUpdate();
+
+    // Once typing pauses, rather than on every keystroke, which would queue
+    // up a count for each.
+    clearTimeout(this.#announceTimeout);
+
+    this.#announceTimeout = setTimeout(() => {
+      announce(this.resultsLabel(this.#visible.length), { source: this });
+    }, announceDelay);
   };
 
   #onInputKeydown = (event: KeyboardEvent) => {
@@ -937,9 +970,16 @@ export default class Combobox extends LitElement {
     this.isBlurring = false;
   }
 
+  // Focus stays where it is, or moves to the next tag, so nothing else says
+  // the tag is gone.
   #remove(value?: string) {
     this.#setValues(this.values.filter((other) => other !== value));
     this.requestUpdate();
+
+    if (value !== undefined) {
+      const text = this.options.find((option) => option.value === value)?.text;
+      announce(this.removedLabel(text ?? value), { source: this });
+    }
   }
 
   #renderTags() {
