@@ -15,6 +15,7 @@ import assertSlot from './library/assert-slot.js';
 import OptionsController from './library/options-controller.js';
 import Option from './option.js';
 import styles from './command-palette.styles.js';
+import isComposing from './library/is-composing.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -331,7 +332,7 @@ export default class CommandPalette extends Dialog {
 
   #onInputKeydown = (event: KeyboardEvent) => {
     // Enter and the arrows belong to an input method while it's composing.
-    if (event.isComposing) {
+    if (isComposing(event)) {
       return;
     }
 

@@ -16,6 +16,7 @@ import required from './library/required.js';
 import styles from './pin-input.styles.js';
 import afterReflection from './library/after-reflection.js';
 import browserValidationMessage from './library/browser-validation-message.js';
+import isComposing from './library/is-composing.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -662,6 +663,12 @@ export default class PinInput extends LitElement {
   }
 
   #onInputKeydown(event: KeyboardEvent) {
+    // Enter, Escape and the arrows belong to an input method while it's
+    // composing.
+    if (isComposing(event)) {
+      return;
+    }
+
     /* v8 ignore next 3 */
     if (!(event.target instanceof HTMLInputElement)) {
       return;

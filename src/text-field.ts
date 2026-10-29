@@ -15,6 +15,7 @@ import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
 import styles from './text-field.styles.js';
 import afterReflection from './library/after-reflection.js';
+import isComposing from './library/is-composing.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -477,6 +478,12 @@ export default class TextField extends LitElement {
   }
 
   #onInputKeydown(event: KeyboardEvent) {
+    // Enter, Escape and the arrows belong to an input method while it's
+    // composing.
+    if (isComposing(event)) {
+      return;
+    }
+
     if (event.key === 'Enter') {
       this.form?.requestSubmit();
     }
