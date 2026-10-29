@@ -34,16 +34,35 @@ const description = "Every release of Slab, newest first, with what's changed in
               <a class="announcement" href={`${base}releases/${version}/`}>
                 <strong>What's new in {version}</strong>
                 <span>{announcement.summary}</span>
+                <ul class="new" aria-label="New">
+                  {announcement.highlights.map(({ title }) => (
+                    <li>{title}</li>
+                  ))}
+                </ul>
               </a>
             )}
 
-            {changes.length > 0 && (
-              <ul class="changes">
-                {changes.map((html) => (
-                  <li set:html={html} />
-                ))}
-              </ul>
-            )}
+            {/*
+              A release with a page of its own keeps its changes folded away,
+              so the page stays a list of releases rather than of changes.
+            */}
+            {changes.length > 0 &&
+              (announcement ? (
+                <details class="all">
+                  <summary>All {changes.length} changes</summary>
+                  <ul class="changes">
+                    {changes.map((html) => (
+                      <li set:html={html} />
+                    ))}
+                  </ul>
+                </details>
+              ) : (
+                <ul class="changes">
+                  {changes.map((html) => (
+                    <li set:html={html} />
+                  ))}
+                </ul>
+              ))}
           </li>
         ))
       }
@@ -133,7 +152,7 @@ const description = "Every release of Slab, newest first, with what's changed in
       font-size: 1.25rem;
     }
 
-    span {
+    > span {
       color: var(--muted);
     }
 
@@ -143,6 +162,34 @@ const description = "Every release of Slab, newest first, with what's changed in
       color: var(--ink);
       translate: 3px 3px;
     }
+  }
+
+  .new {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    list-style: none;
+    margin: 0.5rem 0 0;
+    padding: 0;
+
+    li {
+      border: 1px solid currentcolor;
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      line-height: 1.6;
+      padding: 0 0.4rem;
+    }
+  }
+
+  .all summary {
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    inline-size: fit-content;
+  }
+
+  .all[open] summary {
+    margin-block-end: 1rem;
   }
 
   .changes {
