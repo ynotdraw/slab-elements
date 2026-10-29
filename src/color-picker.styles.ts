@@ -11,6 +11,13 @@ export default [
   `,
   css`
     /*
+      Functional, not visual. Each thumb's range input is what's focused and
+      what screenreaders read, while the thumb is what's seen and dragged.
+    */
+    ${visuallyHidden("input[type='range']")}
+  `,
+  css`
+    /*
       Functional, not visual. The area is the hue from white to fully
       saturated, darkening toward black, the hue slider is the spectrum, and
       the alpha slider is clear to opaque. Without them, there's nothing to

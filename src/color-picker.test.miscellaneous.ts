@@ -70,9 +70,9 @@ test(
 
     await expect(host).toHaveJSProperty('value', '#0000ff');
 
-    await expect(
-      page.getByRole('slider', { name: 'Label Hue' }),
-    ).toHaveAttribute('aria-valuenow', '240');
+    await expect(page.getByRole('slider', { name: 'Label Hue' })).toHaveValue(
+      '240',
+    );
 
     await expect(page.getByRole('textbox', { name: 'Label Hex' })).toHaveValue(
       '#0000ff',
@@ -213,7 +213,7 @@ test(
 
     await setProperty(host, 'value', '#000000');
 
-    await expect(hue).toHaveAttribute('aria-valuenow', '150');
+    await expect(hue).toHaveValue('150');
 
     await expect(area).toHaveAttribute(
       'aria-valuetext',
@@ -222,7 +222,7 @@ test(
 
     await setProperty(host, 'value', '#808080');
 
-    await expect(hue).toHaveAttribute('aria-valuenow', '150');
+    await expect(hue).toHaveValue('150');
 
     await expect(area).toHaveAttribute(
       'aria-valuetext',
@@ -447,5 +447,83 @@ test(
     await setProperty(page.locator('slab-color-picker'), 'disabled', true);
 
     expect(await dispatchTouchStart()).toBe(false);
+  },
+);
+
+test(
+  'changes when a screenreader adjusts a thumb',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-color-picker label="Label" alpha></slab-color-picker>`,
+    );
+
+    const host = page.locator('slab-color-picker');
+
+    // What a screenreader on a phone does after a swipe up: it sets the range
+    // input's value and dispatches "input" and "change" from it.
+    const adjust = (name: string, value: string) =>
+      page
+        .getByRole('slider', { name })
+        .evaluate((input: HTMLInputElement, value) => {
+          input.value = value;
+
+          input.dispatchEvent(
+            new Event('input', { bubbles: true, composed: true }),
+          );
+
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+        }, value);
+
+    await expect(host).toDispatchEvents(
+      () => adjust('Label Brightness', '100'),
+      [
+        { type: 'input', bubbles: true, cancelable: false, composed: true },
+        { type: 'change', bubbles: true, cancelable: false, composed: true },
+      ],
+    );
+
+    await expect(host).toHaveJSProperty('value', '#ffffff');
+
+    await adjust('Label Saturation and brightness', '100');
+    await expect(host).toHaveJSProperty('value', '#ff0000');
+
+    await adjust('Label Hue', '120');
+    await expect(host).toHaveJSProperty('value', '#00ff00');
+
+    await adjust('Label Alpha', '0');
+    await expect(host).toHaveJSProperty('value', '#00ff0000');
+  },
+);
+
+test(
+  'keeps its thumb where it is when a screenreader adjusts it to what it was',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-color-picker
+          label="Label"
+          value="#ff0000"
+        ></slab-color-picker>`,
+    );
+
+    const host = page.locator('slab-color-picker');
+    const hue = page.getByRole('slider', { name: 'Label Hue' });
+
+    // 360 is the same red as 0.
+    await expect(host).not.toDispatchEvents(
+      () =>
+        hue.evaluate((input: HTMLInputElement) => {
+          input.value = '360';
+
+          input.dispatchEvent(
+            new Event('input', { bubbles: true, composed: true }),
+          );
+        }),
+      [{ type: 'change' }],
+    );
+
+    await expect(host).toHaveJSProperty('value', '#ff0000');
   },
 );

@@ -22,6 +22,7 @@ test('label', { tag: '@accessibility' }, async ({ render, page }) => {
     - group "Label":
       - text: Label
       - slider "Label Saturation and brightness"
+      - slider "Label Brightness"
       - slider "Label Hue"
       - textbox "Label Hex": "#000000"
   `);
@@ -36,6 +37,7 @@ test('alpha', { tag: '@accessibility' }, async ({ render, page }) => {
     - group "Label":
       - text: Label
       - slider "Label Saturation and brightness"
+      - slider "Label Brightness"
       - slider "Label Hue"
       - slider "Label Alpha"
       - textbox "Label Hex": "#000000"
@@ -57,6 +59,7 @@ test('swatches', { tag: '@accessibility' }, async ({ render, page }) => {
     - group "Label":
       - text: Label
       - slider "Label Saturation and brightness"
+      - slider "Label Brightness"
       - slider "Label Hue"
       - textbox "Label Hex": "#ff0000"
       - listbox "Label Swatches":
@@ -92,6 +95,7 @@ test(
       - group "Label":
         - text: Label
         - slider "Label Shade"
+        - slider "Label Brightness"
         - slider "Label Tint"
         - slider "Label Opacity"
         - textbox "Label Code"
@@ -120,6 +124,7 @@ test(
       - group "Label":
         - text: Label
         - slider "Label Saturation and brightness" [disabled]
+        - slider "Label Brightness" [disabled]
         - slider "Label Hue" [disabled]
         - slider "Label Alpha" [disabled]
         - textbox "Label Hex" [disabled]
@@ -149,6 +154,7 @@ test(
       - group "Label":
         - text: Label
         - slider "Label Saturation and brightness"
+        - slider "Label Brightness"
         - slider "Label Hue"
         - textbox "Label Hex"
         - text: Description
@@ -178,22 +184,33 @@ test(
     const hue = page.getByRole('slider', { name: 'Label Hue' });
     const alpha = page.getByRole('slider', { name: 'Label Alpha' });
 
-    await expect(area).toHaveAttribute('aria-valuemin', '0');
-    await expect(area).toHaveAttribute('aria-valuemax', '100');
-    await expect(area).toHaveAttribute('aria-valuenow', '67');
+    await expect(area).toHaveAttribute('min', '0');
+    await expect(area).toHaveAttribute('max', '100');
+    await expect(area).toHaveValue('67');
 
     await expect(area).toHaveAttribute(
       'aria-valuetext',
       'Saturation 67%, Brightness 60%',
     );
 
-    await expect(hue).toHaveAttribute('aria-valuemin', '0');
-    await expect(hue).toHaveAttribute('aria-valuemax', '360');
-    await expect(hue).toHaveAttribute('aria-valuenow', '150');
+    const brightness = page.getByRole('slider', { name: 'Label Brightness' });
 
-    await expect(alpha).toHaveAttribute('aria-valuemin', '0');
-    await expect(alpha).toHaveAttribute('aria-valuemax', '100');
-    await expect(alpha).toHaveAttribute('aria-valuenow', '50');
+    await expect(brightness).toHaveAttribute('min', '0');
+    await expect(brightness).toHaveAttribute('max', '100');
+    await expect(brightness).toHaveValue('60');
+
+    await expect(brightness).toHaveAttribute(
+      'aria-valuetext',
+      'Brightness 60%',
+    );
+
+    await expect(hue).toHaveAttribute('min', '0');
+    await expect(hue).toHaveAttribute('max', '360');
+    await expect(hue).toHaveValue('150');
+
+    await expect(alpha).toHaveAttribute('min', '0');
+    await expect(alpha).toHaveAttribute('max', '100');
+    await expect(alpha).toHaveValue('50');
     await expect(alpha).toHaveAttribute('aria-valuetext', '50%');
   },
 );
@@ -215,5 +232,9 @@ test(
     await expect(
       page.getByRole('slider', { name: 'Label Saturation and brightness' }),
     ).toHaveAttribute('aria-valuetext', 'Chroma 0%, Lightness 100%');
+
+    await expect(
+      page.getByRole('slider', { name: 'Label Lightness' }),
+    ).toHaveAttribute('aria-valuetext', 'Lightness 100%');
   },
 );
