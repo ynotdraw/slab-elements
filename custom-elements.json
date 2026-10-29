@@ -1204,9 +1204,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },
@@ -1595,9 +1612,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },
@@ -2693,9 +2727,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },
@@ -4116,9 +4167,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },
@@ -4677,9 +4745,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },
@@ -6741,9 +6826,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },
@@ -7759,9 +7861,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },
@@ -9369,9 +9488,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },
@@ -10418,9 +10554,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },
@@ -11006,9 +11159,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },
@@ -12033,9 +12203,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },
@@ -12885,9 +13072,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },
@@ -13370,9 +13574,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },
@@ -15878,9 +16099,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },
@@ -16366,9 +16604,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },
@@ -16923,9 +17178,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },
@@ -17463,9 +17735,26 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
               },
               "readonly": true
             },

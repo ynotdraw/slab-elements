@@ -18,6 +18,7 @@ import Option from './option.js';
 import styles from './listbox.styles.js';
 import afterReflection from './library/after-reflection.js';
 import OptionsController from './library/options-controller.js';
+import browserValidationMessage from './library/browser-validation-message.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -90,9 +91,15 @@ declare global {
  * @prop {Option[]} selectedOptions - Selected and enabled Options, in the order they appear.
  *
  * @readonly
+ * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
+ *
+ * @readonly
  * @prop {ValidityState} validity
  *
  * @prop {string[]} values - The value of every selected and enabled Option, in the order they appear. Setting it selects the Options with those values, and only those.
+ *
+ * @readonly
+ * @prop {boolean} willValidate
  *
  * @method checkValidity
  * @returns boolean
@@ -190,8 +197,31 @@ export default class Listbox extends LitElement {
     return this.#options.selectedOptions;
   }
 
+  /**
+   * What's wrong, as the validity message says it: the message given to
+   * `setCustomValidity()` or `setValidity()`, or else the browser's own.
+   * Empty while it's valid.
+   */
+  get validationMessage(): string {
+    if (this.validity.valid) {
+      return '';
+    }
+
+    if (this.validityMessage) {
+      return this.validityMessage;
+    }
+
+    // The browser's own, or a space where the consumer set a validity without
+    // a message.
+    return this.#internals.validationMessage.trim();
+  }
+
   get validity(): ValidityState {
     return this.#internals.validity;
+  }
+
+  get willValidate(): boolean {
+    return this.#internals.willValidate;
   }
 
   /**
@@ -298,10 +328,10 @@ export default class Listbox extends LitElement {
         </slot>
 
         ${when(
-          this.#isShowValidationFeedback && this.validityMessage,
+          this.#isShowValidationFeedback && this.validationMessage,
           () =>
             html`<span data-test="validity-message" part="validity-message">
-              ${this.validityMessage}
+              ${this.validationMessage}
             </span>`,
         )}
       </div>`;
@@ -673,7 +703,7 @@ export default class Listbox extends LitElement {
     if (this.required && this.selectedOptions.length === 0) {
       this.#internals.setValidity(
         { customError: Boolean(this.validityMessage), valueMissing: true },
-        ' ',
+        browserValidationMessage('select'),
         this.#anchor,
       );
 

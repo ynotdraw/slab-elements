@@ -81,6 +81,18 @@ export default [
     [part~='swatch'] {
       background-color: var(--color-picker-swatch);
     }
+
+    /*
+      Forced colors would replace the colors being picked from with the
+      user's background, so the area, the sliders and the swatches would all
+      look alike. They're what's being picked, so they're kept.
+    */
+    [part~='area'],
+    [part~='hue'],
+    [part~='alpha'],
+    [part~='swatch'] {
+      forced-color-adjust: none;
+    }
   `,
   css`
     /*
