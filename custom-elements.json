@@ -179,7 +179,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The dismiss button's text and so its accessible name. \"Dismiss\" when\nunset.",
+              "description": "The dismiss button's text and so its accessible name. \"Dismiss\" in\nEnglish when unset.",
               "attribute": "dismiss-label",
               "reflects": true
             },
@@ -237,7 +237,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The dismiss button's text and so its accessible name. \"Dismiss\" when\nunset.",
+              "description": "The dismiss button's text and so its accessible name. \"Dismiss\" in\nEnglish when unset.",
               "fieldName": "dismissLabel"
             },
             {
@@ -330,7 +330,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the navigation. \"Breadcrumb\" when unset.",
+              "description": "Names the navigation. \"Breadcrumb\" in English when unset.",
               "attribute": "label",
               "reflects": true
             },
@@ -379,7 +379,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the navigation. \"Breadcrumb\" when unset.",
+              "description": "Names the navigation. \"Breadcrumb\" in English when unset.",
               "fieldName": "label"
             },
             {
@@ -525,7 +525,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The next month button's text and so its accessible name. \"Next month\" when\nunset.",
+              "description": "The next month button's text and so its accessible name. \"Next month\" in\nEnglish when unset.",
               "attribute": "next-label",
               "reflects": true
             },
@@ -645,7 +645,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The next month button's text and so its accessible name. \"Next month\" when\nunset.",
+              "description": "The next month button's text and so its accessible name. \"Next month\" in\nEnglish when unset.",
               "fieldName": "nextLabel"
             },
             {
@@ -849,7 +849,7 @@
               "type": {
                 "text": "(index: number) => string"
               },
-              "description": "Names each slide's marker, which has no text, from the slide's index.\n\"Slide\" and its number when unset."
+              "description": "Names each slide's marker, which has no text, from the slide's index.\n\"Slide\" and its number in English when unset."
             },
             {
               "kind": "field",
@@ -857,7 +857,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The next button's text and so its accessible name. \"Next slide\" when\nunset.",
+              "description": "The next button's text and so its accessible name. \"Next slide\" in\nEnglish when unset.",
               "attribute": "next-label",
               "reflects": true
             },
@@ -867,7 +867,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The previous button's text and so its accessible name. \"Previous slide\"\nwhen unset.",
+              "description": "The previous button's text and so its accessible name. \"Previous slide\"\nin English when unset.",
               "attribute": "previous-label",
               "reflects": true
             },
@@ -877,7 +877,7 @@
               "type": {
                 "text": "(index: number, total: number) => string"
               },
-              "description": "Names each slide without a name of its own, from its index and how many\nslides there are. \"1 of 3\" and so on when unset."
+              "description": "Names each slide without a name of its own, from its index and how many\nslides there are. \"1 of 3\" and so on in English when unset."
             },
             {
               "kind": "field",
@@ -895,7 +895,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The rotation button's text while the slides rotate. \"Stop slide rotation\"\nwhen unset.",
+              "description": "The rotation button's text while the slides rotate. \"Stop slide rotation\"\nin English when unset.",
               "attribute": "stop-label",
               "reflects": true
             },
@@ -997,7 +997,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The next button's text and so its accessible name. \"Next slide\" when\nunset.",
+              "description": "The next button's text and so its accessible name. \"Next slide\" in\nEnglish when unset.",
               "fieldName": "nextLabel"
             },
             {
@@ -1005,7 +1005,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The previous button's text and so its accessible name. \"Previous slide\"\nwhen unset.",
+              "description": "The previous button's text and so its accessible name. \"Previous slide\"\nin English when unset.",
               "fieldName": "previousLabel"
             },
             {
@@ -1021,7 +1021,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The rotation button's text while the slides rotate. \"Stop slide rotation\"\nwhen unset.",
+              "description": "The rotation button's text while the slides rotate. \"Stop slide rotation\"\nin English when unset.",
               "fieldName": "stopLabel"
             },
             {
@@ -2049,7 +2049,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the alpha slider, after `label`. \"Alpha\" when unset.",
+              "description": "Names the alpha slider, after `label`. \"Alpha\" in English when unset.",
               "attribute": "alpha-label",
               "reflects": true
             },
@@ -2059,7 +2059,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the area, after `label`. \"Saturation and brightness\" when unset.",
+              "description": "Names the area, after `label`. \"Saturation and brightness\" in English when unset.",
               "attribute": "area-label",
               "reflects": true
             },
@@ -2069,7 +2069,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Read before the area's brightness. \"Brightness\" when unset.",
+              "description": "Read before the area's brightness. \"Brightness\" in English when unset.",
               "attribute": "brightness-label",
               "reflects": true
             },
@@ -2089,7 +2089,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the hex field, after `label`. \"Hex\" when unset.",
+              "description": "Names the hex field, after `label`. \"Hex\" in English when unset.",
               "attribute": "hex-label",
               "reflects": true
             },
@@ -2109,7 +2109,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the hue slider, after `label`. \"Hue\" when unset.",
+              "description": "Names the hue slider, after `label`. \"Hue\" in English when unset.",
               "attribute": "hue-label",
               "reflects": true
             },
@@ -2129,7 +2129,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Read before the area's saturation. \"Saturation\" when unset.",
+              "description": "Read before the area's saturation. \"Saturation\" in English when unset.",
               "attribute": "saturation-label",
               "reflects": true
             },
@@ -2150,7 +2150,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the swatches, after `label`. \"Swatches\" when unset.",
+              "description": "Names the swatches, after `label`. \"Swatches\" in English when unset.",
               "attribute": "swatches-label",
               "reflects": true
             },
@@ -2323,7 +2323,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the alpha slider, after `label`. \"Alpha\" when unset.",
+              "description": "Names the alpha slider, after `label`. \"Alpha\" in English when unset.",
               "fieldName": "alphaLabel"
             },
             {
@@ -2331,7 +2331,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the area, after `label`. \"Saturation and brightness\" when unset.",
+              "description": "Names the area, after `label`. \"Saturation and brightness\" in English when unset.",
               "fieldName": "areaLabel"
             },
             {
@@ -2339,7 +2339,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Read before the area's brightness. \"Brightness\" when unset.",
+              "description": "Read before the area's brightness. \"Brightness\" in English when unset.",
               "fieldName": "brightnessLabel"
             },
             {
@@ -2355,7 +2355,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the hex field, after `label`. \"Hex\" when unset.",
+              "description": "Names the hex field, after `label`. \"Hex\" in English when unset.",
               "fieldName": "hexLabel"
             },
             {
@@ -2371,7 +2371,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the hue slider, after `label`. \"Hue\" when unset.",
+              "description": "Names the hue slider, after `label`. \"Hue\" in English when unset.",
               "fieldName": "hueLabel"
             },
             {
@@ -2387,7 +2387,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Read before the area's saturation. \"Saturation\" when unset.",
+              "description": "Read before the area's saturation. \"Saturation\" in English when unset.",
               "fieldName": "saturationLabel"
             },
             {
@@ -2404,7 +2404,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the swatches, after `label`. \"Swatches\" when unset.",
+              "description": "Names the swatches, after `label`. \"Swatches\" in English when unset.",
               "fieldName": "swatchesLabel"
             },
             {
@@ -2642,7 +2642,7 @@
               "type": {
                 "text": "(text: string) => string"
               },
-              "description": "Names each tag's button, which shows only the selected Option's text,\nfrom that text. \"Remove\" and the text when unset."
+              "description": "Names each tag's button, which shows only the selected Option's text,\nfrom that text. \"Remove\" and the text in English when unset."
             },
             {
               "kind": "field",
@@ -2650,7 +2650,7 @@
               "type": {
                 "text": "(text: string) => string"
               },
-              "description": "What screenreaders are told when a tag is removed, from its text. The text\nand \"removed\" when unset."
+              "description": "What screenreaders are told when a tag is removed, from its text. The text\nand \"removed\" in English when unset."
             },
             {
               "kind": "field",
@@ -2668,7 +2668,7 @@
               "type": {
                 "text": "(count: number) => string"
               },
-              "description": "What screenreaders are told once typing pauses, from how many Options are\nleft. \"No results\", \"1 result\" and so on when unset."
+              "description": "What screenreaders are told once typing pauses, from how many Options are\nleft. \"No results\", \"1 result\" and so on in English when unset."
             },
             {
               "kind": "field",
@@ -3761,10 +3761,9 @@
               "kind": "field",
               "name": "copiedLabel",
               "type": {
-                "text": "string"
+                "text": "string | undefined"
               },
-              "default": "'Copied'",
-              "description": "Announced once the text is copied.",
+              "description": "Announced once the text is copied. \"Copied\" in English when unset.",
               "attribute": "copied-label",
               "reflects": true
             },
@@ -3782,10 +3781,9 @@
               "kind": "field",
               "name": "failedLabel",
               "type": {
-                "text": "string"
+                "text": "string | undefined"
               },
-              "default": "\"Couldn't copy\"",
-              "description": "Announced when the clipboard refuses.",
+              "description": "Announced when the clipboard refuses. \"Couldn't copy\" in English when\nunset.",
               "attribute": "failed-label",
               "reflects": true
             },
@@ -3896,10 +3894,9 @@
             {
               "name": "copied-label",
               "type": {
-                "text": "string"
+                "text": "string | undefined"
               },
-              "default": "'Copied'",
-              "description": "Announced once the text is copied.",
+              "description": "Announced once the text is copied. \"Copied\" in English when unset.",
               "fieldName": "copiedLabel"
             },
             {
@@ -3913,10 +3910,9 @@
             {
               "name": "failed-label",
               "type": {
-                "text": "string"
+                "text": "string | undefined"
               },
-              "default": "\"Couldn't copy\"",
-              "description": "Announced when the clipboard refuses.",
+              "description": "Announced when the clipboard refuses. \"Couldn't copy\" in English when\nunset.",
               "fieldName": "failedLabel"
             },
             {
@@ -4645,7 +4641,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The end input's label, read after `label`. \"End\" when unset.",
+              "description": "The end input's label, read after `label`. \"End\" in English when unset.",
               "attribute": "end-label",
               "reflects": true
             },
@@ -4727,7 +4723,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The start input's label, read after `label`. \"Start\" when unset.",
+              "description": "The start input's label, read after `label`. \"Start\" in English when unset.",
               "attribute": "start-label",
               "reflects": true
             },
@@ -4968,7 +4964,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The end input's label, read after `label`. \"End\" when unset.",
+              "description": "The end input's label, read after `label`. \"End\" in English when unset.",
               "fieldName": "endLabel"
             },
             {
@@ -5035,7 +5031,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The start input's label, read after `label`. \"Start\" when unset.",
+              "description": "The start input's label, read after `label`. \"Start\" in English when unset.",
               "fieldName": "startLabel"
             },
             {
@@ -10496,7 +10492,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the navigation. \"Pagination\" when unset.",
+              "description": "Names the navigation. \"Pagination\" in English when unset.",
               "attribute": "label",
               "reflects": true
             },
@@ -10506,7 +10502,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The next button's text and so its accessible name. \"Next\" when unset.",
+              "description": "The next button's text and so its accessible name. \"Next\" in English when\nunset.",
               "attribute": "next-label",
               "reflects": true
             },
@@ -10527,7 +10523,7 @@
               "type": {
                 "text": "(page: number) => string"
               },
-              "description": "Names each page's button, which shows only the number, from that number.\n\"Page\" and the number when unset."
+              "description": "Names each page's button, which shows only the number, from that number.\n\"Page\" and the number in English when unset."
             },
             {
               "kind": "field",
@@ -10535,7 +10531,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The previous button's text and so its accessible name. \"Previous\" when\nunset.",
+              "description": "The previous button's text and so its accessible name. \"Previous\" in\nEnglish when unset.",
               "attribute": "previous-label",
               "reflects": true
             },
@@ -10604,7 +10600,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the navigation. \"Pagination\" when unset.",
+              "description": "Names the navigation. \"Pagination\" in English when unset.",
               "fieldName": "label"
             },
             {
@@ -10612,7 +10608,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The next button's text and so its accessible name. \"Next\" when unset.",
+              "description": "The next button's text and so its accessible name. \"Next\" in English when\nunset.",
               "fieldName": "nextLabel"
             },
             {
@@ -10629,7 +10625,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The previous button's text and so its accessible name. \"Previous\" when\nunset.",
+              "description": "The previous button's text and so its accessible name. \"Previous\" in\nEnglish when unset.",
               "fieldName": "previousLabel"
             },
             {
@@ -10872,7 +10868,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The button's text and so its accessible name. \"Show password\" when unset.",
+              "description": "The button's text and so its accessible name. \"Show password\" in English\nwhen unset.",
               "attribute": "toggle-label",
               "reflects": true
             },
@@ -11238,7 +11234,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "The button's text and so its accessible name. \"Show password\" when unset.",
+              "description": "The button's text and so its accessible name. \"Show password\" in English\nwhen unset.",
               "fieldName": "toggleLabel"
             },
             {
@@ -11406,7 +11402,7 @@
               "type": {
                 "text": "(position: number, length: number) => string"
               },
-              "description": "Names each input from its position, starting at 1, and `length`.\n\"Character 1 of 6\" and so on when unset."
+              "description": "Names each input from its position, starting at 1, and `length`.\n\"Character 1 of 6\" and so on in English when unset."
             },
             {
               "kind": "field",
@@ -12896,7 +12892,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the end thumb, after `label`. \"Maximum\" when unset.",
+              "description": "Names the end thumb, after `label`. \"Maximum\" in English when unset.",
               "attribute": "end-label",
               "reflects": true
             },
@@ -12957,7 +12953,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the start thumb, after `label`. \"Minimum\" when unset.",
+              "description": "Names the start thumb, after `label`. \"Minimum\" in English when unset.",
               "attribute": "start-label",
               "reflects": true
             },
@@ -13139,7 +13135,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the end thumb, after `label`. \"Maximum\" when unset.",
+              "description": "Names the end thumb, after `label`. \"Maximum\" in English when unset.",
               "fieldName": "endLabel"
             },
             {
@@ -13189,7 +13185,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Names the start thumb, after `label`. \"Minimum\" when unset.",
+              "description": "Names the start thumb, after `label`. \"Minimum\" in English when unset.",
               "fieldName": "startLabel"
             },
             {
@@ -15181,7 +15177,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Read by screenreaders after each complete Step's label. \"Completed\" when\nunset.",
+              "description": "Read by screenreaders after each complete Step's label. \"Completed\" in\nEnglish when unset.",
               "attribute": "complete-label",
               "reflects": true
             },
@@ -15289,7 +15285,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Read by screenreaders after each complete Step's label. \"Completed\" when\nunset.",
+              "description": "Read by screenreaders after each complete Step's label. \"Completed\" in\nEnglish when unset.",
               "fieldName": "completeLabel"
             },
             {
@@ -15342,6 +15338,29 @@
           "declaration": {
             "name": "Steps",
             "module": "src/steps.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/strings.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "registerStrings",
+          "declaration": {
+            "name": "registerStrings",
+            "module": "./library/strings.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "Strings",
+          "declaration": {
+            "name": "Strings",
+            "module": "./library/strings.js"
           }
         }
       ]
@@ -16468,7 +16487,7 @@
               "type": {
                 "text": "(text: string) => string"
               },
-              "description": "Names each tag's button, which shows only the tag, from the tag. \"Remove\"\nand the tag when unset."
+              "description": "Names each tag's button, which shows only the tag, from the tag. \"Remove\"\nand the tag in English when unset."
             },
             {
               "kind": "field",
@@ -16476,7 +16495,7 @@
               "type": {
                 "text": "(text: string) => string"
               },
-              "description": "What screenreaders are told when a tag is removed, from the tag. The tag\nand \"removed\" when unset."
+              "description": "What screenreaders are told when a tag is removed, from the tag. The tag\nand \"removed\" in English when unset."
             },
             {
               "kind": "field",
@@ -16484,7 +16503,7 @@
               "type": {
                 "text": "(text: string) => string"
               },
-              "description": "What screenreaders are told when a tag is added, from the tag. The tag\nand \"added\" when unset."
+              "description": "What screenreaders are told when a tag is added, from the tag. The tag\nand \"added\" in English when unset."
             },
             {
               "kind": "field",

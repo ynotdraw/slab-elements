@@ -12,6 +12,7 @@ import { when } from 'lit/directives/when.js';
 import packageJson from '../package.json' with { type: 'json' };
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
+import StringsController from './library/strings.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
 import styles from './date-range-field.styles.js';
@@ -61,7 +62,7 @@ declare global {
  *
  * @attr {string} label - Names the group. Each input is named by it and its own label.
  * @attr {boolean} [disabled=false]
- * @attr {string} [end-label] - The end input's label, read after `label`. "End" when unset.
+ * @attr {string} [end-label] - The end input's label, read after `label`. "End" in English when unset.
  * @attr {string} [end-value=''] - The last day of the range, as "yyyy-mm-dd". Like a native input's `value`, the attribute is the default and the property is the current value.
  * @attr {boolean} [hide-label=false]
  * @attr {string} [max] - The latest date allowed for either, as "yyyy-mm-dd".
@@ -69,7 +70,7 @@ declare global {
  * @attr {string} [name=''] - Submitted twice, with the start value and then the end value.
  * @attr {boolean} [readonly=false]
  * @attr {boolean} [required=false] - Requires both dates.
- * @attr {string} [start-label] - The start input's label, read after `label`. "Start" when unset.
+ * @attr {string} [start-label] - The start input's label, read after `label`. "Start" in English when unset.
  * @attr {string} [start-value=''] - The first day of the range, as "yyyy-mm-dd". Like a native input's `value`, the attribute is the default and the property is the current value.
  *
  * @readonly
@@ -150,7 +151,7 @@ export default class DateRangeField extends LitElement {
   disabled = false;
 
   /**
-   * The end input's label, read after `label`. "End" when unset.
+   * The end input's label, read after `label`. "End" in English when unset.
    */
   @property({ attribute: 'end-label', reflect: true })
   endLabel?: string;
@@ -194,7 +195,7 @@ export default class DateRangeField extends LitElement {
   required = false;
 
   /**
-   * The start input's label, read after `label`. "Start" when unset.
+   * The start input's label, read after `label`. "Start" in English when unset.
    */
   @property({ attribute: 'start-label', reflect: true })
   startLabel?: string;
@@ -304,7 +305,7 @@ export default class DateRangeField extends LitElement {
           <!-- The start input and its label -->
           <label for="start" id="start-label" part="input-label start-label">
             <!-- The start input's label -->
-            ${this.startLabel ?? 'Start'}
+            ${this.startLabel ?? this.#strings.value.dateRangeFieldStart}
           </label>
 
           <input
@@ -332,7 +333,7 @@ export default class DateRangeField extends LitElement {
           <!-- The end input and its label -->
           <label for="end" id="end-label" part="input-label end-label">
             <!-- The end input's label -->
-            ${this.endLabel ?? 'End'}
+            ${this.endLabel ?? this.#strings.value.dateRangeFieldEnd}
           </label>
 
           <input
@@ -533,6 +534,8 @@ export default class DateRangeField extends LitElement {
   #internals: ElementInternals;
 
   #startElementRef = createRef<HTMLInputElement>();
+
+  #strings = new StringsController(this);
 
   // The first input that's invalid by its own rules, or the start when
   // neither is, such as when the consumer has set validity themselves.

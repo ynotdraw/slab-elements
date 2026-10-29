@@ -12,6 +12,7 @@ import { when } from 'lit/directives/when.js';
 import packageJson from '../package.json' with { type: 'json' };
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
+import StringsController from './library/strings.js';
 import assertSlot from './library/assert-slot.js';
 import afterReflection from './library/after-reflection.js';
 import OptionsController from './library/options-controller.js';
@@ -128,9 +129,9 @@ declare global {
  * @readonly
  * @prop {Option[]} options
  *
- * @prop {(text: string) => string} removeLabel - Names each tag's button, which shows only the selected Option's text, from that text. "Remove" and the text when unset.
- * @prop {(text: string) => string} removedLabel - What screenreaders are told when a tag is removed, from its text. The text and "removed" when unset.
- * @prop {(count: number) => string} resultsLabel - What screenreaders are told once typing pauses, from how many Options are left. "No results", "1 result" and so on when unset.
+ * @prop {(text: string) => string} removeLabel - Names each tag's button, which shows only the selected Option's text, from that text. "Remove" and the text in English when unset.
+ * @prop {(text: string) => string} removedLabel - What screenreaders are told when a tag is removed, from its text. The text and "removed" in English when unset.
+ * @prop {(count: number) => string} resultsLabel - What screenreaders are told once typing pauses, from how many Options are left. "No results", "1 result" and so on in English when unset.
  *
  * @readonly
  * @prop {Option | null} selectedOption
@@ -231,33 +232,30 @@ export default class Combobox extends LitElement {
 
   /**
    * Names each tag's button, which shows only the selected Option's text,
-   * from that text. "Remove" and the text when unset.
+   * from that text. "Remove" and the text in English when unset.
    */
   @property({ attribute: false })
-  removeLabel: (text: string) => string = (text) => `Remove ${text}`;
+  removeLabel: (text: string) => string = (text) =>
+    this.#strings.value.comboboxRemove(text);
 
   /**
    * What screenreaders are told when a tag is removed, from its text. The text
-   * and "removed" when unset.
+   * and "removed" in English when unset.
    */
   @property({ attribute: false })
-  removedLabel: (text: string) => string = (text) => `${text} removed`;
+  removedLabel: (text: string) => string = (text) =>
+    this.#strings.value.comboboxRemoved(text);
 
   @property({ reflect: true, type: Boolean })
   required = false;
 
   /**
    * What screenreaders are told once typing pauses, from how many Options are
-   * left. "No results", "1 result" and so on when unset.
+   * left. "No results", "1 result" and so on in English when unset.
    */
   @property({ attribute: false })
-  resultsLabel: (count: number) => string = (count) => {
-    if (count === 0) {
-      return 'No results';
-    }
-
-    return count === 1 ? '1 result' : `${count} results`;
-  };
+  resultsLabel: (count: number) => string = (count) =>
+    this.#strings.value.comboboxResults(count);
 
   /**
    * The selected Option's value, or the typed text when `allow-custom` is set
@@ -687,6 +685,8 @@ export default class Combobox extends LitElement {
 
   // What's been typed since the value was last committed, or `undefined` when
   #slotElementRef = createRef<HTMLSlotElement>();
+
+  #strings = new StringsController(this);
 
   #tags = new TagsController(this, {
     input: () => this.#inputElementRef.value,

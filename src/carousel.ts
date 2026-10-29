@@ -10,6 +10,7 @@ import { repeat } from 'lit/directives/repeat.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import packageJson from '../package.json' with { type: 'json' };
 import customElement from './library/custom-element.js';
+import StringsController from './library/strings.js';
 import required from './library/required.js';
 import styles from './carousel.styles.js';
 
@@ -58,10 +59,10 @@ declare global {
  * @attr {number} [index=0] - The current slide's, from 0.
  * @attr {number} [interval=5000] - How long each slide shows for when `autoplay` is set, in milliseconds.
  * @attr {boolean} [loop=false] - Previous and Next wrap from one end to the other.
- * @attr {string} [next-label] - The next button's text and so its accessible name. "Next slide" when unset.
- * @attr {string} [previous-label] - The previous button's text and so its accessible name. "Previous slide" when unset.
+ * @attr {string} [next-label] - The next button's text and so its accessible name. "Next slide" in English when unset.
+ * @attr {string} [previous-label] - The previous button's text and so its accessible name. "Previous slide" in English when unset.
  * @attr {string} [start-label] - The rotation button's text while rotation is stopped. "Start slide rotation" when unset.
- * @attr {string} [stop-label] - The rotation button's text while the slides rotate. "Stop slide rotation" when unset.
+ * @attr {string} [stop-label] - The rotation button's text while the slides rotate. "Stop slide rotation" in English when unset.
  *
  * @readonly
  * @attr {string} [version]
@@ -80,8 +81,8 @@ declare global {
  *
  * @fires {Event} change
  *
- * @prop {(index: number) => string} markerLabel - Names each slide's marker, which has no text, from the slide's index. "Slide" and its number when unset.
- * @prop {(index: number, total: number) => string} slideLabel - Names each slide without a name of its own, from its index and how many slides there are. "1 of 3" and so on when unset.
+ * @prop {(index: number) => string} markerLabel - Names each slide's marker, which has no text, from the slide's index. "Slide" and its number in English when unset.
+ * @prop {(index: number, total: number) => string} slideLabel - Names each slide without a name of its own, from its index and how many slides there are. "1 of 3" and so on in English when unset.
  *
  * @readonly
  * @prop {Element[]} slides
@@ -121,32 +122,33 @@ export default class Carousel extends LitElement {
 
   /**
    * Names each slide's marker, which has no text, from the slide's index.
-   * "Slide" and its number when unset.
+   * "Slide" and its number in English when unset.
    */
   @property({ attribute: false })
-  markerLabel: (index: number) => string = (index) => `Slide ${index + 1}`;
+  markerLabel: (index: number) => string = (index) =>
+    this.#strings.value.carouselMarker(index);
 
   /**
-   * The next button's text and so its accessible name. "Next slide" when
-   * unset.
+   * The next button's text and so its accessible name. "Next slide" in
+   * English when unset.
    */
   @property({ attribute: 'next-label', reflect: true })
   nextLabel?: string;
 
   /**
    * The previous button's text and so its accessible name. "Previous slide"
-   * when unset.
+   * in English when unset.
    */
   @property({ attribute: 'previous-label', reflect: true })
   previousLabel?: string;
 
   /**
    * Names each slide without a name of its own, from its index and how many
-   * slides there are. "1 of 3" and so on when unset.
+   * slides there are. "1 of 3" and so on in English when unset.
    */
   @property({ attribute: false })
   slideLabel: (index: number, total: number) => string = (index, total) =>
-    `${index + 1} of ${total}`;
+    this.#strings.value.carouselSlide(index, total);
 
   /**
    * The rotation button's text while rotation is stopped. "Start slide
@@ -157,7 +159,7 @@ export default class Carousel extends LitElement {
 
   /**
    * The rotation button's text while the slides rotate. "Stop slide rotation"
-   * when unset.
+   * in English when unset.
    */
   @property({ attribute: 'stop-label', reflect: true })
   stopLabel?: string;
@@ -202,8 +204,8 @@ export default class Carousel extends LitElement {
                 <!-- The button that starts and stops rotation -->
                 ${
                   this.isRotating
-                    ? (this.stopLabel ?? 'Stop slide rotation')
-                    : (this.startLabel ?? 'Start slide rotation')
+                    ? (this.stopLabel ?? this.#strings.value.carouselStop)
+                    : (this.startLabel ?? this.#strings.value.carouselStart)
                 }
               </button>`
             : ''
@@ -217,7 +219,7 @@ export default class Carousel extends LitElement {
           @click=${this.#onPreviousClick}
         >
           <!-- The button to the previous slide -->
-          ${this.previousLabel ?? 'Previous slide'}
+          ${this.previousLabel ?? this.#strings.value.carouselPrevious}
         </button>
 
         <button
@@ -228,7 +230,7 @@ export default class Carousel extends LitElement {
           @click=${this.#onNextClick}
         >
           <!-- The button to the next slide -->
-          ${this.nextLabel ?? 'Next slide'}
+          ${this.nextLabel ?? this.#strings.value.carouselNext}
         </button>
       </div>
 
@@ -269,9 +271,10 @@ export default class Carousel extends LitElement {
     this.#setState('last', this.#isLast);
     this.#setState('rotating', this.isRotating);
 
-    if (changes.has('slideCount') || changes.has('slideLabel')) {
-      this.#labelSlides();
-    }
+    // Every update rather than only when the slides or `slideLabel` change,
+    // since a translation registered later changes the default `slideLabel`'s
+    // labels too.
+    this.#labelSlides();
 
     // The first time is instant, so a carousel that starts on a later slide
     // doesn't scroll there in front of the user.
@@ -352,6 +355,8 @@ export default class Carousel extends LitElement {
   #settleTimeout?: ReturnType<typeof setTimeout>;
 
   #slidesElementRef = createRef<HTMLDivElement>();
+
+  #strings = new StringsController(this);
 
   get #isFirst() {
     return !this.loop && this.index === 0;
@@ -535,7 +540,10 @@ export default class Carousel extends LitElement {
       }
 
       if (!slide.hasAttribute('aria-roledescription')) {
-        slide.setAttribute('aria-roledescription', 'slide');
+        slide.setAttribute(
+          'aria-roledescription',
+          this.#strings.value.carouselSlideRole,
+        );
       }
 
       if (!slide.hasAttribute('aria-label') || this.#labeled.has(slide)) {

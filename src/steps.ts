@@ -9,6 +9,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { repeat } from 'lit/directives/repeat.js';
 import packageJson from '../package.json' with { type: 'json' };
 import customElement from './library/custom-element.js';
+import StringsController from './library/strings.js';
 import ListItemSlots from './library/list-item-slots.js';
 import required from './library/required.js';
 import Step from './steps.step.js';
@@ -42,7 +43,7 @@ declare global {
  * `:state(complete)`, `:state(current)` and `:state(upcoming)`.
  *
  * @attr {string} label - Names the list.
- * @attr {string} [complete-label] - Read by screenreaders after each complete Step's label. "Completed" when unset.
+ * @attr {string} [complete-label] - Read by screenreaders after each complete Step's label. "Completed" in English when unset.
  * @attr {boolean} [navigable=false] - Makes each Step a button that goes to it.
  * @attr {number} [step=1] - The current Step, from 1. The Steps before it are complete.
  *
@@ -72,8 +73,8 @@ export default class Steps extends LitElement {
   label?: string;
 
   /**
-   * Read by screenreaders after each complete Step's label. "Completed" when
-   * unset.
+   * Read by screenreaders after each complete Step's label. "Completed" in
+   * English when unset.
    */
   @property({ attribute: 'complete-label', reflect: true })
   completeLabel?: string;
@@ -168,6 +169,8 @@ export default class Steps extends LitElement {
 
   #listItemSlots = new ListItemSlots(this);
 
+  #strings = new StringsController(this);
+
   // A Step whose definition loads after its Steps' upgrades in place, and an
   // upgrade isn't a change to Steps' child list.
   #onConnected = (event: Event) => {
@@ -214,7 +217,9 @@ export default class Steps extends LitElement {
     for (const [index, step] of this.steps.entries()) {
       const number = index + 1;
 
-      step.completeLabel = this.completeLabel ?? 'Completed';
+      step.completeLabel =
+        this.completeLabel ?? this.#strings.value.stepsComplete;
+
       step.index = number;
       step.navigable = this.navigable;
 

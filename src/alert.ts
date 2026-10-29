@@ -8,6 +8,7 @@ import {
 import { property } from 'lit/decorators.js';
 import packageJson from '../package.json' with { type: 'json' };
 import customElement from './library/custom-element.js';
+import StringsController from './library/strings.js';
 import styles from './alert.styles.js';
 
 declare global {
@@ -42,7 +43,7 @@ declare global {
  * with nothing focused before it. Focus isn't moved when the "dismiss" event is
  * canceled, or when a "dismiss" listener has already moved it off the button.
  *
- * @attr {string} [dismiss-label] - The dismiss button's text and so its accessible name. "Dismiss" when unset.
+ * @attr {string} [dismiss-label] - The dismiss button's text and so its accessible name. "Dismiss" in English when unset.
  * @attr {boolean} [dismissible=false] - Adds a button that dismisses the alert
  *
  * @readonly
@@ -64,8 +65,8 @@ export default class Alert extends LitElement {
   dismissible = false;
 
   /**
-   * The dismiss button's text and so its accessible name. "Dismiss" when
-   * unset.
+   * The dismiss button's text and so its accessible name. "Dismiss" in
+   * English when unset.
    */
   @property({ attribute: 'dismiss-label', reflect: true })
   dismissLabel?: string;
@@ -93,7 +94,7 @@ export default class Alert extends LitElement {
               @click=${this.#onDismissButtonClick}
               @focusin=${this.#onDismissButtonFocusin}
             >
-              ${this.dismissLabel ?? 'Dismiss'}
+              ${this.dismissLabel ?? this.#strings.value.alertDismiss}
             </button>`
           : nothing
       }`;
@@ -109,6 +110,8 @@ export default class Alert extends LitElement {
 
   // A weak reference so a removed element can be collected.
   #previouslyFocused?: WeakRef<HTMLElement>;
+
+  #strings = new StringsController(this);
 
   // Hidden rather than removed. Removing it would pull it out from under
   // whatever rendered it. And a hidden alert is still on the page, so it can

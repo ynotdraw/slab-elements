@@ -12,6 +12,7 @@ import packageJson from '../package.json' with { type: 'json' };
 import announce from './library/announce.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
+import StringsController from './library/strings.js';
 import afterReflection from './library/after-reflection.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
@@ -81,13 +82,13 @@ declare global {
  * @fires {Event} change
  * @fires {Event} input
  *
- * @prop {(text: string) => string} addedLabel - What screenreaders are told when a tag is added, from the tag. The tag and "added" when unset.
+ * @prop {(text: string) => string} addedLabel - What screenreaders are told when a tag is added, from the tag. The tag and "added" in English when unset.
  *
  * @readonly
  * @prop {HTMLFormElement | null} form
  *
- * @prop {(text: string) => string} removeLabel - Names each tag's button, which shows only the tag, from the tag. "Remove" and the tag when unset.
- * @prop {(text: string) => string} removedLabel - What screenreaders are told when a tag is removed, from the tag. The tag and "removed" when unset.
+ * @prop {(text: string) => string} removeLabel - Names each tag's button, which shows only the tag, from the tag. "Remove" and the tag in English when unset.
+ * @prop {(text: string) => string} removedLabel - What screenreaders are told when a tag is removed, from the tag. The tag and "removed" in English when unset.
  *
  * @readonly
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
@@ -163,24 +164,27 @@ export default class TagsInput extends LitElement {
 
   /**
    * Names each tag's button, which shows only the tag, from the tag. "Remove"
-   * and the tag when unset.
+   * and the tag in English when unset.
    */
   @property({ attribute: false })
-  removeLabel: (text: string) => string = (text) => `Remove ${text}`;
+  removeLabel: (text: string) => string = (text) =>
+    this.#strings.value.tagsInputRemove(text);
 
   /**
    * What screenreaders are told when a tag is removed, from the tag. The tag
-   * and "removed" when unset.
+   * and "removed" in English when unset.
    */
   @property({ attribute: false })
-  removedLabel: (text: string) => string = (text) => `${text} removed`;
+  removedLabel: (text: string) => string = (text) =>
+    this.#strings.value.tagsInputRemoved(text);
 
   /**
    * What screenreaders are told when a tag is added, from the tag. The tag
-   * and "added" when unset.
+   * and "added" in English when unset.
    */
   @property({ attribute: false })
-  addedLabel: (text: string) => string = (text) => `${text} added`;
+  addedLabel: (text: string) => string = (text) =>
+    this.#strings.value.tagsInputAdded(text);
 
   @property({ reflect: true, type: Boolean })
   required = false;
@@ -449,6 +453,8 @@ export default class TagsInput extends LitElement {
   #inputElementRef = createRef<HTMLInputElement>();
 
   #internals: ElementInternals;
+
+  #strings = new StringsController(this);
 
   #tags = new TagsController(this, {
     input: () => this.#inputElementRef.value,

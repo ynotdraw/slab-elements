@@ -9,6 +9,7 @@ import { property } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import packageJson from '../package.json' with { type: 'json' };
 import customElement from './library/custom-element.js';
+import StringsController from './library/strings.js';
 import required from './library/required.js';
 import styles from './pagination.styles.js';
 
@@ -38,10 +39,10 @@ type Item = number | 'end-ellipsis' | 'start-ellipsis';
  * `::part(current)`.
  *
  * @attr {number} total - How many pages there are.
- * @attr {string} [label] - Names the navigation. "Pagination" when unset.
- * @attr {string} [next-label] - The next button's text and so its accessible name. "Next" when unset.
+ * @attr {string} [label] - Names the navigation. "Pagination" in English when unset.
+ * @attr {string} [next-label] - The next button's text and so its accessible name. "Next" in English when unset.
  * @attr {number} [page=1] - The current page, from 1 to `total`.
- * @attr {string} [previous-label] - The previous button's text and so its accessible name. "Previous" when unset.
+ * @attr {string} [previous-label] - The previous button's text and so its accessible name. "Previous" in English when unset.
  * @attr {number} [siblings=1] - How many pages are shown either side of the current one.
  *
  * @readonly
@@ -58,7 +59,7 @@ type Item = number | 'end-ellipsis' | 'start-ellipsis';
  *
  * @fires {Event} change
  *
- * @prop {(page: number) => string} pageLabel - Names each page's button, which shows only the number, from that number. "Page" and the number when unset.
+ * @prop {(page: number) => string} pageLabel - Names each page's button, which shows only the number, from that number. "Page" and the number in English when unset.
  */
 @customElement('slab-pagination')
 export default class Pagination extends LitElement {
@@ -70,13 +71,14 @@ export default class Pagination extends LitElement {
   total?: number;
 
   /**
-   * Names the navigation. "Pagination" when unset.
+   * Names the navigation. "Pagination" in English when unset.
    */
   @property({ reflect: true })
   label?: string;
 
   /**
-   * The next button's text and so its accessible name. "Next" when unset.
+   * The next button's text and so its accessible name. "Next" in English when
+   * unset.
    */
   @property({ attribute: 'next-label', reflect: true })
   nextLabel?: string;
@@ -89,14 +91,15 @@ export default class Pagination extends LitElement {
 
   /**
    * Names each page's button, which shows only the number, from that number.
-   * "Page" and the number when unset.
+   * "Page" and the number in English when unset.
    */
   @property({ attribute: false })
-  pageLabel: (page: number) => string = (page) => `Page ${page}`;
+  pageLabel: (page: number) => string = (page) =>
+    this.#strings.value.paginationPage(page);
 
   /**
-   * The previous button's text and so its accessible name. "Previous" when
-   * unset.
+   * The previous button's text and so its accessible name. "Previous" in
+   * English when unset.
    */
   @property({ attribute: 'previous-label', reflect: true })
   previousLabel?: string;
@@ -111,7 +114,10 @@ export default class Pagination extends LitElement {
   readonly version: string = packageJson.version;
 
   override render() {
-    return html`<nav aria-label=${this.label ?? 'Pagination'} part="nav">
+    return html`<nav
+      aria-label=${this.label ?? this.#strings.value.pagination}
+      part="nav"
+    >
       <!-- The navigation -->
       <ul part="list">
         <!-- The buttons -->
@@ -124,7 +130,7 @@ export default class Pagination extends LitElement {
             @click=${this.#onPreviousClick}
           >
             <!-- The button to the previous page -->
-            ${this.previousLabel ?? 'Previous'}
+            ${this.previousLabel ?? this.#strings.value.paginationPrevious}
           </button>
         </li>
 
@@ -142,7 +148,7 @@ export default class Pagination extends LitElement {
             @click=${this.#onNextClick}
           >
             <!-- The button to the next page -->
-            ${this.nextLabel ?? 'Next'}
+            ${this.nextLabel ?? this.#strings.value.paginationNext}
           </button>
         </li>
       </ul>
@@ -170,6 +176,8 @@ export default class Pagination extends LitElement {
   }
 
   #internals = this.attachInternals();
+
+  #strings = new StringsController(this);
 
   get #isFirst() {
     return this.page <= 1;
