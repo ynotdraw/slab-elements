@@ -78,11 +78,11 @@ test(
 
     await expect(
       page.getByRole('slider', { name: 'Label Minimum' }),
-    ).toHaveAttribute('aria-valuenow', '30');
+    ).toHaveValue('30');
 
     await expect(
       page.getByRole('slider', { name: 'Label Maximum' }),
-    ).toHaveAttribute('aria-valuenow', '60');
+    ).toHaveValue('60');
   },
 );
 
@@ -290,9 +290,10 @@ test(
     await expect(host).toHaveJSProperty('endValue', 50);
 
     // There's no range to be along, so the thumbs sit at the start.
-    await expect(
-      page.getByRole('slider', { name: 'Label Maximum' }),
-    ).toHaveJSProperty('style.insetInlineStart', '0%');
+    await expect(page.locator('[data-test="end"]')).toHaveJSProperty(
+      'style.insetInlineStart',
+      '0%',
+    );
   },
 );
 
@@ -311,13 +312,15 @@ test(
         ></slab-range-slider>`,
     );
 
-    await expect(
-      page.getByRole('slider', { name: 'Label Minimum' }),
-    ).toHaveJSProperty('style.insetInlineStart', '25%');
+    await expect(page.locator('[data-test="start"]')).toHaveJSProperty(
+      'style.insetInlineStart',
+      '25%',
+    );
 
-    await expect(
-      page.getByRole('slider', { name: 'Label Maximum' }),
-    ).toHaveJSProperty('style.insetInlineStart', '75%');
+    await expect(page.locator('[data-test="end"]')).toHaveJSProperty(
+      'style.insetInlineStart',
+      '75%',
+    );
 
     const range = page.locator('[part~="range"]');
 
@@ -447,5 +450,94 @@ test(
     await setProperty(page.locator('slab-range-slider'), 'disabled', true);
 
     expect(await dispatchTouchStart()).toBe(false);
+  },
+);
+
+test(
+  'moves a thumb when a screenreader adjusts its input',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-range-slider
+          label="Label"
+          start-value="20"
+          end-value="60"
+        ></slab-range-slider>`,
+    );
+
+    const host = page.locator('slab-range-slider');
+    const start = page.getByRole('slider', { name: 'Label Minimum' });
+
+    // What a screenreader on a phone does after a swipe up: it sets the range
+    // input's value and dispatches "input" and "change" from it.
+    const adjust = (value: string) =>
+      start.evaluate((input: HTMLInputElement, value) => {
+        input.value = value;
+
+        input.dispatchEvent(
+          new Event('input', { bubbles: true, composed: true }),
+        );
+
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }, value);
+
+    await expect(host).toDispatchEvents(
+      () => adjust('21'),
+      [
+        { type: 'input', bubbles: true, cancelable: false, composed: true },
+        { type: 'change', bubbles: true, cancelable: false, composed: true },
+      ],
+    );
+
+    await expect(host).toHaveJSProperty('startValue', 21);
+    await expect(start).toHaveValue('21');
+
+    await page
+      .getByRole('slider', { name: 'Label Maximum' })
+      .evaluate((input: HTMLInputElement) => {
+        input.value = '59';
+
+        input.dispatchEvent(
+          new Event('input', { bubbles: true, composed: true }),
+        );
+      });
+
+    await expect(host).toHaveJSProperty('endValue', 59);
+  },
+);
+
+test(
+  'keeps a thumb where it is when a screenreader adjusts its input past what it allows',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-range-slider
+          label="Label"
+          start-value="20"
+          end-value="60"
+          step="10"
+        ></slab-range-slider>`,
+    );
+
+    const host = page.locator('slab-range-slider');
+    const start = page.getByRole('slider', { name: 'Label Minimum' });
+
+    // Between steps, so it's snapped back to 20, where it already is.
+    await expect(host).not.toDispatchEvents(
+      () =>
+        start.evaluate((input: HTMLInputElement) => {
+          input.value = '23';
+
+          input.dispatchEvent(
+            new Event('input', { bubbles: true, composed: true }),
+          );
+        }),
+      [{ type: 'input' }],
+    );
+
+    await expect(host).toHaveJSProperty('startValue', 20);
+    await expect(start).toHaveValue('20');
   },
 );
