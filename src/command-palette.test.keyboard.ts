@@ -203,6 +203,17 @@ test(
           key: 'Enter',
         }),
       );
+
+      // Safari sends the Enter that ends a composition without
+      // \`isComposing\`, but with a \`keyCode\` of 229.
+      const safariEnter = new KeyboardEvent('keydown', {
+        bubbles: true,
+        composed: true,
+        key: 'Enter',
+      });
+
+      Object.defineProperty(safariEnter, 'keyCode', { value: 229 });
+      element.dispatchEvent(safariEnter);
     });
 
     await expect(host).toHaveJSProperty('open', true);

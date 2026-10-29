@@ -16,6 +16,7 @@ import required from './library/required.js';
 import TagsController from './library/tags-controller.js';
 import styles from './tags-input.styles.js';
 import browserValidationMessage from './library/browser-validation-message.js';
+import isComposing from './library/is-composing.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -505,6 +506,12 @@ export default class TagsInput extends LitElement {
   };
 
   #onInputKeydown = (event: KeyboardEvent) => {
+    // Enter, Escape and the arrows belong to an input method while it's
+    // composing.
+    if (isComposing(event)) {
+      return;
+    }
+
     if (event.key === 'Enter') {
       // A native input submits its form on Enter. This one's in the shadow
       // root, so it has no form, and the host's is submitted for it. Not
