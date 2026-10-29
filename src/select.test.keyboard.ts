@@ -742,3 +742,32 @@ test(
     await expect(host).toHaveJSProperty('values', []);
   },
 );
+
+test(
+  'selects an Option in an Option Group',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-select label="Label">
+          <slab-option value="none">None</slab-option>
+          <slab-option-group label="Fruit">
+            <slab-option value="apple">Apple</slab-option>
+          </slab-option-group>
+        </slab-select>`,
+    );
+
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Enter');
+    await page.keyboard.press('ArrowDown');
+
+    expect(await isActive(page.locator('slab-option').nth(1))).toBe(true);
+
+    await page.keyboard.press('Enter');
+
+    await expect(page.locator('slab-select')).toHaveJSProperty(
+      'value',
+      'apple',
+    );
+  },
+);

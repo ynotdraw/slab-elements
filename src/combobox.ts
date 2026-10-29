@@ -19,6 +19,7 @@ import TagsController from './library/tags-controller.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
 import Option from './option.js';
+import OptionGroup from './option-group.js';
 import styles from './combobox.styles.js';
 import browserValidationMessage from './library/browser-validation-message.js';
 import isComposing from './library/is-composing.js';
@@ -99,7 +100,7 @@ declare global {
  * @readonly
  * @attr {string} [version]
  *
- * @slot {Option}
+ * @slot {Option | OptionGroup}
  * @slot {Element | string} [description]
  *
  * @csspart description - Text about the Combobox, and its validity message when it has one
@@ -450,8 +451,8 @@ export default class Combobox extends LitElement {
         ${ref(this.#listboxElementRef)}
       >
         <!-- The Options, in a popover beside the input -->
-        <slot ${assertSlot([Option])} ${ref(this.#slotElementRef)}>
-          <!-- @type {Option} -->
+        <slot ${assertSlot([Option, OptionGroup])} ${ref(this.#slotElementRef)}>
+          <!-- @type {Option | OptionGroup} -->
         </slot>
       </div>
 
@@ -526,6 +527,20 @@ export default class Combobox extends LitElement {
     for (const option of this.options) {
       option.hidden = !visible.includes(option);
       option.selected = selected.includes(option);
+    }
+
+    // A group with nothing left in it is hidden too, so its label isn't left
+    // naming nothing.
+    const parents = new Set(
+      this.options.map(({ parentElement }) => parentElement),
+    );
+
+    for (const parent of parents) {
+      if (parent instanceof OptionGroup) {
+        parent.hidden = ![...parent.children].some((child) => {
+          return (visible as Element[]).includes(child);
+        });
+      }
     }
 
     this.#updateText();
@@ -628,6 +643,7 @@ export default class Combobox extends LitElement {
   // the arrow keys skip them.
   #options = new OptionsController(this, {
     activeDescendantElement: () => this.#inputElementRef.value,
+    groupClass: OptionGroup,
     isDisabled: () => this.#isDisabled,
     isSelecting: false,
     isShown: (option) => this.#isVisible(option),

@@ -393,3 +393,31 @@ test(
     expect(isPointedAt).toBe(true);
   },
 );
+
+test(
+  'is accessible with Option Groups',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <slab-listbox label="Label">
+          <slab-option>None</slab-option>
+          <slab-option-group label="Fruit">
+            <slab-option>Apple</slab-option>
+            <slab-option>Banana</slab-option>
+          </slab-option-group>
+        </slab-listbox>
+      `,
+    );
+
+    await expect(page).toBeAccessible('slab-listbox');
+
+    await expect(page.getByRole('listbox')).toMatchAriaSnapshot(`
+      - listbox "Label":
+        - option "None"
+        - group "Fruit":
+          - option "Apple"
+          - option "Banana"
+    `);
+  },
+);

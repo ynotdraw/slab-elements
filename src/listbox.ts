@@ -15,6 +15,7 @@ import assertSlot from './library/assert-slot.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
 import Option from './option.js';
+import OptionGroup from './option-group.js';
 import styles from './listbox.styles.js';
 import afterReflection from './library/after-reflection.js';
 import OptionsController from './library/options-controller.js';
@@ -68,7 +69,7 @@ declare global {
  * @readonly
  * @attr {string} [version]
  *
- * @slot {Option}
+ * @slot {Option | OptionGroup}
  * @slot {Element | string} [description]
  *
  * @csspart description - Text about the Listbox, and its validity message when it has one
@@ -316,8 +317,8 @@ export default class Listbox extends LitElement {
         ${ref(this.#listboxElementRef)}
       >
         <!-- The Options -->
-        <slot ${assertSlot([Option])} ${ref(this.#slotElementRef)}>
-          <!-- @type {Option} -->
+        <slot ${assertSlot([Option, OptionGroup])} ${ref(this.#slotElementRef)}>
+          <!-- @type {Option | OptionGroup} -->
         </slot>
       </div>
 
@@ -461,6 +462,7 @@ export default class Listbox extends LitElement {
 
   #options = new OptionsController(this, {
     activeDescendantElement: () => this.#listboxElementRef.value,
+    groupClass: OptionGroup,
     isDisabled: () => this.#isDisabled,
     isMultiple: () => this.multiple,
     onChange: () => {

@@ -17,6 +17,7 @@ import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
 import OptionsController from './library/options-controller.js';
 import Option from './option.js';
+import OptionGroup from './option-group.js';
 import styles from './select.styles.js';
 import browserValidationMessage from './library/browser-validation-message.js';
 
@@ -74,7 +75,7 @@ declare global {
  * @readonly
  * @attr {string} [version]
  *
- * @slot {Option}
+ * @slot {Option | OptionGroup}
  * @slot {Element | string} [description]
  *
  * @csspart combobox - What opens the Options and shows what's selected
@@ -370,8 +371,11 @@ export default class Select extends LitElement {
           @click=${this.#onListboxClick}
         >
           <!-- The Options -->
-          <slot ${assertSlot([Option])} ${ref(this.#slotElementRef)}>
-            <!-- @type {Option} -->
+          <slot
+            ${assertSlot([Option, OptionGroup])}
+            ${ref(this.#slotElementRef)}
+          >
+            <!-- @type {Option | OptionGroup} -->
           </slot>
         </div>
       </div>
@@ -564,6 +568,7 @@ export default class Select extends LitElement {
   // and only while it's open, when the Options can be seen.
   #options = new OptionsController(this, {
     activeDescendantElement: () => this.#comboboxElementRef.value,
+    groupClass: OptionGroup,
     isActiveDescendantShown: () => this.#isPopoverOpen,
     isDisabled: () => this.#isDisabled,
     isMultiple: () => this.multiple,
