@@ -17,6 +17,27 @@ export default css`
     color: var(--paper);
   }
 
+  /*
+    Checkbox and radio Menu Items keep room for their mark whether or not
+    they're checked, so their labels line up. The mark is decoration: the
+    state is read from aria-checked.
+  */
+  :host([type='checkbox']),
+  :host([type='radio']) {
+    padding-inline-start: 2rem;
+    position: relative;
+  }
+
+  :host(:state(checked))::before {
+    content: '✓' / '';
+    inset-inline-start: 0.75rem;
+    position: absolute;
+  }
+
+  :host([type='radio']:state(checked))::before {
+    content: '●' / '';
+  }
+
   :host(:state(disabled)) {
     color: var(--ash);
     cursor: not-allowed;
