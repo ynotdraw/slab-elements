@@ -12,6 +12,7 @@ import { when } from 'lit/directives/when.js';
 import packageJson from '../package.json' with { type: 'json' };
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
+import StringsController from './library/strings.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
 import styles from './password-field.styles.js';
@@ -64,7 +65,7 @@ declare global {
  * @attr {boolean} [readonly=false]
  * @attr {boolean} [required=false]
  * @attr {boolean} [revealed=false] - Whether the password shows. Like `value`, the attribute is the default and the property is the current one, so the attribute doesn't change as the button is pressed.
- * @attr {string} [toggle-label] - The button's text and so its accessible name. "Show password" when unset.
+ * @attr {string} [toggle-label] - The button's text and so its accessible name. "Show password" in English when unset.
  * @attr {string} [value=''] - Like a native input, the attribute is the default value and the property is the current one, so the attribute doesn't change as the field is typed into.
  *
  * @readonly
@@ -176,7 +177,8 @@ export default class PasswordField extends LitElement {
   revealed = false;
 
   /**
-   * The button's text and so its accessible name. "Show password" when unset.
+   * The button's text and so its accessible name. "Show password" in English
+   * when unset.
    */
   @property({ attribute: 'toggle-label', reflect: true })
   toggleLabel?: string;
@@ -276,7 +278,7 @@ export default class PasswordField extends LitElement {
           @click=${this.#onToggleButtonClick}
         >
           <!-- The button that shows and hides the password -->
-          ${this.toggleLabel ?? 'Show password'}
+          ${this.toggleLabel ?? this.#strings.value.passwordFieldShow}
         </button>
       </div>
 
@@ -463,6 +465,8 @@ export default class PasswordField extends LitElement {
   #inputElementRef = createRef<HTMLInputElement>();
 
   #internals: ElementInternals;
+
+  #strings = new StringsController(this);
 
   get #isDisabled() {
     return this.disabled || this.isFormDisabled;

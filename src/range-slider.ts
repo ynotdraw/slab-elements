@@ -13,6 +13,7 @@ import packageJson from '../package.json' with { type: 'json' };
 import afterReflection from './library/after-reflection.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
+import StringsController from './library/strings.js';
 import required from './library/required.js';
 import styles from './range-slider.styles.js';
 
@@ -61,13 +62,13 @@ interface Drag {
  *
  * @attr {string} label - Names the group. Each thumb is named by it and its own label.
  * @attr {boolean} [disabled=false]
- * @attr {string} [end-label] - Names the end thumb, after `label`. "Maximum" when unset.
+ * @attr {string} [end-label] - Names the end thumb, after `label`. "Maximum" in English when unset.
  * @attr {number} [end-value] - Like a native input's `value`, the attribute is the default and the property is the current value. Between `start-value` and `max`, on a step. `max` when unset.
  * @attr {boolean} [hide-label=false]
  * @attr {number} [max=100]
  * @attr {number} [min=0]
  * @attr {string} [name=''] - Submitted twice, with the start value and then the end value.
- * @attr {string} [start-label] - Names the start thumb, after `label`. "Minimum" when unset.
+ * @attr {string} [start-label] - Names the start thumb, after `label`. "Minimum" in English when unset.
  * @attr {number} [start-value] - Like a native input's `value`, the attribute is the default and the property is the current value. Between `min` and `end-value`, on a step. `min` when unset.
  * @attr {number} [step=1]
  *
@@ -127,7 +128,7 @@ export default class RangeSlider extends LitElement {
   disabled = false;
 
   /**
-   * Names the end thumb, after `label`. "Maximum" when unset.
+   * Names the end thumb, after `label`. "Maximum" in English when unset.
    */
   @property({ attribute: 'end-label', reflect: true })
   endLabel?: string;
@@ -166,7 +167,7 @@ export default class RangeSlider extends LitElement {
   name = '';
 
   /**
-   * Names the start thumb, after `label`. "Minimum" when unset.
+   * Names the start thumb, after `label`. "Minimum" in English when unset.
    */
   @property({ attribute: 'start-label', reflect: true })
   startLabel?: string;
@@ -282,7 +283,7 @@ export default class RangeSlider extends LitElement {
         <div
           aria-describedby="description"
           aria-disabled=${ifDefined(this.#isDisabled ? 'true' : undefined)}
-          aria-label=${this.startLabel ?? 'Minimum'}
+          aria-label=${this.startLabel ?? this.#strings.value.rangeSliderMinimum}
           aria-labelledby="label start"
           aria-valuemax=${end}
           aria-valuemin=${this.min}
@@ -302,7 +303,7 @@ export default class RangeSlider extends LitElement {
         <div
           aria-describedby="description"
           aria-disabled=${ifDefined(this.#isDisabled ? 'true' : undefined)}
-          aria-label=${this.endLabel ?? 'Maximum'}
+          aria-label=${this.endLabel ?? this.#strings.value.rangeSliderMaximum}
           aria-labelledby="label end"
           aria-valuemax=${this.#max}
           aria-valuemin=${start}
@@ -364,17 +365,15 @@ export default class RangeSlider extends LitElement {
   // thumbs are on top of each other and the drag hasn't gone either way yet.
   // `start` and `end` are what they were before the pointer went down, to
   // eslint-disable-next-line no-unused-private-class-members
-#ariaForwarding = new AriaForwarding(this, {
+  #ariaForwarding = new AriaForwarding(this, {
     target: () => this.renderRoot.querySelector('[role="group"]'),
   });
 
-// tell whether the drag changed anything.
+  // tell whether the drag changed anything.
   #drag?: Drag;
 
   // A consumer's `aria-*`, and Tooltip's, Popover's and Menu's, on the host.
   // It does its work through the host's lifecycle, so nothing calls it.
-  
-  
 
   #endElementRef = createRef<HTMLDivElement>();
 
@@ -385,6 +384,8 @@ export default class RangeSlider extends LitElement {
   #startElementRef = createRef<HTMLDivElement>();
 
   #startValue?: number;
+
+  #strings = new StringsController(this);
 
   #trackElementRef = createRef<HTMLDivElement>();
 

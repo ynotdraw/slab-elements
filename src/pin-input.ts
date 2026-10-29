@@ -12,6 +12,7 @@ import { when } from 'lit/directives/when.js';
 import packageJson from '../package.json' with { type: 'json' };
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
+import StringsController from './library/strings.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
 import styles from './pin-input.styles.js';
@@ -41,7 +42,7 @@ declare global {
  * and End move between inputs.
  *
  * The inputs are a `[role=group]` named by `label`, and each is named by
- * `inputLabel`, "Character 1 of 6" and so on unless you set it.
+ * `inputLabel`, "Character 1 of 6" and so on in English unless you set it.
  *
  * `required` makes an empty value invalid, as `valueMissing`. A value that's
  * started but has fewer than `length` characters is always invalid, as
@@ -83,7 +84,7 @@ declare global {
  * @readonly
  * @prop {HTMLFormElement | null} form
  *
- * @prop {(position: number, length: number) => string} inputLabel - Names each input from its position, starting at 1, and `length`. "Character 1 of 6" and so on when unset.
+ * @prop {(position: number, length: number) => string} inputLabel - Names each input from its position, starting at 1, and `length`. "Character 1 of 6" and so on in English when unset.
  *
  * @readonly
  * @prop {ValidityState} validity
@@ -140,13 +141,13 @@ export default class PinInput extends LitElement {
 
   /**
    * Names each input from its position, starting at 1, and `length`.
-   * "Character 1 of 6" and so on when unset.
+   * "Character 1 of 6" and so on in English when unset.
    */
   @property({ attribute: false })
   inputLabel: (position: number, length: number) => string = (
     position,
     length,
-  ) => `Character ${position} of ${length}`;
+  ) => this.#strings.value.pinInputCharacter(position, length);
 
   /**
    * How many characters, and so how many inputs.
@@ -450,6 +451,8 @@ export default class PinInput extends LitElement {
   // apart from the character that was already there. Set only by an edit
   // that dispatches "beforeinput", which an autofill may not.
   #selectionBeforeInput?: { end: number; start: number };
+
+  #strings = new StringsController(this);
 
   // What "change" compares against when focus leaves the inputs, as a native
   // input compares against its value when it was focused.

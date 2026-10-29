@@ -12,6 +12,7 @@ import { when } from 'lit/directives/when.js';
 import packageJson from '../package.json' with { type: 'json' };
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
+import StringsController from './library/strings.js';
 import assertSlot from './library/assert-slot.js';
 import afterReflection from './library/after-reflection.js';
 import OptionsController from './library/options-controller.js';
@@ -121,7 +122,7 @@ declare global {
  * @readonly
  * @prop {Option[]} options
  *
- * @prop {(text: string) => string} removeLabel - Names each tag's button, which shows only the selected Option's text, from that text. "Remove" and the text when unset.
+ * @prop {(text: string) => string} removeLabel - Names each tag's button, which shows only the selected Option's text, from that text. "Remove" and the text in English when unset.
  *
  * @readonly
  * @prop {Option | null} selectedOption
@@ -216,10 +217,11 @@ export default class Combobox extends LitElement {
 
   /**
    * Names each tag's button, which shows only the selected Option's text,
-   * from that text. "Remove" and the text when unset.
+   * from that text. "Remove" and the text in English when unset.
    */
   @property({ attribute: false })
-  removeLabel: (text: string) => string = (text) => `Remove ${text}`;
+  removeLabel: (text: string) => string = (text) =>
+    this.#strings.value.comboboxRemove(text);
 
   @property({ reflect: true, type: Boolean })
   required = false;
@@ -612,6 +614,8 @@ export default class Combobox extends LitElement {
 
   // What's been typed since the value was last committed, or `undefined` when
   #slotElementRef = createRef<HTMLSlotElement>();
+
+  #strings = new StringsController(this);
 
   #tags = new TagsController(this, {
     input: () => this.#inputElementRef.value,

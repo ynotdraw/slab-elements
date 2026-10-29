@@ -15,6 +15,7 @@ import packageJson from '../package.json' with { type: 'json' };
 import afterReflection from './library/after-reflection.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
+import StringsController from './library/strings.js';
 import required from './library/required.js';
 import RovingTabindex from './library/roving-tabindex.js';
 import styles from './color-picker.styles.js';
@@ -76,17 +77,17 @@ const black: Color = { alpha: 100, brightness: 0, hue: 0, saturation: 0 };
  *
  * @attr {string} label - Names the group. Each control is named by it and its own label.
  * @attr {boolean} [alpha=false] - Adds the alpha slider, and `value` is "#rrggbbaa" when the color isn't opaque.
- * @attr {string} [alpha-label] - Names the alpha slider, after `label`. "Alpha" when unset.
- * @attr {string} [area-label] - Names the area, after `label`. "Saturation and brightness" when unset.
- * @attr {string} [brightness-label] - Read before the area's brightness. "Brightness" when unset.
+ * @attr {string} [alpha-label] - Names the alpha slider, after `label`. "Alpha" in English when unset.
+ * @attr {string} [area-label] - Names the area, after `label`. "Saturation and brightness" in English when unset.
+ * @attr {string} [brightness-label] - Read before the area's brightness. "Brightness" in English when unset.
  * @attr {boolean} [disabled=false]
- * @attr {string} [hex-label] - Names the hex field, after `label`. "Hex" when unset.
+ * @attr {string} [hex-label] - Names the hex field, after `label`. "Hex" in English when unset.
  * @attr {boolean} [hide-label=false]
- * @attr {string} [hue-label] - Names the hue slider, after `label`. "Hue" when unset.
+ * @attr {string} [hue-label] - Names the hue slider, after `label`. "Hue" in English when unset.
  * @attr {string} [name='']
- * @attr {string} [saturation-label] - Read before the area's saturation. "Saturation" when unset.
+ * @attr {string} [saturation-label] - Read before the area's saturation. "Saturation" in English when unset.
  * @attr {string} [swatches=''] - Space-separated colors to pick from. Ones that aren't colors are left out.
- * @attr {string} [swatches-label] - Names the swatches, after `label`. "Swatches" when unset.
+ * @attr {string} [swatches-label] - Names the swatches, after `label`. "Swatches" in English when unset.
  * @attr {string} [value='#000000'] - Like a native input's `value`, the attribute is the default and the property is the current value. "#000000" when unset.
  *
  * @readonly
@@ -155,19 +156,20 @@ export default class ColorPicker extends LitElement {
   alpha = false;
 
   /**
-   * Names the alpha slider, after `label`. "Alpha" when unset.
+   * Names the alpha slider, after `label`. "Alpha" in English when unset.
    */
   @property({ attribute: 'alpha-label', reflect: true })
   alphaLabel?: string;
 
   /**
-   * Names the area, after `label`. "Saturation and brightness" when unset.
+   * Names the area, after `label`. "Saturation and brightness" in English when
+   * unset.
    */
   @property({ attribute: 'area-label', reflect: true })
   areaLabel?: string;
 
   /**
-   * Read before the area's brightness. "Brightness" when unset.
+   * Read before the area's brightness. "Brightness" in English when unset.
    */
   @property({ attribute: 'brightness-label', reflect: true })
   brightnessLabel?: string;
@@ -176,7 +178,7 @@ export default class ColorPicker extends LitElement {
   disabled = false;
 
   /**
-   * Names the hex field, after `label`. "Hex" when unset.
+   * Names the hex field, after `label`. "Hex" in English when unset.
    */
   @property({ attribute: 'hex-label', reflect: true })
   hexLabel?: string;
@@ -185,7 +187,7 @@ export default class ColorPicker extends LitElement {
   hideLabel = false;
 
   /**
-   * Names the hue slider, after `label`. "Hue" when unset.
+   * Names the hue slider, after `label`. "Hue" in English when unset.
    */
   @property({ attribute: 'hue-label', reflect: true })
   hueLabel?: string;
@@ -194,7 +196,7 @@ export default class ColorPicker extends LitElement {
   name = '';
 
   /**
-   * Read before the area's saturation. "Saturation" when unset.
+   * Read before the area's saturation. "Saturation" in English when unset.
    */
   @property({ attribute: 'saturation-label', reflect: true })
   saturationLabel?: string;
@@ -206,7 +208,7 @@ export default class ColorPicker extends LitElement {
   swatches = '';
 
   /**
-   * Names the swatches, after `label`. "Swatches" when unset.
+   * Names the swatches, after `label`. "Swatches" in English when unset.
    */
   @property({ attribute: 'swatches-label', reflect: true })
   swatchesLabel?: string;
@@ -272,8 +274,8 @@ export default class ColorPicker extends LitElement {
     const value = this.value;
     const opaque = toHex({ ...this.#color, alpha: 100 }, false);
     const tabindex = this.#isDisabled ? -1 : 0;
-    const saturationText = `${this.saturationLabel ?? 'Saturation'} ${Math.round(saturation)}%`;
-    const brightnessText = `${this.brightnessLabel ?? 'Brightness'} ${Math.round(brightness)}%`;
+    const saturationText = `${this.saturationLabel ?? this.#strings.value.colorPickerSaturation} ${Math.round(saturation)}%`;
+    const brightnessText = `${this.brightnessLabel ?? this.#strings.value.colorPickerBrightness} ${Math.round(brightness)}%`;
     const areaText = `${saturationText}, ${brightnessText}`;
 
     // ARIA goes on attributes rather than on ElementInternals. Screenreaders
@@ -308,7 +310,7 @@ export default class ColorPicker extends LitElement {
         <div
           aria-describedby="description"
           aria-disabled=${ifDefined(this.#isDisabled ? 'true' : undefined)}
-          aria-label=${this.areaLabel ?? 'Saturation and brightness'}
+          aria-label=${this.areaLabel ?? this.#strings.value.colorPickerArea}
           aria-labelledby="label area-thumb"
           aria-valuemax="100"
           aria-valuemin="0"
@@ -342,7 +344,7 @@ export default class ColorPicker extends LitElement {
         <div
           aria-describedby="description"
           aria-disabled=${ifDefined(this.#isDisabled ? 'true' : undefined)}
-          aria-label=${this.hueLabel ?? 'Hue'}
+          aria-label=${this.hueLabel ?? this.#strings.value.colorPickerHue}
           aria-labelledby="label hue-thumb"
           aria-valuemax="360"
           aria-valuemin="0"
@@ -374,7 +376,7 @@ export default class ColorPicker extends LitElement {
               <div
                 aria-describedby="description"
                 aria-disabled=${ifDefined(this.#isDisabled ? 'true' : undefined)}
-                aria-label=${this.alphaLabel ?? 'Alpha'}
+                aria-label=${this.alphaLabel ?? this.#strings.value.colorPickerAlpha}
                 aria-labelledby="label alpha-thumb"
                 aria-valuemax="100"
                 aria-valuemin="0"
@@ -396,7 +398,7 @@ export default class ColorPicker extends LitElement {
 
       <input
         aria-describedby="description"
-        aria-label=${this.hexLabel ?? 'Hex'}
+        aria-label=${this.hexLabel ?? this.#strings.value.colorPickerHex}
         aria-labelledby="label hex"
         autocomplete="off"
         id="hex"
@@ -412,7 +414,7 @@ export default class ColorPicker extends LitElement {
       ${
         this.#swatches.length > 0
           ? html`<div
-              aria-label=${this.swatchesLabel ?? 'Swatches'}
+              aria-label=${this.swatchesLabel ?? this.#strings.value.colorPickerSwatches}
               aria-labelledby="label swatches"
               id="swatches"
               part="swatches"
@@ -493,16 +495,12 @@ export default class ColorPicker extends LitElement {
   // It does its work through the host's lifecycle, so nothing calls it.
   #alphaThumbElementRef = createRef<HTMLDivElement>();
 
-#areaThumbElementRef = createRef<HTMLDivElement>();
+  #areaThumbElementRef = createRef<HTMLDivElement>();
 
-// eslint-disable-next-line no-unused-private-class-members
+  // eslint-disable-next-line no-unused-private-class-members
   #ariaForwarding = new AriaForwarding(this, {
     target: () => this.renderRoot.querySelector('[role="group"]'),
   });
-
-  
-
-  
 
   #color: Color = black;
 
@@ -520,6 +518,8 @@ export default class ColorPicker extends LitElement {
     items: () => this.#swatchElements,
     orientation: () => 'both',
   });
+
+  #strings = new StringsController(this);
 
   get #isDisabled() {
     return this.disabled || this.isFormDisabled;

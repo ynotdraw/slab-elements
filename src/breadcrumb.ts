@@ -8,6 +8,7 @@ import { property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import packageJson from '../package.json' with { type: 'json' };
 import customElement from './library/custom-element.js';
+import StringsController from './library/strings.js';
 import styles from './breadcrumb.styles.js';
 
 declare global {
@@ -31,7 +32,7 @@ declare global {
  * until you give it some. The `<ol>` keeps its numbers and indent until your
  * styles take them off.
  *
- * @attr {string} [label] - Names the navigation. "Breadcrumb" when unset.
+ * @attr {string} [label] - Names the navigation. "Breadcrumb" in English when unset.
  *
  * @readonly
  * @attr {string} [version]
@@ -49,7 +50,7 @@ declare global {
 @customElement('slab-breadcrumb')
 export default class Breadcrumb extends LitElement {
   /**
-   * Names the navigation. "Breadcrumb" when unset.
+   * Names the navigation. "Breadcrumb" in English when unset.
    */
   @property({ reflect: true })
   label?: string;
@@ -64,7 +65,10 @@ export default class Breadcrumb extends LitElement {
   }
 
   override render() {
-    return html`<nav aria-label=${this.label ?? 'Breadcrumb'} part="nav">
+    return html`<nav
+      aria-label=${this.label ?? this.#strings.value.breadcrumb}
+      part="nav"
+    >
       <!-- The navigation -->
       <ol part="list">
         <!-- The links -->
@@ -124,6 +128,8 @@ export default class Breadcrumb extends LitElement {
   #current?: Element;
 
   #observer = new MutationObserver(this.#assign.bind(this));
+
+  #strings = new StringsController(this);
 
   #onSlotChange = () => {
     this.#assign();

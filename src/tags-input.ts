@@ -11,6 +11,7 @@ import { when } from 'lit/directives/when.js';
 import packageJson from '../package.json' with { type: 'json' };
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
+import StringsController from './library/strings.js';
 import afterReflection from './library/after-reflection.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
@@ -82,7 +83,7 @@ declare global {
  * @readonly
  * @prop {HTMLFormElement | null} form
  *
- * @prop {(text: string) => string} removeLabel - Names each tag's button, which shows only the tag, from the tag. "Remove" and the tag when unset.
+ * @prop {(text: string) => string} removeLabel - Names each tag's button, which shows only the tag, from the tag. "Remove" and the tag in English when unset.
  *
  * @readonly
  * @prop {ValidityState} validity
@@ -152,10 +153,11 @@ export default class TagsInput extends LitElement {
 
   /**
    * Names each tag's button, which shows only the tag, from the tag. "Remove"
-   * and the tag when unset.
+   * and the tag in English when unset.
    */
   @property({ attribute: false })
-  removeLabel: (text: string) => string = (text) => `Remove ${text}`;
+  removeLabel: (text: string) => string = (text) =>
+    this.#strings.value.tagsInputRemove(text);
 
   @property({ reflect: true, type: Boolean })
   required = false;
@@ -401,6 +403,8 @@ export default class TagsInput extends LitElement {
   #inputElementRef = createRef<HTMLInputElement>();
 
   #internals: ElementInternals;
+
+  #strings = new StringsController(this);
 
   #tags = new TagsController(this, {
     input: () => this.#inputElementRef.value,

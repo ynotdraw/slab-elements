@@ -10,6 +10,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import packageJson from '../package.json' with { type: 'json' };
 import customElement from './library/custom-element.js';
+import StringsController from './library/strings.js';
 import styles from './calendar.styles.js';
 
 declare global {
@@ -49,11 +50,11 @@ interface Highlight {
  * an interval. Between the two, the days from the first to the one focused
  * or hovered are `::part(preview)`, and Escape starts over.
  *
- * The month's name, the weekdays' and each day's full date are the browser's
- * own, from `Intl.DateTimeFormat`, in the language of the nearest `lang`
- * attribute. Slab ships no text, so the only words that aren't the browser's
- * are the previous and next buttons', which `previous-label` and `next-label`
- * set.
+ * The month's name, the weekdays', each day's full date and its number are
+ * the browser's own, from `Intl`, in the language of the nearest `lang`
+ * attribute. The only words that aren't the browser's are the previous and
+ * next buttons', which `previous-label` and `next-label` set, or else the
+ * strings registered for that language with `registerStrings()`.
  *
  * Style it through its parts. A day is also `::part(selected)`,
  * `::part(today)` and `::part(disabled)` when it's those, and with `range`,
@@ -62,7 +63,7 @@ interface Highlight {
  *
  * @attr {string} [max] - The latest date that can be selected, as "yyyy-mm-dd".
  * @attr {string} [min] - The earliest date that can be selected, as "yyyy-mm-dd".
- * @attr {string} [next-label] - The next month button's text and so its accessible name. "Next month" when unset.
+ * @attr {string} [next-label] - The next month button's text and so its accessible name. "Next month" in English when unset.
  * @attr {string} [previous-label] - The previous month button's text and so its accessible name. "Previous month" when unset.
  * @attr {boolean} [range=false] - Selects a range of days rather than one.
  * @attr {string} [value=''] - The selected date, as "yyyy-mm-dd", or with `range` the selected range, as "yyyy-mm-dd/yyyy-mm-dd". Otherwise an empty string. Like a native input, the attribute is the default value and the property is the current one.
@@ -104,8 +105,8 @@ export default class Calendar extends LitElement {
   min?: string;
 
   /**
-   * The next month button's text and so its accessible name. "Next month" when
-   * unset.
+   * The next month button's text and so its accessible name. "Next month" in
+   * English when unset.
    */
   @property({ attribute: 'next-label', reflect: true })
   nextLabel?: string;
@@ -162,6 +163,9 @@ export default class Calendar extends LitElement {
     const formatDay = this.#format({ dateStyle: 'full' });
     const highlight = this.#highlight;
 
+    // In the language's own digits, such as Arabic-Indic ones in Arabic.
+    const formatNumber = new Intl.NumberFormat(this.#locale);
+
     // ARIA goes on attributes rather than on ElementInternals. Screenreaders
     // read both. But Playwright's role queries and ARIA snapshots, and Axe,
     // only read attributes, which would leave the ARIA untested.
@@ -176,7 +180,7 @@ export default class Calendar extends LitElement {
           @click=${this.#onPreviousClick}
         >
           <!-- The button to the previous month -->
-          ${this.previousLabel ?? 'Previous month'}
+          ${this.previousLabel ?? this.#strings.value.calendarPreviousMonth}
         </button>
 
         <span aria-live="polite" id="heading" part="heading">
@@ -191,7 +195,7 @@ export default class Calendar extends LitElement {
           @click=${this.#onNextClick}
         >
           <!-- The button to the next month -->
-          ${this.nextLabel ?? 'Next month'}
+          ${this.nextLabel ?? this.#strings.value.calendarNextMonth}
         </button>
       </div>
 
@@ -225,7 +229,7 @@ export default class Calendar extends LitElement {
               html`<tr>
                 ${week.map((date) =>
                   date
-                    ? this.#renderDay(date, formatDay, highlight)
+                    ? this.#renderDay(date, formatDay, formatNumber, highlight)
                     : this.#renderEmpty(),
                 )}
               </tr>`,
@@ -274,6 +278,8 @@ export default class Calendar extends LitElement {
   private hoveredDate = '';
 
   #gridElementRef = createRef<HTMLTableElement>();
+
+  #strings = new StringsController(this);
 
   // The tabbable day: where the user or `value` moved it, or else today,
   // always between `min` and `max`.
@@ -501,7 +507,12 @@ export default class Calendar extends LitElement {
     this.focusedDate = format(this.#clamp(addMonths(this.#focused, months)));
   }
 
-  #renderDay(date: Date, formatDay: Intl.DateTimeFormat, highlight: Highlight) {
+  #renderDay(
+    date: Date,
+    formatDay: Intl.DateTimeFormat,
+    formatNumber: Intl.NumberFormat,
+    highlight: Highlight,
+  ) {
     const iso = format(date);
     const isDisabled = this.#isDisabled(date);
     const isToday = iso === format(today());
@@ -548,7 +559,7 @@ export default class Calendar extends LitElement {
         @part today - Today
         @part disabled - A day before the earliest date or after the latest
       -->
-      ${date.getUTCDate()}
+      ${formatNumber.format(date.getUTCDate())}
     </td>`;
   }
 

@@ -27,7 +27,7 @@ export const sections: Section[] = [
   {
     id: 'import',
     heading: 'Import what you use',
-    text: "Each element is its own module, and importing it registers its tag. Import the ones you use, and nothing else ships. An element made of parts, like Tabs, has a module for each part.",
+    text: 'Each element is its own module, and importing it registers its tag. Import the ones you use, and nothing else ships. An element made of parts, like Tabs, has a module for each part.',
     code: {
       code: `import 'slab-elements/switch.js';
 
@@ -58,12 +58,12 @@ import 'slab-elements/tabs.panel.js';`,
       label: 'index.html',
       lang: 'html',
     },
-    coda: "Every control needs a `label`, and one without throws rather than going unnamed. `hide-label` hides it from view and keeps it for screenreaders. Like a native control, the `checked` and `value` attributes are where it starts, and the properties are where it is now.",
+    coda: 'Every control needs a `label`, and one without throws rather than going unnamed. `hide-label` hides it from view and keeps it for screenreaders. Like a native control, the `checked` and `value` attributes are where it starts, and the properties are where it is now.',
   },
   {
     id: 'frameworks',
     heading: 'In your framework',
-    text: 'There\'s no wrapper package. The tag is the component, in React, Vue, Svelte, Rails, or plain HTML. React listens for events through a ref, Svelte needs nothing, and Vue needs to know which tags are custom elements. The [home page](#usage) shows the same Disclosure in each.',
+    text: "There's no wrapper package. The tag is the component, in React, Vue, Svelte, Rails, or plain HTML. React listens for events through a ref, Svelte needs nothing, and Vue needs to know which tags are custom elements. The [home page](#usage) shows the same Disclosure in each.",
     code: {
       code: `import vue from '@vitejs/plugin-vue';
 
@@ -150,12 +150,18 @@ customElements.define(
   {
     id: 'words',
     heading: 'Your words, in any language',
-    text: "Slab brings no text of its own. Where an element has to make some, mostly names for screenreaders, it's English until you set an attribute, like Alert's `dismiss-label`. Text built from a value, like Pagination's \"Page 3\", is a function, so you can word and order it for your language.",
+    text: 'Slab brings little text of its own. Where an element has to make some, mostly names for screenreaders, it\'s English until you translate it. Register your language\'s words once, and every element whose nearest `lang` is that language uses them. "fr-CA" takes "fr" for anything it leaves out, and English after that. Text built from a value, like Pagination\'s "Page 3", is a function, so you can word and order it for your language.',
     code: {
-      code: "pagination.pageLabel = (page) => `Seite ${page}`;",
+      code: `import { registerStrings } from 'slab-elements/strings.js';
+
+registerStrings('de', {
+  alertDismiss: 'Schließen',
+  paginationPage: (page) => \`Seite \${page}\`,
+});`,
       label: 'main.js',
       lang: 'js',
     },
+    coda: "`Strings` lists every one. An attribute or property on an element, like Alert's `dismiss-label`, still wins, for the one place you want different words.",
   },
   {
     id: 'typescript',
@@ -181,7 +187,11 @@ const link = /\[([^\]]+)\]\(([^)]*)\)/g;
 /** Text as HTML, with `code` spans and links, which `base` is put in front of. */
 export function html(text: string, base: string): string {
   return escape(text)
-    .replaceAll(link, (_, label: string, path: string) => `<a href="${base}${path}">${label}</a>`)
+    .replaceAll(
+      link,
+      (_, label: string, path: string) =>
+        `<a href="${base}${path}">${label}</a>`,
+    )
     .replaceAll(/`([^`]+)`/g, '<code>$1</code>');
 }
 

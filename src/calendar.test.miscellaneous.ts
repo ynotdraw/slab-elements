@@ -116,6 +116,21 @@ test(
 );
 
 test(
+  "numbers its days in its language's digits",
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<div lang="ar-EG">
+          <slab-calendar value="2026-10-15"></slab-calendar>
+        </div>`,
+    );
+
+    await expect(page.locator('[data-date="2026-10-15"]')).toHaveText('١٥');
+  },
+);
+
+test(
   'can be extended and registered under another tag name',
   { tag: '@miscellaneous' },
   async ({ page }) => {

@@ -9,6 +9,7 @@ import { property } from 'lit/decorators.js';
 import packageJson from '../package.json' with { type: 'json' };
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
+import StringsController from './library/strings.js';
 import required from './library/required.js';
 import styles from './copy-button.styles.js';
 
@@ -38,9 +39,9 @@ declare global {
  * flattened to text regardless. An icon goes on through `::part(button)`.
  *
  * @attr {string} label
- * @attr {string} [copied-label='Copied'] - Announced once the text is copied.
+ * @attr {string} [copied-label] - Announced once the text is copied. "Copied" in English when unset.
  * @attr {boolean} [disabled=false]
- * @attr {string} [failed-label="Couldn't copy"] - Announced when the clipboard refuses.
+ * @attr {string} [failed-label] - Announced when the clipboard refuses. "Couldn't copy" in English when unset.
  * @attr {number} [feedback-duration=2000] - Milliseconds the host matches `:state(copied)` or `:state(failed)` for.
  * @attr {string} [from] - The `id` of an element to copy from, instead of `value`.
  * @attr {string} [value=''] - The text to copy.
@@ -61,19 +62,20 @@ export default class CopyButton extends LitElement {
   };
 
   /**
-   * Announced once the text is copied.
+   * Announced once the text is copied. "Copied" in English when unset.
    */
-  @property({ attribute: 'copied-label', reflect: true, useDefault: true })
-  copiedLabel = 'Copied';
+  @property({ attribute: 'copied-label', reflect: true })
+  copiedLabel?: string;
 
   @property({ reflect: true, type: Boolean })
   disabled = false;
 
   /**
-   * Announced when the clipboard refuses.
+   * Announced when the clipboard refuses. "Couldn't copy" in English when
+   * unset.
    */
-  @property({ attribute: 'failed-label', reflect: true, useDefault: true })
-  failedLabel = "Couldn't copy";
+  @property({ attribute: 'failed-label', reflect: true })
+  failedLabel?: string;
 
   /**
    * Milliseconds the host matches `:state(copied)` or `:state(failed)` for.
@@ -162,15 +164,17 @@ export default class CopyButton extends LitElement {
 
   #internals: ElementInternals;
 
+  #strings = new StringsController(this);
+
   #timeoutId?: ReturnType<typeof setTimeout>;
 
   get #status(): string {
     switch (this.#feedback) {
       case 'copied': {
-        return this.copiedLabel;
+        return this.copiedLabel ?? this.#strings.value.copyButtonCopied;
       }
       case 'failed': {
-        return this.failedLabel;
+        return this.failedLabel ?? this.#strings.value.copyButtonFailed;
       }
       case undefined: {
         return '';
