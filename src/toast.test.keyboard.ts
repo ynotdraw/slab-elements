@@ -179,6 +179,45 @@ test(
 );
 
 test(
+  'leaves F6 alone once the last open toast is dismissed',
+  { tag: '@keyboard' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`
+        <slab-toast data-test="one">Changes saved</slab-toast>
+        <slab-toast data-test="two">Changes published</slab-toast>
+      `,
+    );
+
+    const one = page.locator('[data-test="one"]');
+    const two = page.locator('[data-test="two"]');
+
+    const pressF6 = () =>
+      page.evaluate(() => {
+        const event = new KeyboardEvent('keydown', {
+          bubbles: true,
+          cancelable: true,
+          key: 'F6',
+        });
+
+        document.body.dispatchEvent(event);
+
+        return event.defaultPrevented;
+      });
+
+    await callMethod(one, 'show');
+    await callMethod(two, 'show');
+    await callMethod(one, 'dismiss');
+
+    expect(await pressF6()).toBe(true);
+
+    await callMethod(two, 'dismiss');
+
+    expect(await pressF6()).toBe(false);
+  },
+);
+
+test(
   'moves focus back when dismissed via Escape',
   { tag: '@keyboard' },
   async ({ callMethod, render, page }) => {

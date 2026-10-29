@@ -81,6 +81,9 @@ declare global {
  */
 @customElement('slab-toast')
 export default class Toast extends LitElement {
+  // In the order they were shown, so the last is the most recent.
+  private static openToasts = new Set<Toast>();
+
   /**
    * Milliseconds until it dismisses itself. 0 keeps it until it's dismissed.
    */
@@ -93,6 +96,33 @@ export default class Toast extends LitElement {
   get open(): boolean {
     return this.isOpen;
   }
+
+  // One listener for every Toast, so F6 moves focus once rather than once per
+  // Toast. On the document, because the F6 that moves focus into a Toast comes
+  // from outside every Toast. It's only there while a Toast is open.
+  private static onDocumentKeydown = (event: KeyboardEvent) => {
+    const toasts = [...Toast.openToasts];
+    const latest = toasts.at(-1);
+
+    if (event.key !== 'F6' || !latest) {
+      return;
+    }
+
+    // Not `:focus-within`, which doesn't match while the window itself isn't
+    // focused.
+    const focused = toasts.find((toast) => {
+      return isFocusIn(toast);
+    });
+
+    // Otherwise the browser's own F6 moves focus to its address bar.
+    event.preventDefault();
+
+    if (focused) {
+      focused.#returnFocus();
+    } else {
+      latest.#takeFocus();
+    }
+  };
 
   override connectedCallback() {
     super.connectedCallback();
@@ -107,7 +137,7 @@ export default class Toast extends LitElement {
   override disconnectedCallback() {
     super.disconnectedCallback();
     this.#clearTimer();
-    openToasts.delete(this);
+    Toast.untrack(this);
   }
 
   dismiss(): void {
@@ -118,7 +148,7 @@ export default class Toast extends LitElement {
     this.#clearTimer();
 
     this.isOpen = false;
-    openToasts.delete(this);
+    Toast.untrack(this);
 
     // Its content is about to go, and focus with it. After `isOpen`, so the
     // "focusout" this causes doesn't start the countdown again.
@@ -131,17 +161,6 @@ export default class Toast extends LitElement {
 
   override firstUpdated() {
     this.#raise();
-  }
-
-  // Called by the F6 handler below.
-  privateFocus() {
-    this.#returnFocusTo = deepActiveElement();
-    this.#regionElementRef.value?.focus();
-  }
-
-  // Called by the F6 handler below.
-  privateReturnFocus() {
-    this.#returnFocus();
   }
 
   override render() {
@@ -191,9 +210,7 @@ export default class Toast extends LitElement {
 
     this.isOpen = true;
 
-    // Moved to the end, so F6 finds the most recent.
-    openToasts.delete(this);
-    openToasts.add(this);
+    Toast.track(this);
 
     await this.updateComplete;
 
@@ -218,6 +235,24 @@ export default class Toast extends LitElement {
     subclassStyles?: CSSResultGroup,
   ): CSSResultOrNative[] {
     return super.finalizeStyles([styles, subclassStyles ?? []]);
+  }
+
+  // Moved to the end when it's already there, so F6 finds the most recent.
+  private static track(toast: Toast) {
+    if (Toast.openToasts.size === 0) {
+      document.addEventListener('keydown', Toast.onDocumentKeydown);
+    }
+
+    Toast.openToasts.delete(toast);
+    Toast.openToasts.add(toast);
+  }
+
+  private static untrack(toast: Toast) {
+    Toast.openToasts.delete(toast);
+
+    if (Toast.openToasts.size === 0) {
+      document.removeEventListener('keydown', Toast.onDocumentKeydown);
+    }
   }
 
   constructor() {
@@ -344,6 +379,11 @@ export default class Toast extends LitElement {
       this.dismiss();
     }, this.duration);
   }
+
+  #takeFocus() {
+    this.#returnFocusTo = deepActiveElement();
+    this.#regionElementRef.value?.focus();
+  }
 }
 
 const actionSelector = [
@@ -357,9 +397,6 @@ const actionSelector = [
   '[contenteditable]:not([contenteditable="false"])',
   '[tabindex]',
 ].join(', ');
-
-// In the order they were shown, so the last is the most recent.
-const openToasts = new Set<Toast>();
 
 function deepActiveElement() {
   let element = document.activeElement;
@@ -389,26 +426,3 @@ function isFocusIn(toast: Toast) {
 
   return false;
 }
-
-// One listener for every Toast, so F6 moves focus once rather than once per
-// Toast.
-document.addEventListener('keydown', (event: KeyboardEvent) => {
-  if (event.key !== 'F6' || openToasts.size === 0) {
-    return;
-  }
-
-  // Not `:focus-within`, which doesn't match while the window itself isn't
-  // focused.
-  const focused = [...openToasts].find((toast) => {
-    return isFocusIn(toast);
-  });
-
-  // Otherwise the browser's own F6 moves focus to its address bar.
-  event.preventDefault();
-
-  if (focused) {
-    focused.privateReturnFocus();
-  } else {
-    [...openToasts].at(-1)?.privateFocus();
-  }
-});
