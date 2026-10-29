@@ -31,11 +31,11 @@ declare global {
  * and Escape closes it.
  *
  * Exactly one anchor is tabbable: the one most recently focused or opened, or
- * the first that isn't disabled. Left and Right move focus between the
- * anchors, wrapping at each end and skipping disabled ones, and Home and End go
- * to the first and last. While a Menu is open, Left and Right close it and open
- * the one beside it instead, and pointing at another anchor does the same, as
- * a desktop menubar does.
+ * the first that isn't disabled. Left and Right move focus between the anchors,
+ * wrapping at each end and skipping disabled ones, and Home and End go to the
+ * first and last. While a Menu is open, Left and Right close it and open the
+ * one beside it instead, and pointing at another anchor does the same, as a
+ * desktop menubar does. In a right-to-left page, Left and Right swap.
  *
  * Style it through its part, each Menu through its own, and the anchors
  * directly.

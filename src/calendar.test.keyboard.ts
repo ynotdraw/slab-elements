@@ -301,3 +301,24 @@ test(
     );
   },
 );
+
+test(
+  'moves forward a day via ArrowLeft and back via ArrowRight when right to left',
+  { tag: '@keyboard' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<div dir="rtl">
+          <slab-calendar value="2026-10-15"></slab-calendar>
+        </div>`,
+    );
+
+    await callMethod(page.locator('slab-calendar'), 'focus');
+
+    await page.keyboard.press('ArrowLeft');
+    expect(await getFocused(page)).toBe('2026-10-16');
+
+    await page.keyboard.press('ArrowRight');
+    expect(await getFocused(page)).toBe('2026-10-15');
+  },
+);

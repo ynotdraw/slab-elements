@@ -232,3 +232,34 @@ test(
     await expect(page.locator('slab-tabs-panel').nth(1)).toBeFocused();
   },
 );
+
+test(
+  'swaps ArrowLeft and ArrowRight when right to left',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<div dir="rtl">
+          <slab-tabs label="Label">
+            <slab-tabs-tab panel="one" slot="tab">One</slab-tabs-tab>
+            <slab-tabs-tab panel="two" slot="tab">Two</slab-tabs-tab>
+            <slab-tabs-tab panel="three" slot="tab">Three</slab-tabs-tab>
+            <slab-tabs-panel name="one">One</slab-tabs-panel>
+            <slab-tabs-panel name="two">Two</slab-tabs-panel>
+            <slab-tabs-panel name="three">Three</slab-tabs-panel>
+          </slab-tabs>
+        </div>`,
+    );
+
+    const tabs = page.getByRole('tab');
+
+    await page.keyboard.press('Tab');
+    await expect(tabs.nth(0)).toBeFocused();
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(tabs.nth(1)).toBeFocused();
+
+    await page.keyboard.press('ArrowRight');
+    await expect(tabs.nth(0)).toBeFocused();
+  },
+);

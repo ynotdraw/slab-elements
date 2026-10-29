@@ -72,12 +72,18 @@ export default class RovingTabindex<T extends HTMLElement> {
     const navigable = this.navigableItems;
     const index = navigable.indexOf(from);
 
+    // Left and Right go back and forward in the reading direction, so they
+    // swap where it's right to left, as they do for native radios.
+    const isRtl = getComputedStyle(from).direction === 'rtl';
+    const back = isRtl ? 'ArrowRight' : 'ArrowLeft';
+    const forward = isRtl ? 'ArrowLeft' : 'ArrowRight';
+
     const isPrevious =
-      (event.key === 'ArrowLeft' && orientation !== 'vertical') ||
+      (event.key === back && orientation !== 'vertical') ||
       (event.key === 'ArrowUp' && orientation !== 'horizontal');
 
     const isNext =
-      (event.key === 'ArrowRight' && orientation !== 'vertical') ||
+      (event.key === forward && orientation !== 'vertical') ||
       (event.key === 'ArrowDown' && orientation !== 'horizontal');
 
     if (isPrevious) {
