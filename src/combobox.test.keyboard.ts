@@ -813,17 +813,40 @@ test(
         </slab-combobox>`,
     );
 
-    const region = page.locator('[data-slab-announcer="polite"]');
+    // A stand-in for `ariaNotify()`, since not every browser has one, and a
+    // real one can't be listened to.
+    await page.evaluate(() => {
+      const announcements: string[] = [];
+
+      Object.assign(globalThis, { announcements });
+
+      Object.defineProperty(Element.prototype, 'ariaNotify', {
+        configurable: true,
+        value(message: string) {
+          announcements.push(message);
+        },
+      });
+    });
+
+    const announcements = () =>
+      page.evaluate(
+        () =>
+          (globalThis as unknown as { announcements: string[] }).announcements,
+      );
+
     const combobox = page.getByRole('combobox');
 
     await combobox.pressSequentially('ap');
-    await expect(region).toHaveText('2 results');
+    await expect.poll(announcements).toStrictEqual(['2 results']);
 
     await combobox.pressSequentially('p');
-    await expect(region).toContainText('1 result');
+    await expect.poll(announcements).toStrictEqual(['2 results', '1 result']);
 
     await combobox.pressSequentially('z');
-    await expect(region).toContainText('No results');
+
+    await expect
+      .poll(announcements)
+      .toStrictEqual(['2 results', '1 result', 'No results']);
   },
 );
 
@@ -839,16 +862,39 @@ test(
     );
 
     const host = page.locator('slab-combobox');
-    const region = page.locator('[data-slab-announcer="polite"]');
+
+    // A stand-in for `ariaNotify()`, since not every browser has one, and a
+    // real one can't be listened to.
+    await page.evaluate(() => {
+      const announcements: string[] = [];
+
+      Object.assign(globalThis, { announcements });
+
+      Object.defineProperty(Element.prototype, 'ariaNotify', {
+        configurable: true,
+        value(message: string) {
+          announcements.push(message);
+        },
+      });
+    });
+
+    const announcements = () =>
+      page.evaluate(
+        () =>
+          (globalThis as unknown as { announcements: string[] }).announcements,
+      );
 
     // One value that names an Option, and one that doesn't.
     await setProperty(host, 'values', ['custom', 'apple']);
 
     await page.getByRole('combobox').press('Backspace');
-    await expect(region).toHaveText('Apple removed');
+    await expect.poll(announcements).toStrictEqual(['Apple removed']);
 
     await page.getByRole('combobox').press('Backspace');
-    await expect(region).toContainText('custom removed');
+
+    await expect
+      .poll(announcements)
+      .toStrictEqual(['Apple removed', 'custom removed']);
   },
 );
 

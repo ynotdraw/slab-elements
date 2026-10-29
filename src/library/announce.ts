@@ -1,6 +1,9 @@
 // Announces a change that has no element of its own to announce it from, such
 // as how many Options a Combobox's filter left, or a tag that's gone.
 //
+// Through `ariaNotify()` where there is one, which is made for this. It became
+// Baseline in 2026, so where there isn't, through live regions instead:
+//
 // A live region only announces what's inserted into it after screenreaders
 // have found it, so the regions are made once, on the first announcement, and
 // the message goes in a moment later. Each message is its own element, added
@@ -28,6 +31,14 @@ type Politeness = 'assertive' | 'polite';
 type Regions = Record<Politeness, HTMLElement>;
 
 type Holder = Element & { [key]?: Regions };
+
+// Not in TypeScript's DOM types yet.
+interface Notifier {
+  ariaNotify?: (
+    message: string,
+    options?: { priority?: 'high' | 'normal' },
+  ) => void;
+}
 
 export interface AnnounceOptions {
   /**
@@ -107,6 +118,17 @@ export default function announce(
   { politeness = 'polite', source }: AnnounceOptions = {},
 ): void {
   if (message.trim() === '') {
+    return;
+  }
+
+  // On the source, so the announcement is read in the source's language.
+  const notifier = (source ?? document) as Notifier;
+
+  if (notifier.ariaNotify) {
+    notifier.ariaNotify(message, {
+      priority: politeness === 'assertive' ? 'high' : 'normal',
+    });
+
     return;
   }
 

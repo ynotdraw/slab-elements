@@ -12,6 +12,73 @@ type Announce = (
 ) => void;
 
 test(
+  'announces through `ariaNotify()` on its source where there is one',
+  { tag: '@miscellaneous' },
+  async ({ page }) => {
+    await page.goto(viteUrl);
+
+    const calls = await page.evaluate(async (path) => {
+      const { default: announce } = (await import(path)) as {
+        default: Announce;
+      };
+
+      const calls: unknown[][] = [];
+      const source = document.createElement('span');
+
+      // A stand-in, since not every browser has one, and a real one can't be
+      // listened to.
+      Object.defineProperty(Element.prototype, 'ariaNotify', {
+        configurable: true,
+        value(this: Element, ...parameters: unknown[]) {
+          calls.push([this === source, ...parameters]);
+        },
+      });
+
+      announce('Saved', { source });
+      announce('Failed', { politeness: 'assertive', source });
+
+      return calls;
+    }, announcePath);
+
+    expect(calls).toStrictEqual([
+      [true, 'Saved', { priority: 'normal' }],
+      [true, 'Failed', { priority: 'high' }],
+    ]);
+
+    await expect(page.locator('[data-slab-announcer]')).toHaveCount(0);
+  },
+);
+
+test(
+  'announces through `ariaNotify()` on the document without a source',
+  { tag: '@miscellaneous' },
+  async ({ page }) => {
+    await page.goto(viteUrl);
+
+    const calls = await page.evaluate(async (path) => {
+      const { default: announce } = (await import(path)) as {
+        default: Announce;
+      };
+
+      const calls: unknown[][] = [];
+
+      Object.defineProperty(Document.prototype, 'ariaNotify', {
+        configurable: true,
+        value(this: Document, ...parameters: unknown[]) {
+          calls.push([this === document, ...parameters]);
+        },
+      });
+
+      announce('Saved');
+
+      return calls;
+    }, announcePath);
+
+    expect(calls).toStrictEqual([[true, 'Saved', { priority: 'normal' }]]);
+  },
+);
+
+test(
   'announces politely by default, in a region on the body',
   { tag: '@miscellaneous' },
   async ({ page }) => {
@@ -21,6 +88,10 @@ test(
       const { default: announce } = (await import(path)) as {
         default: Announce;
       };
+
+      // The live regions are for where there's no `ariaNotify()`.
+      Reflect.deleteProperty(Element.prototype, 'ariaNotify');
+      Reflect.deleteProperty(Document.prototype, 'ariaNotify');
 
       announce('Saved');
     }, announcePath);
@@ -47,6 +118,10 @@ test(
         default: Announce;
       };
 
+      // The live regions are for where there's no `ariaNotify()`.
+      Reflect.deleteProperty(Element.prototype, 'ariaNotify');
+      Reflect.deleteProperty(Document.prototype, 'ariaNotify');
+
       announce('Failed', { politeness: 'assertive' });
     }, announcePath);
 
@@ -68,6 +143,10 @@ test(
       const { default: announce } = (await import(path)) as {
         default: Announce;
       };
+
+      // The live regions are for where there's no `ariaNotify()`.
+      Reflect.deleteProperty(Element.prototype, 'ariaNotify');
+      Reflect.deleteProperty(Document.prototype, 'ariaNotify');
 
       announce('Saved');
       announce('Saved');
@@ -95,6 +174,10 @@ test(
         default: Announce;
       };
 
+      // The live regions are for where there's no `ariaNotify()`.
+      Reflect.deleteProperty(Element.prototype, 'ariaNotify');
+      Reflect.deleteProperty(Document.prototype, 'ariaNotify');
+
       announce('Saved');
     }, announcePath);
 
@@ -119,6 +202,10 @@ test(
         default: Announce;
       };
 
+      // The live regions are for where there's no `ariaNotify()`.
+      Reflect.deleteProperty(Element.prototype, 'ariaNotify');
+      Reflect.deleteProperty(Document.prototype, 'ariaNotify');
+
       announce('  ');
     }, announcePath);
 
@@ -136,6 +223,10 @@ test(
       const { default: announce } = (await import(path)) as {
         default: Announce;
       };
+
+      // The live regions are for where there's no `ariaNotify()`.
+      Reflect.deleteProperty(Element.prototype, 'ariaNotify');
+      Reflect.deleteProperty(Document.prototype, 'ariaNotify');
 
       // A dialog in one shadow root, and the source in another inside it,
       // the way a Combobox's input is inside a Dialog.
@@ -174,6 +265,10 @@ test(
         default: Announce;
       };
 
+      // The live regions are for where there's no `ariaNotify()`.
+      Reflect.deleteProperty(Element.prototype, 'ariaNotify');
+      Reflect.deleteProperty(Document.prototype, 'ariaNotify');
+
       const dialog = document.createElement('dialog');
       const source = document.createElement('span');
 
@@ -200,6 +295,10 @@ test(
       const { default: announce } = (await import(path)) as {
         default: Announce;
       };
+
+      // The live regions are for where there's no `ariaNotify()`.
+      Reflect.deleteProperty(Element.prototype, 'ariaNotify');
+      Reflect.deleteProperty(Document.prototype, 'ariaNotify');
 
       announce('First');
 
