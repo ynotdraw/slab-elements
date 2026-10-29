@@ -1,4 +1,5 @@
 ---
+import { Font } from 'astro:assets';
 import { ClientRouter } from 'astro:transitions';
 import { version } from '../../../package.json';
 import Logo from '../components/Logo.astro';
@@ -62,12 +63,13 @@ const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.
     <link href={`${base}favicon.ico`} rel="icon" sizes="16x16 32x32 48x48" />
     <link href={`${base}favicon-32.png`} rel="icon" sizes="32x32" type="image/png" />
     <link href={`${base}apple-touch-icon.png`} rel="apple-touch-icon" />
-    <link href="https://fonts.googleapis.com" rel="preconnect" />
-    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;600&family=Zilla+Slab:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <!--
+      The fonts, from astro.config.mjs. Only the faces nearly every page shows
+      above the fold are preloaded: the body text, the headings and the code.
+    -->
+    <Font cssVariable="--font-display" preload={[{ weight: 400 }, { weight: 600 }]} />
+    <Font cssVariable="--font-mono" preload={[{ weight: 400 }]} />
+    <Font cssVariable="--font-body" />
     <!-- Before the first paint, so a saved theme never flashes the OS's. -->
     <script is:inline>
       try {

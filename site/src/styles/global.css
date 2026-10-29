@@ -28,16 +28,19 @@
   /* Secondary text on ink. 6:1; 5.6:1 dark. */
   --dim: light-dark(#9a9a93, #5c5c55);
   --rule-on-ink: light-dark(#45453f, #c4c3bc);
-  --font-display: 'Zilla Slab', georgia, serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
   --gutter: clamp(1rem, 4vw, 1.75rem);
 
   /*
     The styled components' paper and chalk, rethemed to the site's, through
-    the same custom properties any consumer would set.
+    the same custom properties any consumer would set. Their fonts are the
+    site's own faces, which Astro names (see astro.config.mjs), so they're
+    handed over the same way.
   */
   --slab-styled-paper: var(--paper);
   --slab-styled-chalk: var(--page);
+  --slab-styled-font-body: var(--font-body);
+  --slab-styled-font-display: var(--font-display);
+  --slab-styled-font-mono: var(--font-mono);
 
   /*
     The OS's preference until someone picks a theme, then theirs. The
