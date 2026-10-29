@@ -3,6 +3,7 @@ import { getEntry } from 'astro:content';
 import CodeBlock from '../../components/CodeBlock.astro';
 import FrameworkTabs from '../../components/FrameworkTabs.astro';
 import PageActions from '../../components/PageActions.astro';
+import ReleaseTldr from '../../components/ReleaseTldr.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import Base from '../../layouts/Base.astro';
 import { frameworks } from '../../lib/frameworks.ts';
@@ -18,7 +19,7 @@ export function getStaticPaths() {
 }
 
 const { announcement } = Astro.props as { announcement: Announcement };
-const { highlights, intro, notes = [], summary, version } = announcement;
+const { highlights, intro, notes = [], summary, tldr, version } = announcement;
 const published = isPublished(version);
 const base = import.meta.env.BASE_URL;
 
@@ -83,69 +84,76 @@ const sidebar = [
   markdown={`releases/${version}.md`}
   title={`What's new in Slab ${version} · Slab`}
 >
-  <div class="layout">
-    <Sidebar label="In this release" sections={sidebar} />
+  {
+    /* A release too big to walk through a component at a time is a TL;DR. */
+    tldr ? (
+      <ReleaseTldr announcement={{ ...announcement, tldr }} />
+    ) : (
+      <div class="layout">
+        <Sidebar label="In this release" sections={sidebar} />
 
-    <article class="doc">
-      <header class="intro">
-        <p class="eyebrow">What's new</p>
-        <h1>Slab {version}</h1>
-        <p class="summary">{summary}</p>
-        <p set:html={inline(intro)} />
-        {
-          !published && (
-            <p class="note">
-              {version} isn't on npm yet. This is what's in it, from <code>main</code>,
-              ahead of the release.
-            </p>
-          )
-        }
-        <PageActions markdown={`releases/${version}.md`} />
-      </header>
+        <article class="doc">
+          <header class="intro">
+            <p class="eyebrow">What's new</p>
+            <h1>Slab {version}</h1>
+            <p class="summary">{summary}</p>
+            <p set:html={inline(intro)} />
+            {
+              !published && (
+                <p class="note">
+                  {version} isn't on npm yet. This is what's in it, from <code>main</code>,
+                  ahead of the release.
+                </p>
+              )
+            }
+            <PageActions markdown={`releases/${version}.md`} />
+          </header>
 
-      {
-        sections.map(({ example, href, id, text, title, usages }) => (
-          <section aria-labelledby={id} class="highlight">
-            <h2 id={id}>{title}</h2>
-            <p set:html={inline(text)} />
-            <div class="stage" set:html={example} />
-            <details class="markup">
-              <summary>Usage</summary>
-              <FrameworkTabs frameworks={usages} />
-            </details>
-            <a class="more" href={href}>
-              Read the {title.replace(/ ranges$/, '')} docs
-            </a>
-          </section>
-        ))
-      }
-
-      {
-        noteSections.map(({ id, text, title, usages }) => (
-          <section aria-labelledby={id} class="highlight">
-            <h2 id={id}>{title}</h2>
-            <p set:html={html(text, base)} />
-            {usages && <FrameworkTabs frameworks={usages} />}
-          </section>
-        ))
-      }
-
-      <section aria-labelledby="upgrade" class="highlight">
-        <h2 id="upgrade">Upgrade</h2>
-        <p>
-          It's a patch release, with nothing to change in what you have.
           {
-            published && (
-              <>
-                Every change is in <a href={`${base}releases/#v${version}`}>the release notes</a>.
-              </>
-            )
+            sections.map(({ example, href, id, text, title, usages }) => (
+              <section aria-labelledby={id} class="highlight">
+                <h2 id={id}>{title}</h2>
+                <p set:html={inline(text)} />
+                <div class="stage" set:html={example} />
+                <details class="markup">
+                  <summary>Usage</summary>
+                  <FrameworkTabs frameworks={usages} />
+                </details>
+                <a class="more" href={href}>
+                  Read the {title.replace(/ ranges$/, '')} docs
+                </a>
+              </section>
+            ))
           }
-        </p>
-        <CodeBlock code={`pnpm add slab-elements@${version}`} label="Install" lang="sh" />
-      </section>
-    </article>
-  </div>
+
+          {
+            noteSections.map(({ id, text, title, usages }) => (
+              <section aria-labelledby={id} class="highlight">
+                <h2 id={id}>{title}</h2>
+                <p set:html={html(text, base)} />
+                {usages && <FrameworkTabs frameworks={usages} />}
+              </section>
+            ))
+          }
+
+          <section aria-labelledby="upgrade" class="highlight">
+            <h2 id="upgrade">Upgrade</h2>
+            <p>
+              It's a patch release, with nothing to change in what you have.
+              {
+                published && (
+                  <>
+                    Every change is in <a href={`${base}releases/#v${version}`}>the release notes</a>.
+                  </>
+                )
+              }
+            </p>
+            <CodeBlock code={`pnpm add slab-elements@${version}`} label="Install" lang="sh" />
+          </section>
+        </article>
+      </div>
+    )
+  }
 </Base>
 
 <script>
