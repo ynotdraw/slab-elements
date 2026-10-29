@@ -162,3 +162,28 @@ test(
     await expect(host).toHaveJSProperty('value', 'one');
   },
 );
+
+test(
+  'is focused by a click on its label, unless it is disabled',
+  { tag: '@mouse' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-listbox label="Label">
+          <slab-option>One</slab-option>
+        </slab-listbox>`,
+    );
+
+    const host = page.locator('slab-listbox');
+    const listbox = page.getByRole('listbox');
+
+    await page.getByText('Label').click();
+    await expect(listbox).toBeFocused();
+
+    await listbox.blur();
+    await setProperty(host, 'disabled', true);
+    await page.getByText('Label').click();
+
+    await expect(listbox).not.toBeFocused();
+  },
+);
