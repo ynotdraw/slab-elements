@@ -452,3 +452,40 @@ test(
     await expect(page.getByRole('textbox', { name: 'Before' })).toBeFocused();
   },
 );
+
+test(
+  'adds no tag on Enter while an input method is composing',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(() => html`<slab-tags-input label="Label"></slab-tags-input>`);
+
+    await page.getByRole('textbox').fill('One');
+
+    await page.getByRole('textbox').evaluate((input) => {
+      // Chrome and Firefox mark the Enter that ends a composition with
+      // \`isComposing\`. Safari doesn't, but gives it a \`keyCode\` of 229.
+      input.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          bubbles: true,
+          composed: true,
+          isComposing: true,
+          key: 'Enter',
+        }),
+      );
+
+      const safariEnter = new KeyboardEvent('keydown', {
+        bubbles: true,
+        composed: true,
+        key: 'Enter',
+      });
+
+      Object.defineProperty(safariEnter, 'keyCode', { value: 229 });
+      input.dispatchEvent(safariEnter);
+    });
+
+    await expect(page.locator('slab-tags-input')).toHaveJSProperty(
+      'values',
+      [],
+    );
+  },
+);

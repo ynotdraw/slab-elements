@@ -13,6 +13,7 @@ import afterReflection from './library/after-reflection.js';
 import customElement from './library/custom-element.js';
 import required from './library/required.js';
 import styles from './editable.styles.js';
+import isComposing from './library/is-composing.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -314,7 +315,7 @@ export default class Editable extends LitElement {
 
   async #onInputKeydown(event: KeyboardEvent) {
     // An IME uses Enter and Escape to finish or abandon a composition.
-    if (event.isComposing) {
+    if (isComposing(event)) {
       return;
     }
 
