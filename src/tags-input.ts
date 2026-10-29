@@ -9,6 +9,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { when } from 'lit/directives/when.js';
 import packageJson from '../package.json' with { type: 'json' };
+import announce from './library/announce.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
 import afterReflection from './library/after-reflection.js';
@@ -80,10 +81,13 @@ declare global {
  * @fires {Event} change
  * @fires {Event} input
  *
+ * @prop {(text: string) => string} addedLabel - What screenreaders are told when a tag is added, from the tag. The tag and "added" when unset.
+ *
  * @readonly
  * @prop {HTMLFormElement | null} form
  *
  * @prop {(text: string) => string} removeLabel - Names each tag's button, which shows only the tag, from the tag. "Remove" and the tag when unset.
+ * @prop {(text: string) => string} removedLabel - What screenreaders are told when a tag is removed, from the tag. The tag and "removed" when unset.
  *
  * @readonly
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
@@ -163,6 +167,20 @@ export default class TagsInput extends LitElement {
    */
   @property({ attribute: false })
   removeLabel: (text: string) => string = (text) => `Remove ${text}`;
+
+  /**
+   * What screenreaders are told when a tag is removed, from the tag. The tag
+   * and "removed" when unset.
+   */
+  @property({ attribute: false })
+  removedLabel: (text: string) => string = (text) => `${text} removed`;
+
+  /**
+   * What screenreaders are told when a tag is added, from the tag. The tag
+   * and "added" when unset.
+   */
+  @property({ attribute: false })
+  addedLabel: (text: string) => string = (text) => `${text} added`;
 
   @property({ reflect: true, type: Boolean })
   required = false;
@@ -578,6 +596,9 @@ export default class TagsInput extends LitElement {
         unadded.push(tag);
       } else {
         values.push(tag);
+
+        // The input empties and a tag appears, and nothing else says so.
+        announce(this.addedLabel(tag), { source: this });
       }
     }
 
@@ -611,8 +632,16 @@ export default class TagsInput extends LitElement {
     this.isBlurring = false;
   }
 
+  // Focus stays where it is, or moves to the next tag, so nothing else says
+  // the tag is gone.
   #remove(index: number) {
+    const removed = this.values[index];
+
     this.#setValues(this.values.filter((_, other) => other !== index));
+
+    if (removed !== undefined) {
+      announce(this.removedLabel(removed), { source: this });
+    }
   }
 
   #renderTags() {

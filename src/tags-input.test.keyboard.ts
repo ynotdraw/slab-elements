@@ -454,6 +454,47 @@ test(
 );
 
 test(
+  'tells screenreaders which tag was added or removed',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(() => html`<slab-tags-input label="Label"></slab-tags-input>`);
+
+    // A stand-in for `ariaNotify()`, since not every browser has one, and a
+    // real one can't be listened to.
+    await page.evaluate(() => {
+      const announcements: string[] = [];
+
+      Object.assign(globalThis, { announcements });
+
+      Object.defineProperty(Element.prototype, 'ariaNotify', {
+        configurable: true,
+        value(message: string) {
+          announcements.push(message);
+        },
+      });
+    });
+
+    const announcements = () =>
+      page.evaluate(
+        () =>
+          (globalThis as unknown as { announcements: string[] }).announcements,
+      );
+
+    const textbox = page.getByRole('textbox');
+
+    await textbox.fill('one');
+    await textbox.press('Enter');
+    await expect.poll(announcements).toStrictEqual(['one added']);
+
+    await textbox.press('Backspace');
+
+    await expect
+      .poll(announcements)
+      .toStrictEqual(['one added', 'one removed']);
+  },
+);
+
+test(
   'adds no tag on Enter while an input method is composing',
   { tag: '@keyboard' },
   async ({ render, page }) => {
