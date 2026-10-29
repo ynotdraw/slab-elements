@@ -436,9 +436,10 @@ test(
     const y = (track?.y ?? 0) + (track?.height ?? 0) / 2;
 
     // The start is on the right, so 20 is 40 pixels in from the right.
-    await expect(
-      page.getByRole('slider', { name: 'Label Minimum' }),
-    ).toHaveJSProperty('style.insetInlineStart', '20%');
+    await expect(page.locator('[data-test="start"]')).toHaveJSProperty(
+      'style.insetInlineStart',
+      '20%',
+    );
 
     await page.mouse.move(right - 40, y);
     await page.mouse.down();

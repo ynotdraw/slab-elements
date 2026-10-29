@@ -1,7 +1,7 @@
 ---
 title: Range Slider
 group: Form
-element: '[role=slider]'
+element: '<input type=range>'
 tags: [slab-range-slider]
 summary: 'A two-thumb slider for picking a range, with a thumb at each end that can meet but not pass the other.'
 example: |
@@ -13,6 +13,8 @@ usage: |
 ---
 
 Each thumb is named by `label` and then its own label, "Minimum" and "Maximum" unless you set `start-label` and `end-label`, so a screenreader reads "Price Minimum". The form gets two entries under `name`, the start and then the end. Give the track a size, since the thumbs and the range between them are placed along it.
+
+Inside each thumb is a visually hidden range input. It's what has focus and what a screenreader reads, which lets screenreaders on phones adjust a thumb with a swipe up or down. Since the thumb itself isn't focused, it can't match `:focus-visible`. Style its focus ring through `::part(focus-visible)`, which the thumb has while its input's focus is visible.
 
 ## Keyboard
 

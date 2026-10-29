@@ -45,11 +45,12 @@ export default css`
     box-shadow: 0 0 0 2px var(--ink);
     box-sizing: border-box;
     inline-size: 1rem;
+  }
 
-    &:focus-visible {
-      outline: 3px solid var(--ember);
-      outline-offset: 3px;
-    }
+  [part~='start'][part~='focus-visible'],
+  [part~='end'][part~='focus-visible'] {
+    outline: 3px solid var(--ember);
+    outline-offset: 3px;
   }
 
   [part~='description'] {

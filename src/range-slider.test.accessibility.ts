@@ -120,12 +120,12 @@ test(
     const start = page.getByRole('slider', { name: 'Label Minimum' });
     const end = page.getByRole('slider', { name: 'Label Maximum' });
 
-    await expect(start).toHaveAttribute('aria-valuemin', '10');
-    await expect(start).toHaveAttribute('aria-valuemax', '70');
-    await expect(start).toHaveAttribute('aria-valuenow', '20');
+    await expect(start).toHaveAttribute('min', '10');
+    await expect(start).toHaveAttribute('max', '70');
+    await expect(start).toHaveValue('20');
 
-    await expect(end).toHaveAttribute('aria-valuemin', '20');
-    await expect(end).toHaveAttribute('aria-valuemax', '90');
-    await expect(end).toHaveAttribute('aria-valuenow', '70');
+    await expect(end).toHaveAttribute('min', '20');
+    await expect(end).toHaveAttribute('max', '90');
+    await expect(end).toHaveValue('70');
   },
 );
