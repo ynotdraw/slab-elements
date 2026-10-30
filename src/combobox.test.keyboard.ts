@@ -693,6 +693,43 @@ test(
 );
 
 test(
+  'swaps ArrowLeft and ArrowRight between its tags when right to left',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<div dir="rtl">
+          <slab-combobox label="Label" multiple>
+            <slab-option value="one" selected>One</slab-option>
+            <slab-option value="two" selected>Two</slab-option>
+          </slab-combobox>
+        </div>`,
+    );
+
+    const one = page.getByRole('button', { name: 'Remove One' });
+    const two = page.getByRole('button', { name: 'Remove Two' });
+
+    await page.getByRole('combobox').focus();
+
+    // Left at the start of the input is away from the tags.
+    await page.keyboard.press('ArrowLeft');
+    await expect(page.getByRole('combobox')).toBeFocused();
+
+    await page.keyboard.press('ArrowRight');
+    await expect(two).toBeFocused();
+
+    await page.keyboard.press('ArrowRight');
+    await expect(one).toBeFocused();
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(two).toBeFocused();
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(page.getByRole('combobox')).toBeFocused();
+  },
+);
+
+test(
   'removes a focused tag on Backspace, Delete, Enter or Space when `multiple`',
   { tag: '@keyboard' },
   async ({ render, page }) => {

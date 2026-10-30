@@ -80,8 +80,9 @@ declare global {
  * selected value is shown before the input as a tag, a `<button>` that
  * removes it. Backspace in an empty input removes the last, and Left at the
  * start of the input moves focus to the tags, where Left and Right move
- * between them and Backspace, Delete, Enter and Space remove one. They aren't
- * Tab stops, so Tab still leaves the Combobox in one press. `values` lists the
+ * between them and Backspace, Delete, Enter and Space remove one. In a
+ * right-to-left page, Left and Right swap. They aren't Tab stops, so Tab still
+ * leaves the Combobox in one press. `values` lists the
  * selected values in the order they were chosen, and each is submitted as its
  * own entry, as a `<select multiple>` submits them. Text that names an Option
  * adds it, and with `allow-custom` so does text that names none.
@@ -882,7 +883,7 @@ export default class Combobox extends LitElement {
 
     if (
       this.multiple &&
-      event.key === 'ArrowLeft' &&
+      event.key === this.#tags.backKey &&
       isAtStart &&
       this.#tags.focusLast()
     ) {

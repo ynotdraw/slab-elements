@@ -43,7 +43,8 @@ export interface TagsControllerConfig {
  *
  * The tags aren't Tab stops. Left at the start of the input moves to the last
  * (`focusLast()`), Left and Right move between them, and Right from the last
- * and Escape go back to the input. Backspace, Delete, Enter and Space remove
+ * and Escape go back to the input. In a right-to-left page, where the tags are
+ * to the input's right, Left and Right swap (`backKey`). Backspace, Delete, Enter and Space remove
  * one, and focus moves to the tag that takes its place, or the input when
  * there's none. A click from a pointer removes one too, and leaves focus where
  * it was.
@@ -58,6 +59,16 @@ export default class TagsController implements ReactiveController {
         '[part~="tag"]',
       ),
     ];
+  }
+
+  /**
+   * The key that moves toward the first tag: Left, or Right in a right-to-left
+   * page.
+   */
+  get backKey(): 'ArrowLeft' | 'ArrowRight' {
+    return getComputedStyle(this.#host).direction === 'rtl'
+      ? 'ArrowRight'
+      : 'ArrowLeft';
   }
 
   /**
@@ -170,7 +181,10 @@ export default class TagsController implements ReactiveController {
       return;
     }
 
-    if (event.key === 'ArrowLeft') {
+    const back = this.backKey;
+    const forward = back === 'ArrowLeft' ? 'ArrowRight' : 'ArrowLeft';
+
+    if (event.key === back) {
       event.preventDefault();
       tags.at(Math.max(index - 1, 0))?.focus();
 
@@ -178,7 +192,7 @@ export default class TagsController implements ReactiveController {
     }
 
     // Past the last tag is the input, with the caret at its start.
-    if (event.key === 'ArrowRight') {
+    if (event.key === forward) {
       event.preventDefault();
 
       const next = tags.at(index + 1);

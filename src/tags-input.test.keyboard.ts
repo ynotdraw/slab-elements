@@ -389,6 +389,41 @@ test(
 );
 
 test(
+  'swaps ArrowLeft and ArrowRight between its tags when right to left',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<div dir="rtl">
+          <slab-tags-input label="Label" value="one,two"></slab-tags-input>
+        </div>`,
+    );
+
+    const textbox = page.getByRole('textbox');
+    const one = page.getByRole('button', { name: 'Remove one' });
+    const two = page.getByRole('button', { name: 'Remove two' });
+
+    await textbox.focus();
+
+    // Left at the start of the input is away from the tags.
+    await textbox.press('ArrowLeft');
+    await expect(textbox).toBeFocused();
+
+    await textbox.press('ArrowRight');
+    await expect(two).toBeFocused();
+
+    await page.keyboard.press('ArrowRight');
+    await expect(one).toBeFocused();
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(two).toBeFocused();
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(textbox).toBeFocused();
+  },
+);
+
+test(
   "doesn't move to its tags with Left when there are none",
   { tag: '@keyboard' },
   async ({ render, page }) => {
