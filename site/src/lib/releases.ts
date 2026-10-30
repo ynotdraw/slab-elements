@@ -191,6 +191,7 @@ export const announcements: Announcement[] = [
                 'tree',
                 'calendar',
                 'color-picker',
+                'combobox',
               ],
             },
             {

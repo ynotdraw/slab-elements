@@ -43,8 +43,9 @@ declare global {
  * Each tag is a `<button>` before the input that removes it. Backspace in an
  * empty input removes the last, and Left at the start of the input moves focus
  * to the tags, where Left and Right move between them and Backspace, Delete,
- * Enter and Space remove one. They aren't Tab stops, so Tab still leaves in one
- * press. Enter in an empty input submits the form, as it does in a native one.
+ * Enter and Space remove one. In a right-to-left page, Left and Right swap.
+ * They aren't Tab stops, so Tab still leaves in one press. Enter in an empty
+ * input submits the form, as it does in a native one.
  *
  * `values` lists the tags in the order they were added, and each is submitted
  * as its own entry, the way a `<select multiple>` submits them. The `value`
@@ -582,7 +583,11 @@ export default class TagsInput extends LitElement {
     const input = this.#inputElementRef.value;
     const isAtStart = input?.selectionStart === 0 && input.selectionEnd === 0;
 
-    if (event.key === 'ArrowLeft' && isAtStart && this.#tags.focusLast()) {
+    if (
+      event.key === this.#tags.backKey &&
+      isAtStart &&
+      this.#tags.focusLast()
+    ) {
       event.preventDefault();
     }
   };
