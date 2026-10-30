@@ -1,5 +1,0 @@
----
-'slab-elements': patch
----
-
-Adds Steps, `slab-steps`, and Step, `slab-steps-step`, for showing where the user is in a task of several steps, such as a checkout or a setup wizard. It's an `<ol>` named by `label`, with an `<li>` for each Step. The Steps before `step` are complete, the one at it is current and has `aria-current="step"`, and the rest are upcoming. Past the last Step, every one is complete. Each Step shows its number, its label from the default slot, and a `description` slot, and a complete one has `complete-label` ("Completed" by default) after its label, hidden visually, for screenreaders. With `navigable`, each Step is a `<button>`, and clicking one sets `step` and dispatches "change"; `disabled` keeps the user off Steps they can't go to yet. `next()` and `previous()` move it along from your own buttons. Style it through `::part(list)` and `::part(item)`, and each Step through `::part(step)`, `::part(indicator)`, `::part(label)`, `::part(status)`, `::part(description)` and `:state(complete)`, `:state(current)`, `:state(upcoming)` and `:state(navigable)`.
