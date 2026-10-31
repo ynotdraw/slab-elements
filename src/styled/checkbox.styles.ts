@@ -19,13 +19,17 @@ export default css`
     position: relative;
   }
 
+  /*
+    24 pixels square, the smallest target WCAG 2.5.8 allows without counting
+    the space around it.
+  */
   [part~='input'] {
     appearance: none;
     background-color: var(--paper);
-    block-size: 1.375rem;
+    block-size: 1.5rem;
     border: var(--border);
     cursor: pointer;
-    inline-size: 1.375rem;
+    inline-size: 1.5rem;
     margin: 0;
     transition:
       background-color 100ms,
