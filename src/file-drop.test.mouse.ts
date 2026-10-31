@@ -346,3 +346,149 @@ test(
     expect(await host.evaluate(isDragOver)).toBe(false);
   },
 );
+
+// A stand-in for `ariaNotify()`, since not every browser has one, and a real
+// one can't be listened to. Runs in the page, passed to `evaluate()`.
+function recordAnnouncements() {
+  const announcements: string[] = [];
+
+  Object.assign(globalThis, { announcements });
+
+  Object.defineProperty(Element.prototype, 'ariaNotify', {
+    configurable: true,
+    value(message: string, options?: { priority?: string }) {
+      announcements.push(`${message} (${options?.priority ?? 'normal'})`);
+    },
+  });
+}
+
+function getAnnouncements() {
+  return (globalThis as unknown as { announcements: string[] }).announcements;
+}
+
+test(
+  'tells screenreaders what a drop added and left out',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-file-drop
+          label="Label"
+          accept="image/*"
+          multiple
+        ></slab-file-drop>`,
+    );
+
+    await page.evaluate(recordAnnouncements);
+
+    const host = page.locator('slab-file-drop');
+
+    await host.evaluate(dispatchDragEvent, {
+      type: 'drop',
+      names: ['one.png'],
+      types: ['image/png'],
+    });
+
+    await host.evaluate(dispatchDragEvent, {
+      type: 'drop',
+      names: ['one.png', 'two.png', 'notes.txt'],
+      types: ['image/png', 'image/png', 'text/plain'],
+    });
+
+    await host.evaluate(dispatchDragEvent, {
+      type: 'drop',
+      names: ['notes.txt', 'clip.mp4'],
+      types: ['text/plain', 'video/mp4'],
+    });
+
+    await expect
+      .poll(() => page.evaluate(getAnnouncements))
+      .toStrictEqual([
+        '1 file added (normal)',
+        "2 files added. 1 file isn't an accepted type (normal)",
+        "2 files aren't an accepted type (high)",
+      ]);
+  },
+);
+
+test(
+  'tells screenreaders when a drop of several files is ignored without `multiple`',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(() => html`<slab-file-drop label="Label"></slab-file-drop>`);
+
+    await page.evaluate(recordAnnouncements);
+
+    const host = page.locator('slab-file-drop');
+
+    await host.evaluate(dispatchDragEvent, {
+      type: 'drop',
+      names: ['one.txt', 'two.txt'],
+    });
+
+    await expect
+      .poll(() => page.evaluate(getAnnouncements))
+      .toStrictEqual(['Only one file can be added (high)']);
+  },
+);
+
+test(
+  'tells screenreaders what a drop did in its own words when set',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-file-drop
+          label="Label"
+          accept="image/*"
+          too-many-label="One at a time"
+        ></slab-file-drop>`,
+    );
+
+    await page.evaluate(recordAnnouncements);
+
+    const host = page.locator('slab-file-drop');
+
+    await host.evaluate((element) => {
+      Object.assign(element, {
+        addedLabel: (count: number) => `Added ${count}`,
+        notAcceptedLabel: (count: number) => `Skipped ${count}`,
+      });
+    });
+
+    await host.evaluate(dispatchDragEvent, {
+      type: 'drop',
+      names: ['one.png', 'notes.txt'],
+      types: ['image/png', 'text/plain'],
+    });
+
+    await host.evaluate(dispatchDragEvent, {
+      type: 'drop',
+      names: ['one.png', 'two.png'],
+      types: ['image/png', 'image/png'],
+    });
+
+    await expect
+      .poll(() => page.evaluate(getAnnouncements))
+      .toStrictEqual(['Added 1. Skipped 1 (normal)', 'One at a time (high)']);
+  },
+);
+
+test(
+  'tells screenreaders nothing about a drop when disabled',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-file-drop label="Label" disabled></slab-file-drop>`,
+    );
+
+    await page.evaluate(recordAnnouncements);
+
+    await page.locator('slab-file-drop').evaluate(dispatchDragEvent, {
+      type: 'drop',
+      names: ['one.txt'],
+    });
+
+    expect(await page.evaluate(getAnnouncements)).toStrictEqual([]);
+  },
+);

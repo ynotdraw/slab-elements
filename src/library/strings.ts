@@ -35,6 +35,9 @@ export interface Strings {
   copyButtonFailed: string;
   dateRangeFieldEnd: string;
   dateRangeFieldStart: string;
+  fileDropAdded: (count: number) => string;
+  fileDropNotAccepted: (count: number) => string;
+  fileDropTooMany: string;
   pagination: string;
   paginationNext: string;
   paginationPage: (page: number) => string;
@@ -76,6 +79,13 @@ const english: Strings = {
   copyButtonFailed: "Couldn't copy",
   dateRangeFieldEnd: 'End',
   dateRangeFieldStart: 'Start',
+  fileDropAdded: (count) =>
+    count === 1 ? '1 file added' : `${count} files added`,
+  fileDropNotAccepted: (count) =>
+    count === 1
+      ? "1 file isn't an accepted type"
+      : `${count} files aren't an accepted type`,
+  fileDropTooMany: 'Only one file can be added',
   pagination: 'Pagination',
   paginationNext: 'Next',
   paginationPage: (page) => `Page ${page}`,

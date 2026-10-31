@@ -6755,9 +6755,17 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "A hint to the picker. Dropped files aren't filtered by it.",
+              "description": "Passed to the picker. Dropped files that don't match it are left out.",
               "attribute": "accept",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "addedLabel",
+              "type": {
+                "text": "(count: number) => string"
+              },
+              "description": "What screenreaders are told when files are dropped, from how many were\nadded. \"1 file added\" and so on in English when unset."
             },
             {
               "kind": "field",
@@ -6786,7 +6794,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Without it, only the first of several dropped files is kept.",
+              "description": "Without it, a drop of several files is ignored, as a native file input\nignores it.",
               "attribute": "multiple",
               "reflects": true
             },
@@ -6802,12 +6810,30 @@
             },
             {
               "kind": "field",
+              "name": "notAcceptedLabel",
+              "type": {
+                "text": "(count: number) => string"
+              },
+              "description": "What screenreaders are told when dropped files are left out for not\nmatching `accept`, from how many were. \"1 file isn't an accepted type\"\nand so on in English when unset."
+            },
+            {
+              "kind": "field",
               "name": "required",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tooManyLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "What screenreaders are told when a drop of several files is ignored,\nwithout `multiple`. \"Only one file can be added\" in English when unset.",
+              "attribute": "too-many-label",
               "reflects": true
             },
             {
@@ -7040,7 +7066,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "A hint to the picker. Dropped files aren't filtered by it.",
+              "description": "Passed to the picker. Dropped files that don't match it are left out.",
               "fieldName": "accept"
             },
             {
@@ -7065,7 +7091,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Without it, only the first of several dropped files is kept.",
+              "description": "Without it, a drop of several files is ignored, as a native file input\nignores it.",
               "fieldName": "multiple"
             },
             {
@@ -7083,6 +7109,14 @@
               },
               "default": "false",
               "fieldName": "required"
+            },
+            {
+              "name": "too-many-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "What screenreaders are told when a drop of several files is ignored,\nwithout `multiple`. \"Only one file can be added\" in English when unset.",
+              "fieldName": "tooManyLabel"
             },
             {
               "name": "version",

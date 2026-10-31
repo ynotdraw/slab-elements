@@ -16,6 +16,8 @@ import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
 import styles from './file-drop.styles.js';
 import afterReflection from './library/after-reflection.js';
+import announce from './library/announce.js';
+import StringsController from './library/strings.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -39,6 +41,12 @@ declare global {
  * match `accept` are left out, and without `multiple`, a drop of more than one
  * file is ignored, as a browser ignores it on a native file input.
  *
+ * A drop has no picker to say what happened, so screenreaders are told: how
+ * many files were added, by `addedLabel`, how many were left out for not
+ * matching `accept`, by `notAcceptedLabel`, and when a drop of several files
+ * was ignored, by `too-many-label`. A drop that adds nothing is told
+ * assertively, since it's an error.
+ *
  * With no files, it submits one empty file under its `name`, as a native file
  * input does.
  *
@@ -47,12 +55,13 @@ declare global {
  * target looks like, and how big it is, is left to the styles around it.
  *
  * @attr {string} label
- * @attr {string} [accept] - A hint to the picker. Dropped files aren't filtered by it.
+ * @attr {string} [accept] - Passed to the picker. Dropped files that don't match it are left out.
  * @attr {boolean} [disabled=false]
  * @attr {boolean} [hide-label=false]
- * @attr {boolean} [multiple=false] - Without it, only the first of several dropped files is kept.
+ * @attr {boolean} [multiple=false] - Without it, a drop of several files is ignored, as a native file input ignores it.
  * @attr {string} [name='']
  * @attr {boolean} [required=false]
+ * @attr {string} [too-many-label] - What screenreaders are told when a drop of several files is ignored, without `multiple`. "Only one file can be added" in English when unset.
  *
  * @readonly
  * @attr {string} [version]
@@ -67,11 +76,15 @@ declare global {
  * @fires {Event} change
  * @fires {Event} input
  *
+ * @prop {(count: number) => string} addedLabel - What screenreaders are told when files are dropped, from how many were added. "1 file added" and so on in English when unset.
+ *
  * @readonly
  * @prop {FileList | null} files
  *
  * @readonly
  * @prop {HTMLFormElement | null} form
+ *
+ * @prop {(count: number) => string} notAcceptedLabel - What screenreaders are told when dropped files are left out for not matching `accept`, from how many were. "1 file isn't an accepted type" and so on in English when unset.
  *
  * @readonly
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
@@ -119,10 +132,18 @@ export default class FileDrop extends LitElement {
   label?: string;
 
   /**
-   * A hint to the picker. Dropped files aren't filtered by it.
+   * Passed to the picker. Dropped files that don't match it are left out.
    */
   @property({ reflect: true })
   accept?: string;
+
+  /**
+   * What screenreaders are told when files are dropped, from how many were
+   * added. "1 file added" and so on in English when unset.
+   */
+  @property({ attribute: false })
+  addedLabel: (count: number) => string = (count) =>
+    this.#strings.value.fileDropAdded(count);
 
   @property({ reflect: true, type: Boolean })
   disabled = false;
@@ -131,7 +152,8 @@ export default class FileDrop extends LitElement {
   hideLabel = false;
 
   /**
-   * Without it, only the first of several dropped files is kept.
+   * Without it, a drop of several files is ignored, as a native file input
+   * ignores it.
    */
   @property({ reflect: true, type: Boolean })
   multiple = false;
@@ -139,8 +161,24 @@ export default class FileDrop extends LitElement {
   @property({ reflect: true, useDefault: true })
   name = '';
 
+  /**
+   * What screenreaders are told when dropped files are left out for not
+   * matching `accept`, from how many were. "1 file isn't an accepted type"
+   * and so on in English when unset.
+   */
+  @property({ attribute: false })
+  notAcceptedLabel: (count: number) => string = (count) =>
+    this.#strings.value.fileDropNotAccepted(count);
+
   @property({ reflect: true, type: Boolean })
   required = false;
+
+  /**
+   * What screenreaders are told when a drop of several files is ignored,
+   * without `multiple`. "Only one file can be added" in English when unset.
+   */
+  @property({ attribute: 'too-many-label', reflect: true })
+  tooManyLabel?: string;
 
   @property({ reflect: true })
   readonly version: string = packageJson.version;
@@ -411,6 +449,8 @@ export default class FileDrop extends LitElement {
 
   #internals: ElementInternals;
 
+  #strings = new StringsController(this);
+
   get #isDisabled() {
     return this.disabled || this.isFormDisabled;
   }
@@ -454,19 +494,44 @@ export default class FileDrop extends LitElement {
     this.#dragDepth = 0;
     this.isDragOver = false;
 
-    const files = [...(event.dataTransfer?.files ?? [])].filter((file) =>
-      this.#isAccepted(file),
-    );
+    if (this.#isDisabled) {
+      return;
+    }
+
+    const dropped = [...(event.dataTransfer?.files ?? [])];
+    const files = dropped.filter((file) => this.#isAccepted(file));
+    const notAccepted = dropped.length - files.length;
 
     // A native file input without `multiple` ignores a drop of several files
     // rather than choosing one of them.
-    if (
-      this.#isDisabled ||
-      files.length === 0 ||
-      (!this.multiple && files.length > 1)
-    ) {
+    if (!this.multiple && files.length > 1) {
+      announce(this.tooManyLabel ?? this.#strings.value.fileDropTooMany, {
+        politeness: 'assertive',
+        source: this,
+      });
+
       return;
     }
+
+    if (files.length === 0) {
+      if (notAccepted > 0) {
+        announce(this.notAcceptedLabel(notAccepted), {
+          politeness: 'assertive',
+          source: this,
+        });
+      }
+
+      return;
+    }
+
+    // One announcement rather than two, since the second would cut the first
+    // short in some screenreaders.
+    announce(
+      notAccepted > 0
+        ? `${this.addedLabel(files.length)}. ${this.notAcceptedLabel(notAccepted)}`
+        : this.addedLabel(files.length),
+      { source: this },
+    );
 
     this.#setFiles(files);
 
