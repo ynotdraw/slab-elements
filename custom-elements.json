@@ -3168,6 +3168,14 @@
             },
             {
               "kind": "field",
+              "name": "resultsLabel",
+              "type": {
+                "text": "(count: number) => string"
+              },
+              "description": "What screenreaders are told once typing pauses, from how many Options are\nleft. \"No results\", \"1 result\" and so on in English when unset. With none\nleft, whatever is slotted into `empty` is told instead, if anything is."
+            },
+            {
+              "kind": "field",
               "name": "activeOption",
               "type": {
                 "text": "Option | null"

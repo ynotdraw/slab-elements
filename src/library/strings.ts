@@ -31,6 +31,7 @@ export interface Strings {
   comboboxRemove: (text: string) => string;
   comboboxRemoved: (text: string) => string;
   comboboxResults: (count: number) => string;
+  commandPaletteResults: (count: number) => string;
   copyButtonCopied: string;
   copyButtonFailed: string;
   dateRangeFieldEnd: string;
@@ -71,6 +72,8 @@ const english: Strings = {
   comboboxRemove: (text) => `Remove ${text}`,
   comboboxRemoved: (text) => `${text} removed`,
   comboboxResults: (count) =>
+    count === 0 ? 'No results' : count === 1 ? '1 result' : `${count} results`,
+  commandPaletteResults: (count) =>
     count === 0 ? 'No results' : count === 1 ? '1 result' : `${count} results`,
   copyButtonCopied: 'Copied',
   copyButtonFailed: "Couldn't copy",

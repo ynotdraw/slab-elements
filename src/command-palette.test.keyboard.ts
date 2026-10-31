@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
+import type CommandPalette from './command-palette.js';
 
 test(
   'focuses its input when opened, with its first option active',
@@ -300,5 +301,147 @@ test(
 
     await expect(host).toHaveJSProperty('open', false);
     await expect(host).toHaveJSProperty('returnValue', '');
+  },
+);
+
+test(
+  'tells screenreaders how many options are left once typing pauses',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-command-palette label="Label" open>
+          <slab-option>Apple</slab-option>
+          <slab-option>Banana</slab-option>
+          <slab-option>Grape</slab-option>
+        </slab-command-palette>`,
+    );
+
+    // A stand-in for `ariaNotify()`, since not every browser has one, and a
+    // real one can't be listened to.
+    await page.evaluate(() => {
+      const announcements: string[] = [];
+
+      Object.assign(globalThis, { announcements });
+
+      Object.defineProperty(Element.prototype, 'ariaNotify', {
+        configurable: true,
+        value(message: string) {
+          announcements.push(message);
+        },
+      });
+    });
+
+    const announcements = () =>
+      page.evaluate(
+        () =>
+          (globalThis as unknown as { announcements: string[] }).announcements,
+      );
+
+    const combobox = page.getByRole('combobox');
+
+    await combobox.pressSequentially('ap');
+    await expect.poll(announcements).toStrictEqual(['2 results']);
+
+    await combobox.pressSequentially('p');
+    await expect.poll(announcements).toStrictEqual(['2 results', '1 result']);
+
+    await combobox.pressSequentially('z');
+
+    await expect
+      .poll(announcements)
+      .toStrictEqual(['2 results', '1 result', 'No results']);
+  },
+);
+
+test(
+  'leaves telling screenreaders there are no results to its "empty" slot',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await page.clock.install();
+
+    await render(
+      () =>
+        html`<slab-command-palette label="Label" open>
+          <slab-option>Apple</slab-option>
+          <span slot="empty">Nothing found</span>
+        </slab-command-palette>`,
+    );
+
+    await page.evaluate(() => {
+      const announcements: string[] = [];
+
+      Object.assign(globalThis, { announcements });
+
+      Object.defineProperty(Element.prototype, 'ariaNotify', {
+        configurable: true,
+        value(message: string) {
+          announcements.push(message);
+        },
+      });
+    });
+
+    const announcements = () =>
+      page.evaluate(
+        () =>
+          (globalThis as unknown as { announcements: string[] }).announcements,
+      );
+
+    const combobox = page.getByRole('combobox');
+
+    await combobox.pressSequentially('a');
+    await page.clock.runFor(500);
+    expect(await announcements()).toStrictEqual(['1 result']);
+
+    await combobox.pressSequentially('z');
+    await page.clock.runFor(500);
+
+    // Its status region says so instead.
+    await expect(page.getByText('Nothing found')).toBeVisible();
+    expect(await announcements()).toStrictEqual(['1 result']);
+  },
+);
+
+test(
+  'tells screenreaders the count from `resultsLabel` when set',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-command-palette label="Label" open>
+          <slab-option>Apple</slab-option>
+        </slab-command-palette>`,
+    );
+
+    await page
+      .locator('slab-command-palette')
+      .evaluate<void, void, CommandPalette>((element) => {
+        element.resultsLabel = (count) => `${count} commands`;
+      });
+
+    await page.evaluate(() => {
+      const announcements: string[] = [];
+
+      Object.assign(globalThis, { announcements });
+
+      Object.defineProperty(Element.prototype, 'ariaNotify', {
+        configurable: true,
+        value(message: string) {
+          announcements.push(message);
+        },
+      });
+    });
+
+    await page.getByRole('combobox').pressSequentially('a');
+
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            (globalThis as unknown as { announcements: string[] })
+              .announcements,
+        ),
+      )
+      .toStrictEqual(['1 commands']);
   },
 );
