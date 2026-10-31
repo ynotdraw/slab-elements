@@ -16,6 +16,8 @@ usage: |
   </slab-popover>
 ---
 
+Give it a `label` when it holds something you work in, such as a form or a few controls, rather than a few words about its anchor. It's then a non-modal dialog named by the label, and the anchor tells screenreaders it opens one with `aria-haspopup="dialog"`.
+
 ## Keyboard
 
 | Key          | What it does                                                 |

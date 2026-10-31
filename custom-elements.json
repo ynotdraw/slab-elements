@@ -11881,6 +11881,16 @@
           "members": [
             {
               "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Makes the popover a dialog named by it. Leave it unset when the popover\nonly holds a few words about its anchor.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "open",
               "type": {
                 "text": "boolean"
@@ -11973,6 +11983,14 @@
             }
           ],
           "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Makes the popover a dialog named by it. Leave it unset when the popover\nonly holds a few words about its anchor.",
+              "fieldName": "label"
+            },
             {
               "name": "open",
               "type": {
