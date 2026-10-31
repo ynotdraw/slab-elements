@@ -12,7 +12,7 @@ usage: |
   <slab-slider label="Volume" name="volume" min="0" max="100" value="50"></slab-slider>
 ---
 
-Screenreaders read the value as a bare number. When it means more than that, set `formatValue` to a function of the value, such as `(value) => \`$${value}\``, and they'll read what it returns instead.
+Screenreaders read the value as a bare number. When it means more than that, set `formatValue` to a function of the value, such as `` (value) => `$${value}` ``, and they'll read what it returns instead.
 
 ## Keyboard
 
