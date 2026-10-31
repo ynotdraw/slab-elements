@@ -12830,8 +12830,16 @@
               "description": "The part of the track between the thumbs"
             },
             {
+              "name": "start",
+              "description": "The start thumb"
+            },
+            {
               "name": "focus-visible",
               "description": "The thumb whose input has visible focus"
+            },
+            {
+              "name": "end",
+              "description": "The end thumb"
             },
             {
               "name": "description",
