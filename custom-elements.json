@@ -552,6 +552,22 @@
             },
             {
               "kind": "field",
+              "name": "rangeSelectedLabel",
+              "type": {
+                "text": "(range: string) => string"
+              },
+              "description": "With `range`, what screenreaders are told once its last day is picked,\nfrom the range, such as \"Monday, January 5 – Friday, January 9, 2026\" in\nthe calendar's language. The range and \"selected\" in English when unset."
+            },
+            {
+              "kind": "field",
+              "name": "rangeStartedLabel",
+              "type": {
+                "text": "(date: string) => string"
+              },
+              "description": "With `range`, what screenreaders are told once its first day is picked,\nfrom that day, in the calendar's language. That it's the range's start,\nand to pick its end, in English when unset."
+            },
+            {
+              "kind": "field",
               "name": "value",
               "type": {
                 "text": "string"
