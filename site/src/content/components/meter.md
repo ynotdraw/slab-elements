@@ -13,3 +13,5 @@ example: |
 usage: |
   <slab-meter label="Storage used" value="0.62"></slab-meter>
 ---
+
+Screenreaders read the value as a bare number. When it means more than that, set `formatValue` to a function of `value`, such as `` (value) => `${value * 5} of 5 GB` ``, and they'll read what it returns instead.
