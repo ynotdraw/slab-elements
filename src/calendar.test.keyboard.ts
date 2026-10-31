@@ -418,20 +418,27 @@ test(
     });
 
     await callMethod(page.locator('slab-calendar'), 'focus');
+    // The start first this time, then a later end.
     await page.keyboard.press('Enter');
+    await page.keyboard.press('ArrowRight');
     await page.keyboard.press('Enter');
 
+    // `Intl` puts thin spaces around the dash.
     await expect
-      .poll(() =>
-        page.evaluate(
+      .poll(async () => {
+        const announcements = await page.evaluate(
           () =>
             (globalThis as unknown as { announcements: string[] })
               .announcements,
-        ),
-      )
+        );
+
+        return announcements.map((announcement) =>
+          announcement.replaceAll(/\s/g, ' '),
+        );
+      })
       .toStrictEqual([
         'From Monday, October 12, 2026',
-        'Picked Monday, October 12, 2026',
+        'Picked Monday, October 12 – Tuesday, October 13, 2026',
       ]);
   },
 );
