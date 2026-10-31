@@ -39,7 +39,7 @@ export default css`
       background-color: var(--ember);
     }
 
-    &:focus-visible {
+    &[part~='focus-visible'] {
       background-color: var(--ember);
       outline: 3px solid var(--ember);
       outline-offset: 2px;

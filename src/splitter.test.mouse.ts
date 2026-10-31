@@ -28,7 +28,7 @@ test(
     );
 
     const host = page.locator('slab-splitter');
-    const separator = page.getByRole('separator');
+    const separator = page.locator('[data-test="separator"]');
     const box = await separator.boundingBox();
     const x = (box?.x ?? 0) + (box?.width ?? 0) / 2;
     const y = (box?.y ?? 0) + (box?.height ?? 0) / 2;
@@ -46,7 +46,7 @@ test(
     ]);
 
     await expect(host).toHaveJSProperty('value', 75);
-    await expect(separator).toBeFocused();
+    await expect(page.getByRole('slider')).toBeFocused();
   },
 );
 
@@ -73,7 +73,7 @@ test(
           </slab-splitter>`,
     );
 
-    const box = await page.getByRole('separator').boundingBox();
+    const box = await page.locator('[data-test="separator"]').boundingBox();
     const x = (box?.x ?? 0) + (box?.width ?? 0) / 2;
     const y = (box?.y ?? 0) + (box?.height ?? 0) / 2;
 
@@ -109,7 +109,7 @@ test(
           </slab-splitter>`,
     );
 
-    const box = await page.getByRole('separator').boundingBox();
+    const box = await page.locator('[data-test="separator"]').boundingBox();
     const x = (box?.x ?? 0) + (box?.width ?? 0) / 2;
     const y = (box?.y ?? 0) + (box?.height ?? 0) / 2;
 
@@ -147,7 +147,7 @@ test(
     );
 
     const host = page.locator('slab-splitter');
-    const box = await page.getByRole('separator').boundingBox();
+    const box = await page.locator('[data-test="separator"]').boundingBox();
     const x = (box?.x ?? 0) + (box?.width ?? 0) / 2;
     const y = (box?.y ?? 0) + (box?.height ?? 0) / 2;
 
@@ -183,7 +183,7 @@ test(
     );
 
     await expect(page.locator('slab-splitter')).not.toDispatchEvents(
-      () => page.getByRole('separator').click(),
+      () => page.locator('[data-test="separator"]').click(),
       [{ type: 'change' }],
     );
   },
@@ -212,7 +212,7 @@ test(
           </slab-splitter>`,
     );
 
-    const box = await page.getByRole('separator').boundingBox();
+    const box = await page.locator('[data-test="separator"]').boundingBox();
     const x = (box?.x ?? 0) + (box?.width ?? 0) / 2;
     const y = (box?.y ?? 0) + (box?.height ?? 0) / 2;
 
@@ -248,7 +248,7 @@ test(
           </slab-splitter>`,
     );
 
-    const box = await page.getByRole('separator').boundingBox();
+    const box = await page.locator('[data-test="separator"]').boundingBox();
     const x = (box?.x ?? 0) + (box?.width ?? 0) / 2;
     const y = (box?.y ?? 0) + (box?.height ?? 0) / 2;
 
@@ -258,5 +258,31 @@ test(
     await page.mouse.up();
 
     await expect(page.locator('slab-splitter')).toHaveJSProperty('value', 50);
+  },
+);
+
+test(
+  'does not mark its separator as having visible focus when pressed',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-splitter::part(separator) {
+              inline-size: 1rem;
+            }
+          </style>
+          <slab-splitter label="Label" style="block-size: 10rem">
+            <div slot="primary">Primary</div>
+            <div slot="secondary">Secondary</div>
+          </slab-splitter>`,
+    );
+
+    const separator = page.locator('[data-test="separator"]');
+
+    await separator.click();
+
+    await expect(page.getByRole('slider')).toBeFocused();
+    await expect(separator).toHaveAttribute('part', 'separator');
   },
 );

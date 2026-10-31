@@ -1,4 +1,5 @@
 import { css } from 'lit';
+import visuallyHidden from './library/visually-hidden.js';
 
 export default [
   css`
@@ -32,5 +33,18 @@ export default [
     [part~='separator'] {
       touch-action: none;
     }
+  `,
+  css`
+    /*
+      Functional, not visual. The separator's range input is what's focused
+      and what screenreaders read, while the separator is what's seen and
+      dragged. Positioned in the separator, so focusing it never scrolls to
+      somewhere else.
+    */
+    [part~='separator'] {
+      position: relative;
+    }
+
+    ${visuallyHidden('input')}
   `,
 ];

@@ -14667,6 +14667,10 @@
               "description": "The separator between the panes"
             },
             {
+              "name": "focus-visible",
+              "description": "The separator while its input has visible focus"
+            },
+            {
               "name": "secondary",
               "description": "The secondary pane"
             }

@@ -30,7 +30,7 @@ test(
 
     await callMethod(page.locator('slab-splitter'), 'focus');
 
-    await expect(page.getByRole('separator')).toBeFocused();
+    await expect(page.getByRole('slider')).toBeFocused();
   },
 );
 
@@ -119,10 +119,10 @@ test(
     );
 
     const host = page.locator('slab-splitter');
-    const separator = page.getByRole('separator');
+    const separator = page.getByRole('slider');
 
     await expect(host).toHaveJSProperty('value', 80);
-    await expect(separator).toHaveAttribute('aria-valuemax', '80');
+    await expect(separator).toHaveAttribute('max', '80');
 
     await setProperty(host, 'min', 85);
 
@@ -133,12 +133,12 @@ test(
     await setProperty(host, 'value', 5);
 
     await expect(host).toHaveJSProperty('value', 10);
-    await expect(separator).toHaveAttribute('aria-valuemin', '10');
+    await expect(separator).toHaveAttribute('min', '10');
   },
 );
 
 test(
-  'rounds `aria-valuenow`',
+  'rounds the value a screenreader reads',
   { tag: '@miscellaneous' },
   async ({ render, page }) => {
     await render(
@@ -154,8 +154,8 @@ test(
       33.3333,
     );
 
-    await expect(page.getByRole('separator')).toHaveAttribute(
-      'aria-valuenow',
+    await expect(page.getByRole('slider')).toHaveAttribute(
+      'aria-valuetext',
       '33',
     );
   },
@@ -201,7 +201,7 @@ test(
 
     expect(await getStates()).toStrictEqual([false, false, false]);
 
-    const box = await page.getByRole('separator').boundingBox();
+    const box = await page.getByRole('slider').boundingBox();
     const x = (box?.x ?? 0) + (box?.width ?? 0) / 2;
     const y = (box?.y ?? 0) + (box?.height ?? 0) / 2;
 
@@ -243,7 +243,7 @@ test(
       'acme-splitter',
     );
 
-    await expect(page.getByRole('separator')).toBeAttached();
+    await expect(page.getByRole('slider')).toBeAttached();
   },
 );
 
@@ -329,5 +329,69 @@ test(
     await setProperty(page.locator('slab-splitter'), 'disabled', true);
 
     expect(await dispatchTouchStart()).toBe(false);
+  },
+);
+
+test(
+  'moves its separator when a screenreader adjusts its input',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-splitter label="Label" max="80" step="10">
+          <div slot="primary">Primary</div>
+          <div slot="secondary">Secondary</div>
+        </slab-splitter>`,
+    );
+
+    const host = page.locator('slab-splitter');
+    const slider = page.getByRole('slider');
+
+    // What a screenreader on a phone does after a swipe up: steps the input
+    // and dispatches "input", with no key events.
+    const swipeUp = () => {
+      return slider.evaluate((element: HTMLInputElement) => {
+        element.stepUp();
+
+        element.dispatchEvent(
+          new Event('input', { bubbles: true, composed: true }),
+        );
+      });
+    };
+
+    await expect(host).toDispatchEvents(swipeUp, [
+      { type: 'input', bubbles: true, cancelable: false, composed: true },
+      { type: 'change', bubbles: true, cancelable: false, composed: true },
+    ]);
+
+    await expect(host).toHaveJSProperty('value', 60);
+    await expect(slider).toHaveValue('60');
+
+    await swipeUp();
+    await swipeUp();
+
+    // Kept to `max`.
+    await expect(host).toHaveJSProperty('value', 80);
+    await expect(slider).toHaveValue('80');
+  },
+);
+
+test(
+  'reads where its separator is, between steps',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-splitter label="Label" step="10" value="47">
+          <div slot="primary">Primary</div>
+          <div slot="secondary">Secondary</div>
+        </slab-splitter>`,
+    );
+
+    // A range input snaps its own value to `step`.
+    await expect(page.getByRole('slider')).toHaveAttribute(
+      'aria-valuetext',
+      '47',
+    );
   },
 );

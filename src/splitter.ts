@@ -5,8 +5,9 @@ import {
   type CSSResultOrNative,
   type PropertyValues,
 } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { live } from 'lit/directives/live.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import packageJson from '../package.json' with { type: 'json' };
@@ -22,9 +23,8 @@ declare global {
 }
 
 /**
- * A window splitter with no visual styles: two panes and a
- * `[role=separator]` between them that's dragged, or moved with the keyboard,
- * to resize them.
+ * A window splitter with no visual styles: two panes and a separator between
+ * them that's dragged, or moved with the keyboard, to resize them.
  *
  * `value` is how much of the splitter the primary pane takes up, as a
  * percentage, and the secondary pane takes the rest. The separator keeps its
@@ -32,8 +32,12 @@ declare global {
  * `min` and `max` bound it, so a sidebar can't be squeezed to nothing or take
  * over.
  *
- * The separator is named by `label`, which should name the primary pane, and
- * reports `value` as its `aria-valuenow`. Left and Right move it, or Up and
+ * Inside the separator is a visually hidden range input, which is what's
+ * focused and what a screenreader reads. A range input is what screenreaders
+ * on phones know how to adjust, with a swipe up or down, which they can't do
+ * to a `[role=separator]`. So a screenreader reads the separator as a slider,
+ * named by `label`, which should name the primary pane, with `value` as its
+ * value. Left and Right move it, or Up and
  * Down when `orientation` is `"horizontal"`, by `step`. Home and End move it
  * to `min` and `max`. Enter collapses the primary pane to `min`, and restores
  * it to where it was before.
@@ -42,7 +46,9 @@ declare global {
  * functional and done here: the host is a grid of the two panes and the
  * separator. Give the host a size, or it'll be as tall as its tallest pane.
  * Style the rest through its parts and through `:state(collapsed)`,
- * `:state(disabled)` and `:state(dragging)`.
+ * `:state(disabled)` and `:state(dragging)`. Focus is on the input inside the
+ * separator, so the separator has a `focus-visible` part while the input's
+ * focus is visible, for a focus ring.
  *
  * @attr {string} label - Names the separator. Name it after the primary pane, as the separator resizes it.
  * @attr {boolean} [disabled=false]
@@ -59,6 +65,7 @@ declare global {
  * @slot {Element} [secondary]
  *
  * @csspart container - The panes and the separator
+ * @csspart focus-visible - The separator while its input has visible focus
  * @csspart primary - The primary pane
  * @csspart secondary - The secondary pane
  * @csspart separator - The separator between the panes
@@ -116,11 +123,12 @@ export default class Splitter extends LitElement {
   readonly version: string = packageJson.version;
 
   override focus(options?: FocusOptions) {
-    this.#separatorElementRef.value?.focus(options);
+    this.#inputElementRef.value?.focus(options);
   }
 
   override render() {
     const isVertical = this.orientation === 'vertical';
+    const rounded = Math.round(this.value);
 
     // `fr` rather than percentages, so the panes share what's left once the
     // separator has its size, and never overflow the host between them.
@@ -130,8 +138,15 @@ export default class Splitter extends LitElement {
     // read both. But Playwright's role queries and ARIA snapshots, and Axe,
     // only read attributes, which would leave the ARIA untested.
     //
-    // `aria-valuenow` is rounded because dragging lands between whole
-    // percentages, and a screenreader would read out every decimal place.
+    // The separator has no `role` or `aria-value*`. Its range input is a
+    // slider to the platform already, with its value, minimum and maximum. A
+    // vertical separator moves side to side, so its slider is horizontal, and
+    // the other way around.
+    //
+    // The input's value is rounded because dragging lands between whole
+    // percentages, and a screenreader would read out every decimal place. A
+    // range input also snaps its value to its `step`, so `aria-valuetext`
+    // says where the separator actually is.
     return html`<div
       part="container"
       style=${styleMap({
@@ -149,25 +164,36 @@ export default class Splitter extends LitElement {
       </div>
 
       <div
-        aria-controls="primary"
-        aria-disabled=${ifDefined(this.disabled ? 'true' : undefined)}
-        aria-label=${ifDefined(this.label)}
-        aria-orientation=${this.orientation}
-        aria-valuemax=${this.max}
-        aria-valuemin=${this.min}
-        aria-valuenow=${Math.round(this.value)}
         data-test="separator"
-        part="separator"
-        role="separator"
-        tabindex=${this.disabled ? -1 : 0}
-        @keydown=${this.#onKeydown}
+        part=${this.isFocusVisible ? 'separator focus-visible' : 'separator'}
         @lostpointercapture=${this.#onLostPointerCapture}
         @pointerdown=${this.#onPointerDown}
         @pointermove=${this.#onPointerMove}
         @touchstart=${this.#onTouchStart}
         ${ref(this.#separatorElementRef)}
       >
-        <!-- The separator between the panes -->
+        <!--
+          @part separator - The separator between the panes
+          @part focus-visible - The separator while its input has visible focus
+        -->
+        <input
+          aria-controls="primary"
+          aria-label=${ifDefined(this.label)}
+          aria-orientation=${isVertical ? 'horizontal' : 'vertical'}
+          aria-valuetext=${String(rounded)}
+          max=${this.max}
+          min=${this.min}
+          step=${this.step > 0 ? this.step : 1}
+          type="range"
+          .value=${live(String(rounded))}
+          ?disabled=${this.disabled}
+          @blur=${this.#onInputBlur}
+          @change=${this.#onInputChange}
+          @focus=${this.#onInputFocus}
+          @input=${this.#onInput}
+          @keydown=${this.#onKeydown}
+          ${ref(this.#inputElementRef)}
+        />
       </div>
 
       <div part="secondary">
@@ -206,13 +232,25 @@ export default class Splitter extends LitElement {
     this.#internals = this.attachInternals();
   }
 
+  // Whether the separator's input has focus that's visible, for its
+  // `focus-visible` part. The separator isn't focused itself, so it can't
+  // match `:focus-visible`.
+  @state()
+  private isFocusVisible = false;
+
   #containerElementRef = createRef<HTMLDivElement>();
 
   // Where a drag started, in pixels along the splitter, and the value it
   // started from.
   #drag?: { position: number; value: number };
 
+  #inputElementRef = createRef<HTMLInputElement>();
+
   #internals: ElementInternals;
+
+  // Whether `#onPointerDown()` is focusing the input, so the separator doesn't
+  // get a focus ring from a press.
+  #isFocusingByPointer = false;
 
   // Where Enter restores the primary pane to after collapsing it.
   #restoredValue?: number;
@@ -223,11 +261,48 @@ export default class Splitter extends LitElement {
     return getComputedStyle(this).direction === 'rtl';
   }
 
-  #onKeydown = (event: KeyboardEvent) => {
-    if (this.disabled) {
-      return;
+  // Only from a screenreader, such as one on a phone after a swipe up or down:
+  // the arrow keys are handled in "keydown", and the input is hidden from the
+  // pointer. Each is a step taken and let go of, like a key, so it reports
+  // "change" as well.
+  #onInput = (event: Event) => {
+    // "input" composes, so it would escape alongside the host's own.
+    event.stopPropagation();
+
+    const input = event.target as HTMLInputElement;
+
+    if (this.#moveTo(Number(input.value))) {
+      this.dispatchEvent(
+        new Event('change', { bubbles: true, composed: true }),
+      );
     }
 
+    // Rendered again even when nothing moved, so the input goes back to the
+    // value it's kept to.
+    this.requestUpdate();
+  };
+
+  #onInputBlur = () => {
+    this.isFocusVisible = false;
+  };
+
+  // The input's own "change" doesn't compose, so it never leaves the shadow
+  // root, and the host's is dispatched with each "input" instead.
+  #onInputChange = (event: Event) => {
+    event.stopPropagation();
+  };
+
+  // Not when a press focused it. A range input matches `:focus-visible`
+  // however it's focused in some browsers, but a ring on a separator that's
+  // being dragged would only get in the way.
+  #onInputFocus = (event: FocusEvent) => {
+    this.isFocusVisible =
+      !this.#isFocusingByPointer &&
+      (event.target as HTMLInputElement).matches(':focus-visible');
+  };
+
+  // Never while disabled, since a disabled input gets no key events.
+  #onKeydown = (event: KeyboardEvent) => {
     // Left and Right move a vertical separator that way, whichever pane is on
     // which side. So in a right-to-left splitter, where the primary pane is on
     // the right, Left makes it bigger.
@@ -258,6 +333,21 @@ export default class Splitter extends LitElement {
     const value = values[event.key];
 
     if (value === undefined) {
+      // The input would move itself on the other arrows and on Page Up and
+      // Page Down, which the separator leaves alone.
+      if (
+        [
+          'ArrowDown',
+          'ArrowLeft',
+          'ArrowRight',
+          'ArrowUp',
+          'PageDown',
+          'PageUp',
+        ].includes(event.key)
+      ) {
+        event.preventDefault();
+      }
+
       return;
     }
 
@@ -265,7 +355,8 @@ export default class Splitter extends LitElement {
       this.#restoredValue = this.value;
     }
 
-    event.preventDefault(); // Prevent page scroll
+    // So the page doesn't scroll, and the input doesn't move itself as well.
+    event.preventDefault();
 
     if (this.#moveTo(value)) {
       this.dispatchEvent(
@@ -300,7 +391,9 @@ export default class Splitter extends LitElement {
     event.preventDefault();
 
     this.#separatorElementRef.value?.setPointerCapture(event.pointerId);
-    this.#separatorElementRef.value?.focus();
+    this.#isFocusingByPointer = true;
+    this.#inputElementRef.value?.focus({ preventScroll: true });
+    this.#isFocusingByPointer = false;
 
     this.#drag = { position: this.#positionOf(event), value: this.value };
     this.#setState('dragging', true);
