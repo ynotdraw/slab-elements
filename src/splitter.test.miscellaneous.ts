@@ -201,7 +201,7 @@ test(
 
     expect(await getStates()).toStrictEqual([false, false, false]);
 
-    const box = await page.getByRole('slider').boundingBox();
+    const box = await page.locator('[data-test="separator"]').boundingBox();
     const x = (box?.x ?? 0) + (box?.width ?? 0) / 2;
     const y = (box?.y ?? 0) + (box?.height ?? 0) / 2;
 

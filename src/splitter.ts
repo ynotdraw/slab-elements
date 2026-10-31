@@ -188,7 +188,6 @@ export default class Splitter extends LitElement {
           .value=${live(String(rounded))}
           ?disabled=${this.disabled}
           @blur=${this.#onInputBlur}
-          @change=${this.#onInputChange}
           @focus=${this.#onInputFocus}
           @input=${this.#onInput}
           @keydown=${this.#onKeydown}
@@ -284,12 +283,6 @@ export default class Splitter extends LitElement {
 
   #onInputBlur = () => {
     this.isFocusVisible = false;
-  };
-
-  // The input's own "change" doesn't compose, so it never leaves the shadow
-  // root, and the host's is dispatched with each "input" instead.
-  #onInputChange = (event: Event) => {
-    event.stopPropagation();
   };
 
   // Not when a press focused it. A range input matches `:focus-visible`
