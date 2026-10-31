@@ -59,3 +59,46 @@ test(
   `);
   },
 );
+
+test(
+  'reads its value through `formatValue` when set',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-slider
+          label="Label"
+          max="100"
+          step="10"
+          value="40"
+        ></slab-slider>`,
+    );
+
+    const host = page.locator('slab-slider');
+    const slider = page.getByRole('slider');
+
+    await expect(slider).not.toHaveAttribute('aria-valuetext');
+
+    await host.evaluate<void, void, Slider>((element) => {
+      element.formatValue = (value) => `$${value}`;
+    });
+
+    await expect(slider).toHaveAttribute('aria-valuetext', '$40');
+
+    // The value the input settled on, not the one given.
+    await host.evaluate<void, void, Slider>((element) => {
+      element.value = '44';
+    });
+
+    await expect(slider).toHaveAttribute('aria-valuetext', '$40');
+
+    await slider.press('ArrowRight');
+    await expect(slider).toHaveAttribute('aria-valuetext', '$50');
+
+    await host.evaluate<void, void, Slider>((element) => {
+      element.formatValue = undefined;
+    });
+
+    await expect(slider).not.toHaveAttribute('aria-valuetext');
+  },
+);

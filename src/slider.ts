@@ -35,6 +35,10 @@ declare global {
  * a step is clamped and snapped the way a range input does it. With no value,
  * it sits halfway between `min` and `max`, as a range input does.
  *
+ * Screenreaders read the value as a number. Set `formatValue` to a function
+ * of it that says what it means, such as "$40" or "3 of 5 GB", which becomes
+ * the input's `aria-valuetext`.
+ *
  * Style it through its parts and through `:state(disabled)`. Where the label
  * sits relative to the input is layout, so it's left to the styles around it.
  *
@@ -61,6 +65,8 @@ declare global {
  *
  * @readonly
  * @prop {HTMLFormElement | null} form
+ *
+ * @prop {(value: number) => string | undefined} formatValue - What screenreaders read for the value, such as "$40" rather than "40". The value itself when unset.
  *
  * @readonly
  * @prop {ValidityState} validity
@@ -94,6 +100,13 @@ export default class Slider extends LitElement {
 
   @property({ reflect: true, type: Boolean })
   disabled = false;
+
+  /**
+   * What screenreaders read for the value, such as "$40" rather than "40". The
+   * value itself when unset.
+   */
+  @property({ attribute: false })
+  formatValue?: (value: number) => string;
 
   @property({ attribute: 'hide-label', reflect: true, type: Boolean })
   hideLabel = false;
@@ -266,6 +279,17 @@ export default class Slider extends LitElement {
       input.value = this.#value;
     }
 
+    // Here rather than in the template, since the value is only known once
+    // the input has sanitized it, which is after the first render.
+    if (input && this.formatValue) {
+      input.setAttribute(
+        'aria-valuetext',
+        this.formatValue(Number(input.value)),
+      );
+    } else {
+      input?.removeAttribute('aria-valuetext');
+    }
+
     if (changes.has('disabled') || changes.has('isFormDisabled')) {
       this.#setState('disabled', this.#isDisabled);
     }
@@ -310,6 +334,11 @@ export default class Slider extends LitElement {
     if (event.target instanceof HTMLInputElement) {
       this.value = event.target.value;
     }
+
+    // The setter's own update is skipped, because the value it compares with
+    // is read from the input, which already has the new one. Rendered anyway
+    // so `aria-valuetext` follows the value.
+    this.requestUpdate();
 
     // The analyzer's `add-events` plugin can't see events dispatched by a
     // native control inside a component, and reads their names from the
