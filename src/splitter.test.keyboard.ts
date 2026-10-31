@@ -14,7 +14,7 @@ test(
     );
 
     const host = page.locator('slab-splitter');
-    const separator = page.getByRole('separator');
+    const separator = page.getByRole('slider');
 
     await page.keyboard.press('Tab');
     await expect(separator).toBeFocused();
@@ -28,7 +28,7 @@ test(
     );
 
     await expect(host).toHaveJSProperty('value', 60);
-    await expect(separator).toHaveAttribute('aria-valuenow', '60');
+    await expect(separator).toHaveValue('60');
 
     await page.keyboard.press('ArrowLeft');
     await page.keyboard.press('ArrowLeft');
@@ -55,7 +55,7 @@ test(
 
     const host = page.locator('slab-splitter');
 
-    await page.getByRole('separator').focus();
+    await page.getByRole('slider').focus();
 
     await page.keyboard.press('ArrowDown');
     await expect(host).toHaveJSProperty('value', 55);
@@ -85,7 +85,7 @@ test(
 
     const host = page.locator('slab-splitter');
 
-    await page.getByRole('separator').focus();
+    await page.getByRole('slider').focus();
 
     // The primary pane is on the right, so moving left makes it bigger.
     await page.keyboard.press('ArrowLeft');
@@ -111,7 +111,7 @@ test(
 
     const host = page.locator('slab-splitter');
 
-    await page.getByRole('separator').focus();
+    await page.getByRole('slider').focus();
 
     await page.keyboard.press('End');
     await expect(host).toHaveJSProperty('value', 80);
@@ -141,7 +141,7 @@ test(
 
     const host = page.locator('slab-splitter');
 
-    await page.getByRole('separator').focus();
+    await page.getByRole('slider').focus();
 
     await expect(host).not.toDispatchEvents(
       () => page.keyboard.press('End'),
@@ -169,7 +169,7 @@ test(
 
     const host = page.locator('slab-splitter');
 
-    await page.getByRole('separator').focus();
+    await page.getByRole('slider').focus();
 
     await expect(host).toDispatchEvents(
       () => page.keyboard.press('Enter'),
@@ -198,7 +198,7 @@ test(
         </slab-splitter>`,
     );
 
-    await page.getByRole('separator').focus();
+    await page.getByRole('slider').focus();
     await page.keyboard.press('Enter');
 
     await expect(page.locator('slab-splitter')).toHaveJSProperty('value', 60);
@@ -214,7 +214,7 @@ test('ignores other keys', { tag: '@keyboard' }, async ({ render, page }) => {
       </slab-splitter>`,
   );
 
-  await page.getByRole('separator').focus();
+  await page.getByRole('slider').focus();
   await page.keyboard.press('a');
 
   await expect(page.locator('slab-splitter')).toHaveJSProperty('value', 50);
@@ -234,14 +234,66 @@ test(
 
     const host = page.locator('slab-splitter');
 
-    // Out of the tab order, but still focusable programmatically.
+    // Its input is disabled, so it's neither tabbed to nor focused.
     await page.keyboard.press('Tab');
-    await expect(page.getByRole('separator')).not.toBeFocused();
+    await expect(page.getByRole('slider')).not.toBeFocused();
 
     await callMethod(host, 'focus');
     await page.keyboard.press('ArrowRight');
     await page.keyboard.press('Enter');
 
     await expect(host).toHaveJSProperty('value', 50);
+  },
+);
+
+test(
+  'does not move its separator via Page Up and Page Down',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-splitter label="Label">
+          <div slot="primary">Primary</div>
+          <div slot="secondary">Secondary</div>
+        </slab-splitter>`,
+    );
+
+    const host = page.locator('slab-splitter');
+
+    await page.keyboard.press('Tab');
+
+    await expect(host).not.toDispatchEvents(async () => {
+      await page.keyboard.press('PageUp');
+      await page.keyboard.press('PageDown');
+    }, [{ type: 'input' }, { type: 'change' }]);
+
+    await expect(host).toHaveJSProperty('value', 50);
+  },
+);
+
+test(
+  'marks its separator while its input has visible focus',
+  { tag: '@keyboard' },
+  async ({ browserName, render, page }) => {
+    await render(
+      () =>
+        html`<button type="button">Before</button>
+          <slab-splitter label="Label">
+            <div slot="primary">Primary</div>
+            <div slot="secondary">Secondary</div>
+          </slab-splitter>`,
+    );
+
+    const separator = page.locator('[data-test="separator"]');
+    const tab = browserName === 'webkit' ? 'Alt+Tab' : 'Tab';
+
+    await page.getByRole('button').focus();
+    await page.keyboard.press(tab);
+
+    await expect(separator).toHaveAttribute('part', 'separator focus-visible');
+
+    await page.keyboard.press(`Shift+${tab}`);
+
+    await expect(separator).toHaveAttribute('part', 'separator');
   },
 );

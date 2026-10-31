@@ -30,7 +30,7 @@ test(
   },
 );
 
-test('has a separator', { tag: '@accessibility' }, async ({ render, page }) => {
+test('has a slider', { tag: '@accessibility' }, async ({ render, page }) => {
   await render(
     () =>
       html`<slab-splitter
@@ -49,18 +49,20 @@ test('has a separator', { tag: '@accessibility' }, async ({ render, page }) => {
 
   await expect(page.locator('slab-splitter')).toMatchAriaSnapshot(`
     - text: Primary
-    - separator "Label"
+    - slider "Label"
     - text: Secondary
   `);
 
-  // Playwright's ARIA snapshots leave out a separator's value and orientation.
-  const separator = page.getByRole('separator');
+  // Playwright's ARIA snapshots leave out a slider's value and orientation. A
+  // vertical separator moves side to side, so its slider is horizontal.
+  const slider = page.getByRole('slider');
 
-  await expect(separator).toHaveAttribute('aria-controls', 'primary');
-  await expect(separator).toHaveAttribute('aria-orientation', 'vertical');
-  await expect(separator).toHaveAttribute('aria-valuemax', '100');
-  await expect(separator).toHaveAttribute('aria-valuemin', '0');
-  await expect(separator).toHaveAttribute('aria-valuenow', '50');
+  await expect(slider).toHaveAttribute('aria-controls', 'primary');
+  await expect(slider).toHaveAttribute('aria-orientation', 'horizontal');
+  await expect(slider).toHaveAttribute('max', '100');
+  await expect(slider).toHaveAttribute('min', '0');
+  await expect(slider).toHaveValue('50');
+  await expect(slider).toHaveAttribute('aria-valuetext', '50');
 });
 
 test(
@@ -92,14 +94,14 @@ test(
 
     await expect(page.locator('slab-splitter')).toMatchAriaSnapshot(`
       - text: Primary
-      - separator "Label"
+      - slider "Label"
       - text: Secondary
     `);
 
-    const separator = page.getByRole('separator');
+    const slider = page.getByRole('slider');
 
-    await expect(separator).toHaveAttribute('aria-orientation', 'horizontal');
-    await expect(separator).toHaveAttribute('aria-valuenow', '30');
+    await expect(slider).toHaveAttribute('aria-orientation', 'vertical');
+    await expect(slider).toHaveValue('30');
   },
 );
 
@@ -131,7 +133,7 @@ test(
 
     await expect(page.locator('slab-splitter')).toMatchAriaSnapshot(`
     - text: Primary
-    - separator "Label" [disabled]
+    - slider "Label" [disabled]
     - text: Secondary
   `);
   },

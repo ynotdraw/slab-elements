@@ -1,7 +1,7 @@
 ---
 title: Splitter
 group: Disclosure
-element: '[role=separator]'
+element: '<input type=range>'
 tags: [slab-splitter]
 summary: 'Two panes with a separator between them that resizes them, dragged or moved with the keyboard.'
 example: |
@@ -23,6 +23,8 @@ usage: |
 ---
 
 The separator is named by `label`, which should name the primary pane, since that's the one `value` sizes. Give the splitter a size, such as a `block-size`, or it's as tall as its tallest pane.
+
+Inside the separator is a visually hidden range input. It's what has focus and what a screenreader reads, as a slider named by `label`, which lets screenreaders on phones move the separator with a swipe up or down. Since the separator itself isn't focused, it can't match `:focus-visible`. Style its focus ring through `::part(focus-visible)`, which the separator has while its input's focus is visible.
 
 ## Keyboard
 
