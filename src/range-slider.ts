@@ -6,6 +6,7 @@ import {
   type PropertyValues,
 } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { live } from 'lit/directives/live.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
@@ -57,6 +58,10 @@ interface Drag {
  * and End as far as it can go. Drag a thumb, or press the track to bring the
  * nearer thumb there.
  *
+ * Screenreaders read each thumb's value as a number. Set `formatValue` to a
+ * function of it that says what it means, such as "$40", which becomes each
+ * input's `aria-valuetext`.
+ *
  * Placing the thumbs and the range between them along the track is what a
  * slider does, so that's functional and done here: each thumb is centered on
  * its value, and the range spans from one to the other. Give the track a size,
@@ -93,6 +98,8 @@ interface Drag {
  *
  * @readonly
  * @prop {HTMLFormElement | null} form
+ *
+ * @prop {(value: number) => string | undefined} formatValue - What screenreaders read for each thumb's value, such as "$40" rather than "40". The value itself when unset.
  *
  * @readonly
  * @prop {ValidityState} validity
@@ -135,6 +142,13 @@ export default class RangeSlider extends LitElement {
    */
   @property({ attribute: 'end-label', reflect: true })
   endLabel?: string;
+
+  /**
+   * What screenreaders read for each thumb's value, such as "$40" rather than
+   * "40". The value itself when unset.
+   */
+  @property({ attribute: false })
+  formatValue?: (value: number) => string;
 
   /**
    * Like a native input's `value`, the attribute is the default and the
@@ -299,6 +313,7 @@ export default class RangeSlider extends LitElement {
             aria-describedby="description"
             aria-label=${this.startLabel ?? this.#strings.value.rangeSliderMinimum}
             aria-labelledby="label start"
+            aria-valuetext=${ifDefined(this.formatValue?.(start))}
             id="start"
             max=${end}
             min=${this.min}
@@ -326,6 +341,7 @@ export default class RangeSlider extends LitElement {
             aria-describedby="description"
             aria-label=${this.endLabel ?? this.#strings.value.rangeSliderMaximum}
             aria-labelledby="label end"
+            aria-valuetext=${ifDefined(this.formatValue?.(end))}
             id="end"
             max=${this.#max}
             min=${start}
