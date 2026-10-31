@@ -83,9 +83,11 @@ interface Drag {
  *
  * @csspart container - The label, the track and the description
  * @csspart description - Text about the slider, such as a hint
+ * @csspart end - The end thumb
  * @csspart focus-visible - The thumb whose input has visible focus
  * @csspart label - The label
  * @csspart range - The part of the track between the thumbs
+ * @csspart start - The start thumb
  * @csspart track - The thumbs and the range between them
  *
  * @fires {Event} change
@@ -292,7 +294,7 @@ export default class RangeSlider extends LitElement {
           ${ref(this.#startElementRef)}
         >
           <!--
-            The start thumb
+            @part start - The start thumb
             @part focus-visible - The thumb whose input has visible focus
           -->
           <input
@@ -321,7 +323,7 @@ export default class RangeSlider extends LitElement {
           style=${styleMap({ insetInlineStart: `${endPercentage}%` })}
           ${ref(this.#endElementRef)}
         >
-          <!-- The end thumb -->
+          <!-- @part end - The end thumb -->
           <input
             aria-describedby="description"
             aria-label=${this.endLabel ?? this.#strings.value.rangeSliderMaximum}
