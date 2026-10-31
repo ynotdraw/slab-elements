@@ -26,7 +26,7 @@ usage: |
   </slab-accordion>
 ---
 
-Each item is a [Disclosure](../disclosure/), documented over there.
+Each item is a [Disclosure](../disclosure/), documented over there. The APG's accordion puts each header in a heading, so give each Disclosure a `heading-level` that fits the page, such as 3 under an `<h2>`.
 
 ## Keyboard
 
