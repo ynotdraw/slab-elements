@@ -78,11 +78,13 @@ test(
   { tag: '@accessibility' },
   async ({ render, page }) => {
     await render(
-      () =>
-        html`<slab-disclosure label="Label" heading-level="7"
-          >Content</slab-disclosure
-        >`,
+      () => html`<slab-disclosure label="Label">Content</slab-disclosure>`,
     );
+
+    // Set here because lit-analyzer only knows 1 through 6.
+    await page.locator('slab-disclosure').evaluate((element) => {
+      element.setAttribute('heading-level', '7');
+    });
 
     await expect(page.getByRole('heading')).toHaveCount(0);
 
