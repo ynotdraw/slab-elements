@@ -183,7 +183,7 @@ export default class Splitter extends LitElement {
           aria-valuetext=${String(rounded)}
           max=${this.max}
           min=${this.min}
-          step=${this.step > 0 ? this.step : 1}
+          step=${this.step}
           type="range"
           .value=${live(String(rounded))}
           ?disabled=${this.disabled}
