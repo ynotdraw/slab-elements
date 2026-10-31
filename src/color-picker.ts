@@ -111,12 +111,15 @@ const controls: Record<keyof Color, Control> = {
  * @slot {Element | string} [description] - Text about the color picker, such as a hint
  *
  * @csspart alpha - The alpha slider's track
+ * @csspart alpha-thumb - The alpha slider's thumb
  * @csspart area - The saturation and brightness area
+ * @csspart area-thumb - The area's thumb
  * @csspart container - The label, the controls and the description
  * @csspart description - Text about the color picker, such as a hint
  * @csspart focus-visible - The thumb whose input has visible focus
  * @csspart hex
  * @csspart hue - The hue slider's track
+ * @csspart hue-thumb - The hue slider's thumb
  * @csspart label - The label
  * @csspart selected - The swatch that's value
  * @csspart swatch - A swatch
@@ -333,7 +336,7 @@ export default class ColorPicker extends LitElement {
           @keydown=${this.#onAreaKeydown}
         >
           <!--
-            The area's thumb
+            @part area-thumb - The area's thumb
             @part focus-visible - The thumb whose input has visible focus
           -->
           <input
@@ -385,7 +388,7 @@ export default class ColorPicker extends LitElement {
           style=${styleMap({ insetInlineStart: `${(hue / 360) * 100}%` })}
           @keydown=${this.#onHueKeydown}
         >
-          <!-- The hue slider's thumb -->
+          <!-- @part hue-thumb - The hue slider's thumb -->
           <input
             aria-describedby="description"
             aria-label=${this.hueLabel ?? this.#strings.value.colorPickerHue}
@@ -420,7 +423,7 @@ export default class ColorPicker extends LitElement {
                 style=${styleMap({ insetInlineStart: `${alpha}%` })}
                 @keydown=${this.#onAlphaKeydown}
               >
-                <!-- The alpha slider's thumb -->
+                <!-- @part alpha-thumb - The alpha slider's thumb -->
                 <input
                   aria-describedby="description"
                   aria-label=${this.alphaLabel ?? this.#strings.value.colorPickerAlpha}
