@@ -30,7 +30,8 @@ declare global {
  * The radios are the platform's, in the shadow root, so they're checked, moved
  * between with the arrow keys, and read the way a native radio group is. Each
  * is named by its number, and the group by `label`, so a screenreader reads
- * "Label, 3, radio button, 3 of 5".
+ * "Label, 3, radio button, 3 of 5". Set `formatValue` to a function of the
+ * number to name each radio by what it means instead, such as "3 stars".
  *
  * Each radio is a `star` part. Those up to the value are `filled` as well, and
  * while one is hovered, those up to it are `filled` instead, so a pointer
@@ -71,6 +72,8 @@ declare global {
  *
  * @readonly
  * @prop {HTMLFormElement | null} form
+ *
+ * @prop {(value: number) => string | undefined} formatValue - Names each radio from its number, such as "3 stars" rather than "3". The number itself when unset.
  *
  * @readonly
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
@@ -114,6 +117,13 @@ export default class Rating extends LitElement {
 
   @property({ reflect: true, type: Boolean })
   disabled = false;
+
+  /**
+   * Names each radio from its number, such as "3 stars" rather than "3". The
+   * number itself when unset.
+   */
+  @property({ attribute: false })
+  formatValue?: (value: number) => string;
 
   @property({ attribute: 'hide-label', reflect: true, type: Boolean })
   hideLabel = false;
@@ -264,10 +274,11 @@ export default class Rating extends LitElement {
             ...(point <= filled ? ['filled'] : []),
           ].join(' ');
 
-          // Named by its number alone, since what a point is a point of is
-          // the label's to say, and a number reads the same in any language.
+          // Named by its number alone unless `formatValue` says otherwise,
+          // since what a point is a point of is the label's to say, and a
+          // number reads the same in any language.
           return html`<input
-            aria-label=${point}
+            aria-label=${this.formatValue?.(point) ?? point}
             data-test="star"
             name="rating"
             part=${parts}
