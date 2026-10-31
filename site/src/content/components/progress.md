@@ -12,3 +12,5 @@ example: |
 usage: |
   <slab-progress label="Uploading" max="100" value="40"></slab-progress>
 ---
+
+Screenreaders read how far along it is as a percentage. To say it another way, set `formatValue` to a function of `value`, such as `` (value) => `${value} of 10 files` ``, and they'll read what it returns instead. It isn't called while the progress bar is indeterminate.
