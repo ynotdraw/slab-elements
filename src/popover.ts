@@ -7,6 +7,7 @@ import {
 } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import packageJson from '../package.json' with { type: 'json' };
 import customElement from './library/custom-element.js';
 import styles from './popover.styles.js';
@@ -48,6 +49,12 @@ declare global {
  * neither leaves the shadow root. Cancelling "beforetoggle" cancels the
  * opening, as it does on a native popover.
  *
+ * Give it a `label` when what it holds is a dialog, such as a form or a set
+ * of controls, rather than a few words about its anchor. The popover is then
+ * a non-modal `role="dialog"` named by the label, the way react-aria's is,
+ * and its anchor gets `aria-haspopup="dialog"`. Without one, it's a plain
+ * container, read as content that follows its anchor.
+ *
  * Positioning is the one place it carries CSS beyond the bare minimum. Left to
  * the browser, a popover is centered in the viewport, not by its anchor, which
  * isn't a look so much as not working. So it's put beside its anchor with CSS
@@ -56,6 +63,7 @@ declare global {
  * visual choice are left to `::part(popover)`. Where anchor positioning isn't
  * supported, the popover falls back to the browser's centering.
  *
+ * @attr {string} [label] - Makes the popover a dialog named by it. Leave it unset when the popover only holds a few words about its anchor.
  * @attr {boolean} [open=false]
  * @attr {'bottom'|'left'|'right'|'top'} [placement='bottom'] - The side of its anchor it opens on, when there's room. It flips when there isn't.
  *
@@ -76,6 +84,13 @@ declare global {
  */
 @customElement('slab-popover')
 export default class Popover extends LitElement {
+  /**
+   * Makes the popover a dialog named by it. Leave it unset when the popover
+   * only holds a few words about its anchor.
+   */
+  @property({ reflect: true })
+  label?: string;
+
   @property({ reflect: true, type: Boolean })
   open = false;
 
@@ -111,9 +126,11 @@ export default class Popover extends LitElement {
       </slot>
 
       <div
+        aria-label=${ifDefined(this.label)}
         data-test="popover"
         part="popover"
         popover="auto"
+        role=${ifDefined(this.label ? 'dialog' : undefined)}
         @beforetoggle=${this.#onPopoverBeforeToggle}
         @toggle=${this.#onPopoverToggle}
         ${ref(this.#popoverElementRef)}
@@ -142,6 +159,10 @@ export default class Popover extends LitElement {
   }
 
   override updated(changes: PropertyValues<this>) {
+    if (changes.has('label')) {
+      this.#syncAnchor();
+    }
+
     // The popover can't be opened before it's rendered, so an `open` set
     // before then is acted on here.
     if (changes.has('open')) {
@@ -167,11 +188,9 @@ export default class Popover extends LitElement {
 
   #anchorSlotElementRef = createRef<HTMLSlotElement>();
 
-#isOpenOnAnchorPointerDown = false;
+  #isOpenOnAnchorPointerDown = false;
 
   #popoverElementRef = createRef<HTMLDivElement>();
-
-  
 
   get #isPopoverOpen() {
     return this.#popoverElementRef.value?.matches(':popover-open') ?? false;
@@ -185,13 +204,14 @@ export default class Popover extends LitElement {
       });
   }
 
-  // Synchronous, unlike "toggle", which is queued. So `open` is already right
   #onAnchorSlotChange = () => {
-    this.#anchor?.setAttribute('aria-expanded', String(this.open));
+    this.#syncAnchor();
   };
 
-// it never gets a click.
-#onAnchorSlotClick = (event: MouseEvent) => {
+  // On the slot rather than the anchor, so an anchor swapped for another
+  // doesn't need listeners moved. A disabled button never gets here, because
+  // it never gets a click.
+  #onAnchorSlotClick = (event: MouseEvent) => {
     // A pointer's click comes after light dismiss has already closed the
     // popover on "pointerup". `source` doesn't make the anchor part of the
     // popover as far as light dismiss is concerned: only `popovertarget` and
@@ -206,12 +226,12 @@ export default class Popover extends LitElement {
     }
   };
 
-// doesn't need listeners moved. A disabled button never gets here, because
-#onAnchorSlotPointerDown = () => {
+  #onAnchorSlotPointerDown = () => {
     this.#isOpenOnAnchorPointerDown = this.#isPopoverOpen;
   };
 
-// by the time `show()` or `hide()` returns.
+  // Synchronous, unlike "toggle", which is queued. So `open` is already right
+  // by the time `show()` or `hide()` returns.
   #onPopoverBeforeToggle = (event: ToggleEvent) => {
     // Chromium lets the popover's own "beforetoggle" out of the shadow root,
     // where Firefox and WebKit don't. Stopped so there's only ever the one
@@ -262,17 +282,23 @@ export default class Popover extends LitElement {
     );
   };
 
-  
-
-  // On the slot rather than the anchor, so an anchor swapped for another
-  
-  
-  
-
-  
-
   #sync(isOpen: boolean) {
     this.open = isOpen;
-    this.#anchor?.setAttribute('aria-expanded', String(isOpen));
+    this.#syncAnchor();
+  }
+
+  // A labelled popover is a dialog, so its anchor says it opens one. One
+  // without a label is only content beside the anchor, and says nothing of
+  // what it opens, the way a disclosure button doesn't.
+  #syncAnchor() {
+    const anchor = this.#anchor;
+
+    anchor?.setAttribute('aria-expanded', String(this.open));
+
+    if (this.label) {
+      anchor?.setAttribute('aria-haspopup', 'dialog');
+    } else {
+      anchor?.removeAttribute('aria-haspopup');
+    }
   }
 }
