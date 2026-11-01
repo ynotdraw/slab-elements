@@ -15,7 +15,12 @@ import assertSlot from './library/assert-slot.js';
 import OptionsController from './library/options-controller.js';
 import Option from './option.js';
 import styles from './command-palette.styles.js';
+
+// How long typing has to pause before the number of results is announced.
+const announceDelay = 500;
 import isComposing from './library/is-composing.js';
+import announce from './library/announce.js';
+import StringsController from './library/strings.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -46,7 +51,9 @@ declare global {
  * one, so Enter runs the best match. An Option that doesn't match is hidden.
  * With none left, the listbox is hidden too, the host matches
  * `:state(empty)`, and whatever is slotted into `empty` is shown in a status
- * region, so it's announced.
+ * region, so it's announced. Once typing pauses, screenreaders are told how
+ * many Options are left, by `resultsLabel`, or that none are when nothing is
+ * slotted into `empty`.
  *
  * ArrowDown and ArrowUp move the active Option, stopping at each end and
  * skipping disabled Options. Enter and a click choose the active Option: the
@@ -101,6 +108,7 @@ declare global {
  * @readonly
  * @prop {string} query - What's been typed into the input.
  *
+ * @prop {(count: number) => string} resultsLabel - What screenreaders are told once typing pauses, from how many Options are left. "No results", "1 result" and so on in English when unset. With none left, whatever is slotted into `empty` is told instead, if anything is.
  * @prop {string} returnValue - The `<dialog>`'s, so `close(returnValue)` and a `<form method="dialog">` set it the way they do natively.
  *
  * @method close
@@ -121,6 +129,15 @@ export default class CommandPalette extends Dialog {
 
   @property({ reflect: true })
   placeholder?: string;
+
+  /**
+   * What screenreaders are told once typing pauses, from how many Options are
+   * left. "No results", "1 result" and so on in English when unset. With none
+   * left, whatever is slotted into `empty` is told instead, if anything is.
+   */
+  @property({ attribute: false })
+  resultsLabel: (count: number) => string = (count) =>
+    this.#strings.value.commandPaletteResults(count);
 
   /**
    * The Option the user is on, which Enter chooses. It's pointed at rather
@@ -288,6 +305,8 @@ export default class CommandPalette extends Dialog {
     this.#internals = this.attachInternals();
   }
 
+  #announceTimeout?: ReturnType<typeof setTimeout>;
+
   #inputElementRef = createRef<HTMLInputElement>();
 
   #internals: ElementInternals;
@@ -310,6 +329,8 @@ export default class CommandPalette extends Dialog {
 
   #slotElementRef = createRef<HTMLSlotElement>();
 
+  #strings = new StringsController(this);
+
   // The Options that match what's been typed. All of them until something is.
   get #visible() {
     return this.options.filter((option) => this.#isVisible(option));
@@ -328,6 +349,23 @@ export default class CommandPalette extends Dialog {
     // Back to the first match, which `updated()` sees to.
     this.#options.activeOption = null;
     this.requestUpdate();
+
+    // Once typing pauses, rather than on every keystroke, which would queue
+    // up a count for each.
+    clearTimeout(this.#announceTimeout);
+
+    this.#announceTimeout = setTimeout(() => {
+      const count = this.#visible.length;
+
+      // The "empty" slot's status region says so itself.
+      const isEmptySlotted = Boolean(
+        this.querySelector(':scope > [slot="empty"]'),
+      );
+
+      if (this.open && (count > 0 || !isEmptySlotted)) {
+        announce(this.resultsLabel(count), { source: this });
+      }
+    }, announceDelay);
   };
 
   #onInputKeydown = (event: KeyboardEvent) => {

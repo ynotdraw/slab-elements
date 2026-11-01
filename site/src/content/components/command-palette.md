@@ -52,7 +52,7 @@ palette.addEventListener('close', () => {
 });
 ```
 
-Typing filters the Options by their text. Replace `filter` to match on more, like keywords, or listen for "input" and read `query` to fetch results as the user types. What's slotted into `empty` is shown, and announced, when nothing matches.
+Typing filters the Options by their text. Replace `filter` to match on more, like keywords, or listen for "input" and read `query` to fetch results as the user types. What's slotted into `empty` is shown, and announced, when nothing matches. Once typing pauses, screenreaders are also told how many Options are left, such as "3 results". Set `resultsLabel` to a function of the count to change what they're told.
 
 ## Keyboard
 
