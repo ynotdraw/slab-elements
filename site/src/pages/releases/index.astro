@@ -34,11 +34,13 @@ const description = "Every release of Slab, newest first, with what's changed in
               <a class="announcement" href={`${base}releases/${version}/`}>
                 <strong>What's new in {version}</strong>
                 <span>{announcement.summary}</span>
-                <ul class="new" aria-label="New">
-                  {announcement.highlights.map(({ title }) => (
-                    <li>{title}</li>
-                  ))}
-                </ul>
+                {announcement.highlights.length > 0 && (
+                  <ul class="new" aria-label="New">
+                    {announcement.highlights.map(({ title }) => (
+                      <li>{title}</li>
+                    ))}
+                  </ul>
+                )}
               </a>
             )}
 

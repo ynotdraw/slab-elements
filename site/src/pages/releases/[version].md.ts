@@ -23,24 +23,31 @@ const fromHere = (text: string) =>
 // every fix with the components it's in.
 const tldrSections = async (
   { highlights, version }: Announcement,
-  { additions, checks, fixes, points }: Tldr,
+  {
+    additions,
+    checks,
+    fixes,
+    fixesTitle = 'Accessibility, everywhere',
+    points,
+  }: Tldr,
 ) => {
   const title = async (component: string) =>
     (await getEntry('components', component))?.data.title ?? component;
 
   return [
     ['## TL;DR', points.map((point) => `- ${point}`).join('\n')].join('\n\n'),
+    highlights.length > 0 &&
+      [
+        '## New components',
+        highlights
+          .map(
+            ({ component, text, title }) =>
+              `- [${title}](../components/${component}.md): ${text}`,
+          )
+          .join('\n'),
+      ].join('\n\n'),
     [
-      '## New components',
-      highlights
-        .map(
-          ({ component, text, title }) =>
-            `- [${title}](../components/${component}.md): ${text}`,
-        )
-        .join('\n'),
-    ].join('\n\n'),
-    [
-      '## Also new',
+      highlights.length > 0 ? '## Also new' : '## New features',
       additions
         .map(
           ({ href, text, title }) =>
@@ -49,7 +56,7 @@ const tldrSections = async (
         .join('\n'),
     ].join('\n\n'),
     [
-      '## Accessibility, everywhere',
+      `## ${fixesTitle}`,
       ...(await Promise.all(
         fixes.map(async (group) =>
           [

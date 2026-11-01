@@ -72,6 +72,11 @@ export interface Tldr {
   checks: Check[];
   fixes: { fixes: Fix[]; title: string }[];
 
+  // The fixes' heading and the line under it, when they're not all from an
+  // accessibility audit.
+  fixesLede?: string;
+  fixesTitle?: string;
+
   // The short version, a line each, with `code` spans.
   points: string[];
 }
@@ -90,6 +95,94 @@ export interface Announcement {
 }
 
 export const announcements: Announcement[] = [
+  {
+    version: '0.3.0',
+    summary:
+      'Values screenreaders read the way you mean them, headings in Disclosure, dialogs in Popover, and the rest of the accessibility audit.',
+    intro:
+      "0.3.0 finishes the accessibility audit 0.2.0 began. Sliders, meters and ratings can say what their numbers mean, Disclosure and Popover take the roles they're used for, and Calendar, File Drop and Command Palette say what just happened. It's a minor release because Splitter's separator moved its focus, so check how you style it.",
+    tldr: {
+      points: [
+        'Slider, Range Slider, Meter, Progress and Rating take `formatValue`, so a screenreader reads "$40" or "3 of 5 GB" rather than a bare number.',
+        "Disclosure's label can be a heading, and a Popover with a `label` is a dialog.",
+        'Calendar ranges, File Drop and Command Palette tell screenreaders what just happened.',
+        "Splitter's separator is a native range input inside, so phone screenreaders move it with a swipe.",
+        "Splitter's focus ring moves to a `focus-visible` part.",
+      ],
+      additions: [
+        {
+          title: 'Values that read right',
+          href: 'components/slider/',
+          text: '`formatValue`, a function of the value whose result screenreaders read, such as "$40" or "3 stars", in Slider, Range Slider, Meter, Progress and Rating.',
+        },
+        {
+          title: 'Disclosure headings',
+          href: 'components/disclosure/',
+          text: "`heading-level` puts Disclosure's label in a heading of that level, as the APG's accordion does, so it's in a screenreader's list of headings.",
+        },
+        {
+          title: 'Popover dialogs',
+          href: 'components/popover/',
+          text: 'With `label`, a Popover is a non-modal dialog named by it, for one that holds a form or controls rather than a few words.',
+        },
+      ],
+      fixesTitle: 'Fixes',
+      fixesLede:
+        "The last of the accessibility audit, and two parts back in the manifest. A line each, and the components it's in.",
+      fixes: [
+        {
+          title: 'Screenreaders',
+          fixes: [
+            {
+              text: "A range's first day, and then the whole range, are announced as they're picked.",
+              components: ['calendar'],
+            },
+            {
+              text: 'A drop says how many files were added, and how many were left out.',
+              components: ['file-drop'],
+            },
+            {
+              text: 'How many results are left is announced once typing pauses, as in Combobox.',
+              components: ['command-palette'],
+            },
+          ],
+        },
+        {
+          title: 'Touch and target size',
+          fixes: [
+            {
+              text: 'The separator is a native range input, so phone screenreaders move it with a swipe.',
+              components: ['splitter'],
+            },
+            {
+              text: "The styled box is 24 pixels square, WCAG 2.5.8's smallest target.",
+              components: ['checkbox'],
+            },
+          ],
+        },
+        {
+          title: 'Editors and docs',
+          fixes: [
+            {
+              text: "The thumbs' parts are listed in the elements manifest again.",
+              components: ['range-slider', 'color-picker'],
+            },
+          ],
+        },
+      ],
+      checks: [
+        {
+          title: "Splitter's focus ring",
+          text: "The separator holds a hidden range input that takes focus, so it isn't `[role=separator]` and doesn't match `:focus-visible`. Style its ring through the `focus-visible` part.",
+          before:
+            'slab-splitter::part(separator):focus-visible {\n  outline: 3px solid;\n}',
+          after:
+            'slab-splitter::part(separator focus-visible) {\n  outline: 3px solid;\n}',
+        },
+      ],
+    },
+    highlights: [],
+  },
   {
     version: '0.2.0',
     summary:
