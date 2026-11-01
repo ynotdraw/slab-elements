@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
+import type Rating from './rating.js';
 
 test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
   await render(
@@ -122,3 +123,39 @@ test('step="0.5"', { tag: '@accessibility' }, async ({ render, page }) => {
       - radio "2"
   `);
 });
+
+test(
+  'names its radios through `formatValue` when set',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-rating label="Label" max="3" step="0.5"></slab-rating>`,
+    );
+
+    const host = page.locator('slab-rating');
+
+    await host.evaluate<void, void, Rating>((element) => {
+      element.formatValue = (value) =>
+        value === 1 ? '1 star' : `${value} stars`;
+    });
+
+    await expect(host).toMatchAriaSnapshot(`
+      - text: Label
+      - radiogroup "Label":
+        - radio "0.5 stars"
+        - radio "1 star"
+        - radio "1.5 stars"
+        - radio "2 stars"
+        - radio "2.5 stars"
+        - radio "3 stars"
+    `);
+
+    await host.evaluate<void, void, Rating>((element) => {
+      element.formatValue = undefined;
+    });
+
+    await expect(
+      page.getByRole('radio', { name: '1', exact: true }),
+    ).toHaveCount(1);
+  },
+);

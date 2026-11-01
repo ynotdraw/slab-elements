@@ -13471,6 +13471,14 @@
             },
             {
               "kind": "field",
+              "name": "formatValue",
+              "type": {
+                "text": "(value: number) => string | undefined"
+              },
+              "description": "Names each radio from its number, such as \"3 stars\" rather than \"3\". The\nnumber itself when unset."
+            },
+            {
+              "kind": "field",
               "name": "hideLabel",
               "type": {
                 "text": "boolean"
