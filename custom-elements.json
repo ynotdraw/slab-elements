@@ -12180,6 +12180,14 @@
             },
             {
               "kind": "field",
+              "name": "formatValue",
+              "type": {
+                "text": "(value: number) => string | undefined"
+              },
+              "description": "What screenreaders read for the value, such as \"3 of 10 files\" rather\nthan \"30%\". A percentage when unset."
+            },
+            {
+              "kind": "field",
               "name": "hideLabel",
               "type": {
                 "text": "boolean"

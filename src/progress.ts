@@ -27,6 +27,11 @@ declare global {
  * The label and the `<progress>` are both in the shadow root, so a plain `for`
  * reference names it.
  *
+ * Screenreaders read how far along it is as a percentage. Set `formatValue` to
+ * a function of `value` that says it another way, such as "3 of 10 files",
+ * which becomes the `<progress>`'s `aria-valuetext`. It isn't called while
+ * it's indeterminate.
+ *
  * Style it through its parts and through `:state(indeterminate)`.
  *
  * @attr {string} label
@@ -39,12 +44,21 @@ declare global {
  *
  * @csspart label - The label
  * @csspart progress
+ *
+ * @prop {(value: number) => string | undefined} formatValue - What screenreaders read for the value, such as "3 of 10 files" rather than "30%". A percentage when unset.
  */
 @customElement('slab-progress')
 export default class Progress extends LitElement {
   @property({ reflect: true })
   @required
   label?: string;
+
+  /**
+   * What screenreaders read for the value, such as "3 of 10 files" rather
+   * than "30%". A percentage when unset.
+   */
+  @property({ attribute: false })
+  formatValue?: (value: number) => string;
 
   @property({ attribute: 'hide-label', reflect: true, type: Boolean })
   hideLabel = false;
@@ -66,15 +80,20 @@ export default class Progress extends LitElement {
   readonly version: string = packageJson.version;
 
   override render() {
-    // There's no `role` or `aria-value*` here. A `<progress>` is a
-    // progressbar to the platform already, with its value and maximum, and
-    // without them when it has no value.
+    // There's no `role` or `aria-value*` here but `aria-valuetext`. A
+    // `<progress>` is a progressbar to the platform already, with its value
+    // and maximum, and without them when it has no value.
     return html`<label for="progress" part="label">
         <!-- The label -->
         ${this.label}
       </label>
 
       <progress
+        aria-valuetext=${ifDefined(
+          this.value === undefined || this.value === null
+            ? undefined
+            : this.formatValue?.(this.value),
+        )}
         id="progress"
         max=${ifDefined(this.max ?? undefined)}
         part="progress"
