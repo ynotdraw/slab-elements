@@ -14443,6 +14443,14 @@
             },
             {
               "kind": "field",
+              "name": "formatValue",
+              "type": {
+                "text": "(value: number) => string | undefined"
+              },
+              "description": "What screenreaders read for the value, such as \"$40\" rather than \"40\". The\nvalue itself when unset."
+            },
+            {
+              "kind": "field",
               "name": "hideLabel",
               "type": {
                 "text": "boolean"
