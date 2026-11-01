@@ -32,6 +32,10 @@ declare global {
  * do it, and set as `:state(optimum)`, `:state(suboptimum)` or
  * `:state(even-less-good)`.
  *
+ * Screenreaders read its value as a number. Set `formatValue` to a function
+ * of `value` that says what it means, such as "3 of 5 GB", which becomes the
+ * `<meter>`'s `aria-valuetext`.
+ *
  * Style it through its parts and those states.
  *
  * @attr {string} label
@@ -48,12 +52,21 @@ declare global {
  *
  * @csspart label - The label
  * @csspart meter
+ *
+ * @prop {(value: number) => string | undefined} formatValue - What screenreaders read for the value, such as "3 of 5 GB" rather than "3". The value itself when unset.
  */
 @customElement('slab-meter')
 export default class Meter extends LitElement {
   @property({ reflect: true })
   @required
   label?: string;
+
+  /**
+   * What screenreaders read for the value, such as "3 of 5 GB" rather than
+   * "3". The value itself when unset.
+   */
+  @property({ attribute: false })
+  formatValue?: (value: number) => string;
 
   @property({ attribute: 'hide-label', reflect: true, type: Boolean })
   hideLabel = false;
@@ -96,14 +109,16 @@ export default class Meter extends LitElement {
   readonly version: string = packageJson.version;
 
   override render() {
-    // There's no `role` or `aria-value*` here. A `<meter>` is a meter to the
-    // platform already, with its value, minimum and maximum.
+    // There's no `role` or `aria-value*` here but `aria-valuetext`. A
+    // `<meter>` is a meter to the platform already, with its value, minimum
+    // and maximum.
     return html`<label for="meter" part="label">
         <!-- The label -->
         ${this.label}
       </label>
 
       <meter
+        aria-valuetext=${ifDefined(this.formatValue?.(this.value))}
         high=${ifDefined(this.high ?? undefined)}
         id="meter"
         low=${ifDefined(this.low ?? undefined)}
