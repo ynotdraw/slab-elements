@@ -1,5 +1,39 @@
 # slab-elements
 
+## 0.3.0
+
+### Minor Changes
+
+- [#68](https://github.com/ynotdraw/slab-elements/pull/68) [`c39c01c`](https://github.com/ynotdraw/slab-elements/commit/c39c01cf7e959e3b4ccbe92d57d2241422cbb5dd) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Splitter's separator holds a visually hidden range input, which is what's focused and what screenreaders read, so screenreaders on phones can move it with a swipe up or down. The separator is no longer a `[role=separator]` itself, so screenreaders read it as a slider, and since it isn't focused, it doesn't match `:focus-visible`: style its focus ring through its new `focus-visible` part, as in `::part(separator focus-visible)`.
+
+### Patch Changes
+
+- [#74](https://github.com/ynotdraw/slab-elements/pull/74) [`0479423`](https://github.com/ynotdraw/slab-elements/commit/0479423cdc23b4fb6e74e1eaabfb6f03a4808248) Thanks [@ynotdraw](https://github.com/ynotdraw)! - With `range`, Calendar tells screenreaders when the first day picked starts the range, and what the range is once the last is picked. Change what it says with `rangeStartedLabel` and `rangeSelectedLabel`.
+
+- [#71](https://github.com/ynotdraw/slab-elements/pull/71) [`2eb7fb7`](https://github.com/ynotdraw/slab-elements/commit/2eb7fb790fb3fa942d7dc6d2ffa10b7e51cfdb54) Thanks [@ynotdraw](https://github.com/ynotdraw)! - The styled Checkbox's box is 24 pixels square rather than 22, the smallest target size WCAG 2.5.8 allows.
+
+- [#70](https://github.com/ynotdraw/slab-elements/pull/70) [`dce96a7`](https://github.com/ynotdraw/slab-elements/commit/dce96a7418e8c70fd0ce5c2943140a83c430617b) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Color Picker's `area-thumb`, `hue-thumb` and `alpha-thumb` parts are listed in the elements manifest again, so editors and the docs show them.
+
+- [#72](https://github.com/ynotdraw/slab-elements/pull/72) [`2ab652b`](https://github.com/ynotdraw/slab-elements/commit/2ab652bd99c5533bea143b807774a1cebd4bc8c3) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Command Palette tells screenreaders how many Options are left once typing pauses, the way Combobox does. Set `resultsLabel` to change what it says. With none left, what's slotted into `empty` is announced instead, as before, or "No results" when nothing is.
+
+- [#75](https://github.com/ynotdraw/slab-elements/pull/75) [`e1dd766`](https://github.com/ynotdraw/slab-elements/commit/e1dd766a9e8683202a1490499b077e20cb862913) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Disclosure has a `heading-level` attribute that makes its label a heading of that level, as the APG's accordion puts each header in one.
+
+- [#73](https://github.com/ynotdraw/slab-elements/pull/73) [`a12cd3d`](https://github.com/ynotdraw/slab-elements/commit/a12cd3dd902e0dd4470e7fde3863aadd898bff1c) Thanks [@ynotdraw](https://github.com/ynotdraw)! - File Drop tells screenreaders what a drop did: how many files were added, how many were left out for not matching `accept`, and when a drop of several files was ignored without `multiple`. Change what it says with `addedLabel`, `notAcceptedLabel` and `too-many-label`.
+
+- [#79](https://github.com/ynotdraw/slab-elements/pull/79) [`b293bab`](https://github.com/ynotdraw/slab-elements/commit/b293bab20bb879d6b05cb90da4d019330e522032) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Meter has a `formatValue` property, a function of the value whose result screenreaders read instead of the bare number, such as "3 of 5 GB".
+
+- [#76](https://github.com/ynotdraw/slab-elements/pull/76) [`83653c5`](https://github.com/ynotdraw/slab-elements/commit/83653c56e1bb27108ab08fa501aa953df16312f3) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Popover has a `label` attribute that makes it a non-modal dialog named by the label, with `aria-haspopup="dialog"` on its anchor, for a popover that holds a form or controls rather than a few words.
+
+- [#80](https://github.com/ynotdraw/slab-elements/pull/80) [`585778a`](https://github.com/ynotdraw/slab-elements/commit/585778a3bebe6eef45f0b0486350545067e7879e) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Progress has a `formatValue` property, a function of the value whose result screenreaders read instead of a percentage, such as "3 of 10 files".
+
+- [#78](https://github.com/ynotdraw/slab-elements/pull/78) [`14d0e01`](https://github.com/ynotdraw/slab-elements/commit/14d0e018c14acb908df22b53ad8e78384aa51c99) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Range Slider has a `formatValue` property, a function of a thumb's value whose result screenreaders read instead of the bare number, such as "$40".
+
+- [#69](https://github.com/ynotdraw/slab-elements/pull/69) [`5bfb767`](https://github.com/ynotdraw/slab-elements/commit/5bfb7673ddd61687aecc168968001ed815e31a18) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Range Slider's `start` and `end` parts are listed in the elements manifest again, so editors and the docs show them.
+
+- [#81](https://github.com/ynotdraw/slab-elements/pull/81) [`a36f03d`](https://github.com/ynotdraw/slab-elements/commit/a36f03df4c938e9d4ef66931bdd039e00ceea96a) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Rating has a `formatValue` property, a function of each radio's number that names it, such as "3 stars" rather than "3".
+
+- [#77](https://github.com/ynotdraw/slab-elements/pull/77) [`bc5bc57`](https://github.com/ynotdraw/slab-elements/commit/bc5bc5784dbc05cce98bb47ffb7ffe3f97af838d) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Slider has a `formatValue` property, a function of the value whose result screenreaders read instead of the bare number, such as "$40".
+
 ## 0.2.0
 
 ### Minor Changes
