@@ -5414,10 +5414,7 @@
           "name": "Disclosure",
           "cssParts": [
             {
-              "name": "details"
-            },
-            {
-              "name": "summary",
+              "name": "details",
               "description": "The label, and the control that toggles the content"
             },
             {
@@ -5443,6 +5440,16 @@
               },
               "static": true,
               "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
+            },
+            {
+              "kind": "field",
+              "name": "headingLevel",
+              "type": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6 | undefined"
+              },
+              "description": "Makes the label a heading of this level, from 1 to 6.",
+              "attribute": "heading-level",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -5530,6 +5537,14 @@
             }
           ],
           "attributes": [
+            {
+              "name": "heading-level",
+              "type": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6 | undefined"
+              },
+              "description": "Makes the label a heading of this level, from 1 to 6.",
+              "fieldName": "headingLevel"
+            },
             {
               "name": "label",
               "type": {

@@ -15,6 +15,8 @@ usage: |
   </slab-disclosure>
 ---
 
+Set `heading-level` to make the label a heading of that level, so screenreader users can jump between Disclosures by heading. The heading goes inside the `<summary>`, since a `<summary>` must be the first thing in a `<details>`. Most screenreaders read it as a heading there, but a few read only the `<summary>`'s button.
+
 ## Keyboard
 
 | Key          | What it does                             |

@@ -38,7 +38,14 @@ declare global {
  * Anything a design wants beside it, such as an icon, goes on through
  * `::part(summary)`.
  *
+ * Set `heading-level` to make the label a heading of that level, as the APG's
+ * accordion puts each header in one, so screenreader users can jump between
+ * Disclosures by heading. The heading goes inside the `<summary>`, since a
+ * `<summary>` has to be the `<details>`'s first child. Most screenreaders read
+ * it as a heading there, though some read only the `<summary>`'s button.
+ *
  * @attr {string} label
+ * @attr {1|2|3|4|5|6} [heading-level] - Makes the label a heading of this level, from 1 to 6.
  * @attr {string} [name='']
  * @attr {boolean} [open=false]
  *
@@ -48,8 +55,7 @@ declare global {
  * @slot {Element | string}
  *
  * @csspart content - The content revealed when open
- * @csspart details
- * @csspart summary - The label, and the control that toggles the content
+ * @csspart details - The label, and the control that toggles the content
  *
  * @fires {ToggleEvent} toggle
  */
@@ -59,6 +65,12 @@ export default class Disclosure extends LitElement {
     ...LitElement.shadowRootOptions,
     delegatesFocus: true,
   };
+
+  /**
+   * Makes the label a heading of this level, from 1 to 6.
+   */
+  @property({ attribute: 'heading-level', reflect: true, type: Number })
+  headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
 
   @property({ reflect: true })
   @required
@@ -90,7 +102,15 @@ export default class Disclosure extends LitElement {
     >
       <summary part="summary" ${ref(this.#summaryElementRef)}>
         <!-- The label, and the control that toggles the content -->
-        ${this.label}
+        ${
+          this.#headingLevel
+            ? // A `<span>` with a role rather than an `<h2>` and so on, which
+              // would bring the browser's heading styles with it.
+              html`<span aria-level=${this.#headingLevel} role="heading"
+                >${this.label}</span
+              >`
+            : this.label
+        }
       </summary>
 
       <div part="content">
@@ -118,6 +138,16 @@ export default class Disclosure extends LitElement {
   });
 
   #summaryElementRef = createRef<HTMLElement>();
+
+  // `undefined` for anything that isn't a heading level, rather than a
+  // heading of no level.
+  get #headingLevel() {
+    const level = this.headingLevel ?? 0;
+
+    return Number.isInteger(level) && level >= 1 && level <= 6
+      ? level
+      : undefined;
+  }
 
   // "toggle" fires however the `<details>` changed: a click, a key,
   // find-in-page, another `<details>` of the same `name` opening, or `open`

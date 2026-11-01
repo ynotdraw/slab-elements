@@ -39,3 +39,61 @@ test('open=${false}', { tag: '@accessibility' }, async ({ render, page }) => {
     - group: Label
   `);
 });
+
+test(
+  'is accessible with `heading-level`',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-disclosure label="Label" heading-level="3" open
+          >Content</slab-disclosure
+        >`,
+    );
+
+    await expect(page).toBeAccessible('slab-disclosure');
+  },
+);
+
+test(
+  'heading-level="3"',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-disclosure label="Label" heading-level="3"
+          >Content</slab-disclosure
+        >`,
+    );
+
+    await expect(page.locator('slab-disclosure')).toMatchAriaSnapshot(`
+      - group:
+        - heading "Label" [level=3]
+    `);
+  },
+);
+
+test(
+  'ignores a `heading-level` that is not one',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-disclosure label="Label">Content</slab-disclosure>`,
+    );
+
+    // Set here because lit-analyzer only knows 1 through 6.
+    await page.locator('slab-disclosure').evaluate((element) => {
+      element.setAttribute('heading-level', '7');
+    });
+
+    await expect(page.getByRole('heading')).toHaveCount(0);
+
+    await page
+      .locator('slab-disclosure')
+      .evaluate<void, void, Disclosure>((element) => {
+        element.headingLevel = 2;
+      });
+
+    await expect(page.getByRole('heading', { level: 2 })).toHaveText('Label');
+  },
+);
