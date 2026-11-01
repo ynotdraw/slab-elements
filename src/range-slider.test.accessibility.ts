@@ -129,3 +129,40 @@ test(
     await expect(end).toHaveValue('70');
   },
 );
+
+test(
+  'reads its values through `formatValue` when set',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-range-slider
+          label="Label"
+          start-value="20"
+          end-value="70"
+        ></slab-range-slider>`,
+    );
+
+    const host = page.locator('slab-range-slider');
+    const start = page.getByRole('slider', { name: 'Label Minimum' });
+    const end = page.getByRole('slider', { name: 'Label Maximum' });
+
+    await expect(start).not.toHaveAttribute('aria-valuetext');
+
+    await host.evaluate<void, void, RangeSlider>((element) => {
+      element.formatValue = (value) => `$${value}`;
+    });
+
+    await expect(start).toHaveAttribute('aria-valuetext', '$20');
+    await expect(end).toHaveAttribute('aria-valuetext', '$70');
+
+    await start.press('ArrowRight');
+    await expect(start).toHaveAttribute('aria-valuetext', '$21');
+
+    await host.evaluate<void, void, RangeSlider>((element) => {
+      element.formatValue = undefined;
+    });
+
+    await expect(start).not.toHaveAttribute('aria-valuetext');
+  },
+);

@@ -13009,6 +13009,14 @@
             },
             {
               "kind": "field",
+              "name": "formatValue",
+              "type": {
+                "text": "(value: number) => string | undefined"
+              },
+              "description": "What screenreaders read for each thumb's value, such as \"$40\" rather than\n\"40\". The value itself when unset."
+            },
+            {
+              "kind": "field",
               "name": "endValue",
               "type": {
                 "text": "number"

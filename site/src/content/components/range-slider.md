@@ -16,6 +16,8 @@ Each thumb is named by `label` and then its own label, "Minimum" and "Maximum" u
 
 Inside each thumb is a visually hidden range input. It's what has focus and what a screenreader reads, which lets screenreaders on phones adjust a thumb with a swipe up or down. Since the thumb itself isn't focused, it can't match `:focus-visible`. Style its focus ring through `::part(focus-visible)`, which the thumb has while its input's focus is visible.
 
+Screenreaders read each thumb's value as a bare number. When it means more than that, set `formatValue` to a function of the value, such as `` (value) => `$${value}` ``, and they'll read what it returns instead.
+
 ## Keyboard
 
 | Key                   | What it does                                                                                   |
