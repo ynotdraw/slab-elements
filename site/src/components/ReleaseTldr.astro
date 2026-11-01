@@ -13,7 +13,14 @@ interface Props {
 }
 
 const { highlights, intro, summary, tldr, version } = Astro.props.announcement;
-const { additions, checks, fixes, points } = tldr;
+const {
+  additions,
+  checks,
+  fixes,
+  fixesLede = "From an accessibility audit of every component. A line each, and the components it's in.",
+  fixesTitle = 'Accessibility, everywhere',
+  points,
+} = tldr;
 const published = isPublished(version);
 const base = import.meta.env.BASE_URL;
 
@@ -58,12 +65,18 @@ const groups = await Promise.all(
 
 const fixed = new Set(fixes.flatMap((group) => group.fixes.flatMap((fix) => fix.components)));
 
+// A release with no new components leads with its other additions instead,
+// and a number that's nothing isn't shown.
 const stats = [
-  { label: 'new components', value: highlights.length },
-  { label: 'accessibility fixes', value: fixes.flatMap((group) => group.fixes).length },
+  highlights.length > 0
+    ? { label: 'new components', value: highlights.length }
+    : { label: 'new features', value: additions.length },
+  {
+    label: tldr.fixesTitle ? 'fixes' : 'accessibility fixes',
+    value: fixes.flatMap((group) => group.fixes).length },
   { label: 'components fixed', value: fixed.size },
   { label: checks.length === 1 ? 'change to check' : 'changes to check', value: checks.length },
-];
+].filter(({ value }) => value > 0);
 ---
 
 <article class="tldr">
@@ -102,6 +115,8 @@ const stats = [
     <ol>{points.map((point) => <li><span set:html={inline(point)} /></li>)}</ol>
   </section>
 
+  {
+    tiles.length > 0 && (
   <section aria-labelledby="components" class="block">
     <h2 id="components">New components</h2>
     <p class="lede">Every one is live below, styled the way this site styles them.</p>
@@ -122,9 +137,11 @@ const stats = [
       }
     </ul>
   </section>
+    )
+  }
 
   <section aria-labelledby="also" class="block">
-    <h2 id="also">Also new</h2>
+    <h2 id="also">{tiles.length > 0 ? 'Also new' : 'New features'}</h2>
     <ul class="additions">
       {
         additions.map(({ href, text, title }) => (
@@ -140,11 +157,8 @@ const stats = [
   </section>
 
   <section aria-labelledby="fixes" class="block">
-    <h2 id="fixes">Accessibility, everywhere</h2>
-    <p class="lede">
-      From an accessibility audit of every component. A line each, and the components it's
-      in.
-    </p>
+    <h2 id="fixes">{fixesTitle}</h2>
+    <p class="lede" set:html={inline(fixesLede)} />
     <div class="groups">
       {
         groups.map(({ fixes, title }) => (
