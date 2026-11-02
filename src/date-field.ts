@@ -4,6 +4,7 @@ import {
   type CSSResultGroup,
   type CSSResultOrNative,
   type PropertyValues,
+  type TemplateResult,
 } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property, state } from 'lit/decorators.js';
@@ -26,7 +27,7 @@ declare global {
 /**
  * A date field with no visual styles, around a native `<input type="date">`,
  * so it is typed into, picked from, and read the way one is. The picker is the
- * browser's own; a calendar of Slab's making is `slab-calendar`'s job.
+ * browser's own. For a calendar of Slab's making, use `slab-date-picker`.
  *
  * The value is the input's: an ISO "yyyy-mm-dd" string, or an empty one. What
  * a person sees is formatted for their locale by the browser, but what's
@@ -263,24 +264,26 @@ export default class DateField extends LitElement {
         ${this.label}
       </label>
 
-      <input
-        aria-describedby="description"
-        aria-invalid=${this.#isShowValidationFeedback ? 'true' : 'false'}
-        data-test="input"
-        id="input"
-        max=${ifDefined(this.max)}
-        min=${ifDefined(this.min)}
-        part="input"
-        type="date"
-        ?disabled=${this.#isDisabled}
-        ?readonly=${this.readonly}
-        ?required=${this.required}
-        @blur=${this.#onInputBlur}
-        @change=${this.#onInputChangeOrInput}
-        @input=${this.#onInputChangeOrInput}
-        @keydown=${this.#onInputKeydown}
-        ${ref(this.#inputElementRef)}
-      />
+      ${this.renderControl(
+        html`<input
+          aria-describedby="description"
+          aria-invalid=${this.#isShowValidationFeedback ? 'true' : 'false'}
+          data-test="input"
+          id="input"
+          max=${ifDefined(this.max)}
+          min=${ifDefined(this.min)}
+          part="input"
+          type="date"
+          ?disabled=${this.#isDisabled}
+          ?readonly=${this.readonly}
+          ?required=${this.required}
+          @blur=${this.#onInputBlur}
+          @change=${this.#onInputChangeOrInput}
+          @input=${this.#onInputChangeOrInput}
+          @keydown=${this.#onInputKeydown}
+          ${ref(this.#inputElementRef)}
+        />`,
+      )}
 
       <div id="description" part="description">
         <!-- Text about the field, and its validity message when it has one -->
@@ -296,6 +299,13 @@ export default class DateField extends LitElement {
             </span>`,
         )}
       </div>`;
+  }
+
+  // What's between the label and the description, given the input. Date
+  // Picker overrides it to put a button beside the input and a calendar in a
+  // popover, and inherits everything else.
+  protected renderControl(input: TemplateResult): TemplateResult {
+    return input;
   }
 
   reportValidity(): boolean {

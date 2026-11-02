@@ -37,6 +37,7 @@ export interface Strings {
   commandPaletteResults: (count: number) => string;
   copyButtonCopied: string;
   copyButtonFailed: string;
+  datePickerButton: string;
   dateRangeFieldEnd: string;
   dateRangeFieldStart: string;
   fileDropAdded: (count: number) => string;
@@ -87,6 +88,7 @@ const english: Strings = {
     count === 0 ? 'No results' : count === 1 ? '1 result' : `${count} results`,
   copyButtonCopied: 'Copied',
   copyButtonFailed: "Couldn't copy",
+  datePickerButton: 'Choose date',
   dateRangeFieldEnd: 'End',
   dateRangeFieldStart: 'Start',
   fileDropAdded: (count) =>
@@ -140,7 +142,7 @@ export function registerStrings(lang: string, strings: Partial<Strings>) {
 
 // The nearest `lang`, through shadow roots, since an element in one can't see
 // the page's with `closest()` alone.
-function langOf(element: Element) {
+export function langOf(element: Element) {
   let node: Element | undefined = element;
 
   while (node) {

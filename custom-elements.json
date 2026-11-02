@@ -4736,6 +4736,24 @@
             },
             {
               "kind": "method",
+              "name": "renderControl",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "input",
+                  "type": {
+                    "text": "TemplateResult"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "reportValidity",
               "return": {
                 "type": {
@@ -4961,6 +4979,843 @@
           "declaration": {
             "name": "DateField",
             "module": "src/date-field.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/date-picker.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/date-picker.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/date-picker.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "DatePicker",
+          "cssParts": [
+            {
+              "name": "control",
+              "description": "The input and the button"
+            },
+            {
+              "name": "button",
+              "description": "Opens and closes the calendar"
+            },
+            {
+              "name": "popover",
+              "description": "The popover the Calendar is in"
+            },
+            {
+              "name": "calendar"
+            },
+            {
+              "name": "label",
+              "description": "The label",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "name": "input",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "name": "description",
+              "description": "Text about the field, and its validity message when it has one",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "name": "validity-message",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "buttonLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The button's text and so its accessible name. \"Choose date\" in English\nwhen unset.",
+              "attribute": "button-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the calendar is open, however it got there or went away. Setting\nit opens or closes the calendar.",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "weekStart",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The day the Calendar's weeks start on, from 0 for Sunday to 6 for\nSaturday.",
+              "attribute": "week-start",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isDisabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hidePicker",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Closes the calendar."
+            },
+            {
+              "kind": "method",
+              "name": "renderControl",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "input",
+                  "type": {
+                    "text": "TemplateResult"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "showPicker",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Opens the calendar and focuses its tabbable day. Unlike the native\ninput's, it needs no user gesture.",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "label",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "autocomplete",
+              "type": {
+                "text": "HTMLInputElement['autocomplete'] | undefined"
+              },
+              "attribute": "autocomplete",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "hideLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hide-label",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The latest date allowed, as \"yyyy-mm-dd\".",
+              "attribute": "max",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The earliest date allowed, as \"yyyy-mm-dd\". Also where `step` counts from.",
+              "attribute": "min",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "required",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "step",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "In days, or \"any\". Counted from `min` when there is one.",
+              "attribute": "step",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "An ISO \"yyyy-mm-dd\" string. Like a native input, the attribute is the\ndefault value and the property is the current one, so the attribute\ndoesn't change as the field is edited.",
+              "attribute": "value",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "HTMLFormElement | null"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`, or else the browser's own.\nEmpty while it's valid.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "valueAsDate",
+              "type": {
+                "text": "Date | null"
+              },
+              "description": "`value` as a `Date` at midnight UTC, or `null` when empty, as on a native\ninput.",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "click",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "string | File | FormData | null"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resetValidityFeedback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears the validity feedback without changing `validity`.",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "flags",
+                  "optional": true,
+                  "type": {
+                    "text": "ValidityStateFlags"
+                  }
+                },
+                {
+                  "name": "message",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              },
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              },
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "name": "toggle",
+              "type": {
+                "text": "ToggleEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "button-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The button's text and so its accessible name. \"Choose date\" in English\nwhen unset.",
+              "fieldName": "buttonLabel"
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the calendar is open, however it got there or went away. Setting\nit opens or closes the calendar.",
+              "fieldName": "open"
+            },
+            {
+              "name": "week-start",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The day the Calendar's weeks start on, from 0 for Sunday to 6 for\nSaturday.",
+              "fieldName": "weekStart"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "label",
+              "required": true,
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "name": "autocomplete",
+              "type": {
+                "text": "HTMLInputElement['autocomplete'] | undefined"
+              },
+              "fieldName": "autocomplete",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "name": "hide-label",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hideLabel",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The latest date allowed, as \"yyyy-mm-dd\".",
+              "fieldName": "max",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "name": "min",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The earliest date allowed, as \"yyyy-mm-dd\". Also where `step` counts from.",
+              "fieldName": "min",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "required",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "name": "step",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "In days, or \"any\". Counted from `min` when there is one.",
+              "fieldName": "step",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "An ISO \"yyyy-mm-dd\" string. Like a native input, the attribute is the\ndefault value and the property is the current one, so the attribute\ndoesn't change as the field is edited.",
+              "fieldName": "value",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "DateField",
+            "module": "/src/date-field.js"
+          },
+          "tagName": "slab-date-picker",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "description",
+              "description": "",
+              "type": {
+                "text": "Element | string"
+              },
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "DatePicker",
+            "module": "src/date-picker.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-date-picker",
+          "declaration": {
+            "name": "DatePicker",
+            "module": "src/date-picker.ts"
           }
         }
       ]
