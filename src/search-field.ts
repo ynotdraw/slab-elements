@@ -397,10 +397,11 @@ export default class SearchField extends LitElement {
     //
     // `enterkeyhint` is set here for the same reason: it's not in
     // lit-analyzer's list of attributes. It's "search", so phones label their
-    // Enter key as one.
+    // Enter key as one. It's set as an attribute because not every browser has
+    // the `enterKeyHint` property.
     if (input) {
       input.autocomplete = this.autocomplete ?? '';
-      input.enterKeyHint = 'search';
+      input.setAttribute('enterkeyhint', 'search');
     }
 
     if (changes.has('disabled') || changes.has('isFormDisabled')) {
