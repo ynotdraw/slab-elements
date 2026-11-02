@@ -14784,6 +14784,377 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/sortable-list.item.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/sortable-list.item.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/sortable-list.item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "SortableListItem",
+          "cssParts": [
+            {
+              "name": "handle",
+              "description": "The button that moves the item"
+            },
+            {
+              "name": "content",
+              "description": "Holds the content"
+            }
+          ],
+          "slots": [
+            {
+              "name": "handle",
+              "description": "Shown in the handle, such as a grip icon",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "",
+              "description": "The item's content",
+              "type": {
+                "text": "Element | string"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the item, in its handle's name and in what screenreaders are told\nas it moves.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "grabbed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Set by its Sortable List."
+            },
+            {
+              "kind": "field",
+              "name": "handleLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the handle. \"Reorder\" and `label` in English when unset.",
+              "attribute": "handle-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "instructions",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Set by its Sortable List."
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "private-connected",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the item, in its handle's name and in what screenreaders are told\nas it moves.",
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "handle-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the handle. \"Reorder\" and `label` in English when unset.",
+              "fieldName": "handleLabel"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-sortable-list-item",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "SortableListItem",
+            "module": "src/sortable-list.item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-sortable-list-item",
+          "declaration": {
+            "name": "SortableListItem",
+            "module": "src/sortable-list.item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/sortable-list.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/sortable-list.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/sortable-list.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "SortableList",
+          "cssParts": [
+            {
+              "name": "list",
+              "description": "The items"
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The items, in order",
+              "type": {
+                "text": "SortableListItem"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the list.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "canceledLabel",
+              "type": {
+                "text": "Announcement"
+              },
+              "description": "What screenreaders are told when an item is put back, from its label and\nwhere it is, from 1. \"Reorder canceled…\" in English when unset."
+            },
+            {
+              "kind": "field",
+              "name": "droppedLabel",
+              "type": {
+                "text": "Announcement"
+              },
+              "description": "What screenreaders are told when an item is dropped, from its label and\nwhere it is, from 1. \"Pour dropped at position 2 of 3\" and so on in\nEnglish when unset."
+            },
+            {
+              "kind": "field",
+              "name": "grabbedLabel",
+              "type": {
+                "text": "Announcement"
+              },
+              "description": "What screenreaders are told when an item is picked up with the keyboard,\nfrom its label and where it is, from 1. \"Pour picked up at position 2 of\n3\" and so on in English when unset."
+            },
+            {
+              "kind": "field",
+              "name": "instructionsLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Describes each handle to screenreaders. \"Press Space to pick it up…\" in\nEnglish when unset.",
+              "attribute": "instructions-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "movedLabel",
+              "type": {
+                "text": "Announcement"
+              },
+              "description": "What screenreaders are told when a picked up item is moved, from its\nlabel and where it is, from 1. \"Pour moved to position 2 of 3\" and so on\nin English when unset."
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "SortableListItem[]"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the list.",
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "instructions-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Describes each handle to screenreaders. \"Press Space to pick it up…\" in\nEnglish when unset.",
+              "fieldName": "instructionsLabel"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-sortable-list",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "SortableList",
+            "module": "src/sortable-list.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-sortable-list",
+          "declaration": {
+            "name": "SortableList",
+            "module": "src/sortable-list.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/splitter.styles.ts",
       "declarations": [],
       "exports": [

@@ -49,6 +49,24 @@ export interface Strings {
   pinInputCharacter: (position: number, length: number) => string;
   rangeSliderMaximum: string;
   rangeSliderMinimum: string;
+  sortableListCanceled: (
+    label: string,
+    position: number,
+    total: number,
+  ) => string;
+  sortableListDropped: (
+    label: string,
+    position: number,
+    total: number,
+  ) => string;
+  sortableListGrabbed: (
+    label: string,
+    position: number,
+    total: number,
+  ) => string;
+  sortableListHandle: (label: string) => string;
+  sortableListInstructions: string;
+  sortableListMoved: (label: string, position: number, total: number) => string;
   stepsComplete: string;
   tagsInputAdded: (text: string) => string;
   tagsInputRemove: (text: string) => string;
@@ -101,6 +119,17 @@ const english: Strings = {
   pinInputCharacter: (position, length) => `Character ${position} of ${length}`,
   rangeSliderMaximum: 'Maximum',
   rangeSliderMinimum: 'Minimum',
+  sortableListCanceled: (label, position, total) =>
+    `Reorder canceled. ${label} is back at position ${position} of ${total}`,
+  sortableListDropped: (label, position, total) =>
+    `${label} dropped at position ${position} of ${total}`,
+  sortableListGrabbed: (label, position, total) =>
+    `${label} picked up at position ${position} of ${total}`,
+  sortableListHandle: (label) => `Reorder ${label}`,
+  sortableListInstructions:
+    'Press Space to pick it up. Then use the arrow keys to move it, Space to drop it, and Escape to cancel.',
+  sortableListMoved: (label, position, total) =>
+    `${label} moved to position ${position} of ${total}`,
   stepsComplete: 'Completed',
   tagsInputAdded: (text) => `${text} added`,
   tagsInputRemove: (text) => `Remove ${text}`,
