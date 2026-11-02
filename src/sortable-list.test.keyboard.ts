@@ -205,9 +205,11 @@ test(
     await render(
       () =>
         html`<slab-sortable-list label="Label">
-          <slab-sortable-list-item label="One">One</slab-sortable-list-item>
-          <slab-sortable-list-item label="Two">Two</slab-sortable-list-item>
-        </slab-sortable-list>`,
+            <slab-sortable-list-item label="One">One</slab-sortable-list-item>
+            <slab-sortable-list-item label="Two">Two</slab-sortable-list-item>
+          </slab-sortable-list>
+
+          <button>After</button>`,
     );
 
     await page.evaluate(recordAnnouncements);
@@ -217,7 +219,11 @@ test(
     await handle.focus();
     await page.keyboard.press('Space');
     await page.keyboard.press('ArrowDown');
+
+    // To something after the list, rather than out of the page, which
+    // Firefox doesn't blur the handle for.
     await page.keyboard.press('Tab');
+    await expect(page.getByRole('button', { name: 'After' })).toBeFocused();
 
     expect(await getOrder(page)).toStrictEqual(['One', 'Two']);
     await expect(handle).toHaveAttribute('aria-pressed', 'false');
