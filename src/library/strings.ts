@@ -49,6 +49,7 @@ export interface Strings {
   pinInputCharacter: (position: number, length: number) => string;
   rangeSliderMaximum: string;
   rangeSliderMinimum: string;
+  searchFieldClear: string;
   stepsComplete: string;
   tagsInputAdded: (text: string) => string;
   tagsInputRemove: (text: string) => string;
@@ -101,6 +102,7 @@ const english: Strings = {
   pinInputCharacter: (position, length) => `Character ${position} of ${length}`,
   rangeSliderMaximum: 'Maximum',
   rangeSliderMinimum: 'Minimum',
+  searchFieldClear: 'Clear search',
   stepsComplete: 'Completed',
   tagsInputAdded: (text) => `${text} added`,
   tagsInputRemove: (text) => `Remove ${text}`,
