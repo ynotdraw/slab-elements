@@ -48,6 +48,7 @@ const components = [
   ['slab-text-field', 'input'],
   ['slab-textarea', 'textarea'],
   ['slab-time-field', 'input'],
+  ['slab-toggle-button', 'button'],
 ] as const;
 
 for (const [tag, selector] of components) {
