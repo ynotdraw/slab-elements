@@ -10,6 +10,7 @@ import type { ReactiveController, ReactiveControllerHost } from 'lit';
 // then "fr", then English. A registered table can leave strings out, and those
 // are the next table's.
 export interface Strings {
+  alertDialogCancel: string;
   alertDismiss: string;
   breadcrumb: string;
   calendarNextMonth: string;
@@ -49,6 +50,7 @@ export interface Strings {
   pinInputCharacter: (position: number, length: number) => string;
   rangeSliderMaximum: string;
   rangeSliderMinimum: string;
+  searchFieldClear: string;
   sortableListCanceled: (
     label: string,
     position: number,
@@ -74,6 +76,7 @@ export interface Strings {
 }
 
 const english: Strings = {
+  alertDialogCancel: 'Cancel',
   alertDismiss: 'Dismiss',
   breadcrumb: 'Breadcrumb',
   calendarNextMonth: 'Next month',
@@ -119,6 +122,7 @@ const english: Strings = {
   pinInputCharacter: (position, length) => `Character ${position} of ${length}`,
   rangeSliderMaximum: 'Maximum',
   rangeSliderMinimum: 'Minimum',
+  searchFieldClear: 'Clear search',
   sortableListCanceled: (label, position, total) =>
     `Reorder canceled. ${label} is back at position ${position} of ${total}`,
   sortableListDropped: (label, position, total) =>

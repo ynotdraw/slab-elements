@@ -42,12 +42,14 @@ const components = [
   ['slab-password-field', 'input'],
   ['slab-pin-input', '[role="group"]'],
   ['slab-range-slider', '[role="group"]'],
+  ['slab-search-field', 'input'],
   ['slab-slider', 'input'],
   ['slab-switch', 'input'],
   ['slab-tags-input', 'input'],
   ['slab-text-field', 'input'],
   ['slab-textarea', 'textarea'],
   ['slab-time-field', 'input'],
+  ['slab-toggle-button', 'button'],
 ] as const;
 
 for (const [tag, selector] of components) {
