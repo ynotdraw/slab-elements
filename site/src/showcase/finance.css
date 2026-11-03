@@ -1,0 +1,839 @@
+/*
+  Finance. Quiet navy on white, hairline rules, soft corners and tabular
+  numbers, so columns of money line up. Every rule reaches Slab's headless
+  elements from outside, through ::part() and :state(), and everything sits
+  under .finance so it stays on this page.
+*/
+.finance {
+  --fi-page: #f3f5f9;
+  --fi-card: #ffffff;
+  --fi-ink: #0b1f3a;
+  --fi-muted: #5b6b82;
+  --fi-line: #dfe4ec;
+  --fi-soft: #eef2f8;
+  --fi-blue: #1f4fd1;
+  --fi-blue-soft: #e5ecfc;
+  --fi-up: #0b7a53;
+  --fi-down: #b42318;
+  --fi-radius: 0.625rem;
+  --fi-ring: 0 0 0 3px rgb(31 79 209 / 30%);
+
+  accent-color: var(--fi-blue);
+  background-color: var(--fi-page);
+  color: var(--fi-ink);
+  color-scheme: light;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+  padding: clamp(1rem, 3vw, 2rem);
+
+  :focus-visible {
+    outline: 2px solid var(--fi-blue);
+    outline-offset: 2px;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+/* The page's own chrome: plain HTML. */
+.fi-bar {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-block-end: 1.5rem;
+}
+
+.fi-logo {
+  align-items: center;
+  display: flex;
+  font-size: 1.125rem;
+  font-weight: 600;
+  gap: 0.5rem;
+  letter-spacing: -0.01em;
+
+  span {
+    background: linear-gradient(135deg, var(--fi-blue), #5b8cff);
+    block-size: 1.5rem;
+    border-radius: 0.375rem;
+    inline-size: 1.5rem;
+  }
+}
+
+.fi-grid {
+  align-items: start;
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (width >= 60rem) {
+  .fi-grid {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+  }
+}
+
+.fi-card {
+  background-color: var(--fi-card);
+  border: 1px solid var(--fi-line);
+  border-radius: var(--fi-radius);
+  box-shadow: 0 1px 2px rgb(11 31 58 / 6%);
+  min-inline-size: 0;
+  padding: 1.25rem;
+}
+
+.fi-side {
+  display: grid;
+  gap: 1.125rem;
+}
+
+.fi-summary {
+  align-items: end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.fi-label,
+.fi-heading {
+  color: var(--fi-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.fi-heading {
+  color: var(--fi-ink);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.fi-value {
+  font-size: clamp(1.75rem, 5vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.fi-delta {
+  color: var(--fi-up);
+  font-weight: 500;
+
+  span {
+    color: var(--fi-muted);
+    font-weight: 400;
+  }
+}
+
+.fi-chart {
+  block-size: 8.75rem;
+  color: var(--fi-blue);
+  display: block;
+  inline-size: 100%;
+  margin-block: 1rem 0.5rem;
+}
+
+.fi-table {
+  border-collapse: collapse;
+  inline-size: 100%;
+  margin-block: 0.75rem 1rem;
+
+  th,
+  td {
+    border-block-end: 1px solid var(--fi-line);
+    padding: 0.75rem 0.5rem;
+    text-align: end;
+    white-space: nowrap;
+  }
+
+  thead th {
+    color: var(--fi-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  :is(th, td):first-child,
+  tbody th {
+    text-align: start;
+  }
+
+  tbody th {
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+  }
+}
+
+.fi-symbol {
+  background-color: var(--fi-soft);
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-inline-end: 0.375rem;
+  padding: 0.125rem 0.375rem;
+}
+
+.fi-up {
+  color: var(--fi-up);
+}
+
+.fi-down {
+  color: var(--fi-down);
+}
+
+.fi-form {
+  display: grid;
+  gap: 1.25rem;
+  max-inline-size: 28rem;
+  padding-block: 1.25rem 0.25rem;
+}
+
+.fi-quote {
+  border-block-start: 1px solid var(--fi-line);
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding-block-start: 1rem;
+
+  div {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  dt {
+    color: var(--fi-muted);
+  }
+
+  dd {
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+.fi-button {
+  background-color: var(--fi-blue);
+  border: 0;
+  border-radius: 0.5rem;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  transition: background-color 120ms;
+
+  &:hover {
+    background-color: #173fae;
+  }
+}
+
+.fi-button--quiet {
+  background-color: var(--fi-soft);
+  color: var(--fi-ink);
+
+  &:hover {
+    background-color: var(--fi-line);
+  }
+}
+
+.fi-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-block-start: 1.5rem;
+}
+
+/* Labels and descriptions, the same on every field. */
+.finance
+  :is(
+    slab-select,
+    slab-combobox,
+    slab-number,
+    slab-date-picker,
+    slab-radio-group
+  ) {
+  display: grid;
+}
+
+.finance
+  :is(
+    slab-select,
+    slab-combobox,
+    slab-number,
+    slab-date-picker,
+    slab-radio-group
+  )::part(label) {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  margin-block-end: 0.375rem;
+}
+
+.finance :is(slab-number, slab-switch)::part(description),
+.finance :is(slab-number, slab-switch) > [slot='description'] {
+  color: var(--fi-muted);
+  font-size: 0.8125rem;
+  margin-block-start: 0.25rem;
+}
+
+/* Inputs: Select, Combobox, Number and Date Picker share one field. */
+.finance slab-select::part(combobox),
+.finance :is(slab-combobox, slab-number)::part(input),
+.finance slab-date-picker::part(control) {
+  background-color: var(--fi-card);
+  border: 1px solid var(--fi-line);
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  color: var(--fi-ink);
+  font: inherit;
+  min-block-size: 2.625rem;
+  transition:
+    border-color 120ms,
+    box-shadow 120ms;
+}
+
+.finance slab-select::part(combobox),
+.finance :is(slab-combobox, slab-number)::part(input) {
+  inline-size: 100%;
+  padding: 0 0.75rem;
+}
+
+.finance slab-select::part(combobox):hover,
+.finance :is(slab-combobox, slab-number)::part(input):hover,
+.finance slab-date-picker::part(control):hover {
+  border-color: #b9c3d3;
+}
+
+.finance slab-select::part(combobox):focus-visible,
+.finance :is(slab-combobox, slab-number)::part(input):focus-visible {
+  border-color: var(--fi-blue);
+  box-shadow: var(--fi-ring);
+  outline: 0;
+}
+
+.finance slab-date-picker::part(control):focus-within {
+  border-color: var(--fi-blue);
+  box-shadow: var(--fi-ring);
+}
+
+.finance :is(slab-combobox, slab-number)::part(input)::placeholder {
+  color: var(--fi-muted);
+}
+
+.finance slab-select::part(combobox) {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
+.finance slab-select::part(combobox)::after {
+  block-size: 0.4rem;
+  border-block-end: 1.5px solid currentcolor;
+  border-inline-end: 1.5px solid currentcolor;
+  content: '';
+  inline-size: 0.4rem;
+  rotate: 45deg;
+  translate: 0 -0.125rem;
+}
+
+.finance slab-select.fi-account::part(combobox) {
+  font-weight: 500;
+  min-inline-size: 14rem;
+}
+
+.finance slab-date-picker::part(control) {
+  align-items: center;
+  display: flex;
+  overflow: hidden;
+}
+
+.finance slab-date-picker::part(input) {
+  background: none;
+  border: 0;
+  color: inherit;
+  flex: 1;
+  font: inherit;
+  min-inline-size: 0;
+  padding: 0 0.75rem;
+
+  &:focus-visible {
+    outline: 0;
+  }
+}
+
+.finance slab-date-picker::part(button) {
+  align-self: stretch;
+  background-color: var(--fi-soft);
+  border: 0;
+  border-inline-start: 1px solid var(--fi-line);
+  color: var(--fi-ink);
+  cursor: pointer;
+  font-size: 0;
+  inline-size: 2.75rem;
+
+  &::before {
+    content: '▦' / '';
+    font-size: 1.125rem;
+  }
+
+  &:hover {
+    background-color: var(--fi-line);
+  }
+
+  &:focus-visible {
+    outline-offset: -3px;
+  }
+}
+
+/* Popovers: the Select's list, the Combobox's and the Date Picker's calendar. */
+.finance slab-select::part(popover),
+.finance slab-combobox::part(listbox),
+.finance slab-date-picker::part(popover) {
+  background-color: var(--fi-card);
+  border: 1px solid var(--fi-line);
+  border-radius: var(--fi-radius);
+  box-shadow: 0 12px 32px rgb(11 31 58 / 14%);
+  box-sizing: border-box;
+  color: var(--fi-ink);
+  margin-block: 0.375rem;
+  padding: 0.25rem;
+}
+
+.finance slab-select::part(popover),
+.finance slab-combobox::part(listbox) {
+  min-inline-size: anchor-size(inline);
+}
+
+.finance slab-option {
+  border-radius: 0.375rem;
+  cursor: pointer;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: 0.5rem 0.625rem;
+
+  &:hover {
+    background-color: var(--fi-soft);
+  }
+}
+
+.finance slab-option:state(active) {
+  background-color: var(--fi-blue-soft);
+}
+
+.finance slab-option:state(selected) {
+  color: var(--fi-blue);
+  font-weight: 600;
+}
+
+.finance slab-option:state(selected)::after {
+  content: '✓' / '';
+}
+
+.finance slab-option:state(disabled) {
+  color: var(--fi-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* The Date Picker's calendar, through the parts it passes on. */
+.finance slab-date-picker::part(popover) {
+  padding: 0.75rem;
+}
+
+.finance slab-date-picker::part(header) {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-block-end: 0.5rem;
+}
+
+.finance slab-date-picker::part(heading) {
+  font-weight: 600;
+}
+
+.finance slab-date-picker::part(previous),
+.finance slab-date-picker::part(next) {
+  background: none;
+  border: 0;
+  border-radius: 0.375rem;
+  block-size: 2rem;
+  color: var(--fi-ink);
+  cursor: pointer;
+  font-size: 0;
+  inline-size: 2rem;
+  padding: 0;
+
+  &:hover {
+    background-color: var(--fi-soft);
+  }
+}
+
+.finance slab-date-picker::part(previous)::before {
+  content: '‹' / '';
+  font-size: 1.25rem;
+}
+
+.finance slab-date-picker::part(next)::before {
+  content: '›' / '';
+  font-size: 1.25rem;
+}
+
+.finance slab-date-picker::part(grid) {
+  border-collapse: separate;
+  border-spacing: 2px;
+}
+
+.finance slab-date-picker::part(weekday) {
+  color: var(--fi-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding-block: 0.25rem;
+}
+
+.finance slab-date-picker::part(day) {
+  background: none;
+  block-size: 2.25rem;
+  border: 0;
+  border-radius: 0.375rem;
+  box-sizing: border-box;
+  color: var(--fi-ink);
+  cursor: pointer;
+  inline-size: 2.25rem;
+  text-align: center;
+
+  &:hover {
+    background-color: var(--fi-soft);
+  }
+}
+
+.finance slab-date-picker::part(today) {
+  box-shadow: inset 0 0 0 1px var(--fi-blue);
+}
+
+.finance slab-date-picker::part(selected) {
+  background-color: var(--fi-blue);
+  color: #fff;
+
+  &:hover {
+    background-color: #173fae;
+  }
+}
+
+.finance slab-date-picker::part(disabled) {
+  color: #a9b3c3;
+  cursor: not-allowed;
+
+  &:hover {
+    background: none;
+  }
+}
+
+/* Toggle Group: a segmented control, the pressed segment raised on a tray. */
+.finance slab-toggle-group::part(group) {
+  background-color: var(--fi-soft);
+  border-radius: 0.5rem;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+}
+
+.finance slab-toggle-group-button {
+  border-radius: 0.375rem;
+  color: var(--fi-muted);
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.375rem 0.75rem;
+  text-align: center;
+  transition:
+    background-color 120ms,
+    color 120ms;
+
+  &:hover {
+    color: var(--fi-ink);
+  }
+}
+
+.finance slab-toggle-group-button:state(pressed) {
+  background-color: var(--fi-card);
+  box-shadow: 0 1px 3px rgb(11 31 58 / 15%);
+  color: var(--fi-ink);
+}
+
+/* Buy and Sell, full width, with each side in its own color. */
+.finance .fi-side-pick slab-toggle-group-button {
+  flex: 1;
+  font-size: 0.9375rem;
+  padding-block: 0.5rem;
+}
+
+.finance .fi-side-pick slab-toggle-group-button[value='buy']:state(pressed) {
+  color: var(--fi-up);
+}
+
+.finance .fi-side-pick slab-toggle-group-button[value='sell']:state(pressed) {
+  color: var(--fi-down);
+}
+
+/* Tabs: an underline that follows the selected tab. */
+.finance slab-tabs {
+  display: block;
+  margin-block-start: 0.5rem;
+}
+
+.finance slab-tabs::part(tablist) {
+  border-block-end: 1px solid var(--fi-line);
+  display: flex;
+  gap: 1.25rem;
+}
+
+.finance slab-tabs-tab {
+  border-block-end: 2px solid transparent;
+  color: var(--fi-muted);
+  cursor: pointer;
+  font-weight: 500;
+  margin-block-end: -1px;
+  padding: 0.625rem 0.125rem;
+
+  &:hover {
+    color: var(--fi-ink);
+  }
+
+  &:focus-visible {
+    outline-offset: -2px;
+  }
+}
+
+.finance slab-tabs-tab:state(selected) {
+  border-block-end-color: var(--fi-blue);
+  color: var(--fi-ink);
+}
+
+/* Pagination: quiet numbers, the current one filled. */
+.finance slab-pagination::part(list) {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-end;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.finance slab-pagination::part(page),
+.finance slab-pagination::part(previous),
+.finance slab-pagination::part(next) {
+  align-items: center;
+  background: none;
+  block-size: 2rem;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  box-sizing: border-box;
+  color: var(--fi-ink);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 0.875rem;
+  justify-content: center;
+  min-inline-size: 2rem;
+  padding: 0 0.5rem;
+  text-decoration: none;
+}
+
+.finance slab-pagination::part(page):hover,
+.finance slab-pagination::part(previous):hover,
+.finance slab-pagination::part(next):hover {
+  background-color: var(--fi-soft);
+}
+
+.finance slab-pagination::part(current) {
+  background-color: var(--fi-ink);
+  color: #fff;
+}
+
+.finance slab-pagination::part(current):hover {
+  background-color: var(--fi-ink);
+}
+
+.finance slab-pagination::part(ellipsis) {
+  color: var(--fi-muted);
+  padding-inline: 0.25rem;
+}
+
+.finance slab-pagination:state(first)::part(previous),
+.finance slab-pagination:state(last)::part(next) {
+  color: #a9b3c3;
+  cursor: not-allowed;
+}
+
+/* Radio Group: a row of chips. */
+.finance slab-radio-group::part(radios) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.finance slab-radio-group-radio {
+  align-items: center;
+  border: 1px solid var(--fi-line);
+  border-radius: 999px;
+  cursor: pointer;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.375rem 0.875rem 0.375rem 0.625rem;
+
+  &::before {
+    block-size: 0.875rem;
+    border: 1.5px solid #a9b3c3;
+    border-radius: 50%;
+    box-sizing: border-box;
+    content: '';
+    inline-size: 0.875rem;
+  }
+
+  &:hover {
+    border-color: #b9c3d3;
+  }
+}
+
+.finance slab-radio-group-radio:state(checked) {
+  background-color: var(--fi-blue-soft);
+  border-color: var(--fi-blue);
+  color: var(--fi-blue);
+  font-weight: 500;
+}
+
+.finance slab-radio-group-radio:state(checked)::before {
+  border: 4px solid var(--fi-blue);
+}
+
+/* Switch: a rounded track with a white knob. */
+.finance slab-switch {
+  align-items: center;
+  column-gap: 1rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.finance slab-switch::part(label) {
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.finance slab-switch::part(description) {
+  grid-column: 1 / -1;
+}
+
+.finance slab-switch::part(input) {
+  appearance: none;
+  background:
+    radial-gradient(circle, #fff 0 0.5rem, transparent 0.55rem) no-repeat
+      0.125rem 50% / 1.25rem 1.25rem,
+    #c4ccd8;
+  block-size: 1.5rem;
+  border-radius: 999px;
+  cursor: pointer;
+  inline-size: 2.625rem;
+  margin: 0;
+  transition: background 150ms;
+}
+
+.finance slab-switch::part(input):checked {
+  background:
+    radial-gradient(circle, #fff 0 0.5rem, transparent 0.55rem) no-repeat
+      calc(100% - 0.125rem) 50% / 1.25rem 1.25rem,
+    var(--fi-blue);
+}
+
+/* Checkbox: the native box, in the theme's blue. */
+.finance slab-checkbox {
+  align-items: center;
+  column-gap: 0.5rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
+
+.finance slab-checkbox::part(input) {
+  block-size: 1.125rem;
+  cursor: pointer;
+  inline-size: 1.125rem;
+  margin: 0;
+}
+
+.finance slab-checkbox::part(label) {
+  cursor: pointer;
+}
+
+/* Dialog: a sheet over a soft, blurred page. */
+.finance slab-dialog::part(dialog) {
+  animation: fi-rise 180ms ease-out;
+  background-color: var(--fi-card);
+  border: 0;
+  border-radius: 0.875rem;
+  box-shadow: 0 24px 64px rgb(11 31 58 / 25%);
+  box-sizing: border-box;
+  color: var(--fi-ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  inline-size: min(26rem, 100% - 2rem);
+  padding: 1.5rem;
+}
+
+.finance slab-dialog::part(dialog)::backdrop {
+  backdrop-filter: blur(3px);
+  background-color: rgb(11 31 58 / 35%);
+}
+
+.finance slab-dialog::part(label) {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-block-end: 1rem;
+}
+
+/* Toast: a dark pill at the bottom. */
+.finance slab-toast:state(open)::part(region) {
+  animation: fi-rise 180ms ease-out;
+  background-color: var(--fi-ink);
+  border: 0;
+  border-radius: 0.625rem;
+  box-shadow: 0 12px 32px rgb(11 31 58 / 30%);
+  color: #fff;
+  font-family: var(--font-body), system-ui, sans-serif;
+  inset: auto 1.5rem 1.5rem auto;
+  margin: 0;
+  max-inline-size: min(24rem, 100% - 3rem);
+  padding: 0.875rem 1.125rem;
+  position: fixed;
+
+  &::before {
+    color: #6ee7b7;
+    content: '✓  ' / '';
+  }
+}
+
+@keyframes fi-rise {
+  from {
+    opacity: 0;
+    translate: 0 0.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .finance slab-dialog::part(dialog),
+  .finance slab-toast:state(open)::part(region) {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .finance slab-switch::part(input) {
+    forced-color-adjust: none;
+  }
+}

@@ -1,0 +1,122 @@
+---
+import Showcase from '../../layouts/Showcase.astro';
+import '../../showcase/cyberpunk.css';
+import css from '../../showcase/cyberpunk.css?raw';
+---
+
+<Showcase css={css} slug="cyberpunk">
+  <div class="cyberpunk">
+    <header class="cy-bar">
+      <p class="cy-logo">NULL<span>SECTOR</span></p>
+      <p class="cy-status"><span aria-hidden="true"></span> Link stable · 12ms</p>
+      <slab-tooltip placement="bottom">
+        <button aria-label="About this console" class="cy-icon" slot="anchor" type="button">?</button>
+        <span>Every control here is a headless Slab element. The neon is page CSS.</span>
+      </slab-tooltip>
+    </header>
+
+    <div class="cy-grid">
+      <section aria-labelledby="cy-uplink" class="cy-panel">
+        <h2 id="cy-uplink" class="cy-heading">Uplink</h2>
+
+        <slab-tabs label="Uplink">
+          <slab-tabs-tab panel="route">Route</slab-tabs-tab>
+          <slab-tabs-tab panel="daemons">Daemons</slab-tabs-tab>
+          <slab-tabs-tab panel="log">Log</slab-tabs-tab>
+
+          <slab-tabs-panel name="route">
+            <div class="cy-stack">
+              <slab-select label="Proxy node" placeholder="Pick a node">
+                <slab-option value="kowloon" selected>Kowloon-7 · 12ms</slab-option>
+                <slab-option value="lagos">Lagos relay · 41ms</slab-option>
+                <slab-option value="reykjavik">Reykjavík cold storage · 88ms</slab-option>
+                <slab-option value="orbital" disabled>Orbital L4 · offline</slab-option>
+              </slab-select>
+
+              <slab-toggle-group label="Routing">
+                <slab-toggle-group-button value="stealth" pressed>Stealth</slab-toggle-group-button>
+                <slab-toggle-group-button value="balanced">Balanced</slab-toggle-group-button>
+                <slab-toggle-group-button value="overclock">Overclock</slab-toggle-group-button>
+              </slab-toggle-group>
+
+              <slab-range-slider
+                end-value="720"
+                label="Bandwidth window"
+                max="1000"
+                min="0"
+                start-value="240"
+                step="10"
+              >
+                <span slot="description">Megabits per second. Wider is faster and louder.</span>
+              </slab-range-slider>
+
+              <slab-progress label="Decrypting shard 3 of 5" max="100" value="62"></slab-progress>
+            </div>
+          </slab-tabs-panel>
+
+          <slab-tabs-panel name="daemons">
+            <div class="cy-stack">
+              <slab-switch label="Ghost protocol" checked>
+                <span slot="description">Spoof the handshake so the node sees a maintenance bot.</span>
+              </slab-switch>
+              <slab-switch label="Trace scrambler">
+                <span slot="description">Bounce the return path through three relays.</span>
+              </slab-switch>
+              <slab-checkbox label="Wipe logs on exit" checked></slab-checkbox>
+              <slab-checkbox label="Leave a calling card"></slab-checkbox>
+            </div>
+          </slab-tabs-panel>
+
+          <slab-tabs-panel name="log">
+            <ol class="cy-log">
+              <li><time>03:14:07</time> Handshake accepted by Kowloon-7</li>
+              <li><time>03:14:09</time> Ghost protocol engaged</li>
+              <li><time>03:14:22</time> Shard 1 decrypted</li>
+              <li><time>03:14:41</time> Shard 2 decrypted</li>
+              <li class="cy-warn"><time>03:15:02</time> ICE ping from 10.4.0.12</li>
+            </ol>
+          </slab-tabs-panel>
+        </slab-tabs>
+      </section>
+
+      <section aria-labelledby="cy-target" class="cy-panel cy-panel--hot">
+        <h2 id="cy-target" class="cy-heading">Target</h2>
+
+        <div class="cy-stack">
+          <slab-combobox label="Host" placeholder="Search the grid">
+            <slab-option value="helix">Helix Biotech · vault</slab-option>
+            <slab-option value="obsidian">Obsidian Freight · ledger</slab-option>
+            <slab-option value="vanta" selected>Vanta Bank · mainframe</slab-option>
+            <slab-option value="water">Orbital Water Authority</slab-option>
+            <slab-option value="mayor" disabled>Mayor’s office · sealed</slab-option>
+          </slab-combobox>
+
+          <slab-pin-input label="Access key" length="4" type="alphanumeric">
+            <span slot="description">Four characters, from the fixer’s message.</span>
+          </slab-pin-input>
+
+          <dl class="cy-stats">
+            <div><dt>ICE</dt><dd>Black</dd></div>
+            <div><dt>Heat</dt><dd>72%</dd></div>
+            <div><dt>Payout</dt><dd>¤ 48k</dd></div>
+          </dl>
+
+          <button class="cy-button" data-open="cy-confirm" type="button">Breach</button>
+        </div>
+      </section>
+    </div>
+
+    <slab-dialog closedby="any" id="cy-confirm" label="Run the breach?">
+      <p>
+        Black ICE answers in about nine seconds. If the trace lands before
+        you’re out, the rig burns with it.
+      </p>
+      <form class="cy-actions" method="dialog">
+        <button class="cy-button cy-button--ghost" value="abort">Abort</button>
+        <button class="cy-button" data-show="cy-toast" value="run">Run it</button>
+      </form>
+    </slab-dialog>
+
+    <slab-toast id="cy-toast">Breach running. Don’t blink.</slab-toast>
+  </div>
+</Showcase>

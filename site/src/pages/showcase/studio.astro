@@ -1,0 +1,98 @@
+---
+import Showcase from '../../layouts/Showcase.astro';
+import '../../showcase/studio.css';
+import css from '../../showcase/studio.css?raw';
+---
+
+<Showcase css={css} slug="studio">
+  <div class="studio">
+    <header class="st-bar">
+      <p class="st-logo">Kiln <span>&amp;</span> Clay</p>
+      <p class="st-tagline">Wheel and hand-building classes, small groups, all levels</p>
+    </header>
+
+    <slab-steps class="st-steps" label="Booking" step="2">
+      <slab-steps-step>Class</slab-steps-step>
+      <slab-steps-step>Date</slab-steps-step>
+      <slab-steps-step>Details</slab-steps-step>
+    </slab-steps>
+
+    <div class="st-grid">
+      <section aria-labelledby="st-class" class="st-card">
+        <h2 class="st-heading" id="st-class">Pick a class</h2>
+        <slab-radio-group hide-label label="Class" value="wheel">
+          <slab-radio-group-radio checked label="Intro to the wheel" value="wheel">
+            <span class="st-option">
+              <strong>Intro to the wheel</strong>
+              <span>Center, open and pull your first cylinder.</span>
+            </span>
+            <span class="st-price">$68</span>
+          </slab-radio-group-radio>
+          <slab-radio-group-radio label="Hand-building" value="hand">
+            <span class="st-option">
+              <strong>Hand-building</strong>
+              <span>Pinch pots, coils and slabs. No wheel needed.</span>
+            </span>
+            <span class="st-price">$54</span>
+          </slab-radio-group-radio>
+          <slab-radio-group-radio label="Glaze lab" value="glaze">
+            <span class="st-option">
+              <strong>Glaze lab</strong>
+              <span>Dip, layer and brush. Bring a bisqued piece.</span>
+            </span>
+            <span class="st-price">$42</span>
+          </slab-radio-group-radio>
+        </slab-radio-group>
+      </section>
+
+      <section aria-labelledby="st-date" class="st-card">
+        <h2 class="st-heading" id="st-date">Choose a day</h2>
+        <slab-calendar max="2026-12-20" min="2026-11-04" value="2026-11-14"></slab-calendar>
+
+        <slab-toggle-group class="st-times" label="Time">
+          <slab-toggle-group-button value="10">10:00</slab-toggle-group-button>
+          <slab-toggle-group-button pressed value="13">1:00</slab-toggle-group-button>
+          <slab-toggle-group-button value="18">6:30</slab-toggle-group-button>
+          <slab-toggle-group-button disabled value="20">8:00</slab-toggle-group-button>
+        </slab-toggle-group>
+      </section>
+
+      <section aria-labelledby="st-details" class="st-card">
+        <h2 class="st-heading" id="st-details">
+          Your details
+          <slab-tooltip placement="top">
+            <button aria-label="Why we ask" class="st-hint" slot="anchor" type="button">i</button>
+            <span>We send a reminder the day before, and nothing else.</span>
+          </slab-tooltip>
+        </h2>
+        <div class="st-stack">
+          <slab-text-field label="Name" placeholder="Robin Okafor" required></slab-text-field>
+          <slab-text-field label="Email" placeholder="robin@example.com" type="email"></slab-text-field>
+          <slab-checkbox checked label="Rent an apron ($4)"></slab-checkbox>
+          <slab-checkbox label="Add a second bag of clay ($12)"></slab-checkbox>
+          <slab-rating label="How much have you thrown before?" max="5" value="1"></slab-rating>
+          <button class="st-button" data-show="st-toast" type="button">Book my spot</button>
+        </div>
+      </section>
+    </div>
+
+    <section aria-labelledby="st-faq" class="st-faq">
+      <h2 class="st-heading" id="st-faq">Good to know</h2>
+      <slab-accordion exclusive>
+        <slab-disclosure label="What should I wear?" open>
+          Something you don’t mind getting muddy, and short nails if you can. Clay
+          washes out, but slowly.
+        </slab-disclosure>
+        <slab-disclosure label="When can I take my piece home?">
+          About three weeks. It dries, gets a first firing, a glaze and a second
+          firing. We’ll email you when it’s out of the kiln.
+        </slab-disclosure>
+        <slab-disclosure label="Can I reschedule?">
+          Yes, up to 48 hours before the class, as many times as you need.
+        </slab-disclosure>
+      </slab-accordion>
+    </section>
+
+    <slab-toast id="st-toast">You’re booked for Saturday, Nov 14 at 1:00. See you at the wheel.</slab-toast>
+  </div>
+</Showcase>

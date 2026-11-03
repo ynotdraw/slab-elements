@@ -1,0 +1,698 @@
+/*
+  Studio. Warm clay and sage on cream, big round corners, soft shadows and
+  room to breathe. Every rule reaches Slab's headless elements from outside,
+  through ::part() and :state(), and everything sits under .studio so it
+  stays on this page.
+*/
+.studio {
+  --st-cream: #fbf5ec;
+  --st-card: #fffdf9;
+  --st-ink: #3d2c24;
+  --st-muted: #75625a;
+  --st-line: #eadfd1;
+  --st-clay: #b5532f;
+  --st-clay-soft: #f6e2d6;
+  --st-sage: #5f7f62;
+  --st-sage-soft: #e3ece1;
+  --st-serif: 'Iowan Old Style', 'Palatino Linotype', palatino, georgia, serif;
+  --st-shadow: 0 1px 2px rgb(61 44 36 / 6%), 0 8px 24px rgb(61 44 36 / 8%);
+
+  accent-color: var(--st-clay);
+  background:
+    radial-gradient(circle at 100% 0%, var(--st-clay-soft), transparent 35%),
+    radial-gradient(circle at 0% 100%, var(--st-sage-soft), transparent 35%),
+    var(--st-cream);
+  color: var(--st-ink);
+  color-scheme: light;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  padding: clamp(1rem, 4vw, 2.5rem);
+
+  :focus-visible {
+    outline: 2px solid var(--st-clay);
+    outline-offset: 3px;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+/* The page's own chrome: plain HTML. */
+.st-bar {
+  display: grid;
+  gap: 0.25rem;
+  margin-block-end: 2rem;
+  text-align: center;
+}
+
+.st-logo {
+  font-family: var(--st-serif);
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-style: italic;
+  letter-spacing: -0.01em;
+
+  span {
+    color: var(--st-clay);
+  }
+}
+
+.st-tagline {
+  color: var(--st-muted);
+}
+
+.st-grid {
+  align-items: start;
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  margin-block-start: 2rem;
+}
+
+.st-card {
+  background-color: var(--st-card);
+  border-radius: 1.5rem;
+  box-shadow: var(--st-shadow);
+  display: grid;
+  gap: 1rem;
+  min-inline-size: 0;
+  padding: 1.5rem;
+}
+
+.st-heading {
+  align-items: center;
+  display: flex;
+  font-family: var(--st-serif);
+  font-size: 1.375rem;
+  font-weight: 600;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.st-stack {
+  display: grid;
+  gap: 1.125rem;
+}
+
+.st-option {
+  display: grid;
+
+  span {
+    color: var(--st-muted);
+    font-size: 0.875rem;
+  }
+}
+
+.st-price {
+  color: var(--st-clay);
+  font-family: var(--st-serif);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.st-hint {
+  background-color: var(--st-sage-soft);
+  block-size: 1.5rem;
+  border: 0;
+  border-radius: 50%;
+  color: var(--st-sage);
+  cursor: pointer;
+  font-family: var(--st-serif);
+  font-size: 0.875rem;
+  font-style: italic;
+  font-weight: 700;
+  inline-size: 1.5rem;
+}
+
+.st-button {
+  background-color: var(--st-clay);
+  border: 0;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgb(181 83 47 / 30%);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.875rem 1.5rem;
+  transition:
+    background-color 150ms,
+    translate 150ms;
+
+  &:hover {
+    background-color: #9b4426;
+    translate: 0 -1px;
+  }
+}
+
+.st-faq {
+  margin: 2.5rem auto 0;
+  max-inline-size: 40rem;
+
+  .st-heading {
+    justify-content: center;
+    margin-block-end: 0.75rem;
+  }
+}
+
+/* Steps: soft numbered dots joined by a line. */
+.studio slab-steps {
+  container-type: inline-size;
+  margin-inline: auto;
+  max-inline-size: 36rem;
+}
+
+.studio slab-steps::part(list) {
+  display: flex;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.studio slab-steps::part(item) {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+.studio slab-steps-step {
+  column-gap: 0.5rem;
+  display: grid;
+  grid-template-columns: 2rem auto minmax(1rem, 1fr);
+}
+
+.studio slab-steps-step::part(step) {
+  align-items: center;
+  background: none;
+  border: 0;
+  color: inherit;
+  column-gap: inherit;
+  display: grid;
+  font: inherit;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  margin: 0;
+  padding: 0;
+}
+
+.studio slab-steps-step::part(step)::after {
+  background-color: var(--st-line);
+  block-size: 2px;
+  border-radius: 1px;
+  content: '';
+}
+
+.studio slab-steps-step:last-child::part(step)::after {
+  display: none;
+}
+
+.studio slab-steps-step:state(complete)::part(step)::after {
+  background-color: var(--st-sage);
+}
+
+.studio slab-steps-step::part(indicator) {
+  background-color: var(--st-card);
+  block-size: 2rem;
+  border: 2px solid var(--st-line);
+  border-radius: 50%;
+  box-sizing: border-box;
+  color: var(--st-muted);
+  display: grid;
+  font-size: 0.875rem;
+  font-weight: 600;
+  inline-size: 2rem;
+  place-items: center;
+}
+
+.studio slab-steps-step:state(complete)::part(indicator) {
+  background-color: var(--st-sage);
+  border-color: var(--st-sage);
+  color: #fff;
+  font-size: 0;
+}
+
+.studio slab-steps-step:state(complete)::part(indicator)::before {
+  content: '✓';
+  font-size: 0.875rem;
+}
+
+.studio slab-steps-step:state(current)::part(indicator) {
+  background-color: var(--st-clay);
+  border-color: var(--st-clay);
+  box-shadow: 0 0 0 4px var(--st-clay-soft);
+  color: #fff;
+}
+
+.studio slab-steps-step::part(label) {
+  font-weight: 600;
+}
+
+.studio slab-steps-step:state(upcoming)::part(label) {
+  color: var(--st-muted);
+  font-weight: 400;
+}
+
+/* Radio Group: big rounded cards, the chosen one outlined in clay. */
+.studio slab-radio-group::part(radios) {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.studio slab-radio-group-radio {
+  align-items: center;
+  background-color: var(--st-card);
+  border: 2px solid var(--st-line);
+  border-radius: 1rem;
+  cursor: pointer;
+  display: grid;
+  gap: 0.875rem;
+  grid-template-columns: auto 1fr auto;
+  padding: 0.875rem 1rem;
+  transition:
+    border-color 150ms,
+    background-color 150ms;
+
+  &::before {
+    block-size: 1.25rem;
+    border: 2px solid var(--st-line);
+    border-radius: 50%;
+    box-sizing: border-box;
+    content: '';
+    inline-size: 1.25rem;
+    transition: border 150ms;
+  }
+
+  &:hover {
+    border-color: #dccbb7;
+  }
+}
+
+.studio slab-radio-group-radio:state(checked) {
+  background-color: #fff8f3;
+  border-color: var(--st-clay);
+}
+
+.studio slab-radio-group-radio:state(checked)::before {
+  border: 6px solid var(--st-clay);
+}
+
+/* Calendar: round days, today ringed, the chosen day filled with clay. */
+.studio slab-calendar {
+  display: block;
+}
+
+.studio slab-calendar::part(header) {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-block-end: 0.5rem;
+}
+
+.studio slab-calendar::part(heading) {
+  font-family: var(--st-serif);
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+.studio slab-calendar::part(previous),
+.studio slab-calendar::part(next) {
+  background-color: var(--st-cream);
+  block-size: 2rem;
+  border: 0;
+  border-radius: 50%;
+  color: var(--st-ink);
+  cursor: pointer;
+  font-size: 0;
+  inline-size: 2rem;
+  padding: 0;
+
+  &:hover {
+    background-color: var(--st-clay-soft);
+  }
+}
+
+.studio slab-calendar::part(previous)::before {
+  content: '‹' / '';
+  font-size: 1.25rem;
+}
+
+.studio slab-calendar::part(next)::before {
+  content: '›' / '';
+  font-size: 1.25rem;
+}
+
+.studio slab-calendar::part(grid) {
+  border-collapse: separate;
+  border-spacing: 2px;
+  inline-size: 100%;
+  table-layout: fixed;
+}
+
+.studio slab-calendar::part(weekday) {
+  color: var(--st-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding-block: 0.25rem;
+}
+
+.studio slab-calendar::part(day) {
+  background: none;
+  block-size: 2.5rem;
+  border: 0;
+  border-radius: 999px;
+  color: var(--st-ink);
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 120ms;
+
+  &:hover {
+    background-color: var(--st-clay-soft);
+  }
+}
+
+.studio slab-calendar::part(today) {
+  box-shadow: inset 0 0 0 2px var(--st-sage);
+}
+
+.studio slab-calendar::part(selected) {
+  background-color: var(--st-clay);
+  color: #fff;
+  font-weight: 600;
+
+  &:hover {
+    background-color: #9b4426;
+  }
+}
+
+.studio slab-calendar::part(disabled) {
+  color: #c9b9ab;
+  cursor: not-allowed;
+
+  &:hover {
+    background: none;
+  }
+}
+
+/* Toggle Group: time slots as pills that wrap. */
+.studio slab-toggle-group::part(group) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.studio slab-toggle-group-button {
+  background-color: var(--st-cream);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 0.375rem 1rem;
+  transition:
+    background-color 150ms,
+    border-color 150ms;
+
+  &:hover {
+    border-color: var(--st-line);
+  }
+}
+
+.studio slab-toggle-group-button:state(pressed) {
+  background-color: var(--st-sage);
+  color: #fff;
+}
+
+.studio slab-toggle-group-button:state(disabled) {
+  color: #b3a294;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* Text Field: a soft, filled input that whitens when it's in use. */
+.studio slab-text-field {
+  display: grid;
+}
+
+.studio :is(slab-text-field, slab-rating)::part(label) {
+  font-weight: 600;
+  margin-block-end: 0.375rem;
+}
+
+.studio slab-text-field:state(required)::part(label)::after {
+  color: var(--st-clay);
+  content: ' *' / '';
+}
+
+.studio slab-text-field::part(input) {
+  background-color: var(--st-cream);
+  block-size: 2.875rem;
+  border: 2px solid transparent;
+  border-radius: 0.875rem;
+  box-sizing: border-box;
+  color: var(--st-ink);
+  font: inherit;
+  padding: 0 1rem;
+  transition:
+    background-color 150ms,
+    border-color 150ms;
+}
+
+.studio slab-text-field::part(input)::placeholder {
+  color: #b3a294;
+}
+
+.studio slab-text-field::part(input):focus-visible {
+  background-color: #fff;
+  border-color: var(--st-clay);
+  outline: 0;
+}
+
+.studio slab-text-field:state(error)::part(input) {
+  border-color: #b42318;
+}
+
+.studio slab-text-field::part(validity-message) {
+  color: #b42318;
+  font-size: 0.875rem;
+  margin-block-start: 0.25rem;
+}
+
+/* Checkbox: a rounded square that fills with sage. */
+.studio slab-checkbox {
+  align-items: center;
+  column-gap: 0.625rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
+
+.studio slab-checkbox::part(checkbox) {
+  display: grid;
+  position: relative;
+}
+
+.studio slab-checkbox::part(input) {
+  appearance: none;
+  background-color: var(--st-cream);
+  block-size: 1.375rem;
+  border: 2px solid var(--st-line);
+  border-radius: 0.4rem;
+  cursor: pointer;
+  inline-size: 1.375rem;
+  margin: 0;
+  transition:
+    background-color 150ms,
+    border-color 150ms;
+}
+
+.studio slab-checkbox:state(checked)::part(input) {
+  background-color: var(--st-sage);
+  border-color: var(--st-sage);
+}
+
+.studio slab-checkbox::part(checkbox)::after {
+  color: #fff;
+  content: '✓' / '';
+  display: grid;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  inset: 0;
+  opacity: 0;
+  place-items: center;
+  pointer-events: none;
+  position: absolute;
+}
+
+.studio slab-checkbox:state(checked)::part(checkbox)::after {
+  opacity: 1;
+}
+
+.studio slab-checkbox::part(label) {
+  cursor: pointer;
+}
+
+/* Rating: five balls of clay. */
+.studio slab-rating {
+  display: grid;
+}
+
+.studio slab-rating::part(stars) {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.studio slab-rating::part(star) {
+  appearance: none;
+  background-color: var(--st-cream);
+  block-size: 1.75rem;
+  border: 2px solid var(--st-line);
+  border-radius: 50%;
+  box-sizing: border-box;
+  cursor: pointer;
+  inline-size: 1.75rem;
+  margin: 0;
+  transition:
+    background-color 120ms,
+    border-color 120ms,
+    scale 120ms;
+
+  &:hover {
+    scale: 1.1;
+  }
+}
+
+.studio slab-rating::part(filled) {
+  background: radial-gradient(circle at 35% 30%, #d9805c, var(--st-clay));
+  border-color: var(--st-clay);
+}
+
+.studio slab-rating:state(previewing)::part(filled) {
+  background: var(--st-clay-soft);
+  border-color: #dfa486;
+}
+
+/* Accordion: Disclosures as stacked, rounded rows. */
+.studio slab-accordion {
+  display: grid;
+  gap: 0.625rem;
+}
+
+.studio slab-disclosure {
+  background-color: var(--st-card);
+  border-radius: 1rem;
+  box-shadow: var(--st-shadow);
+  display: block;
+}
+
+.studio slab-disclosure::part(summary) {
+  align-items: center;
+  border-radius: 1rem;
+  cursor: pointer;
+  display: flex;
+  font-weight: 600;
+  justify-content: space-between;
+  list-style: none;
+  padding: 1rem 1.25rem;
+}
+
+.studio slab-disclosure::part(summary)::-webkit-details-marker {
+  display: none;
+}
+
+.studio slab-disclosure::part(summary)::after {
+  background-color: var(--st-clay-soft);
+  block-size: 1.75rem;
+  border-radius: 50%;
+  color: var(--st-clay);
+  content: '+' / '';
+  display: grid;
+  flex-shrink: 0;
+  font-size: 1.125rem;
+  inline-size: 1.75rem;
+  place-items: center;
+  transition: rotate 200ms;
+}
+
+.studio slab-disclosure[open]::part(summary)::after {
+  rotate: 45deg;
+}
+
+.studio slab-disclosure::part(details)::details-content {
+  block-size: 0;
+  overflow: clip;
+  transition:
+    block-size 250ms ease-out,
+    content-visibility 250ms allow-discrete;
+}
+
+.studio slab-disclosure[open]::part(details)::details-content {
+  block-size: auto;
+  block-size: calc-size(auto, size);
+}
+
+.studio slab-disclosure::part(content) {
+  color: var(--st-muted);
+  padding: 0 1.25rem 1.125rem;
+}
+
+/* Tooltip: a small sage bubble. */
+.studio slab-tooltip::part(tooltip) {
+  background-color: var(--st-ink);
+  border: 0;
+  border-radius: 0.75rem;
+  color: #fff;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  margin: 0.5rem;
+  max-inline-size: 15rem;
+  padding: 0.5rem 0.75rem;
+}
+
+/* Toast: a rounded card that floats up from the bottom. */
+.studio slab-toast:state(open)::part(region) {
+  animation: st-float 300ms cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  background-color: var(--st-sage);
+  border: 0;
+  border-radius: 1.25rem;
+  box-shadow: 0 12px 32px rgb(61 44 36 / 25%);
+  color: #fff;
+  font-family: var(--font-body), system-ui, sans-serif;
+  inset: auto 1.5rem 1.5rem auto;
+  margin: 0;
+  max-inline-size: min(22rem, 100% - 3rem);
+  padding: 1rem 1.25rem;
+  position: fixed;
+}
+
+@keyframes st-float {
+  from {
+    opacity: 0;
+    translate: 0 1rem;
+  }
+}
+
+/* One column of steps on a narrow screen, like the styled Steps. */
+@container (inline-size < 26rem) {
+  .studio slab-steps-step {
+    grid-template-columns: 2rem minmax(0, 1fr);
+  }
+
+  .studio slab-steps-step::part(step)::after {
+    display: none;
+  }
+
+  .studio slab-steps-step::part(label) {
+    font-size: 0.8125rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio slab-toast:state(open)::part(region) {
+    animation: none;
+  }
+
+  .studio slab-disclosure::part(details)::details-content,
+  .studio slab-disclosure::part(summary)::after,
+  .studio slab-rating::part(star) {
+    transition: none;
+  }
+}

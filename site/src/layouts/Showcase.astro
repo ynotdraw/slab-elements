@@ -1,0 +1,185 @@
+---
+// A showcase page: its theme's app in a frame, and the theme's stylesheet
+// under it, so the page shows both what it looks like and all it took.
+import CodeBlock from '../components/CodeBlock.astro';
+import { showcases } from '../lib/showcases.ts';
+import Base from './Base.astro';
+
+interface Props {
+  // The theme's stylesheet, as written, for the code under the frame.
+  css: string;
+  slug: (typeof showcases)[number]['slug'];
+}
+
+const { css, slug } = Astro.props;
+const showcase = showcases.find((entry) => entry.slug === slug)!;
+const base = import.meta.env.BASE_URL;
+const lines = css.trim().split('\n').length;
+---
+
+<Base description={showcase.summary} title={`${showcase.title} showcase · Slab`}>
+  <div class="page">
+    <header class="intro">
+      <p class="eyebrow"><a href={`${base}showcase/`}>Showcase</a></p>
+      <h1>{showcase.title}</h1>
+      <p>{showcase.summary}</p>
+      <p>
+        Every element here is Slab’s headless one, as it ships. The look is a
+        single stylesheet of <code>::part()</code> and <code>:state()</code>
+        selectors, the same CSS you’d write yourself.
+        <a href="#stylesheet">Read it under the demo</a>.
+      </p>
+
+      <nav aria-label="Themes" class="themes">
+        <ul>
+          {
+            showcases.map((entry) => (
+              <li>
+                <a
+                  aria-current={entry.slug === slug ? 'page' : undefined}
+                  href={`${base}showcase/${entry.slug}/`}
+                >
+                  {entry.title}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </header>
+
+    <div class="frame">
+      <slot />
+    </div>
+
+    <section aria-labelledby="stylesheet" class="source">
+      <h2 id="stylesheet">The stylesheet</h2>
+      <p>
+        {lines} lines of CSS, with no subclass and no design tokens from Slab.
+        The markup is plain <code>&lt;slab-*&gt;</code> tags, the same ones on
+        every component’s page, and the only script opens the dialog and shows
+        the toast.
+      </p>
+      <p class="elements">
+        {
+          showcase.elements.map((tag) => (
+            <a href={`${base}components/${tag.replace('slab-', '')}/`}>
+              <code>{`<${tag}>`}</code>
+            </a>
+          ))
+        }
+      </p>
+      <details class="file">
+        <summary>{slug}.css</summary>
+        <CodeBlock code={css} label={`${slug}.css`} lang="css" />
+      </details>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import '../scripts/examples.ts';
+</script>
+
+<style>
+  .page {
+    display: grid;
+    gap: 2.5rem;
+    margin-inline: auto;
+    max-inline-size: 78rem;
+    padding: 1.5rem var(--gutter) 4rem;
+  }
+
+  .intro {
+    border-block-end: 4px solid var(--ink);
+    display: grid;
+    gap: 0.75rem;
+    max-inline-size: 52rem;
+    padding-block-end: 1.5rem;
+
+    h1 {
+      font-size: clamp(2.25rem, 6vw, 3.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin: 0;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .eyebrow a {
+      text-decoration: none;
+    }
+  }
+
+  .themes ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0.5rem 0 0;
+    padding: 0;
+  }
+
+  .themes a {
+    border: 2px solid var(--ink);
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    padding: 0.375rem 0.875rem;
+    text-decoration: none;
+
+    &[aria-current='page'] {
+      background-color: var(--ink);
+      color: var(--paper);
+    }
+  }
+
+  /*
+    The theme's app. Its stylesheet sets everything inside, so the frame only
+    clips it to the page and keeps it clear of the site's own styles.
+  */
+  .frame {
+    border: 3px solid var(--ink);
+    min-inline-size: 0;
+    overflow: hidden;
+  }
+
+  .source {
+    display: grid;
+    gap: 1rem;
+    max-inline-size: 52rem;
+
+    h2 {
+      font-size: 1.75rem;
+      margin: 0;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .elements {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  .file summary {
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    padding-block: 0.5rem;
+  }
+
+  .file :global(pre) {
+    max-block-size: 40rem;
+  }
+</style>

@@ -1,0 +1,122 @@
+---
+import Showcase from '../../layouts/Showcase.astro';
+import '../../showcase/rpg.css';
+import css from '../../showcase/rpg.css?raw';
+
+// An original party, for an original game.
+const party = [
+  { name: 'Rook', job: 'Swordhand', level: 24, hp: [1840, 2210], mp: [96, 140], color: '#c0583a' },
+  { name: 'Seri', job: 'Mender', level: 22, hp: [1120, 1480], mp: [310, 330], color: '#3f8f6b' },
+  { name: 'Tamsin', job: 'Arcanist', level: 23, hp: [420, 1390], mp: [58, 402], color: '#6a55c4' },
+];
+---
+
+<Showcase css={css} slug="rpg">
+  <div class="rpg">
+    <div class="rpg-screen">
+      <section aria-label="Party" class="rpg-window rpg-party">
+        <ul>
+          {
+            party.map((member) => (
+              <li class="rpg-member">
+                <span aria-hidden="true" class="rpg-portrait" style={`--tint: ${member.color}`}>
+                  {member.name[0]}
+                </span>
+                <div class="rpg-stats">
+                  <p class="rpg-name">
+                    {member.name} <span>{member.job}</span>
+                  </p>
+                  <p class="rpg-level">LV {member.level}</p>
+                  <slab-progress
+                    class={member.hp[0] / member.hp[1] < 0.35 ? 'rpg-hp rpg-low' : 'rpg-hp'}
+                    label={`HP ${member.hp[0]} / ${member.hp[1]}`}
+                    max={member.hp[1]}
+                    value={member.hp[0]}
+                  />
+                  <slab-progress
+                    class="rpg-mp"
+                    label={`MP ${member.mp[0]} / ${member.mp[1]}`}
+                    max={member.mp[1]}
+                    value={member.mp[0]}
+                  />
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section aria-label="Menu" class="rpg-window rpg-menu">
+        <slab-tabs label="Menu" orientation="vertical">
+          <slab-tabs-tab panel="items">Item</slab-tabs-tab>
+          <slab-tabs-tab panel="equip">Equip</slab-tabs-tab>
+          <slab-tabs-tab panel="config">Config</slab-tabs-tab>
+          <slab-tabs-tab disabled panel="save">Save</slab-tabs-tab>
+
+          <slab-tabs-panel name="items">
+            <slab-listbox label="Items" value="tonic">
+              <slab-option value="tonic">Tonic <span>×12</span></slab-option>
+              <slab-option value="hi-tonic">Hi-Tonic <span>×4</span></slab-option>
+              <slab-option value="ether">Ether Drop <span>×6</span></slab-option>
+              <slab-option value="feather">Phoenix Quill <span>×2</span></slab-option>
+              <slab-option disabled value="key">Rusted Key <span>×1</span></slab-option>
+            </slab-listbox>
+            <button class="rpg-button" data-show="rpg-toast" type="button">Use on Tamsin</button>
+          </slab-tabs-panel>
+
+          <slab-tabs-panel name="equip">
+            <div class="rpg-stack">
+              <slab-select label="Weapon">
+                <slab-option selected value="ashblade">Ashblade · ATK 48</slab-option>
+                <slab-option value="tidecutter">Tidecutter · ATK 44</slab-option>
+                <slab-option value="saw">Lumber saw · ATK 12</slab-option>
+              </slab-select>
+              <slab-select label="Armor">
+                <slab-option selected value="mail">Wyrmscale mail · DEF 31</slab-option>
+                <slab-option value="coat">Traveler’s coat · DEF 14</slab-option>
+              </slab-select>
+              <slab-select label="Charm" placeholder="Empty">
+                <slab-option value="ember">Ember charm · fire ward</slab-option>
+                <slab-option value="lucky">Lucky button · +5 LUCK</slab-option>
+              </slab-select>
+            </div>
+          </slab-tabs-panel>
+
+          <slab-tabs-panel name="config">
+            <div class="rpg-stack">
+              <slab-slider label="Battle speed" max="6" min="1" value="4"></slab-slider>
+              <slab-radio-group label="Window color" value="azure">
+                <slab-radio-group-radio checked label="Azure" value="azure">Azure</slab-radio-group-radio>
+                <slab-radio-group-radio label="Crimson" value="crimson">Crimson</slab-radio-group-radio>
+                <slab-radio-group-radio label="Verdant" value="verdant">Verdant</slab-radio-group-radio>
+              </slab-radio-group>
+              <slab-switch checked label="Remember cursor"></slab-switch>
+              <slab-checkbox label="Skip cutscenes I’ve seen"></slab-checkbox>
+            </div>
+          </slab-tabs-panel>
+
+          <slab-tabs-panel name="save">Save points only.</slab-tabs-panel>
+        </slab-tabs>
+      </section>
+
+      <section aria-label="Journey" class="rpg-window rpg-info">
+        <dl>
+          <div><dt>Time</dt><dd>41:07</dd></div>
+          <div><dt>Coin</dt><dd>18,240 ¢</dd></div>
+        </dl>
+        <p class="rpg-place">Saltmarsh Crossing</p>
+        <button class="rpg-button" data-open="rpg-quit" type="button">Quit</button>
+      </section>
+    </div>
+
+    <slab-dialog closedby="any" id="rpg-quit" label="Return to the title screen?">
+      <p>Anything since your last save at the Lantern Inn will be lost.</p>
+      <form class="rpg-actions" method="dialog">
+        <button class="rpg-button" value="no">No</button>
+        <button class="rpg-button" value="yes">Yes</button>
+      </form>
+    </slab-dialog>
+
+    <slab-toast id="rpg-toast">Tamsin recovered 500 HP.</slab-toast>
+  </div>
+</Showcase>
