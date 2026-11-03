@@ -73,6 +73,7 @@ const activity = [
           <slab-tabs-tab panel="transfer">Transfer</slab-tabs-tab>
 
           <slab-tabs-panel name="holdings">
+            <div class="fi-scroll" role="region" aria-label="Holdings" tabindex="0">
             <table class="fi-table">
               <thead>
                 <tr><th scope="col">Holding</th><th scope="col">Shares</th><th scope="col">Value</th><th scope="col">Today</th></tr>
@@ -92,9 +93,11 @@ const activity = [
                 }
               </tbody>
             </table>
+            </div>
           </slab-tabs-panel>
 
           <slab-tabs-panel name="activity">
+            <div class="fi-scroll" role="region" aria-label="Activity" tabindex="0">
             <table class="fi-table">
               <thead>
                 <tr><th scope="col">Date</th><th scope="col">Activity</th><th scope="col">Amount</th></tr>
@@ -111,6 +114,7 @@ const activity = [
                 }
               </tbody>
             </table>
+            </div>
             <slab-pagination label="Activity pages" page="1" total="6"></slab-pagination>
           </slab-tabs-panel>
 
