@@ -8049,6 +8049,16 @@
             },
             {
               "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Makes the card a group named by it, announced when focus moves into it.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "openDelay",
               "type": {
                 "text": "number"
@@ -8134,6 +8144,14 @@
               "default": "false",
               "description": "The card doesn't open.",
               "fieldName": "disabled"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Makes the card a group named by it, announced when focus moves into it.",
+              "fieldName": "label"
             },
             {
               "name": "open-delay",

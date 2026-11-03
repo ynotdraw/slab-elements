@@ -7,9 +7,11 @@ import {
 } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import packageJson from '../package.json' with { type: 'json' };
 import assertSlot from './library/assert-slot.js';
 import customElement from './library/custom-element.js';
+import uniqueId from './library/unique-id.js';
 import styles from './hover-card.styles.js';
 
 declare global {
@@ -32,10 +34,16 @@ declare global {
  * order. Escape with focus in the card gives focus back to the anchor. A
  * touch doesn't open it: a tap on a link follows the link.
  *
- * A hover card is a preview, not the only way to what's in it. Nothing about
- * it is announced on the anchor: an `aria-expanded` would say a link expands
- * when activating it navigates. So whatever the card holds should be reachable
- * by following the anchor too.
+ * A hover card is a preview, not the only way to what's in it, so whatever it
+ * holds should be reachable by following the anchor too. The anchor's
+ * `aria-details` points at the card's content, which tells a screenreader
+ * there's more about it without saying it opens anything. There's no
+ * `aria-expanded` or `aria-haspopup`: either would say a link expands or opens
+ * a menu when activating it navigates.
+ *
+ * Give it a `label`, such as "Profile preview", and the card is a group named
+ * by it, so Tab into the card says where focus went. Without one, the card's
+ * content is read as it is.
  *
  * It's placed beside its anchor with CSS anchor positioning, as Popover and
  * Tooltip are, and flipped when it would leave the screen. `placement` picks
@@ -47,6 +55,7 @@ declare global {
  *
  * @attr {number} [close-delay=300]
  * @attr {boolean} [disabled=false] - The card doesn't open.
+ * @attr {string} [label] - Makes the card a group named by it, announced when focus moves into it.
  * @attr {boolean} [open=false]
  * @attr {number} [open-delay=700]
  * @attr {'bottom'|'left'|'right'|'top'} [placement='bottom'] - The side of its anchor it opens on, when there's room. It flips when there isn't.
@@ -76,6 +85,12 @@ export default class HoverCard extends LitElement {
    */
   @property({ reflect: true, type: Boolean })
   disabled = false;
+
+  /**
+   * Makes the card a group named by it, announced when focus moves into it.
+   */
+  @property({ reflect: true })
+  label?: string;
 
   @property({
     attribute: 'open-delay',
@@ -116,6 +131,7 @@ export default class HoverCard extends LitElement {
     });
 
     clearTimeout(this.#timeoutId);
+    this.#detail(null);
   }
 
   override firstUpdated() {
@@ -125,6 +141,7 @@ export default class HoverCard extends LitElement {
   override render() {
     return html`<slot
         name="anchor"
+        @slotchange=${this.#onSlotChange}
         ${assertSlot([Element])}
         ${ref(this.#anchorSlotElementRef)}
       >
@@ -143,14 +160,23 @@ export default class HoverCard extends LitElement {
 
         After the anchor in the shadow root, so the card's content comes next
         in the focus order: Tab from the anchor goes into the card.
+
+        A group only when it's labelled. An unnamed one adds nothing a
+        screenreader would say.
       -->
       <div
+        aria-label=${ifDefined(this.label)}
         data-test="card"
         part="card"
         .popover=${'manual'}
+        role=${ifDefined(this.label ? 'group' : undefined)}
         ${ref(this.#cardElementRef)}
       >
-        <slot ${assertSlot([Element])}>
+        <slot
+          @slotchange=${this.#onSlotChange}
+          ${assertSlot([Element])}
+          ${ref(this.#defaultSlotElementRef)}
+        >
           <!--
             The card's content, which can hold links, buttons and anything else that can be focused
             @required
@@ -174,6 +200,10 @@ export default class HoverCard extends LitElement {
       this.dispatchEvent(
         new Event('toggle', { bubbles: true, composed: true }),
       );
+    }
+
+    if (changes.has('disabled')) {
+      this.#detail(this.#anchor);
     }
   }
 
@@ -201,6 +231,14 @@ export default class HoverCard extends LitElement {
   #anchorSlotElementRef = createRef<HTMLSlotElement>();
 
   #cardElementRef = createRef<HTMLElement>();
+
+  #defaultSlotElementRef = createRef<HTMLSlotElement>();
+
+  // The anchor this card added its IDs to the `aria-details` of, and the IDs,
+  // so they, and only they, can be taken back out.
+  #detailedAnchor: Element | null = null;
+
+  #detailsIds: string[] = [];
 
   #internals: ElementInternals;
 
@@ -328,6 +366,61 @@ export default class HoverCard extends LitElement {
     }
 
     this.open = false;
+  }
+
+  // An attribute rather than `ariaDetailsElements`, as Tooltip's
+  // `aria-describedby` is. The card's content is slotted, so it's in the
+  // anchor's tree and an ID reaches it. A Slab anchor reflects it onto its own
+  // focused element itself. And Playwright and Axe only read the attribute.
+  //
+  // The anchor's own IDs are kept, so a consumer can point it at other
+  // details as well.
+  #detail(anchor: Element | null | undefined) {
+    if (this.#detailedAnchor) {
+      const ids = (this.#detailedAnchor.getAttribute('aria-details') ?? '')
+        .split(' ')
+        .filter((id) => id && !this.#detailsIds.includes(id));
+
+      if (ids.length > 0) {
+        this.#detailedAnchor.setAttribute('aria-details', ids.join(' '));
+      } else {
+        this.#detailedAnchor.removeAttribute('aria-details');
+      }
+    }
+
+    this.#detailsIds = [];
+    this.#detailedAnchor = null;
+
+    if (!anchor || this.disabled || !this.isConnected) {
+      return;
+    }
+
+    const contents = this.#defaultSlotElementRef.value?.assignedElements();
+
+    /* v8 ignore next 3 */
+    if (!contents) {
+      return;
+    }
+
+    for (const content of contents) {
+      content.id ||= uniqueId();
+      this.#detailsIds.push(content.id);
+    }
+
+    const ids = (anchor.getAttribute('aria-details') ?? '')
+      .split(' ')
+      .filter(Boolean);
+
+    anchor.setAttribute(
+      'aria-details',
+      [...ids, ...this.#detailsIds].join(' '),
+    );
+
+    this.#detailedAnchor = anchor;
+  }
+
+  #onSlotChange() {
+    this.#detail(this.#anchor);
   }
 
   #sync() {

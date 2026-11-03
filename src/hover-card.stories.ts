@@ -1,4 +1,5 @@
 import { html, nothing } from 'lit';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { withActions } from '@storybook/addon-actions/decorator';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import './hover-card.js';
@@ -82,6 +83,14 @@ const meta: Meta = {
         },
       },
     },
+    label: {
+      table: {
+        type: {
+          summary: 'string',
+          detail: '// Makes the card a group named by it',
+        },
+      },
+    },
     open: {
       table: {
         defaultValue: { summary: 'false' },
@@ -124,6 +133,7 @@ const meta: Meta = {
     return html`<slab-hover-card
       close-delay=${arguments_['close-delay'] ?? nothing}
       open-delay=${arguments_['open-delay'] ?? nothing}
+      label=${ifDefined(arguments_.label)}
       placement=${arguments_.placement ?? nothing}
       ?disabled=${arguments_.disabled}
       ?open=${arguments_.open}

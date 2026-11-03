@@ -7,7 +7,7 @@ summary: 'A preview of what a link leads to, shown beside it on hover and keyboa
 example: |
   <div>
     Forms go up Thursday with
-    <slab-styled-hover-card>
+    <slab-styled-hover-card label="Ana Ruiz preview">
       <a href="#ana" slot="anchor">Ana Ruiz</a>
       <div class="stack">
         <div>
@@ -20,7 +20,7 @@ example: |
     and her crew.
   </div>
 usage: |
-  <slab-hover-card>
+  <slab-hover-card label="Ana Ruiz preview">
     <a href="/crew/ana" slot="anchor">Ana Ruiz</a>
     <div>
       <p>Forms lead. 12 pours this month.</p>
@@ -29,7 +29,9 @@ usage: |
   </slab-hover-card>
 ---
 
-Use a Tooltip for a short description of a control, and a Hover Card to preview where a link goes. Touch users never see the card, and nothing tells a screenreader user it's there, so anything in it should also be on the page the anchor links to.
+Use a Tooltip for a short description of a control, and a Hover Card to preview where a link goes. Touch users never see the card, and not every screenreader announces the anchor's `aria-details`, so anything in it should also be on the page the anchor links to.
+
+Give it a `label` so the card is a named group, and Tab into it says where focus went.
 
 ## Keyboard
 
