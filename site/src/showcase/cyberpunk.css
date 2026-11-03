@@ -203,13 +203,16 @@
   text-transform: uppercase;
   transition: background-color 120ms;
 
+  /* Dark text on yellow, for the ghost button too, which is light on dark. */
   &:hover {
     background-color: var(--cy-yellow);
+    color: var(--cy-void);
   }
 
   /* The clip would cut a ring off, so focus shows as a color instead. */
   &:focus-visible {
     background-color: var(--cy-yellow);
+    color: var(--cy-void);
     outline: 0;
     text-decoration: underline 2px;
     text-underline-offset: 4px;
