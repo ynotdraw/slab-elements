@@ -298,3 +298,31 @@ test(
     ).resolves.toStrictEqual(['content']);
   },
 );
+
+test(
+  "leaves its anchor alone when the anchor's `aria-details` was removed",
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-hover-card>
+          <div id="content"><a href="#">Link</a></div>
+          <a href="#" slot="anchor">Anchor</a>
+        </slab-hover-card>`,
+    );
+
+    const anchor = page.getByRole('link', { name: 'Anchor' });
+
+    await anchor.evaluate((element) => {
+      element.removeAttribute('aria-details');
+    });
+
+    await page
+      .locator('slab-hover-card')
+      .evaluate<void, void, HoverCard>((element) => {
+        element.disabled = true;
+      });
+
+    await expect(anchor).not.toHaveAttribute('aria-details');
+  },
+);
