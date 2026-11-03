@@ -1,6 +1,6 @@
 {
   "name": "slab-elements",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Headless Web Components: keyboard, focus, ARIA, and forms on native elements, with the design left to you",
   "author": "Tony Ward",
   "license": "Apache-2.0",
