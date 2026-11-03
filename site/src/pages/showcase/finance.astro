@@ -1,0 +1,183 @@
+---
+import Showcase from '../../layouts/Showcase.astro';
+import '../../showcase/finance.css';
+import css from '../../showcase/finance.css?raw';
+
+const holdings = [
+  { name: 'Northline Index Fund', symbol: 'NLIX', shares: '142.50', value: '$38,412.20', change: '+1.24%', up: true },
+  { name: 'Harbor Utilities', symbol: 'HBRU', shares: '310.00', value: '$21,080.00', change: '−0.38%', up: false },
+  { name: 'Corvid Semiconductor', symbol: 'CRVD', shares: '48.00', value: '$17,256.96', change: '+3.07%', up: true },
+  { name: 'Treasury Ladder 2029', symbol: 'TL29', shares: '25.00', value: '$24,615.00', change: '+0.02%', up: true },
+];
+
+const activity = [
+  { date: 'Nov 3', what: 'Dividend · Harbor Utilities', amount: '+$62.00' },
+  { date: 'Nov 1', what: 'Buy · Northline Index Fund', amount: '−$1,500.00' },
+  { date: 'Oct 30', what: 'Transfer from Checking ··4821', amount: '+$2,000.00' },
+  { date: 'Oct 28', what: 'Sell · Corvid Semiconductor', amount: '+$3,594.20' },
+];
+---
+
+<Showcase css={css} slug="finance">
+  <div class="finance">
+    <header class="fi-bar">
+      <p class="fi-logo"><span aria-hidden="true"></span> Ledgerline</p>
+      <slab-select class="fi-account" hide-label label="Account">
+        <slab-option selected value="brokerage">Brokerage ··2207</slab-option>
+        <slab-option value="ira">Retirement IRA ··9314</slab-option>
+        <slab-option value="joint">Joint savings ··5520</slab-option>
+      </slab-select>
+    </header>
+
+    <div class="fi-grid">
+      <section aria-labelledby="fi-portfolio" class="fi-card fi-main">
+        <div class="fi-summary">
+          <div>
+            <h2 class="fi-label" id="fi-portfolio">Portfolio value</h2>
+            <p class="fi-value">$101,364.16</p>
+            <p class="fi-delta">+$1,208.44 (1.21%) <span>this month</span></p>
+          </div>
+
+          <slab-toggle-group label="Period">
+            <slab-toggle-group-button value="1d">1D</slab-toggle-group-button>
+            <slab-toggle-group-button value="1w">1W</slab-toggle-group-button>
+            <slab-toggle-group-button pressed value="1m">1M</slab-toggle-group-button>
+            <slab-toggle-group-button value="1y">1Y</slab-toggle-group-button>
+            <slab-toggle-group-button value="all">All</slab-toggle-group-button>
+          </slab-toggle-group>
+        </div>
+
+        <svg aria-hidden="true" class="fi-chart" preserveAspectRatio="none" viewBox="0 0 600 140">
+          <defs>
+            <linearGradient id="fi-fill" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="currentColor" stop-opacity="0.18" />
+              <stop offset="1" stop-color="currentColor" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M0 110 L40 102 L80 106 L120 92 L160 96 L200 80 L240 84 L280 70 L320 76 L360 58 L400 64 L440 48 L480 52 L520 36 L560 40 L600 24 L600 140 L0 140 Z"
+            fill="url(#fi-fill)"
+          />
+          <path
+            d="M0 110 L40 102 L80 106 L120 92 L160 96 L200 80 L240 84 L280 70 L320 76 L360 58 L400 64 L440 48 L480 52 L520 36 L560 40 L600 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            vector-effect="non-scaling-stroke"
+          />
+        </svg>
+
+        <slab-tabs label="Portfolio">
+          <slab-tabs-tab panel="holdings">Holdings</slab-tabs-tab>
+          <slab-tabs-tab panel="activity">Activity</slab-tabs-tab>
+          <slab-tabs-tab panel="transfer">Transfer</slab-tabs-tab>
+
+          <slab-tabs-panel name="holdings">
+            <div class="fi-scroll" role="region" aria-label="Holdings" tabindex="0">
+            <table class="fi-table">
+              <thead>
+                <tr><th scope="col">Holding</th><th scope="col">Shares</th><th scope="col">Value</th><th scope="col">Today</th></tr>
+              </thead>
+              <tbody>
+                {
+                  holdings.map((holding) => (
+                    <tr>
+                      <th scope="row">
+                        <span class="fi-symbol">{holding.symbol}</span> {holding.name}
+                      </th>
+                      <td>{holding.shares}</td>
+                      <td>{holding.value}</td>
+                      <td class={holding.up ? 'fi-up' : 'fi-down'}>{holding.change}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+            </div>
+          </slab-tabs-panel>
+
+          <slab-tabs-panel name="activity">
+            <div class="fi-scroll" role="region" aria-label="Activity" tabindex="0">
+            <table class="fi-table">
+              <thead>
+                <tr><th scope="col">Date</th><th scope="col">Activity</th><th scope="col">Amount</th></tr>
+              </thead>
+              <tbody>
+                {
+                  activity.map((row) => (
+                    <tr>
+                      <td>{row.date}</td>
+                      <th scope="row">{row.what}</th>
+                      <td class={row.amount.startsWith('+') ? 'fi-up' : undefined}>{row.amount}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+            </div>
+            <slab-pagination label="Activity pages" page="1" total="6"></slab-pagination>
+          </slab-tabs-panel>
+
+          <slab-tabs-panel name="transfer">
+            <div class="fi-form">
+              <slab-number label="Amount" min="1" placeholder="0.00" step="0.01" value="2000">
+                <span slot="description">From Checking ··4821. Up to $25,000 a day.</span>
+              </slab-number>
+              <slab-date-picker label="On" min="2026-11-04" value="2026-11-06"></slab-date-picker>
+              <slab-radio-group label="Repeat" value="monthly">
+                <slab-radio-group-radio label="Once" value="once">Once</slab-radio-group-radio>
+                <slab-radio-group-radio label="Every two weeks" value="biweekly">Every two weeks</slab-radio-group-radio>
+                <slab-radio-group-radio checked label="Monthly" value="monthly">Monthly</slab-radio-group-radio>
+              </slab-radio-group>
+              <slab-switch checked label="Invest it when it lands">
+                <span slot="description">Into your target mix, 80% stocks and 20% bonds.</span>
+              </slab-switch>
+            </div>
+          </slab-tabs-panel>
+        </slab-tabs>
+      </section>
+
+      <section aria-labelledby="fi-trade" class="fi-card fi-side">
+        <h2 class="fi-heading" id="fi-trade">Trade</h2>
+
+        <slab-toggle-group class="fi-side-pick" label="Side">
+          <slab-toggle-group-button pressed value="buy">Buy</slab-toggle-group-button>
+          <slab-toggle-group-button value="sell">Sell</slab-toggle-group-button>
+        </slab-toggle-group>
+
+        <slab-combobox label="Symbol" placeholder="Search a name or ticker">
+          <slab-option value="nlix" selected>NLIX · Northline Index Fund</slab-option>
+          <slab-option value="hbru">HBRU · Harbor Utilities</slab-option>
+          <slab-option value="crvd">CRVD · Corvid Semiconductor</slab-option>
+          <slab-option value="tl29">TL29 · Treasury Ladder 2029</slab-option>
+          <slab-option value="pend" disabled>PEND · Halted</slab-option>
+        </slab-combobox>
+
+        <slab-number label="Shares" min="0" step="1" value="10"></slab-number>
+
+        <slab-checkbox label="Allow extended-hours trading"></slab-checkbox>
+
+        <dl class="fi-quote">
+          <div><dt>Price</dt><dd>$269.56</dd></div>
+          <div><dt>Estimated cost</dt><dd>$2,695.60</dd></div>
+        </dl>
+
+        <button class="fi-button" data-open="fi-review" type="button">Review order</button>
+      </section>
+    </div>
+
+    <slab-dialog closedby="any" id="fi-review" label="Review your order">
+      <dl class="fi-quote">
+        <div><dt>Buy</dt><dd>10 NLIX</dd></div>
+        <div><dt>At market</dt><dd>$269.56</dd></div>
+        <div><dt>Estimated cost</dt><dd>$2,695.60</dd></div>
+      </dl>
+      <form class="fi-actions" method="dialog">
+        <button class="fi-button fi-button--quiet" value="cancel">Edit</button>
+        <button class="fi-button" data-show="fi-toast" value="place">Place order</button>
+      </form>
+    </slab-dialog>
+
+    <slab-toast id="fi-toast">Order placed. 10 NLIX at market.</slab-toast>
+  </div>
+</Showcase>

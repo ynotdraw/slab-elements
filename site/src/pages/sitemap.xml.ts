@@ -1,10 +1,11 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { announcements } from '../lib/releases.ts';
+import { showcases } from '../lib/showcases.ts';
 
 // Every page, for search engines. Written here rather than with a sitemap
 // integration, since the pages are few and all known: the home page, the
-// guide, the components index, a page per component, the releases and a
+// guide, the components index, a page per component, the showcase and its themes, the releases and a
 // page per announced release.
 export const GET: APIRoute = async ({ site }) => {
   const components = await getCollection('components');
@@ -14,6 +15,8 @@ export const GET: APIRoute = async ({ site }) => {
     'get-started/',
     'components/',
     ...components.map((component) => `components/${component.id}/`),
+    'showcase/',
+    ...showcases.map(({ slug }) => `showcase/${slug}/`),
     'releases/',
     ...announcements.map(({ version }) => `releases/${version}/`),
   ];
