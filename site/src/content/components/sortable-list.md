@@ -30,6 +30,8 @@ Screenreaders hear where the item is at each step, such as "Walls picked up at p
 
 Sortable List moves the items in the DOM itself, so their order there is always the list's, and dispatches "change" when an item is dropped somewhere new. Read the new order from `items`. In a framework that renders the items from an array, set the array from `items` on "change" and key each item, so the framework's order and the list's agree. An item has `:state(grabbed)` while it's picked up or dragged.
 
+For motion, give the items a `view-transition-name`, such as `view-transition-name: match-element`, and each move happens in a view transition, so the items glide to their new places, as in the example above. Style the animation with `::view-transition-group()` in your page's CSS. The items move at once when they have no name, in a browser without view transitions, or for someone who prefers reduced motion.
+
 ## Keyboard
 
 | Key                  | What it does                                                    |

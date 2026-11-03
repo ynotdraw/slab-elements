@@ -179,6 +179,9 @@ export default class SortableList extends LitElement {
   // it takes it from when they're removed.
   #items = new Set<Element>();
 
+  // A move that's waiting on its view transition.
+  #moving?: Promise<void>;
+
   #strings = new StringsController(this);
 
   // An item whose definition loads after its Sortable List's upgrades in
@@ -199,7 +202,7 @@ export default class SortableList extends LitElement {
       grab.pointerId === undefined &&
       this.#isHandleEvent(event, grab.item)
     ) {
-      this.#cancel(grab);
+      this.#afterMoving(() => this.#cancel(grab));
     }
   };
 
@@ -226,6 +229,13 @@ export default class SortableList extends LitElement {
         this.#pickUp(item);
       }
 
+      return;
+    }
+
+    // While a move is waiting on its view transition, the items aren't where
+    // the keys would move from yet.
+    if (this.#moving) {
+      event.preventDefault();
       return;
     }
 
@@ -261,8 +271,9 @@ export default class SortableList extends LitElement {
       event.preventDefault();
 
       if (to >= 0 && to < items.length && to !== index) {
-        this.#move(item, to);
-        this.#announce(this.movedLabel, item);
+        this.#move(item, to, () => {
+          this.#announce(this.movedLabel, item);
+        });
       }
 
       return;
@@ -281,8 +292,10 @@ export default class SortableList extends LitElement {
   // After "pointerup" and "pointercancel" both, so a drag the browser takes
   // over still ends.
   #onLostPointerCapture = (event: PointerEvent) => {
-    if (this.#grab && this.#grab.pointerId === event.pointerId) {
-      this.#drop(this.#grab);
+    const grab = this.#grab;
+
+    if (grab?.pointerId === event.pointerId) {
+      this.#afterMoving(() => this.#drop(grab));
     }
   };
 
@@ -320,7 +333,9 @@ export default class SortableList extends LitElement {
 
   // The item goes where the pointer is among the others' middles.
   #onPointerMove = (event: PointerEvent) => {
-    if (this.#grab?.pointerId !== event.pointerId) {
+    // The others' middles are where they were until a move that's waiting on
+    // its view transition is made, so the next "pointermove" will do.
+    if (this.#grab?.pointerId !== event.pointerId || this.#moving) {
       return;
     }
 
@@ -354,6 +369,16 @@ export default class SortableList extends LitElement {
     this.#sync();
   };
 
+  // Dropping and putting back wait for a move that's waiting on its view
+  // transition, so they see the items where they're going.
+  #afterMoving(callback: () => void) {
+    if (this.#moving) {
+      void this.#moving.then(callback);
+    } else {
+      callback();
+    }
+  }
+
   #announce(label: Announcement, item: SortableListItem) {
     const items = this.items;
 
@@ -366,8 +391,9 @@ export default class SortableList extends LitElement {
     this.#grab = undefined;
     grab.item.grabbed = false;
 
-    this.#move(grab.item, grab.from);
-    this.#announce(this.canceledLabel, grab.item);
+    this.#move(grab.item, grab.from, () => {
+      this.#announce(this.canceledLabel, grab.item);
+    });
   }
 
   #drop(grab: Grab) {
@@ -399,15 +425,44 @@ export default class SortableList extends LitElement {
 
   // The others are moved around it rather than it among them. An element
   // that's moved loses focus and pointer capture, and it has both.
-  #move(item: SortableListItem, to: number) {
-    const items = this.items;
-    const from = items.indexOf(item);
+  //
+  // Through a view transition when the item has a `view-transition-name`, such
+  // as `match-element`, so the items glide to where they're going. That's
+  // the consumer's choice, in their styles, and it's skipped for those who'd
+  // rather have less motion. The move is then made a frame later, once the
+  // browser has a picture of the items where they were.
+  #move(item: SortableListItem, to: number, onMoved?: () => void) {
+    const update = () => {
+      const items = this.items;
+      const from = items.indexOf(item);
 
-    if (to > from) {
-      item.before(...items.slice(from + 1, to + 1));
-    } else if (to < from) {
-      item.after(...items.slice(to, from));
+      if (to > from) {
+        item.before(...items.slice(from + 1, to + 1));
+      } else if (to < from) {
+        item.after(...items.slice(to, from));
+      }
+
+      onMoved?.();
+    };
+
+    if (
+      typeof document.startViewTransition !== 'function' ||
+      getComputedStyle(item).viewTransitionName === 'none' ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      update();
+      return;
     }
+
+    const moving = document
+      .startViewTransition(update)
+      .updateCallbackDone.finally(() => {
+        if (this.#moving === moving) {
+          this.#moving = undefined;
+        }
+      });
+
+    this.#moving = moving;
   }
 
   #pickUp(item: SortableListItem) {

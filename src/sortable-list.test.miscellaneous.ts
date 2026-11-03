@@ -277,3 +277,325 @@ test(
     ).rejects.toThrow();
   },
 );
+
+// A stand-in for `ariaNotify()`, since not every browser has one, and a real
+// one can't be listened to. Runs in the page, passed to `evaluate()`.
+function recordAnnouncements() {
+  const announcements: string[] = [];
+
+  Object.assign(globalThis, { announcements });
+
+  Object.defineProperty(Element.prototype, 'ariaNotify', {
+    configurable: true,
+    value(message: string) {
+      announcements.push(message);
+    },
+  });
+}
+
+function getAnnouncements() {
+  return (globalThis as unknown as { announcements: string[] }).announcements;
+}
+
+test(
+  'moves items through a view transition when they have a `view-transition-name`',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-sortable-list-item {
+              view-transition-name: match-element;
+            }
+          </style>
+
+          <slab-sortable-list label="Label">
+            <slab-sortable-list-item label="One">One</slab-sortable-list-item>
+            <slab-sortable-list-item label="Two">Two</slab-sortable-list-item>
+            <slab-sortable-list-item label="Three"
+              >Three</slab-sortable-list-item
+            >
+          </slab-sortable-list>`,
+    );
+
+    await page.evaluate(recordAnnouncements);
+
+    const host = page.locator('slab-sortable-list');
+    const handle = page.getByRole('button', { name: 'Reorder One' });
+
+    await handle.focus();
+    await page.keyboard.press('Space');
+
+    // Two in the same task: the second comes while the first is waiting on
+    // its view transition, so it's ignored rather than moving from where the
+    // item was.
+    const isSecondPrevented = await handle.evaluate((element) => {
+      const press = () => {
+        const event = new KeyboardEvent('keydown', {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+          key: 'ArrowDown',
+        });
+
+        element.dispatchEvent(event);
+
+        return event.defaultPrevented;
+      };
+
+      press();
+
+      return press();
+    });
+
+    expect(isSecondPrevented).toBe(true);
+
+    await expect
+      .poll(() => getOrder(host))
+      .toStrictEqual(['Two', 'One', 'Three']);
+
+    await expect(host).toDispatchEvents(
+      () => page.keyboard.press('Space'),
+      [{ type: 'change' }],
+    );
+
+    await expect
+      .poll(() => page.evaluate(getAnnouncements))
+      .toStrictEqual([
+        'One picked up at position 1 of 3',
+        'One moved to position 2 of 3',
+        'One dropped at position 2 of 3',
+      ]);
+  },
+);
+
+test(
+  'puts an item back after a move that is waiting on its view transition',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-sortable-list-item {
+              view-transition-name: match-element;
+            }
+          </style>
+
+          <slab-sortable-list label="Label">
+            <slab-sortable-list-item label="One">One</slab-sortable-list-item>
+            <slab-sortable-list-item label="Two">Two</slab-sortable-list-item>
+          </slab-sortable-list>`,
+    );
+
+    await page.evaluate(recordAnnouncements);
+
+    const host = page.locator('slab-sortable-list');
+    const handle = page.getByRole('button', { name: 'Reorder One' });
+
+    await handle.focus();
+    await page.keyboard.press('Space');
+
+    // Focus leaves in the same task as the move.
+    await handle.evaluate((element) => {
+      element.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+          key: 'ArrowDown',
+        }),
+      );
+
+      (element as HTMLElement).blur();
+    });
+
+    await expect
+      .poll(() => page.evaluate(getAnnouncements))
+      .toStrictEqual([
+        'One picked up at position 1 of 2',
+        'One moved to position 2 of 2',
+        'Reorder canceled. One is back at position 1 of 2',
+      ]);
+
+    expect(await getOrder(host)).toStrictEqual(['One', 'Two']);
+  },
+);
+
+test(
+  'drops a dragged item after a move that is waiting on its view transition',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-sortable-list-item {
+              view-transition-name: match-element;
+            }
+          </style>
+
+          <slab-sortable-list label="Label">
+            <slab-sortable-list-item label="One">One</slab-sortable-list-item>
+            <slab-sortable-list-item label="Two">Two</slab-sortable-list-item>
+          </slab-sortable-list>`,
+    );
+
+    const host = page.locator('slab-sortable-list');
+
+    await host.evaluate((element) => {
+      Object.assign(globalThis, { changes: 0 });
+
+      element.addEventListener('change', () => {
+        (globalThis as unknown as { changes: number }).changes += 1;
+      });
+    });
+
+    // Synthetic, so the moves and the drop come in the same task. The
+    // capture is never really taken, so "lostpointercapture" is dispatched
+    // too.
+    await page
+      .locator('slab-sortable-list-item')
+      .first()
+      .evaluate((item) => {
+        const handle = item.shadowRoot?.querySelector('[part~="handle"]');
+
+        const { bottom } = item.parentElement?.getBoundingClientRect() ?? {
+          bottom: 0,
+        };
+
+        const dispatch = (target: Element | null | undefined, type: string) => {
+          target?.dispatchEvent(
+            new PointerEvent(type, {
+              bubbles: true,
+              button: 0,
+              clientY: bottom + 10,
+              composed: true,
+              isPrimary: true,
+              pointerId: 1,
+            }),
+          );
+        };
+
+        // `setPointerCapture()` throws for a pointer that isn't down.
+        Object.defineProperty(item, 'setPointerCapture', {
+          value: Function.prototype,
+        });
+
+        dispatch(handle, 'pointerdown');
+        dispatch(item, 'pointermove');
+
+        // Ignored while the first is waiting on its view transition.
+        dispatch(item, 'pointermove');
+
+        dispatch(item, 'lostpointercapture');
+      });
+
+    await expect.poll(() => getOrder(host)).toStrictEqual(['Two', 'One']);
+
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () => (globalThis as unknown as { changes: number }).changes,
+        ),
+      )
+      .toBe(1);
+  },
+);
+
+test(
+  'moves items at once for those who prefer less motion',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+
+    await render(
+      () =>
+        html`<style>
+            slab-sortable-list-item {
+              view-transition-name: match-element;
+            }
+          </style>
+
+          <slab-sortable-list label="Label">
+            <slab-sortable-list-item label="One">One</slab-sortable-list-item>
+            <slab-sortable-list-item label="Two">Two</slab-sortable-list-item>
+          </slab-sortable-list>`,
+    );
+
+    const host = page.locator('slab-sortable-list');
+
+    const order = await page
+      .getByRole('button', { name: 'Reorder One' })
+      .evaluate((element) => {
+        const press = (key: string) => {
+          element.dispatchEvent(
+            new KeyboardEvent('keydown', {
+              bubbles: true,
+              cancelable: true,
+              composed: true,
+              key,
+            }),
+          );
+        };
+
+        press(' ');
+        press('ArrowDown');
+
+        // Read in the same task, before any view transition could have run.
+        return document
+          .querySelector<SortableList>('slab-sortable-list')
+          ?.items.map((item) => item.label);
+      });
+
+    expect(order).toStrictEqual(['Two', 'One']);
+    expect(await getOrder(host)).toStrictEqual(['Two', 'One']);
+  },
+);
+
+test(
+  'moves items at once without view transitions',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-sortable-list-item {
+              view-transition-name: match-element;
+            }
+          </style>
+
+          <slab-sortable-list label="Label">
+            <slab-sortable-list-item label="One">One</slab-sortable-list-item>
+            <slab-sortable-list-item label="Two">Two</slab-sortable-list-item>
+          </slab-sortable-list>`,
+    );
+
+    const order = await page
+      .getByRole('button', { name: 'Reorder One' })
+      .evaluate((element) => {
+        // As in a browser that doesn't have them.
+        Object.defineProperty(document, 'startViewTransition', {
+          value: undefined,
+        });
+
+        const press = (key: string) => {
+          element.dispatchEvent(
+            new KeyboardEvent('keydown', {
+              bubbles: true,
+              cancelable: true,
+              composed: true,
+              key,
+            }),
+          );
+        };
+
+        press(' ');
+        press('ArrowDown');
+
+        return document
+          .querySelector<SortableList>('slab-sortable-list')
+          ?.items.map((item) => item.label);
+      });
+
+    expect(order).toStrictEqual(['Two', 'One']);
+  },
+);

@@ -19,6 +19,12 @@ export default css`
     transition:
       box-shadow 100ms,
       translate 100ms;
+
+    /*
+      Each item is its own view transition group, so Sortable List glides it
+      from where it was to where it's moved.
+    */
+    view-transition-name: match-element;
   }
 
   :host(:state(grabbed)) {
