@@ -42,6 +42,7 @@ const components = [
   ['slab-password-field', 'input'],
   ['slab-pin-input', '[role="group"]'],
   ['slab-range-slider', '[role="group"]'],
+  ['slab-search-field', 'input'],
   ['slab-slider', 'input'],
   ['slab-switch', 'input'],
   ['slab-tags-input', 'input'],
