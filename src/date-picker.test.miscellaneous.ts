@@ -121,6 +121,11 @@ test(
     const host = page.locator('slab-date-picker');
 
     await callMethod(host, 'showPicker');
+
+    // Opening it focuses a day once the calendar has rendered, so focus is
+    // moved away only after that, or the day would take it back.
+    await expect(page.locator('[data-date][tabindex="0"]')).toBeFocused();
+
     await page.getByRole('button', { name: 'Elsewhere' }).focus();
     await callMethod(host, 'hidePicker');
 
