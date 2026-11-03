@@ -81,9 +81,17 @@ export default css`
     background-color: var(--paper);
     border: var(--border);
     box-shadow: var(--shadow);
+    box-sizing: border-box;
     color: var(--ink);
     font-family: var(--font-body);
+
+    /*
+      As wide as the input and button, the way Combobox's listbox is, but
+      never narrower than a week of days.
+    */
+    inline-size: anchor-size(inline);
     margin-block: 0.5rem;
+    min-inline-size: 19.5rem;
     padding: 1rem;
   }
 
@@ -159,6 +167,10 @@ export default css`
   [part~='calendar']::part(grid) {
     border-collapse: separate;
     border-spacing: 0;
+
+    /* Its days spread out to fill a popover as wide as the field. */
+    inline-size: 100%;
+    table-layout: fixed;
   }
 
   [part~='calendar']::part(weekday) {
@@ -175,7 +187,7 @@ export default css`
     border: 2px solid transparent;
     box-sizing: border-box;
     cursor: pointer;
-    inline-size: 2.5rem;
+    min-inline-size: 2.5rem;
     text-align: center;
     transition:
       background-color 100ms,
