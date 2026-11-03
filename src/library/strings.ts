@@ -10,6 +10,7 @@ import type { ReactiveController, ReactiveControllerHost } from 'lit';
 // then "fr", then English. A registered table can leave strings out, and those
 // are the next table's.
 export interface Strings {
+  alertDialogCancel: string;
   alertDismiss: string;
   breadcrumb: string;
   calendarNextMonth: string;
@@ -56,6 +57,7 @@ export interface Strings {
 }
 
 const english: Strings = {
+  alertDialogCancel: 'Cancel',
   alertDismiss: 'Dismiss',
   breadcrumb: 'Breadcrumb',
   calendarNextMonth: 'Next month',
