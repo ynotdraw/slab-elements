@@ -8783,6 +8783,406 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/grid-list.item.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/grid-list.item.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/grid-list.item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GridListItem",
+          "cssParts": [
+            {
+              "name": "cell",
+              "description": "Holds the content"
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The row's content, and any controls in it",
+              "type": {
+                "text": "Element | string"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Can't be focused or selected. The controls in it are yours to disable.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the row in place of its content, and is what typeahead matches\nagainst.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "selectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Set by its Grid List."
+            },
+            {
+              "kind": "field",
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Like Option's, the attribute is the default state and the property is the\ncurrent one. Style `:state(selected)` rather than `[selected]`.",
+              "attribute": "selected"
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "controls",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "description": "What in the row can take focus, in order, other than disabled controls.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "description": "What typeahead matches against: its label, or its text when it has no\nlabel.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "private-connected",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "private-selected-change",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "private-disabled-change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Can't be focused or selected. The controls in it are yours to disable.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the row in place of its content, and is what typeahead matches\nagainst.",
+              "fieldName": "label"
+            },
+            {
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Like Option's, the attribute is the default state and the property is the\ncurrent one. Style `:state(selected)` rather than `[selected]`.",
+              "fieldName": "selected"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-grid-list-item",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "GridListItem",
+            "module": "src/grid-list.item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-grid-list-item",
+          "declaration": {
+            "name": "GridListItem",
+            "module": "src/grid-list.item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/grid-list.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/grid-list.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/grid-list.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GridList",
+          "cssParts": [
+            {
+              "name": "grid",
+              "description": "The rows"
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "",
+              "type": {
+                "text": "GridListItem"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the grid list.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "selectionMode",
+              "type": {
+                "text": "'multiple' | 'none' | 'single'"
+              },
+              "default": "'none'",
+              "description": "Whether rows can be selected, and how many at once.",
+              "attribute": "selection-mode",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "GridListItem[]"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "selectedItem",
+              "type": {
+                "text": "GridListItem | null"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "selectedItems",
+              "type": {
+                "text": "GridListItem[]"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the grid list.",
+              "fieldName": "label",
+              "required": true
+            },
+            {
+              "name": "selection-mode",
+              "type": {
+                "text": "'multiple' | 'none' | 'single'"
+              },
+              "default": "'none'",
+              "description": "Whether rows can be selected, and how many at once.",
+              "fieldName": "selectionMode"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-grid-list",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "GridList",
+            "module": "src/grid-list.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-grid-list",
+          "declaration": {
+            "name": "GridList",
+            "module": "src/grid-list.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/hover-card.styles.ts",
       "declarations": [],
       "exports": [
