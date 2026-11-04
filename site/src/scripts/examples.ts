@@ -81,3 +81,30 @@ document.addEventListener('click', (event) => {
     }
   }
 });
+
+// The examples' Tables, which sort their rows by the column the user sorts.
+// Slab leaves sorting the rows to the page, as a page that renders them from
+// data would. Each row's Cells are in the same order as the Column Headers.
+document.addEventListener('sort', (event) => {
+  const header = event.target as HTMLElement & { sort: string };
+  const row = header.parentElement;
+  const table = row?.closest('slab-styled-table, slab-table');
+  const body = table?.querySelector('slab-styled-table-body, slab-table-body');
+
+  if (!row || !body) {
+    return;
+  }
+
+  const column = [...row.children].indexOf(header);
+  const direction = header.sort === 'descending' ? -1 : 1;
+
+  const text = (element: Element) =>
+    element.children[column]?.textContent?.trim() ?? '';
+
+  const rows = [...body.children].toSorted(
+    (a, b) =>
+      direction * text(a).localeCompare(text(b), undefined, { numeric: true }),
+  );
+
+  body.append(...rows);
+});

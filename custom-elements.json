@@ -18207,6 +18207,817 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/table.body.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/table.body.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/table.body.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "TableBody",
+          "slots": [
+            {
+              "name": "",
+              "description": "The body rows",
+              "type": {
+                "text": "TableRow"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-table-body",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "TableBody",
+            "module": "src/table.body.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-table-body",
+          "declaration": {
+            "name": "TableBody",
+            "module": "src/table.body.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/table.cell.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/table.cell.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/table.cell.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "TableCell",
+          "slots": [
+            {
+              "name": "",
+              "description": "The Cell's content",
+              "type": {
+                "text": "Element | string"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "rowHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the Cell its row's header, like a `<th scope=\"row\">`.",
+              "attribute": "row-header",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "row-header",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the Cell its row's header, like a `<th scope=\"row\">`.",
+              "fieldName": "rowHeader"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-table-cell",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "TableCell",
+            "module": "src/table.cell.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-table-cell",
+          "declaration": {
+            "name": "TableCell",
+            "module": "src/table.cell.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/table.column-header.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/table.column-header.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/table.column-header.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "TableColumnHeader",
+          "cssParts": [
+            {
+              "name": "sort-button",
+              "description": "The button in a sortable Column Header"
+            },
+            {
+              "name": "label",
+              "description": "Holds the name in a sortable Column Header"
+            },
+            {
+              "name": "sort-indicator",
+              "description": "Holds the sort indicator in a sortable Column Header, hidden from screenreaders"
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The column's name",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "sort-indicator",
+              "description": "Shown after the name in a sortable Column Header, such as an arrow, and hidden from screenreaders",
+              "type": {
+                "text": "Element | string"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "sort",
+              "type": {
+                "text": "'ascending' | 'descending' | 'none'"
+              },
+              "default": "'none'",
+              "description": "How the column is sorted. Sets `aria-sort`.",
+              "attribute": "sort",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "sortable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the Column Header a button that sorts the column.",
+              "attribute": "sortable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "sortedLabel",
+              "type": {
+                "text": "(column: string, sort: 'ascending' | 'descending') => string"
+              },
+              "description": "What screenreaders are told when the user sorts the column, from its\nname and `sort`. \"Sorted by\", the name and the direction in English when\nunset."
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "private-sort",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "sort",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "sort",
+              "type": {
+                "text": "'ascending' | 'descending' | 'none'"
+              },
+              "default": "'none'",
+              "description": "How the column is sorted. Sets `aria-sort`.",
+              "fieldName": "sort"
+            },
+            {
+              "name": "sortable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the Column Header a button that sorts the column.",
+              "fieldName": "sortable"
+            },
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-table-column-header",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "TableColumnHeader",
+            "module": "src/table.column-header.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-table-column-header",
+          "declaration": {
+            "name": "TableColumnHeader",
+            "module": "src/table.column-header.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/table.foot.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/table.foot.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/table.foot.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "TableFoot",
+          "slots": [
+            {
+              "name": "",
+              "description": "The footer rows",
+              "type": {
+                "text": "TableRow"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-table-foot",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "TableFoot",
+            "module": "src/table.foot.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-table-foot",
+          "declaration": {
+            "name": "TableFoot",
+            "module": "src/table.foot.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/table.head.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/table.head.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/table.head.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "TableHead",
+          "slots": [
+            {
+              "name": "",
+              "description": "The header rows",
+              "type": {
+                "text": "TableRow"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-table-head",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "TableHead",
+            "module": "src/table.head.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-table-head",
+          "declaration": {
+            "name": "TableHead",
+            "module": "src/table.head.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/table.row.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/table.row.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/table.row.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "TableRow",
+          "slots": [
+            {
+              "name": "",
+              "description": "The row's Cells, or its Column Headers",
+              "type": {
+                "text": "TableCell | TableColumnHeader"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-table-row",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "TableRow",
+            "module": "src/table.row.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-table-row",
+          "declaration": {
+            "name": "TableRow",
+            "module": "src/table.row.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/table.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/table.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/table.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "Table",
+          "slots": [
+            {
+              "name": "",
+              "description": "The Table Head, Body and Foot",
+              "type": {
+                "text": "TableBody | TableFoot | TableHead"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "attribute": "version",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "columnHeaders",
+              "type": {
+                "text": "TableColumnHeader[]"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "finalizeStyles",
+              "privacy": "protected",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "CSSResultOrNative[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "subclassStyles",
+                  "optional": true,
+                  "type": {
+                    "text": "CSSResultGroup"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true,
+              "fieldName": "version"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slab-table",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "Table",
+            "module": "src/table.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slab-table",
+          "declaration": {
+            "name": "Table",
+            "module": "src/table.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/tabs.panel.styles.ts",
       "declarations": [],
       "exports": [
