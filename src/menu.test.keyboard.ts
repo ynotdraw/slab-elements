@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
+import type Menu from './menu.js';
 
 const isActive = (locator: import('@playwright/test').Locator) => {
   return locator.evaluate((element) => element.matches(':state(active)'));
@@ -371,5 +372,282 @@ test(
         );
       })
       .toBe(1);
+  },
+);
+
+test(
+  'opens a submenu at its first Menu Item via ArrowRight, Enter and Space, and closes it via ArrowLeft and Escape',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-menu label="Label">
+          <button slot="anchor">Anchor</button>
+          <slab-menu-item>One</slab-menu-item>
+          <slab-menu label="Share">
+            <slab-menu-item slot="anchor">Share</slab-menu-item>
+            <slab-menu-item>Email</slab-menu-item>
+            <slab-menu-item>Message</slab-menu-item>
+          </slab-menu>
+        </slab-menu>`,
+    );
+
+    const parent = page.getByRole('menu', { name: 'Label' });
+    const submenu = page.getByRole('menu', { name: 'Share' });
+    const trigger = page.getByRole('menuitem', { name: 'Share' });
+    const host = page.locator('slab-menu slab-menu');
+
+    await page.getByRole('button').focus();
+    await page.keyboard.press('ArrowUp');
+    await expect.poll(() => isActive(trigger)).toBe(true);
+
+    for (const [open, close] of [
+      ['ArrowRight', 'ArrowLeft'],
+      ['Enter', 'Escape'],
+      ['Space', 'ArrowLeft'],
+    ] as const) {
+      await test.step(`${open} and ${close}`, async () => {
+        await page.keyboard.press(open);
+
+        await expect(host).toHaveJSProperty('open', true);
+        await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+        await expect(submenu).toBeFocused();
+
+        await expect
+          .poll(() => isActive(page.getByRole('menuitem', { name: 'Email' })))
+          .toBe(true);
+
+        // Its Menu Item stays the active one in the Menu it's in.
+        await expect.poll(() => isActive(trigger)).toBe(true);
+
+        await page.keyboard.press(close);
+
+        await expect(host).toHaveJSProperty('open', false);
+        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+        await expect(page.locator('slab-menu').first()).toHaveJSProperty(
+          'open',
+          true,
+        );
+
+        await expect(parent).toBeFocused();
+        await expect.poll(() => isActive(trigger)).toBe(true);
+      });
+    }
+  },
+);
+
+test(
+  'focuses an open submenu at its first Menu Item via ArrowRight',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-menu label="Label">
+          <button slot="anchor">Anchor</button>
+          <slab-menu label="Share">
+            <slab-menu-item slot="anchor">Share</slab-menu-item>
+            <slab-menu-item>Email</slab-menu-item>
+            <slab-menu-item>Message</slab-menu-item>
+          </slab-menu>
+        </slab-menu>`,
+    );
+
+    await page.getByRole('button').focus();
+    await page.keyboard.press('ArrowDown');
+
+    // As when it's been opened by the pointer resting on its Menu Item.
+    await page
+      .locator('slab-menu slab-menu')
+      .evaluate<void, void, Menu>((element) => {
+        element.privateShow(null);
+      });
+
+    await expect(page.getByRole('menu', { name: 'Label' })).toBeFocused();
+
+    await page.keyboard.press('ArrowRight');
+
+    await expect(page.getByRole('menu', { name: 'Share' })).toBeFocused();
+
+    await expect
+      .poll(() => isActive(page.getByRole('menuitem', { name: 'Email' })))
+      .toBe(true);
+  },
+);
+
+test(
+  'moves through the Menu Items of a submenu without moving the Menu it is in',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-menu label="Label">
+          <button slot="anchor">Anchor</button>
+          <slab-menu-item>One</slab-menu-item>
+          <slab-menu label="Share">
+            <slab-menu-item slot="anchor">Share</slab-menu-item>
+            <slab-menu-item>Email</slab-menu-item>
+            <slab-menu-item>Message</slab-menu-item>
+          </slab-menu>
+          <slab-menu-item>Three</slab-menu-item>
+        </slab-menu>`,
+    );
+
+    const trigger = page.getByRole('menuitem', { name: 'Share' });
+
+    await page.getByRole('button').focus();
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('ArrowDown');
+    await expect.poll(() => isActive(trigger)).toBe(true);
+
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('ArrowDown');
+
+    await expect
+      .poll(() => isActive(page.getByRole('menuitem', { name: 'Message' })))
+      .toBe(true);
+
+    await page.keyboard.press('ArrowDown');
+
+    await expect
+      .poll(() => isActive(page.getByRole('menuitem', { name: 'Email' })))
+      .toBe(true);
+
+    await page.keyboard.press('m');
+
+    await expect
+      .poll(() => isActive(page.getByRole('menuitem', { name: 'Message' })))
+      .toBe(true);
+
+    await expect.poll(() => isActive(trigger)).toBe(true);
+
+    // Right does nothing on a Menu Item without a submenu, and Left on a Menu
+    // that isn't a submenu.
+    await page.keyboard.press('ArrowRight');
+    await expect(page.getByRole('menu', { name: 'Share' })).toBeFocused();
+
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('ArrowLeft');
+
+    await expect(page.getByRole('menu', { name: 'Label' })).toBeFocused();
+
+    await expect(page.locator('slab-menu').first()).toHaveJSProperty(
+      'open',
+      true,
+    );
+  },
+);
+
+test(
+  'swaps ArrowLeft and ArrowRight for a submenu in a right-to-left page',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<div dir="rtl">
+          <slab-menu label="Label">
+            <button slot="anchor">Anchor</button>
+            <slab-menu label="Share">
+              <slab-menu-item slot="anchor">Share</slab-menu-item>
+              <slab-menu-item>Email</slab-menu-item>
+            </slab-menu>
+          </slab-menu>
+        </div>`,
+    );
+
+    const host = page.locator('slab-menu slab-menu');
+
+    await page.getByRole('button').focus();
+    await page.keyboard.press('ArrowDown');
+
+    await page.keyboard.press('ArrowRight');
+    await expect(host).toHaveJSProperty('open', false);
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(host).toHaveJSProperty('open', true);
+    await expect(page.getByRole('menu', { name: 'Share' })).toBeFocused();
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(host).toHaveJSProperty('open', true);
+
+    await page.keyboard.press('ArrowRight');
+    await expect(host).toHaveJSProperty('open', false);
+    await expect(page.getByRole('menu', { name: 'Label' })).toBeFocused();
+  },
+);
+
+test(
+  'clicks a Menu Item in a submenu and closes every Menu via Enter',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-menu label="Label">
+          <button slot="anchor">Anchor</button>
+          <slab-menu label="Share">
+            <slab-menu-item slot="anchor">Share</slab-menu-item>
+            <slab-menu-item>Email</slab-menu-item>
+          </slab-menu>
+        </slab-menu>`,
+    );
+
+    const item = page.locator('slab-menu-item', { hasText: 'Email' });
+
+    await page.getByRole('button').focus();
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('ArrowRight');
+
+    await expect(item).toDispatchEvents(
+      () => page.keyboard.press('Enter'),
+      [{ type: 'click', bubbles: true, cancelable: true, composed: true }],
+    );
+
+    await expect(page.locator('slab-menu').first()).toHaveJSProperty(
+      'open',
+      false,
+    );
+
+    await expect(page.locator('slab-menu slab-menu')).toHaveJSProperty(
+      'open',
+      false,
+    );
+
+    await expect(page.getByRole('button')).toBeFocused();
+  },
+);
+
+test(
+  'closes every Menu via Tab from a submenu, and focus moves on from its anchor',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-menu label="Label">
+            <button slot="anchor">Anchor</button>
+            <slab-menu label="Share">
+              <slab-menu-item slot="anchor">Share</slab-menu-item>
+              <slab-menu-item>Email</slab-menu-item>
+            </slab-menu>
+          </slab-menu>
+
+          <button>After</button>`,
+    );
+
+    await page.getByRole('button', { name: 'Anchor' }).focus();
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('Tab');
+
+    await expect(page.locator('slab-menu').first()).toHaveJSProperty(
+      'open',
+      false,
+    );
+
+    await expect(page.locator('slab-menu slab-menu')).toHaveJSProperty(
+      'open',
+      false,
+    );
+
+    await expect(page.getByRole('button', { name: 'After' })).toBeFocused();
   },
 );

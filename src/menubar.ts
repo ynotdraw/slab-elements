@@ -174,7 +174,9 @@ export default class Menubar extends LitElement {
 
     // From the open menu rather than its anchor, Left and Right move to the
     // Menu beside it and open that, leaving Home and End to the Menu Items.
-    if (menu.open && event.target === menu) {
+    // From one of its submenus too, which is heard as coming from the
+    // submenu, unless the submenu has used the key itself.
+    if (menu.open && event.target !== anchor) {
       if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
         const next = this.#rovingTabindex.next(event, anchor);
 

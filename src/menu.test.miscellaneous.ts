@@ -304,3 +304,169 @@ test(
     ).rejects.toThrow();
   },
 );
+
+test(
+  'has a submenu in its `items` as the Menu Item that opens it',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-menu label="Label">
+          <button slot="anchor">Anchor</button>
+          <slab-menu-item>One</slab-menu-item>
+          <slab-menu label="Share">
+            <slab-menu-item slot="anchor">Share</slab-menu-item>
+            <slab-menu-item>Email</slab-menu-item>
+          </slab-menu>
+        </slab-menu>`,
+    );
+
+    const texts = await page
+      .locator('slab-menu')
+      .first()
+      .evaluate<string[], void, Menu>((element) => {
+        return element.items.map((item) => item.text);
+      });
+
+    expect(texts).toStrictEqual(['One', 'Share']);
+  },
+);
+
+test(
+  'sets `aria-haspopup`, `aria-expanded` and `:state(submenu)` for a submenu',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-menu label="Label">
+          <button slot="anchor">Anchor</button>
+          <slab-menu label="Share">
+            <slab-menu-item slot="anchor">Share</slab-menu-item>
+            <slab-menu-item>Email</slab-menu-item>
+          </slab-menu>
+        </slab-menu>`,
+    );
+
+    const trigger = page.locator('slab-menu-item', { hasText: 'Share' });
+
+    await expect(trigger).toHaveAttribute('aria-haspopup', 'menu');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+    const states = await page.locator('slab-menu').evaluateAll((elements) => {
+      return elements.map((element) => element.matches(':state(submenu)'));
+    });
+
+    expect(states).toStrictEqual([false, true]);
+  },
+);
+
+test(
+  'closes its submenus when it closes',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-menu label="Label" open>
+          <button slot="anchor">Anchor</button>
+          <slab-menu label="Share">
+            <slab-menu-item slot="anchor">Share</slab-menu-item>
+            <slab-menu-item>Email</slab-menu-item>
+          </slab-menu>
+        </slab-menu>`,
+    );
+
+    const submenu = page.locator('slab-menu slab-menu');
+
+    await submenu.evaluate<void, void, Menu>((element) => {
+      element.show();
+    });
+
+    await expect(submenu).toHaveJSProperty('open', true);
+    await expect(page.getByRole('menu', { name: 'Share' })).toBeFocused();
+
+    await page
+      .locator('slab-menu')
+      .first()
+      .evaluate<void, void, Menu>((element) => {
+        element.hide();
+      });
+
+    await expect(submenu).toHaveJSProperty('open', false);
+    await expect(page.getByRole('button')).toBeFocused();
+  },
+);
+
+test(
+  'closes every Menu when focus leaves a submenu',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-menu label="Label" open>
+            <button slot="anchor">Anchor</button>
+            <slab-menu label="Share">
+              <slab-menu-item slot="anchor">Share</slab-menu-item>
+              <slab-menu-item>Email</slab-menu-item>
+            </slab-menu>
+          </slab-menu>
+
+          <button>After</button>`,
+    );
+
+    await page.getByRole('menuitem', { name: 'Share' }).click();
+    await expect(page.getByRole('menu', { name: 'Share' })).toBeFocused();
+
+    await page.getByRole('button', { name: 'After' }).click();
+
+    await expect(page.locator('slab-menu').first()).toHaveJSProperty(
+      'open',
+      false,
+    );
+
+    await expect(page.locator('slab-menu slab-menu')).toHaveJSProperty(
+      'open',
+      false,
+    );
+  },
+);
+
+test(
+  'leaves out a nested Menu whose anchor is not a Menu Item',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-menu label="Label" open>
+          <button slot="anchor">Anchor</button>
+          <slab-menu-item>One</slab-menu-item>
+          <slab-menu label="Nested">
+            <button slot="anchor">Nested</button>
+            <slab-menu-item>Two</slab-menu-item>
+          </slab-menu>
+        </slab-menu>`,
+    );
+
+    const parent = page.locator('slab-menu').first();
+
+    const count = await parent.evaluate<number, void, Menu>((element) => {
+      return element.items.length;
+    });
+
+    expect(count).toBe(1);
+
+    await page.getByRole('menuitem', { name: 'One' }).hover();
+    await page.getByRole('button', { name: 'Nested' }).hover();
+
+    const isAnyActive = await page
+      .getByRole('menuitem', { name: 'One' })
+      .evaluate((element) => element.matches(':state(active)'));
+
+    expect(isAnyActive).toBe(false);
+
+    await expect(
+      page.locator('slab-menu slab-menu').evaluate((element) => {
+        return element.matches(':state(submenu)');
+      }),
+    ).resolves.toBe(false);
+  },
+);

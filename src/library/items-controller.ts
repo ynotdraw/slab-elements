@@ -55,6 +55,12 @@ export interface ItemsControllerConfig<T extends Item> {
   itemClass: abstract new (...arguments_: never[]) => T;
 
   /**
+   * The item an assigned element stands for when it isn't an item itself,
+   * such as the Menu Item that opens a Menu's submenu.
+   */
+  itemOf?: (element: Element) => Element | undefined;
+
+  /**
    * The items, when they aren't simply what's assigned to `slot`, such as a
    * Tree's, which are every item that can be seen at every depth.
    */
@@ -152,9 +158,11 @@ export default class ItemsController<
     const elements = this.#assignedElements.flatMap((element) => {
       const { groupClass } = this.#config;
 
-      return groupClass && element instanceof groupClass
-        ? [...element.children]
-        : [element];
+      if (groupClass && element instanceof groupClass) {
+        return [...element.children];
+      }
+
+      return [this.#config.itemOf?.(element) ?? element];
     });
 
     return elements.filter((element): element is T => {
