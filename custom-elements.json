@@ -6619,16 +6619,6 @@
             },
             {
               "kind": "method",
-              "name": "showPicker",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "Opens the calendar and focuses its tabbable day."
-            },
-            {
-              "kind": "method",
               "name": "renderFields",
               "privacy": "protected",
               "return": {
@@ -6648,6 +6638,16 @@
                 "name": "DateRangeField",
                 "module": "src/date-range-field.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "showPicker",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Opens the calendar and focuses its tabbable day."
             },
             {
               "kind": "method",
