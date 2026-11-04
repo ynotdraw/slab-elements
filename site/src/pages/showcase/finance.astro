@@ -74,46 +74,59 @@ const activity = [
 
           <slab-tabs-panel name="holdings">
             <div class="fi-scroll" role="region" aria-label="Holdings" tabindex="0">
-            <table class="fi-table">
-              <thead>
-                <tr><th scope="col">Holding</th><th scope="col">Shares</th><th scope="col">Value</th><th scope="col">Today</th></tr>
-              </thead>
-              <tbody>
+            <slab-table aria-label="Holdings" class="fi-table">
+              <slab-table-head>
+                <slab-table-row>
+                  <slab-table-column-header sortable sort="ascending">Holding</slab-table-column-header>
+                  <slab-table-column-header sortable>Shares</slab-table-column-header>
+                  <slab-table-column-header sortable>Value</slab-table-column-header>
+                  <slab-table-column-header sortable>Today</slab-table-column-header>
+                </slab-table-row>
+              </slab-table-head>
+              <slab-table-body>
                 {
-                  holdings.map((holding) => (
-                    <tr>
-                      <th scope="row">
-                        <span class="fi-symbol">{holding.symbol}</span> {holding.name}
-                      </th>
-                      <td>{holding.shares}</td>
-                      <td>{holding.value}</td>
-                      <td class={holding.up ? 'fi-up' : 'fi-down'}>{holding.change}</td>
-                    </tr>
-                  ))
+                  holdings
+                    .toSorted((a, b) => a.symbol.localeCompare(b.symbol))
+                    .map((holding) => (
+                      <slab-table-row>
+                        <slab-table-cell row-header>
+                          <span class="fi-symbol">{holding.symbol}</span> {holding.name}
+                        </slab-table-cell>
+                        <slab-table-cell>{holding.shares}</slab-table-cell>
+                        <slab-table-cell data-sort={holding.value.replace(/[^\d.]/g, '')}>{holding.value}</slab-table-cell>
+                        <slab-table-cell class={holding.up ? 'fi-up' : 'fi-down'} data-sort={holding.change.replace('−', '-').replace(/[+%]/g, '')}>
+                          {holding.change}
+                        </slab-table-cell>
+                      </slab-table-row>
+                    ))
                 }
-              </tbody>
-            </table>
+              </slab-table-body>
+            </slab-table>
             </div>
           </slab-tabs-panel>
 
           <slab-tabs-panel name="activity">
             <div class="fi-scroll" role="region" aria-label="Activity" tabindex="0">
-            <table class="fi-table">
-              <thead>
-                <tr><th scope="col">Date</th><th scope="col">Activity</th><th scope="col">Amount</th></tr>
-              </thead>
-              <tbody>
+            <slab-table aria-label="Activity" class="fi-table">
+              <slab-table-head>
+                <slab-table-row>
+                  <slab-table-column-header>Date</slab-table-column-header>
+                  <slab-table-column-header class="fi-start">Activity</slab-table-column-header>
+                  <slab-table-column-header>Amount</slab-table-column-header>
+                </slab-table-row>
+              </slab-table-head>
+              <slab-table-body>
                 {
                   activity.map((row) => (
-                    <tr>
-                      <td>{row.date}</td>
-                      <th scope="row">{row.what}</th>
-                      <td class={row.amount.startsWith('+') ? 'fi-up' : undefined}>{row.amount}</td>
-                    </tr>
+                    <slab-table-row>
+                      <slab-table-cell>{row.date}</slab-table-cell>
+                      <slab-table-cell row-header>{row.what}</slab-table-cell>
+                      <slab-table-cell class={row.amount.startsWith('+') ? 'fi-up' : undefined}>{row.amount}</slab-table-cell>
+                    </slab-table-row>
                   ))
                 }
-              </tbody>
-            </table>
+              </slab-table-body>
+            </slab-table>
             </div>
             <slab-pagination label="Activity pages" page="1" total="6"></slab-pagination>
           </slab-tabs-panel>

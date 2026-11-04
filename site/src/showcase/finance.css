@@ -143,19 +143,23 @@
   overflow-x: auto;
 }
 
+/*
+  Table is laid out like a "<table>", so it collapses its borders and fills
+  the card the same way. A sortable header's button is reset to look like the
+  plain headers beside it, with an arrow drawn after it.
+*/
 .fi-table {
   border-collapse: collapse;
   inline-size: 100%;
 
-  th,
-  td {
+  :is(slab-table-column-header, slab-table-cell) {
     border-block-end: 1px solid var(--fi-line);
     padding: 0.75rem 0.5rem;
     text-align: end;
     white-space: nowrap;
   }
 
-  thead th {
+  slab-table-column-header {
     color: var(--fi-muted);
     font-size: 0.75rem;
     font-weight: 500;
@@ -163,17 +167,64 @@
     text-transform: uppercase;
   }
 
-  :is(th, td):first-child,
-  tbody th {
+  :is(slab-table-column-header, slab-table-cell):first-child,
+  slab-table-cell[row-header],
+  .fi-start {
     text-align: start;
   }
 
-  tbody th {
+  slab-table-cell[row-header] {
     font-weight: 500;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
   }
+}
+
+.fi-table slab-table-column-header::part(sort-button) {
+  align-items: center;
+  background: none;
+  border: 0;
+  border-radius: 0.25rem;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  gap: 0.25rem;
+  letter-spacing: inherit;
+  padding: 0;
+  text-transform: inherit;
+}
+
+.fi-table slab-table-column-header::part(sort-button):hover {
+  color: var(--fi-ink);
+}
+
+.fi-table slab-table-column-header::part(sort-button):focus-visible {
+  outline: 2px solid var(--fi-blue);
+  outline-offset: 2px;
+}
+
+.fi-table slab-table-column-header::part(sort-indicator)::before {
+  content: '↕';
+  font-size: 0.875em;
+  opacity: 0.45;
+}
+
+.fi-table slab-table-column-header:is(:state(ascending), :state(descending)) {
+  color: var(--fi-ink);
+}
+
+.fi-table
+  slab-table-column-header:state(ascending)::part(sort-indicator)::before {
+  content: '↑';
+  opacity: 1;
+}
+
+.fi-table
+  slab-table-column-header:state(descending)::part(sort-indicator)::before {
+  content: '↓';
+  opacity: 1;
 }
 
 .fi-symbol {
