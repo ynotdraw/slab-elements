@@ -38,6 +38,30 @@ export default css`
     content: '●' / '';
   }
 
+  /*
+    A Menu Item that opens a submenu points the way it opens. The arrow is
+    decoration: that it opens one is read from aria-haspopup. While its
+    submenu is open, it stays marked, even once the pointer has moved on.
+  */
+  :host([aria-haspopup]) {
+    padding-inline-end: 2rem;
+    position: relative;
+  }
+
+  :host([aria-haspopup])::after {
+    content: '›' / '';
+    inset-inline-end: 0.75rem;
+    position: absolute;
+  }
+
+  :host([aria-haspopup]:dir(rtl))::after {
+    content: '‹' / '';
+  }
+
+  :host([aria-expanded='true']) {
+    border-inline-start-color: var(--ember);
+  }
+
   :host(:state(disabled)) {
     color: var(--ash);
     cursor: not-allowed;

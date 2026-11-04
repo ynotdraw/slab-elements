@@ -379,3 +379,57 @@ test(
     await expect(anchors.nth(0)).toBeFocused();
   },
 );
+
+test(
+  'opens a submenu via ArrowRight, closes it via ArrowLeft, and moves to the next Menu via ArrowRight from it',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-menubar label="Label">
+          <slab-menu label="File">
+            <button slot="anchor">File</button>
+            <slab-menu label="Share">
+              <slab-menu-item slot="anchor">Share</slab-menu-item>
+              <slab-menu-item>Email</slab-menu-item>
+            </slab-menu>
+          </slab-menu>
+
+          <slab-menu label="Edit">
+            <button slot="anchor">Edit</button>
+            <slab-menu-item>Undo</slab-menu-item>
+          </slab-menu>
+        </slab-menubar>`,
+    );
+
+    const [file, share, edit] = [
+      page.locator('slab-menu', { has: page.getByText('File') }).first(),
+      page.locator('slab-menu slab-menu'),
+      page.locator('slab-menu', { has: page.getByText('Undo') }),
+    ];
+
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('ArrowDown');
+
+    await page.keyboard.press('ArrowRight');
+    await expect(share).toHaveJSProperty('open', true);
+    await expect(page.getByRole('menu', { name: 'Share' })).toBeFocused();
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(share).toHaveJSProperty('open', false);
+    await expect(file).toHaveJSProperty('open', true);
+    await expect(page.getByRole('menu', { name: 'File' })).toBeFocused();
+
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('ArrowRight');
+
+    await expect(file).toHaveJSProperty('open', false);
+    await expect(share).toHaveJSProperty('open', false);
+    await expect(edit).toHaveJSProperty('open', true);
+    await expect(page.getByRole('menu', { name: 'Edit' })).toBeFocused();
+
+    await expect
+      .poll(() => isActive(page.getByRole('menuitem', { name: 'Undo' })))
+      .toBe(true);
+  },
+);

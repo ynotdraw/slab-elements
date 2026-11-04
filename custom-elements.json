@@ -9917,7 +9917,7 @@
           "slots": [
             {
               "name": "anchor",
-              "description": "What opens the menu, usually a \\`<button>\\`",
+              "description": "What opens the menu, usually a \\`<button>\\`, or a Menu Item for a submenu",
               "required": {
                 "tag": "required",
                 "name": "",
@@ -9954,7 +9954,7 @@
               "name": "",
               "description": "",
               "type": {
-                "text": "MenuItem | MenuGroup"
+                "text": "MenuItem | MenuGroup | Menu"
               }
             }
           ],
@@ -9986,7 +9986,7 @@
                 "text": "'bottom' | 'left' | 'right' | 'top'"
               },
               "default": "'bottom'",
-              "description": "The side of its anchor it opens on, when there's room. It flips when\nthere isn't.",
+              "description": "The side of its anchor it opens on, when there's room. It flips when\nthere isn't. A submenu ignores it and opens beside its Menu Item.",
               "attribute": "placement",
               "reflects": true
             },
@@ -10071,7 +10071,7 @@
                 "text": "'bottom' | 'left' | 'right' | 'top'"
               },
               "default": "'bottom'",
-              "description": "The side of its anchor it opens on, when there's room. It flips when\nthere isn't.",
+              "description": "The side of its anchor it opens on, when there's room. It flips when\nthere isn't. A submenu ignores it and opens beside its Menu Item.",
               "fieldName": "placement"
             },
             {

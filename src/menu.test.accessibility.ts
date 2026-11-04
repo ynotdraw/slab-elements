@@ -103,3 +103,35 @@ test(
     `);
   },
 );
+
+test(
+  'is accessible with a submenu open',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <slab-menu label="Label" open>
+          <button slot="anchor">Anchor</button>
+          <slab-menu-item>One</slab-menu-item>
+          <slab-menu label="Share">
+            <slab-menu-item slot="anchor">Share</slab-menu-item>
+            <slab-menu-item>Email</slab-menu-item>
+          </slab-menu>
+        </slab-menu>
+      `,
+    );
+
+    await page.getByRole('menuitem', { name: 'Share' }).click();
+
+    await expect(page).toBeAccessible('slab-menu');
+
+    await expect(page.getByRole('menu', { name: 'Label' }))
+      .toMatchAriaSnapshot(`
+      - menu "Label":
+        - menuitem "One"
+        - menuitem "Share" [expanded]
+        - menu "Share":
+          - menuitem "Email"
+    `);
+  },
+);

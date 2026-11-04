@@ -15,6 +15,14 @@ export default css`
   }
 
   /*
+    A submenu opens beside its Menu Item, overlapping its Menu's edge a little,
+    with its first Menu Item level with the one that opened it.
+  */
+  :host(:state(submenu)) [part~='popover'] {
+    margin: calc(-0.25rem - 2px) -0.25rem;
+  }
+
+  /*
     The menu is focused for as long as it's open, and the active Menu Item is
     what shows where the keyboard is, so the menu itself has no outline.
   */
