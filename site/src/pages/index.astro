@@ -2,6 +2,7 @@
 import CodeBlock from '../components/CodeBlock.astro';
 import FrameworkTabs from '../components/FrameworkTabs.astro';
 import Logo from '../components/Logo.astro';
+import ShowcaseCards from '../components/ShowcaseCards.astro';
 import Base from '../layouts/Base.astro';
 import { componentsByGroup, description } from '../lib/index-markdown.ts';
 import { inline } from '../lib/prose.ts';
@@ -418,6 +419,21 @@ const scoped = (id: string, css: string) =>
         ))
       }
     </ul>
+  </section>
+
+  <section aria-labelledby="showcase-heading" class="showcase" id="showcase">
+    <div class="looks-intro">
+      <p class="eyebrow">Showcase</p>
+      <h2 id="showcase-heading">Not convinced?</h2>
+      <p>
+        Here are the same elements dressed up four very different ways. No
+        forks, no tokens, just one stylesheet each.
+      </p>
+    </div>
+
+    <ShowcaseCards />
+
+    <a class="button" href={`${base}showcase/`}>See the showcase</a>
   </section>
 
   <section aria-labelledby="cta" class="cta">
@@ -987,6 +1003,18 @@ const scoped = (id: string, css: string) =>
       color: var(--muted);
       font-size: 0.6875rem;
       letter-spacing: 0.06em;
+    }
+  }
+
+  .showcase {
+    border-block-end: 3px solid var(--ink);
+    display: grid;
+    gap: 2rem;
+    justify-items: start;
+    padding: 2.875rem var(--gutter);
+
+    > :global(.cards) {
+      inline-size: 100%;
     }
   }
 
