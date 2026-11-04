@@ -59,7 +59,8 @@ const meta: Meta = {
       table: {
         type: {
           summary: 'Element',
-          detail: '// What opens the menu, usually a `<button>`.',
+          detail:
+            '// What opens the menu, usually a `<button>`, or a Menu Item for a submenu.',
         },
       },
       type: { name: 'function', required: true },
@@ -78,7 +79,7 @@ const meta: Meta = {
         type: {
           summary: '"bottom" | "left" | "right" | "top"',
           detail:
-            "// The side of its anchor it opens on, when there's room. It flips when there isn't.",
+            "// The side of its anchor it opens on, when there's room. It flips when there isn't. A submenu ignores it and opens beside its Menu Item.",
         },
       },
     },
@@ -122,3 +123,26 @@ const meta: Meta = {
 export default meta;
 
 export const Menu: StoryObj = {};
+
+export const Submenu: StoryObj = {
+  render(arguments_) {
+    return html`<slab-menu
+      label=${arguments_.label}
+      placement=${arguments_.placement}
+      ?open=${arguments_.open}
+    >
+      <button slot="anchor">Anchor</button>
+
+      <slab-menu-item>One</slab-menu-item>
+
+      <slab-menu label="Two">
+        <slab-menu-item slot="anchor">Two</slab-menu-item>
+
+        <slab-menu-item>Two A</slab-menu-item>
+        <slab-menu-item>Two B</slab-menu-item>
+      </slab-menu>
+
+      <slab-menu-item>Three</slab-menu-item>
+    </slab-menu>`;
+  },
+};
