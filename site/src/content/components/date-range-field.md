@@ -14,7 +14,7 @@ usage: |
 
 Each input's bound is the other's value, as well as `min` and `max`, so a browser's picker won't offer an end before the start. An end typed before the start isn't changed to fit: it stays, and the field is `rangeUnderflow` and `rangeOverflow`, as a date outside `min` and `max` is on a single input. The form gets two entries under `name`, the start and then the end, even when one is empty.
 
-The group is named by `label`, and each input by it and then its own label, "Start" and "End" unless you set `start-label` and `end-label`, so a screenreader reads "Stay Check-in". Lay the inputs out with `::part(fields)`. For a calendar instead of the browser's picker, [Calendar](../calendar/) with `range` picks the same thing, as "yyyy-mm-dd/yyyy-mm-dd".
+The group is named by `label`, and each input by it and then its own label, "Start" and "End" unless you set `start-label` and `end-label`, so a screenreader reads "Stay Check-in". Lay the inputs out with `::part(fields)`. For a calendar instead of the browser's picker, use [Date Range Picker](../date-range-picker/).
 
 ## Keyboard
 
