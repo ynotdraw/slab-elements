@@ -71,6 +71,7 @@ export interface Strings {
   sortableListInstructions: string;
   sortableListMoved: (label: string, position: number, total: number) => string;
   stepsComplete: string;
+  tableSorted: (column: string, sort: 'ascending' | 'descending') => string;
   tagsInputAdded: (text: string) => string;
   tagsInputRemove: (text: string) => string;
   tagsInputRemoved: (text: string) => string;
@@ -137,6 +138,7 @@ const english: Strings = {
   sortableListMoved: (label, position, total) =>
     `${label} moved to position ${position} of ${total}`,
   stepsComplete: 'Completed',
+  tableSorted: (column, sort) => `Sorted by ${column}, ${sort}`,
   tagsInputAdded: (text) => `${text} added`,
   tagsInputRemove: (text) => `Remove ${text}`,
   tagsInputRemoved: (text) => `${text} removed`,
