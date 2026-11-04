@@ -98,12 +98,21 @@ document.addEventListener('sort', (event) => {
   const column = [...row.children].indexOf(header);
   const direction = header.sort === 'descending' ? -1 : 1;
 
-  const text = (element: Element) =>
-    element.children[column]?.textContent?.trim() ?? '';
+  // A Cell's `data-sort`, when it has one, is what it sorts by, such as
+  // "-0.38" for "−0.38%". Numbers sort as numbers, and the rest as text.
+  const value = (row: Element) => {
+    const cell = row.children[column] as HTMLElement | undefined;
+
+    return cell?.dataset.sort ?? cell?.textContent?.trim() ?? '';
+  };
+
+  const compare = (a: string, b: string) =>
+    a !== '' && b !== '' && !Number.isNaN(Number(a)) && !Number.isNaN(Number(b))
+      ? Number(a) - Number(b)
+      : a.localeCompare(b, undefined, { numeric: true });
 
   const rows = [...body.children].toSorted(
-    (a, b) =>
-      direction * text(a).localeCompare(text(b), undefined, { numeric: true }),
+    (a, b) => direction * compare(value(a), value(b)),
   );
 
   body.append(...rows);

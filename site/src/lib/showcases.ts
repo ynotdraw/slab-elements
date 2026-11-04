@@ -37,6 +37,7 @@ export const showcases: Showcase[] = [
       'slab-select',
       'slab-toggle-group',
       'slab-tabs',
+      'slab-table',
       'slab-pagination',
       'slab-combobox',
       'slab-number',
