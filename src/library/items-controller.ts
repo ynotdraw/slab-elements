@@ -24,9 +24,10 @@ export interface Item extends HTMLElement {
 export interface ItemsControllerConfig<T extends Item> {
   /**
    * The element that has focus and so carries `aria-activedescendant`, once
-   * it's rendered.
+   * it's rendered. A host that focuses its items instead, such as Grid List,
+   * leaves it out.
    */
-  activeDescendantElement: () => HTMLElement | undefined;
+  activeDescendantElement?: () => HTMLElement | undefined;
 
   /**
    * Whether `aria-activedescendant` is set at all. A Select's isn't while it's
@@ -97,10 +98,9 @@ export interface ItemsControllerConfig<T extends Item> {
  *
  * The active item is pointed at with `aria-activedescendant` on the element
  * the host says has focus, and it's never focused itself. A host that would
- * rather move focus, with a roving `tabindex`, would return
- * nothing from `activeDescendantElement` and focus `activeItem` itself after
- * each move. Movement and typeahead don't depend on how the active item is
- * shown.
+ * rather move focus, with a roving `tabindex`, as Grid List does, leaves out
+ * `activeDescendantElement` and focuses `activeItem` itself after each move.
+ * Movement and typeahead don't depend on how the active item is shown.
  */
 export default class ItemsController<
   T extends Item,
@@ -446,7 +446,7 @@ export default class ItemsController<
   // the shadow root. An element reference may point out of a shadow root into
   // the tree around it, which is where the items are.
   #updateActiveDescendant() {
-    const element = this.#config.activeDescendantElement();
+    const element = this.#config.activeDescendantElement?.();
 
     if (element) {
       const isShown = this.#config.isActiveDescendantShown?.() ?? true;
