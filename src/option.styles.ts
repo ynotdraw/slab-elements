@@ -1,4 +1,5 @@
 import { css } from 'lit';
+import visuallyHidden from './library/visually-hidden.js';
 
 export default [
   css`
@@ -22,5 +23,21 @@ export default [
     :host([hidden]) {
       display: none !important;
     }
+
+    /*
+      Functional, not visual. A Listbox or Combobox with "virtual" lays out only
+      the Options in or near view, and important for the same reason.
+    */
+    :host(:state(private-unrendered)) {
+      display: none !important;
+    }
+  `,
+  css`
+    /*
+      Functional, not visual. The active Option of a Listbox or Combobox with
+      "virtual", once it's scrolled out of view. It stays in the accessibility
+      tree, which \`aria-activedescendant\` needs, without being seen.
+    */
+    ${visuallyHidden(':host(:state(private-offscreen))')}
   `,
 ];

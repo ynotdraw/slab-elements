@@ -380,3 +380,29 @@ test(
     );
   },
 );
+
+test(
+  'is accessible when virtual',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <style>
+          slab-combobox::part(listbox) {
+            max-block-size: 200px;
+          }
+        </style>
+
+        <slab-combobox label="Label" virtual>
+          ${Array.from({ length: 100 }, (_, index) => {
+            return html`<slab-option>Option ${index}</slab-option>`;
+          })}
+        </slab-combobox>
+      `,
+    );
+
+    await page.getByRole('combobox').click();
+
+    await expect(page).toBeAccessible('slab-combobox');
+  },
+);

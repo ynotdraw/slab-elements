@@ -82,6 +82,7 @@ const meta: Meta = {
         ?hide-label=${arguments_['hide-label'] || nothing}
         ?multiple=${arguments_.multiple}
         ?required=${arguments_.required}
+        ?virtual=${arguments_.virtual}
       >
         <slab-option
           label=${arguments_['<slab-option>.label'] || nothing}
@@ -132,6 +133,7 @@ const meta: Meta = {
     'setValidity(flags, message)': '',
     'slot="description"': '',
     value: '',
+    virtual: false,
     version: '',
     '<slab-option>.label': '',
     '<slab-option>.one.disabled': false,
@@ -262,6 +264,12 @@ const meta: Meta = {
         },
       },
     },
+    virtual: {
+      table: {
+        defaultValue: { summary: 'false' },
+        type: { summary: 'boolean' },
+      },
+    },
     version: {
       control: false,
       table: {
@@ -344,5 +352,21 @@ export const Multiple: StoryObj = {
 export const WithError: StoryObj = {
   args: {
     required: true,
+  },
+};
+
+export const Virtual: StoryObj = {
+  render() {
+    return html`<style>
+        slab-listbox::part(listbox) {
+          block-size: 20rem;
+        }
+      </style>
+
+      <slab-listbox label="Label" virtual>
+        ${Array.from({ length: 5000 }, (_, index) => {
+          return html`<slab-option>Option ${index + 1}</slab-option>`;
+        })}
+      </slab-listbox>`;
   },
 };

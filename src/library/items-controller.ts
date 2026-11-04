@@ -67,6 +67,12 @@ export interface ItemsControllerConfig<T extends Item> {
   onChange: () => void;
 
   /**
+   * Scrolls an item into view when it becomes active, in place of its own
+   * `scrollIntoView()`. A virtualized host renders it first.
+   */
+  scrollIntoView?: (item: T) => void;
+
+  /**
    * The slot the items are assigned to. Items are found among what's assigned
    * to it, so ones slotted through from further out count too. Until there's a
    * slot, the host's own children are used.
@@ -97,6 +103,10 @@ export default class ItemsController<
   // there.
   protected hasUpdated = false;
 
+  // Whether items have connected since the last `settle()`, which is still to
+  // run for them.
+  protected isSettlePending = false;
+
   /**
    * The item the user is on. Only one of the host's shown items can be.
    */
@@ -111,7 +121,14 @@ export default class ItemsController<
     this.#activeItem = active;
 
     active?.privateSetActive(true);
-    active?.scrollIntoView({ block: 'nearest' });
+
+    if (active) {
+      if (this.#config.scrollIntoView) {
+        this.#config.scrollIntoView(active);
+      } else {
+        active.scrollIntoView({ block: 'nearest' });
+      }
+    }
 
     this.#updateActiveDescendant();
   }
@@ -193,10 +210,38 @@ export default class ItemsController<
   // Whether an event came from one of the host's own items, rather than from
   // one nested inside an item or inside another component.
   protected isOwn(event: Event): event is Event & { target: T } {
-    return (
-      event.target instanceof this.#config.itemClass &&
-      this.items.includes(event.target)
-    );
+    const { target } = event;
+    const isItem = target instanceof this.#config.itemClass;
+
+    // Found from where the item is slotted when it can be, rather than by
+    // searching every item. Each of thousands of items announces itself as
+    // it connects, and searching each time would take as long as all of
+    // them squared. Items that aren't simply what's slotted are searched.
+    if (!isItem || this.#config.items) {
+      return isItem && this.items.includes(target);
+    }
+
+    const { groupClass } = this.#config;
+    const parent = target.parentElement;
+    const isGrouped = Boolean(groupClass && parent instanceof groupClass);
+
+    // A group's own slot is in its shadow root, so it's the group that's
+    // assigned to the host's slot.
+    const element = isGrouped ? parent : target;
+    const slot = this.#config.slot();
+
+    // Until there's a slot, the items are the host's children.
+    if (!slot) {
+      return element?.parentElement === this.#host;
+    }
+
+    let assigned = element?.assignedSlot;
+
+    while (assigned && assigned !== slot) {
+      assigned = assigned.assignedSlot;
+    }
+
+    return assigned === slot;
   }
 
   /**
@@ -228,6 +273,23 @@ export default class ItemsController<
     return this.#moveTo(
       navigable.at(index === -1 ? -1 : Math.max(index - 1, 0)),
     );
+  }
+
+  // What an item's own events call in place of `onChange`, once for all of
+  // those dispatched in the same task. Each of thousands of items dispatches
+  // a few as it first updates, and the host deriving everything from every
+  // item for each of them would take as long as all of them squared.
+  protected scheduleChange() {
+    if (this.#isChangePending) {
+      return;
+    }
+
+    this.#isChangePending = true;
+
+    queueMicrotask(() => {
+      this.#isChangePending = false;
+      this.#config.onChange();
+    });
   }
 
   // Run once the items are there, and again whenever they change. A subclass
@@ -284,14 +346,26 @@ export default class ItemsController<
 
   #host: ItemsControllerHost;
 
+  #isChangePending = false;
+
   #search = '';
 
   #searchTimeout?: ReturnType<typeof setTimeout>;
 
+  // Settled once for every item that connects in the same task, rather than
+  // once for each, which for thousands of items is thousands of times over
+  // all of them.
   #onConnected = (event: Event) => {
-    if (this.isOwn(event)) {
-      this.settle();
+    if (!this.isOwn(event) || this.isSettlePending) {
+      return;
     }
+
+    this.isSettlePending = true;
+
+    queueMicrotask(() => {
+      this.isSettlePending = false;
+      this.settle();
+    });
   };
 
   #onDisabled = (event: Event) => {
@@ -305,7 +379,7 @@ export default class ItemsController<
       this.activeItem = null;
     }
 
-    this.#config.onChange();
+    this.scheduleChange();
   };
 
   // Only listened for when there's a `groupClass`. A group that isn't one of

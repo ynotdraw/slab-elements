@@ -12,6 +12,7 @@ import required from './library/required.js';
 import Option from './option.js';
 import assertSlot from './library/assert-slot.js';
 import styles from './option-group.styles.js';
+import { type Rendering } from './library/virtualizer.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -63,15 +64,39 @@ export default class OptionGroup extends LitElement {
     this.setAttribute('role', 'group');
   }
 
+  // Private because it's only meant to be called by the Virtualizer of a
+  // Listbox or Combobox with `virtual`. Whether it's laid out, which it isn't
+  // while none of its Options are in or near view.
+  privateSetRendering(rendering: Rendering) {
+    this.#setState('private-unrendered', rendering === 'unrendered');
+    this.#setState('private-offscreen', rendering === 'offscreen');
+  }
+
+  // Private for the same reason. The room taken by its Options that aren't
+  // rendered, before and after those that are, so its label stays put.
+  privateSetSpacers(before: number, after: number) {
+    const [start, end] = this.#spacers;
+
+    start.style.blockSize = `${before}px`;
+    end.style.blockSize = `${after}px`;
+  }
+
   override render() {
+    // The spacers are always there, rather than rendered only while
+    // virtualized, so the Virtualizer can size them without waiting for an
+    // update.
     return html`<div aria-hidden="true" part="label">
         <!-- The label -->
         ${this.label}
       </div>
 
+      ${this.#spacers[0]}
+
       <slot @slotchange=${this.#onSlotChange} ${assertSlot([Option])}>
         <!-- @type {Option} -->
-      </slot>`;
+      </slot>
+
+      ${this.#spacers[1]}`;
   }
 
   override updated(changes: PropertyValues<this>) {
@@ -89,9 +114,29 @@ export default class OptionGroup extends LitElement {
     return super.finalizeStyles([styles, subclassStyles ?? []]);
   }
 
+  constructor() {
+    super();
+    this.#internals = this.attachInternals();
+  }
+
+  #internals: ElementInternals;
+
+  #spacers: [HTMLDivElement, HTMLDivElement] = [
+    document.createElement('div'),
+    document.createElement('div'),
+  ];
+
   // What it's in finds its Options through it, and doesn't hear this
   // "slotchange", which doesn't leave the shadow root.
   #onSlotChange() {
     this.dispatchEvent(new Event('private-group-change', { bubbles: true }));
+  }
+
+  #setState(state: string, isActive: boolean) {
+    if (isActive) {
+      this.#internals.states.add(state);
+    } else {
+      this.#internals.states.delete(state);
+    }
   }
 }

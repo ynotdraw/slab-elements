@@ -670,3 +670,101 @@ test(
     await expect(host).toHaveJSProperty('value', 'apple');
   },
 );
+
+test(
+  'moves to options that are not rendered when virtual',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-listbox::part(listbox) {
+              block-size: 200px;
+            }
+
+            slab-option {
+              block-size: 20px;
+            }
+          </style>
+
+          <slab-listbox label="Label" virtual>
+            ${Array.from({ length: 1000 }, (_, index) => {
+              return html`<slab-option>Option ${index}</slab-option>`;
+            })}
+          </slab-listbox>`,
+    );
+
+    const host = page.locator('slab-listbox');
+    const last = page.getByRole('option', { name: 'Option 999' });
+
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('End');
+
+    await expect(host).toHaveJSProperty(
+      'activeOption.textContent',
+      'Option 999',
+    );
+
+    await expect(last).toBeInViewport();
+    expect(await isActive(last)).toBe(true);
+
+    await page.keyboard.press('ArrowUp');
+
+    await expect(host).toHaveJSProperty(
+      'activeOption.textContent',
+      'Option 998',
+    );
+
+    await page.keyboard.press('Home');
+
+    await expect(host).toHaveJSProperty('activeOption.textContent', 'Option 0');
+
+    await expect(
+      page.getByRole('option', { name: 'Option 0' }),
+    ).toBeInViewport();
+
+    await expect(last).toBeHidden();
+  },
+);
+
+test(
+  'moves to options that are not rendered by typeahead when virtual',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-listbox::part(listbox) {
+              block-size: 200px;
+            }
+
+            slab-option {
+              block-size: 20px;
+            }
+          </style>
+
+          <slab-listbox label="Label" virtual>
+            ${Array.from({ length: 1000 }, (_, index) => {
+              return html`<slab-option>Option ${index}</slab-option>`;
+            })}
+          </slab-listbox>`,
+    );
+
+    const host = page.locator('slab-listbox');
+
+    await page.keyboard.press('Tab');
+    await page.keyboard.type('Option 950');
+
+    await expect(host).toHaveJSProperty(
+      'activeOption.textContent',
+      'Option 950',
+    );
+
+    await expect(
+      page.getByRole('option', { name: 'Option 950' }),
+    ).toBeInViewport();
+
+    await page.keyboard.press('Enter');
+    await expect(host).toHaveJSProperty('value', 'Option 950');
+  },
+);

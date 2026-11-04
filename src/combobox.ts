@@ -25,6 +25,7 @@ import OptionGroup from './option-group.js';
 import styles from './combobox.styles.js';
 import browserValidationMessage from './library/browser-validation-message.js';
 import isComposing from './library/is-composing.js';
+import Virtualizer from './library/virtualizer.js';
 
 // How long typing has to pause before the number of results is announced.
 const announceDelay = 500;
@@ -106,6 +107,8 @@ declare global {
  *
  * @readonly
  * @attr {string} [version]
+ *
+ * @attr {boolean} [virtual=false] - Lays out only the Options in or near view, for a Combobox with thousands. Give `::part(listbox)` a maximum block size so it scrolls. Options are taken to be the same height as each other.
  *
  * @slot {Option | OptionGroup}
  * @slot {Element | string} [description]
@@ -251,6 +254,14 @@ export default class Combobox extends LitElement {
   required = false;
 
   /**
+   * Lays out only the Options in or near view, for a Combobox with thousands.
+   * Give `::part(listbox)` a maximum block size so it scrolls. Options are
+   * taken to be the same height as each other.
+   */
+  @property({ reflect: true, type: Boolean })
+  virtual = false;
+
+  /**
    * What screenreaders are told once typing pauses, from how many Options are
    * left. "No results", "1 result" and so on in English when unset.
    */
@@ -323,7 +334,10 @@ export default class Combobox extends LitElement {
   }
 
   get selectedOption(): Option | null {
-    return this.options.find(({ value }) => value === this.value) ?? null;
+    // Read once rather than for each Option, since it's derived from them.
+    const selected = this.value;
+
+    return this.options.find(({ value }) => value === selected) ?? null;
   }
 
   /**
@@ -331,8 +345,10 @@ export default class Combobox extends LitElement {
    * are left out.
    */
   get selectedOptions(): Option[] {
-    return this.values.flatMap((value) => {
-      return this.options.find((option) => option.value === value) ?? [];
+    const { options, values } = this;
+
+    return values.flatMap((value) => {
+      return options.find((option) => option.value === value) ?? [];
     });
   }
 
@@ -476,10 +492,14 @@ export default class Combobox extends LitElement {
         @mousedown=${this.#onListboxMousedown}
         ${ref(this.#listboxElementRef)}
       >
+        ${this.#renderSpacer(this.#spacerBeforeElementRef)}
+
         <!-- The Options, in a popover beside the input -->
         <slot ${assertSlot([Option, OptionGroup])} ${ref(this.#slotElementRef)}>
           <!-- @type {Option | OptionGroup} -->
         </slot>
+
+        ${this.#renderSpacer(this.#spacerAfterElementRef)}
       </div>
 
       <div id="description" part="description">
@@ -546,13 +566,17 @@ export default class Combobox extends LitElement {
   override updated(changes: PropertyValues<this>) {
     const visible = this.#visible;
 
-    const selected = this.multiple
-      ? this.selectedOptions
-      : [this.selectedOption];
+    // Sets rather than arrays, so thousands of Options aren't each searched
+    // for among thousands.
+    const visibleSet = new Set<Element>(visible);
+
+    const selected = new Set(
+      this.multiple ? this.selectedOptions : [this.selectedOption],
+    );
 
     for (const option of this.options) {
-      option.hidden = !visible.includes(option);
-      option.selected = selected.includes(option);
+      option.hidden = !visibleSet.has(option);
+      option.selected = selected.has(option);
     }
 
     // A group with nothing left in it is hidden too, so its label isn't left
@@ -564,7 +588,7 @@ export default class Combobox extends LitElement {
     for (const parent of parents) {
       if (parent instanceof OptionGroup) {
         parent.hidden = ![...parent.children].some((child) => {
-          return (visible as Element[]).includes(child);
+          return visibleSet.has(child);
         });
       }
     }
@@ -588,6 +612,9 @@ export default class Combobox extends LitElement {
     this.#updateFormValue();
     this.#updateValidity();
     this.#setState('error', this.#isShowValidationFeedback);
+
+    // Last, so it measures what's been shown and hidden.
+    this.#virtualizer.update();
   }
 
   override willUpdate() {
@@ -678,6 +705,9 @@ export default class Combobox extends LitElement {
     onChange: () => {
       this.requestUpdate();
     },
+    scrollIntoView: (option) => {
+      this.#virtualizer.scrollIntoView(option);
+    },
     slot: () => this.#slotElementRef.value,
   });
 
@@ -686,6 +716,10 @@ export default class Combobox extends LitElement {
 
   // What's been typed since the value was last committed, or `undefined` when
   #slotElementRef = createRef<HTMLSlotElement>();
+
+  #spacerAfterElementRef = createRef<HTMLDivElement>();
+
+  #spacerBeforeElementRef = createRef<HTMLDivElement>();
 
   #strings = new StringsController(this);
 
@@ -704,6 +738,19 @@ export default class Combobox extends LitElement {
   // What `values` was set to. Until it's set, the Options that say they're
   // `selected` are the values, the way a `<select>`'s are.
   #values?: string[];
+
+  #virtualizer = new Virtualizer<Option>(this, {
+    activeRow: () => this.#options.activeOption,
+    groupClass: OptionGroup,
+    isEnabled: () => this.virtual,
+    rows: () => this.options,
+    scroller: () => this.#listboxElementRef.value,
+    shownRows: () => this.#visible,
+    spacers: () => [
+      this.#spacerBeforeElementRef.value,
+      this.#spacerAfterElementRef.value,
+    ],
+  });
 
   // What a validation message is anchored to, so reporting validity takes
   // focus somewhere sensible.
@@ -981,6 +1028,21 @@ export default class Combobox extends LitElement {
       const text = this.options.find((option) => option.value === value)?.text;
       announce(this.removedLabel(text ?? value), { source: this });
     }
+  }
+
+  // Where the Options that aren't rendered would be, while `virtual`. Hidden
+  // from the accessibility tree, which has room only for Options and groups
+  // in a listbox.
+  #renderSpacer(reference: ReturnType<typeof createRef<HTMLDivElement>>) {
+    return when(
+      this.virtual,
+      () =>
+        html`<div
+          aria-hidden="true"
+          data-test="spacer"
+          ${ref(reference)}
+        ></div>`,
+    );
   }
 
   #renderTags() {

@@ -20,6 +20,7 @@ import styles from './listbox.styles.js';
 import afterReflection from './library/after-reflection.js';
 import OptionsController from './library/options-controller.js';
 import browserValidationMessage from './library/browser-validation-message.js';
+import Virtualizer from './library/virtualizer.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -68,6 +69,8 @@ declare global {
  *
  * @readonly
  * @attr {string} [version]
+ *
+ * @attr {boolean} [virtual=false] - Lays out only the Options in or near view, for a Listbox with thousands. Give `::part(listbox)` a block size so it scrolls. Options are taken to be the same height as each other.
  *
  * @slot {Option | OptionGroup}
  * @slot {Element | string} [description]
@@ -147,6 +150,14 @@ export default class Listbox extends LitElement {
 
   @property({ reflect: true, type: Boolean })
   required = false;
+
+  /**
+   * Lays out only the Options in or near view, for a Listbox with thousands.
+   * Give `::part(listbox)` a block size so it scrolls. Options are taken to be
+   * the same height as each other.
+   */
+  @property({ reflect: true, type: Boolean })
+  virtual = false;
 
   /**
    * The value of the first selected and enabled Option. Setting it selects
@@ -316,10 +327,14 @@ export default class Listbox extends LitElement {
         @keydown=${this.#onListboxKeydown}
         ${ref(this.#listboxElementRef)}
       >
+        ${this.#renderSpacer(this.#spacerBeforeElementRef)}
+
         <!-- The Options -->
         <slot ${assertSlot([Option, OptionGroup])} ${ref(this.#slotElementRef)}>
           <!-- @type {Option | OptionGroup} -->
         </slot>
+
+        ${this.#renderSpacer(this.#spacerAfterElementRef)}
       </div>
 
       <div id="description" part="description">
@@ -401,6 +416,9 @@ export default class Listbox extends LitElement {
     }
 
     this.#setState('error', this.#isShowValidationFeedback);
+
+    // Last, so it measures what's been rendered.
+    this.#virtualizer.update();
   }
 
   // Functional styles go in here rather than in `styles`, so a subclass that
@@ -468,6 +486,9 @@ export default class Listbox extends LitElement {
     onChange: () => {
       this.#deriveValue();
     },
+    scrollIntoView: (option) => {
+      this.#virtualizer.scrollIntoView(option);
+    },
     slot: () => this.#slotElementRef.value,
   });
 
@@ -475,6 +496,23 @@ export default class Listbox extends LitElement {
   #rangeStart?: Option;
 
   #slotElementRef = createRef<HTMLSlotElement>();
+
+  #spacerAfterElementRef = createRef<HTMLDivElement>();
+
+  #spacerBeforeElementRef = createRef<HTMLDivElement>();
+
+  #virtualizer = new Virtualizer<Option>(this, {
+    activeRow: () => this.#options.activeOption,
+    groupClass: OptionGroup,
+    isEnabled: () => this.virtual,
+    rows: () => this.options,
+    scroller: () => this.#listboxElementRef.value,
+    shownRows: () => this.options,
+    spacers: () => [
+      this.#spacerBeforeElementRef.value,
+      this.#spacerAfterElementRef.value,
+    ],
+  });
 
   // What a validation message is anchored to, so reporting validity takes
   // focus somewhere sensible.
@@ -640,7 +678,6 @@ export default class Listbox extends LitElement {
     this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   }
 
-  // What Shift with Space and Control with Shift and Home or End do. Where a
   // Nothing for a disabled one, as for a native select's label.
   #onLabelClick() {
     if (!this.#isDisabled) {
@@ -648,6 +685,22 @@ export default class Listbox extends LitElement {
     }
   }
 
+  // Where the Options that aren't rendered would be, while `virtual`. Hidden
+  // from the accessibility tree, which has room only for Options and groups
+  // in a listbox.
+  #renderSpacer(reference: ReturnType<typeof createRef<HTMLDivElement>>) {
+    return when(
+      this.virtual,
+      () =>
+        html`<div
+          aria-hidden="true"
+          data-test="spacer"
+          ${ref(reference)}
+        ></div>`,
+    );
+  }
+
+  // What Shift with Space and Control with Shift and Home or End do. Where a
   // range starts from stays put, so another starts from the same place.
   #selectRange(from: Option, to: Option) {
     if (this.#options.selectRange(from, to)) {

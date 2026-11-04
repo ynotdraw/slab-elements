@@ -508,3 +508,105 @@ test(
     ).toBeDisabled();
   },
 );
+
+test(
+  'renders only the options in view when virtual',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-combobox::part(listbox) {
+              max-block-size: 200px;
+              padding: 0;
+            }
+
+            slab-option {
+              block-size: 20px;
+            }
+          </style>
+
+          <slab-combobox label="Label" virtual>
+            ${Array.from({ length: 1000 }, (_, index) => {
+              return html`<slab-option>Option ${index}</slab-option>`;
+            })}
+          </slab-combobox>`,
+    );
+
+    await page.getByRole('combobox').click();
+
+    await expect(page.getByRole('option', { name: 'Option 0' })).toBeVisible();
+    await expect(page.getByRole('option', { name: 'Option 999' })).toBeHidden();
+    expect(await page.getByRole('option').count()).toBeLessThan(30);
+
+    expect(
+      await page.getByRole('listbox').evaluate(({ scrollHeight }) => {
+        return scrollHeight;
+      }),
+    ).toBe(20_000);
+  },
+);
+
+test(
+  'renders the options that match what is typed when virtual',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-combobox::part(listbox) {
+              max-block-size: 200px;
+            }
+
+            slab-option {
+              block-size: 20px;
+            }
+          </style>
+
+          <slab-combobox label="Label" virtual>
+            <slab-option-group label="Group">
+              ${Array.from({ length: 1000 }, (_, index) => {
+                return html`<slab-option>Option ${index}</slab-option>`;
+              })}
+            </slab-option-group>
+          </slab-combobox>`,
+    );
+
+    const listbox = page.getByRole('listbox');
+
+    await page.getByRole('combobox').fill('99');
+
+    // 99, 199 and so on, and 990 to 999.
+    await expect(
+      page.getByRole('option', { name: 'Option 99', exact: true }),
+    ).toBeVisible();
+
+    await expect(
+      page.getByRole('option', { name: 'Option 99', exact: true }),
+    ).toHaveAttribute('aria-setsize', '19');
+
+    await listbox.evaluate((element) => {
+      element.scrollTop = element.scrollHeight;
+    });
+
+    await expect(
+      page.getByRole('option', { name: 'Option 999' }),
+    ).toBeInViewport();
+
+    await expect(
+      page.getByRole('option', { name: 'Option 999' }),
+    ).toHaveAttribute('aria-posinset', '19');
+
+    // Nothing left, and so nothing to render.
+    await page.getByRole('combobox').fill('Nothing');
+
+    await expect(page.locator('slab-combobox')).toHaveJSProperty('open', false);
+    await expect(listbox).toBeHidden();
+
+    await page.getByRole('combobox').fill('');
+    await page.keyboard.press('ArrowDown');
+
+    await expect(page.getByRole('option', { name: 'Option 0' })).toBeVisible();
+    await expect(page.getByRole('option', { name: 'Option 999' })).toBeHidden();
+  },
+);
