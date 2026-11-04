@@ -38,6 +38,26 @@ To group Options under a heading, put them in a `slab-option-group` with a `labe
 </slab-listbox>
 ```
 
+## Long lists
+
+For thousands of Options, set `virtual`. Only the Options in or near view are laid out, and spacers take the room of the rest, so the scrollbar is the size it would be with all of them. The Options are still all there, so the keys, typeahead, selection and the form value reach every one, and the list scrolls to whichever becomes active. Each Option that's rendered gets `aria-posinset` and `aria-setsize`, so a screenreader still says "4 of 5,000".
+
+Give `::part(listbox)` a block size so it scrolls. Options are taken to be the same height as each other, which is measured from the ones on screen.
+
+```html
+<style>
+  slab-listbox::part(listbox) {
+    block-size: 20rem;
+  }
+</style>
+
+<slab-listbox label="City" virtual>
+  <slab-option>Aachen</slab-option>
+  <slab-option>Aalborg</slab-option>
+  <!-- And thousands more -->
+</slab-listbox>
+```
+
 ## Keyboard
 
 | Key          | What it does                                                              |

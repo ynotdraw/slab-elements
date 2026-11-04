@@ -421,3 +421,159 @@ test(
     `);
   },
 );
+
+test(
+  'is accessible when virtual',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <style>
+          slab-listbox::part(listbox) {
+            block-size: 200px;
+          }
+        </style>
+
+        <slab-listbox label="Label" virtual>
+          <slab-option-group label="Group">
+            ${Array.from({ length: 100 }, (_, index) => {
+              return html`<slab-option>Option ${index}</slab-option>`;
+            })}
+          </slab-option-group>
+        </slab-listbox>
+      `,
+    );
+
+    await expect(page).toBeAccessible('slab-listbox');
+  },
+);
+
+test(
+  'gives its rendered options their positions when virtual',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <style>
+          slab-listbox::part(listbox) {
+            block-size: 200px;
+          }
+
+          slab-option {
+            block-size: 20px;
+          }
+        </style>
+
+        <slab-listbox label="Label" virtual>
+          <slab-option>One</slab-option>
+
+          <slab-option-group label="Group">
+            ${Array.from({ length: 1000 }, (_, index) => {
+              return html`<slab-option>Option ${index}</slab-option>`;
+            })}
+          </slab-option-group>
+        </slab-listbox>
+      `,
+    );
+
+    // Counted within its group, the way a browser counts a group's options.
+    await expect(page.getByRole('option', { name: 'One' })).toHaveAttribute(
+      'aria-posinset',
+      '1',
+    );
+
+    await expect(page.getByRole('option', { name: 'One' })).toHaveAttribute(
+      'aria-setsize',
+      '1',
+    );
+
+    await expect(
+      page.getByRole('option', { name: 'Option 0' }),
+    ).toHaveAttribute('aria-posinset', '1');
+
+    await expect(
+      page.getByRole('option', { name: 'Option 0' }),
+    ).toHaveAttribute('aria-setsize', '1000');
+
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('End');
+
+    await expect(
+      page.getByRole('option', { name: 'Option 999' }),
+    ).toHaveAttribute('aria-posinset', '1000');
+
+    // Not in the accessibility tree, so it has no need of one.
+    await expect(page.locator('slab-option').nth(1)).not.toHaveAttribute(
+      'aria-posinset',
+    );
+  },
+);
+
+test(
+  'keeps its active option in the accessibility tree when it is scrolled away from and virtual',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <style>
+          slab-listbox::part(listbox) {
+            block-size: 200px;
+          }
+
+          slab-option {
+            block-size: 20px;
+          }
+        </style>
+
+        <slab-listbox label="Label" virtual>
+          <slab-option-group label="Group">
+            ${Array.from({ length: 1000 }, (_, index) => {
+              return html`<slab-option>Option ${index}</slab-option>`;
+            })}
+          </slab-option-group>
+        </slab-listbox>
+      `,
+    );
+
+    const listbox = page.getByRole('listbox');
+
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('End');
+
+    await listbox.evaluate((element) => {
+      element.scrollTop = 0;
+    });
+
+    await expect(page.getByRole('option', { name: 'Option 0' })).toBeVisible();
+
+    const option = page.getByRole('option', { name: 'Option 999' });
+
+    // In the tree, so `aria-activedescendant` still points at something, but
+    // not seen.
+    await expect(option).toBeAttached();
+
+    // Visually hidden, so it's a single pixel, clipped. Not
+    // `toBeInViewport()`, which Firefox and WebKit say a clipped element is.
+    expect(await option.boundingBox()).toMatchObject({ height: 1, width: 1 });
+    await expect(option).toHaveAttribute('aria-posinset', '1000');
+
+    expect(
+      await listbox.evaluate((element) => {
+        return element.ariaActiveDescendantElement?.textContent;
+      }),
+    ).toBe('Option 999');
+
+    // And its group with it, though no other option of the group is.
+    await page.getByRole('option', { name: 'Option 0' }).waitFor();
+
+    await listbox.evaluate((element) => {
+      element.scrollTop = 10_000;
+    });
+
+    await expect(
+      page.getByRole('option', { name: 'Option 500' }),
+    ).toBeInViewport();
+
+    await expect(page.getByRole('group', { name: 'Group' })).toBeVisible();
+  },
+);

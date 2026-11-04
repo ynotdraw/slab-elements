@@ -1014,3 +1014,83 @@ test(
     await expect(vegetables).toBeVisible();
   },
 );
+
+test(
+  'moves to options that are not rendered when virtual',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-combobox::part(listbox) {
+              max-block-size: 200px;
+            }
+
+            slab-option {
+              block-size: 20px;
+            }
+          </style>
+
+          <slab-combobox label="Label" virtual>
+            ${Array.from({ length: 1000 }, (_, index) => {
+              return html`<slab-option>Option ${index}</slab-option>`;
+            })}
+          </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+    const last = page.getByRole('option', { name: 'Option 999' });
+
+    await page.getByRole('combobox').focus();
+    await page.keyboard.press('ArrowUp');
+
+    await expect(host).toHaveJSProperty(
+      'activeOption.textContent',
+      'Option 999',
+    );
+
+    await expect(last).toBeInViewport();
+
+    await page.keyboard.press('Enter');
+    await expect(host).toHaveJSProperty('value', 'Option 999');
+  },
+);
+
+test(
+  'scrolls to its selected option as it opens when virtual',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-combobox::part(listbox) {
+              max-block-size: 200px;
+            }
+
+            slab-option {
+              block-size: 20px;
+            }
+          </style>
+
+          <slab-combobox label="Label" value="Option 900" virtual>
+            ${Array.from({ length: 1000 }, (_, index) => {
+              return html`<slab-option>Option ${index}</slab-option>`;
+            })}
+          </slab-combobox>`,
+    );
+
+    await page.getByRole('combobox').focus();
+    await page.keyboard.press('ArrowDown');
+
+    await expect(page.locator('slab-combobox')).toHaveJSProperty(
+      'activeOption.textContent',
+      'Option 900',
+    );
+
+    await expect(
+      page.getByRole('option', { name: 'Option 900' }),
+    ).toBeInViewport();
+
+    await expect(page.getByRole('option', { name: 'Option 0' })).toBeHidden();
+  },
+);

@@ -3110,6 +3110,17 @@
             },
             {
               "kind": "field",
+              "name": "virtual",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays out only the Options in or near view, for a Combobox with thousands.\nGive `::part(listbox)` a maximum block size so it scrolls. Options are\ntaken to be the same height as each other.",
+              "attribute": "virtual",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "resultsLabel",
               "type": {
                 "text": "(count: number) => string"
@@ -3455,6 +3466,15 @@
               },
               "default": "false",
               "fieldName": "required"
+            },
+            {
+              "name": "virtual",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays out only the Options in or near view, for a Combobox with thousands.\nGive `::part(listbox)` a maximum block size so it scrolls. Options are\ntaken to be the same height as each other.",
+              "fieldName": "virtual"
             },
             {
               "name": "value",
@@ -9195,6 +9215,17 @@
             },
             {
               "kind": "field",
+              "name": "virtual",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays out only the Options in or near view, for a Listbox with thousands.\nGive `::part(listbox)` a block size so it scrolls. Options are taken to be\nthe same height as each other.",
+              "attribute": "virtual",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "value",
               "type": {
                 "text": "string"
@@ -9490,6 +9521,15 @@
               },
               "default": "false",
               "fieldName": "required"
+            },
+            {
+              "name": "virtual",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays out only the Options in or near view, for a Listbox with thousands.\nGive `::part(listbox)` a block size so it scrolls. Options are taken to be\nthe same height as each other.",
+              "fieldName": "virtual"
             },
             {
               "name": "value",

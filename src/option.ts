@@ -9,6 +9,7 @@ import { property } from 'lit/decorators.js';
 import packageJson from '../package.json' with { type: 'json' };
 import customElement from './library/custom-element.js';
 import styles from './option.styles.js';
+import { type Rendering } from './library/virtualizer.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -115,8 +116,36 @@ export default class Option extends LitElement {
   // is, without the Listbox overwriting the Option's own `disabled`, which
   // would be lost when the Listbox is enabled again.
   privateSetListboxDisabled(isDisabled: boolean) {
+    // Called for every Option whenever they change, so it's skipped when
+    // there's nothing to do. Thousands of Options would otherwise each be
+    // written to thousands of times as they connect.
+    if (isDisabled === this.#isListboxDisabled && this.hasUpdated) {
+      return;
+    }
+
     this.#isListboxDisabled = isDisabled;
     this.#updateDisabled();
+  }
+
+  // Private because it's only meant to be called by the Virtualizer of a
+  // Listbox or Combobox with `virtual`. Its position among the Options that
+  // are shown, which screenreaders would otherwise count from the few that
+  // are rendered.
+  privateSetPosition(position: { index: number; size: number } | null) {
+    if (position) {
+      this.setAttribute('aria-posinset', String(position.index));
+      this.setAttribute('aria-setsize', String(position.size));
+    } else {
+      this.removeAttribute('aria-posinset');
+      this.removeAttribute('aria-setsize');
+    }
+  }
+
+  // Private for the same reason. Whether it's laid out, which `virtual`
+  // reserves for the Options in or near view.
+  privateSetRendering(rendering: Rendering) {
+    this.#setState('private-unrendered', rendering === 'unrendered');
+    this.#setState('private-offscreen', rendering === 'offscreen');
   }
 
   override render() {

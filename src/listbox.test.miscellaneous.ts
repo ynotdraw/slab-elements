@@ -650,3 +650,346 @@ test(
     await expect(host).toHaveJSProperty('options.length', 1);
   },
 );
+
+test(
+  'renders only the options in view when virtual',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-listbox::part(listbox) {
+              block-size: 200px;
+            }
+
+            slab-option {
+              block-size: 20px;
+            }
+          </style>
+
+          <slab-listbox label="Label" virtual>
+            ${Array.from({ length: 1000 }, (_, index) => {
+              return html`<slab-option>Option ${index}</slab-option>`;
+            })}
+          </slab-listbox>`,
+    );
+
+    const listbox = page.getByRole('listbox');
+
+    await expect(page.getByRole('option', { name: 'Option 0' })).toBeVisible();
+    await expect(page.getByRole('option', { name: 'Option 999' })).toBeHidden();
+
+    // Ten in view plus a few either side, rather than all thousand.
+    expect(await page.getByRole('option').count()).toBeLessThan(30);
+
+    // As tall as it would be with every option rendered, so the scrollbar is
+    // too.
+    expect(await listbox.evaluate(({ scrollHeight }) => scrollHeight)).toBe(
+      20_000,
+    );
+  },
+);
+
+test(
+  'renders the options scrolled to when virtual',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-listbox::part(listbox) {
+              block-size: 200px;
+            }
+
+            slab-option {
+              block-size: 20px;
+            }
+          </style>
+
+          <slab-listbox label="Label" virtual>
+            ${Array.from({ length: 1000 }, (_, index) => {
+              return html`<slab-option>Option ${index}</slab-option>`;
+            })}
+          </slab-listbox>`,
+    );
+
+    await page.getByRole('listbox').evaluate((element) => {
+      element.scrollTop = 10_000;
+    });
+
+    await expect(
+      page.getByRole('option', { name: 'Option 500' }),
+    ).toBeInViewport();
+
+    await expect(page.getByRole('option', { name: 'Option 0' })).toBeHidden();
+  },
+);
+
+test(
+  'renders only the options and groups in view when virtual',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-listbox::part(listbox) {
+              block-size: 200px;
+            }
+
+            slab-option {
+              block-size: 20px;
+            }
+          </style>
+
+          <slab-listbox label="Label" virtual>
+            ${['One', 'Two', 'Three'].map((label) => {
+              return html`<slab-option-group label=${label}>
+                ${Array.from({ length: 300 }, (_, index) => {
+                  return html`<slab-option>${label} ${index}</slab-option>`;
+                })}
+              </slab-option-group>`;
+            })}
+          </slab-listbox>`,
+    );
+
+    const listbox = page.getByRole('listbox');
+
+    await expect(page.getByRole('group', { name: 'One' })).toBeVisible();
+    await expect(page.getByRole('group', { name: 'Three' })).toBeHidden();
+
+    await listbox.evaluate((element) => {
+      element.scrollTop = element.scrollHeight;
+    });
+
+    await expect(
+      page.getByRole('option', { name: 'Three 299' }),
+    ).toBeInViewport();
+
+    await expect(page.getByRole('group', { name: 'One' })).toBeHidden();
+
+    // Where one group ends and the next begins, both are rendered, with the
+    // next's label right after the last option of the first.
+    await listbox.evaluate((element) => {
+      element.scrollTop = 5950;
+    });
+
+    await expect(
+      page.getByRole('option', { name: 'One 299' }),
+    ).toBeInViewport();
+
+    await expect(page.getByRole('option', { name: 'Two 0' })).toBeInViewport();
+
+    const [end, start] = await page.evaluate(() => {
+      const option = document.querySelectorAll('slab-option')[299];
+      const group = document.querySelectorAll('slab-option-group')[1];
+
+      return [
+        option?.getBoundingClientRect().bottom,
+        group?.getBoundingClientRect().top,
+      ];
+    });
+
+    expect(start).toBe(end);
+
+    // Its label is where it would be with every option rendered: above its
+    // first option rather than above the first one rendered.
+    await listbox.evaluate((element) => {
+      element.scrollTop = 0;
+    });
+
+    await page.getByRole('option', { name: 'One 0' }).waitFor();
+
+    const [label, option] = await page.evaluate(() => {
+      const group = document.querySelector('slab-option-group');
+      const first = document.querySelector('slab-option');
+
+      return [
+        group?.getBoundingClientRect().top,
+        first?.getBoundingClientRect().top,
+      ];
+    });
+
+    expect(option).toBeGreaterThan(Number(label));
+  },
+);
+
+test(
+  'renders every option when virtual is removed',
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-listbox::part(listbox) {
+              block-size: 200px;
+            }
+
+            slab-option {
+              block-size: 20px;
+            }
+          </style>
+
+          <slab-listbox label="Label" virtual>
+            <slab-option-group label="Group">
+              ${Array.from({ length: 100 }, (_, index) => {
+                return html`<slab-option>Option ${index}</slab-option>`;
+              })}
+            </slab-option-group>
+          </slab-listbox>`,
+    );
+
+    const host = page.locator('slab-listbox');
+
+    await expect(page.getByRole('option', { name: 'Option 99' })).toBeHidden();
+
+    await setProperty(host, 'virtual', false);
+
+    await expect(page.getByRole('option', { name: 'Option 99' })).toBeVisible();
+
+    await expect(page.getByRole('option').first()).not.toHaveAttribute(
+      'aria-setsize',
+    );
+
+    await expect(page.getByRole('option')).toHaveCount(100);
+  },
+);
+
+test(
+  'renders the options in view when virtual and reconnected',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-listbox::part(listbox) {
+              block-size: 200px;
+            }
+
+            slab-option {
+              block-size: 20px;
+            }
+          </style>
+
+          <slab-listbox label="Label" virtual>
+            ${Array.from({ length: 100 }, (_, index) => {
+              return html`<slab-option>Option ${index}</slab-option>`;
+            })}
+          </slab-listbox>`,
+    );
+
+    await page.locator('slab-listbox').evaluate((element) => {
+      const parent = element.parentElement;
+      element.remove();
+      parent?.append(element);
+    });
+
+    await page.getByRole('listbox').evaluate((element) => {
+      element.scrollTop = 1000;
+    });
+
+    await expect(
+      page.getByRole('option', { name: 'Option 50' }),
+    ).toBeInViewport();
+
+    await expect(page.getByRole('option', { name: 'Option 0' })).toBeHidden();
+  },
+);
+
+test(
+  'renders the options in view when options are removed and virtual',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-listbox::part(listbox) {
+              block-size: 200px;
+            }
+
+            slab-option {
+              block-size: 20px;
+            }
+          </style>
+
+          <slab-listbox label="Label" virtual>
+            ${Array.from({ length: 100 }, (_, index) => {
+              return html`<slab-option>Option ${index}</slab-option>`;
+            })}
+          </slab-listbox>`,
+    );
+
+    const listbox = page.getByRole('listbox');
+
+    await page.locator('slab-option').evaluateAll((options) => {
+      for (const option of options.slice(0, 98)) {
+        option.remove();
+      }
+    });
+
+    await expect(page.getByRole('option', { name: 'Option 99' })).toBeVisible();
+    await expect(page.getByRole('option')).toHaveCount(2);
+
+    await expect(
+      page.getByRole('option', { name: 'Option 99' }),
+    ).toHaveAttribute('aria-setsize', '2');
+
+    expect(await listbox.evaluate(({ scrollHeight }) => scrollHeight)).toBe(
+      200,
+    );
+  },
+);
+
+test(
+  'renders its option when it has one and is virtual',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-listbox::part(listbox) {
+              block-size: 200px;
+            }
+          </style>
+
+          <slab-listbox label="Label" virtual>
+            <slab-option>One</slab-option>
+          </slab-listbox>`,
+    );
+
+    await expect(page.getByRole('option', { name: 'One' })).toBeVisible();
+  },
+);
+
+test(
+  'renders nothing when its options are removed and it is virtual',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<style>
+            slab-listbox::part(listbox) {
+              block-size: 200px;
+            }
+          </style>
+
+          <slab-listbox label="Label" virtual>
+            <slab-option>One</slab-option>
+          </slab-listbox>`,
+    );
+
+    await page.locator('slab-option').evaluate((element) => {
+      element.remove();
+    });
+
+    await expect(page.locator('slab-listbox')).toHaveJSProperty(
+      'options.length',
+      0,
+    );
+
+    expect(
+      await page.getByRole('listbox').evaluate(({ scrollHeight }) => {
+        return scrollHeight;
+      }),
+    ).toBe(200);
+  },
+);

@@ -41,5 +41,16 @@ export default [
     :host([placement='top']) [part~='listbox'] {
       position-area: top span-right;
     }
+
+    /*
+      Functional, not visual. With "virtual", the Options scroll within the
+      listbox, whose maximum block size is left to "::part(listbox)". Scroll
+      anchoring is off because the spacers above the Options change size as
+      they scroll, which it would otherwise answer by scrolling more.
+    */
+    :host([virtual]) [part~='listbox'] {
+      overflow-anchor: none;
+      overflow-y: auto;
+    }
   `,
 ];

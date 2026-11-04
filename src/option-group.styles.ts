@@ -22,5 +22,32 @@ export default [
     :host([hide-label]) [part~='label'] {
       display: none;
     }
+
+    /*
+      Functional, not visual. A Listbox or Combobox with "virtual" lays out only
+      the Option Groups with Options in or near view, and important for the
+      same reason.
+    */
+    :host(:state(private-unrendered)) {
+      display: none !important;
+    }
+  `,
+  css`
+    /*
+      Functional, not visual. A group whose only Option left in the
+      accessibility tree is the active one, scrolled out of view. Important
+      for the same reason as Option's.
+    */
+    :host(:state(private-offscreen)) {
+      block-size: 1px !important;
+      border-width: 0 !important;
+      clip-path: inset(50%) !important;
+      inline-size: 1px !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      padding: 0 !important;
+      position: absolute !important;
+      white-space: nowrap !important;
+    }
   `,
 ];

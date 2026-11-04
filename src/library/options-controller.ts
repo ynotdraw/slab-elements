@@ -241,17 +241,20 @@ export default class OptionsController extends ItemsController<Option> {
       return;
     }
 
-    // One at a time unless multiple, the way native options are.
-    if (event.target.selected) {
+    // One at a time unless multiple, the way native options are. Left to
+    // `settle()` when it's still to run for Options that have just connected,
+    // so the last of them that says it's selected is the one kept, as it is
+    // for a native `<select>`.
+    if (event.target.selected && !this.isSettlePending) {
       this.#keepOneSelected(event.target);
     }
 
-    this.#config.onChange();
+    this.scheduleChange();
   };
 
   #onValueChange = (event: Event) => {
     if (this.isOwn(event)) {
-      this.#config.onChange();
+      this.scheduleChange();
     }
   };
 
