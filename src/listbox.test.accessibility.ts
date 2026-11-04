@@ -551,7 +551,10 @@ test(
     // In the tree, so `aria-activedescendant` still points at something, but
     // not seen.
     await expect(option).toBeAttached();
-    await expect(option).not.toBeInViewport();
+
+    // Visually hidden, so it's a single pixel, clipped. Not
+    // `toBeInViewport()`, which Firefox and WebKit say a clipped element is.
+    expect(await option.boundingBox()).toMatchObject({ height: 1, width: 1 });
     await expect(option).toHaveAttribute('aria-posinset', '1000');
 
     expect(
