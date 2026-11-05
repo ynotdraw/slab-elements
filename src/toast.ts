@@ -69,7 +69,7 @@ declare global {
  *
  * @csspart region - The region it's shown in
  *
- * @fires {Event} dismiss - When it's dismissed, by its button, its timer, or `dismiss()`.
+ * @fires {Event} dismiss - When it's dismissed, by Escape, its timer or `dismiss()`. Cancel it to keep it shown.
  *
  * @readonly
  * @prop {boolean} open - Whether it's shown.

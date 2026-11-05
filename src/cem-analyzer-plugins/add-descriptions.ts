@@ -361,7 +361,8 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
   'slab-toast': {
     cssParts: { region: "The region it's shown in" },
     events: {
-      dismiss: "When it's dismissed, by its button, its timer, or `dismiss()`.",
+      dismiss:
+        "When it's dismissed, by Escape, its timer or `dismiss()`. Cancel it to keep it shown.",
     },
     members: {
       dismiss: 'Hides it.',
