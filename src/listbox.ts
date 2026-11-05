@@ -9,7 +9,7 @@ import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { when } from 'lit/directives/when.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import assertSlot from './library/assert-slot.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
@@ -176,7 +176,7 @@ export default class Listbox extends LitElement {
   }
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   /**
    * The Option the user is on, which Space, Enter and typeahead act from.

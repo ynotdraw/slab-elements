@@ -6,7 +6,7 @@ import {
 } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import announce from './library/announce.js';
 import customElement from './library/custom-element.js';
 import required from './library/required.js';
@@ -122,7 +122,7 @@ export default class SortableList extends LitElement {
     this.#strings.value.sortableListMoved(...arguments_);
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   // Direct children rather than a query, so a renamed subclass still counts
   // and an item in a nested Sortable List doesn't.

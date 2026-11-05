@@ -8,7 +8,7 @@ import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { when } from 'lit/directives/when.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import announce from './library/announce.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
@@ -223,7 +223,7 @@ export default class TagsInput extends LitElement {
   }
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   get form(): HTMLFormElement | null {
     return this.#internals.form;

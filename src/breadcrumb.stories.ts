@@ -40,8 +40,7 @@ const meta: Meta = {
       table: {
         type: {
           summary: 'string',
-          detail:
-            '// Names the navigation. "Breadcrumb" when unset.',
+          detail: '// Names the navigation. "Breadcrumb" when unset.',
         },
       },
     },

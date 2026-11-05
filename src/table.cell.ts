@@ -6,7 +6,7 @@ import {
   type PropertyValues,
 } from 'lit';
 import { property } from 'lit/decorators.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import styles from './table.cell.styles.js';
 
@@ -41,7 +41,7 @@ export default class TableCell extends LitElement {
   rowHeader = false;
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   override render() {
     return html`<slot>

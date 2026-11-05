@@ -7,7 +7,7 @@ import {
 } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property } from 'lit/decorators.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import ToggleEvents from './library/toggle-events.js';
 import assertSlot from './library/assert-slot.js';
 import customElement from './library/custom-element.js';
@@ -95,7 +95,7 @@ export default class Tooltip extends LitElement {
   placement: 'bottom' | 'left' | 'right' | 'top' = 'bottom';
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   override connectedCallback() {
     super.connectedCallback();

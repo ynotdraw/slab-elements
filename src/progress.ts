@@ -6,7 +6,7 @@ import {
 } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import required from './library/required.js';
 import styles from './progress.styles.js';
@@ -77,7 +77,7 @@ export default class Progress extends LitElement {
   value?: number;
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   override render() {
     // There's no `role` or `aria-value*` here but `aria-valuetext`. A

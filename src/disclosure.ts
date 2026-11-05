@@ -6,7 +6,7 @@ import {
 } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property } from 'lit/decorators.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
 import required from './library/required.js';
@@ -83,7 +83,7 @@ export default class Disclosure extends LitElement {
   open = false;
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   override click() {
     this.#summaryElementRef.value?.click();

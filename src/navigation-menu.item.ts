@@ -8,7 +8,7 @@ import {
 import { property } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { repeat } from 'lit/directives/repeat.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
 import ListItemSlots from './library/list-item-slots.js';
@@ -87,7 +87,7 @@ export default class NavigationMenuItem extends LitElement {
   open = false;
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   // Children rather than what's slotted, since each child is in a slot of its
   // own.

@@ -6,7 +6,7 @@ import {
   type PropertyValues,
 } from 'lit';
 import { property } from 'lit/decorators.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import styles from './option.styles.js';
 import { type Rendering } from './library/virtualizer.js';
@@ -76,7 +76,7 @@ export default class Option extends LitElement {
   }
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   /**
    * What the user reads as the Option's name: its label, or its text when it

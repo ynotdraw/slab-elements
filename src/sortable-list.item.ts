@@ -6,7 +6,7 @@ import {
   type PropertyValues,
 } from 'lit';
 import { property } from 'lit/decorators.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import required from './library/required.js';
 import StringsController from './library/strings.js';
@@ -77,7 +77,7 @@ export default class SortableListItem extends LitElement {
   instructions = '';
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   override firstUpdated() {
     // Announced rather than left to "slotchange" because an item whose

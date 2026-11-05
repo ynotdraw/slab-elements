@@ -7,7 +7,7 @@ import {
 } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import styles from './steps.step.styles.js';
 
@@ -85,7 +85,7 @@ export default class Step extends LitElement {
   status: 'complete' | 'current' | 'upcoming' = 'upcoming';
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   override firstUpdated() {
     // Announced rather than left to "slotchange" because a Step whose
