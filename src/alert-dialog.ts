@@ -44,31 +44,31 @@ declare global {
  * @attr {string} [cancel-label] - The Cancel button's text and so its accessible name. "Cancel" in English when unset.
  * @attr {'any'|'closerequest'|'none'} [closedby] - Passed to the `<dialog>`. "none" keeps Escape from closing it where the browser supports that. "any" is treated as "closerequest", since an alert dialog doesn't close on a click outside it.
  * @attr {string} [description] - What the dialog is asking, read with the label when it opens. Plain text. Slot into "description" for more.
- * @attr {boolean} [hide-label=false]
- * @attr {string} [label]
- * @attr {boolean} [open=false]
+ * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
+ * @attr {string} [label] - Names it. It's the accessible name, and the visible label where there is one.
+ * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
  *
  * @readonly
  * @attr {string} [version]
  *
  * @slot {Element | string} - The action that does what the dialog asks, such as a Delete button in a form with method="dialog".
- * @slot {Element | string} [description]
- * @slot {Element | string} [label]
+ * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
+ * @slot {Element | string} [label] - Its heading, in place of `label`
  *
  * @csspart cancel - The Cancel button. Closes the dialog with an empty returnValue
  * @csspart description - The description
  * @csspart dialog - The native dialog. A modal one's backdrop is its ::backdrop
  * @csspart label - The label
  *
- * @fires {Event} cancel
- * @fires {Event} close
+ * @fires {Event} cancel - When the user asks to close it, with Escape or, with `closedby="any"`, a click outside. Cancel it to keep it open, as a native dialog's.
+ * @fires {Event} close - When it closes, as a native dialog's does.
  *
  * @prop {string} returnValue - The `<dialog>`'s, so `close(returnValue)` and a `<form method="dialog">` set it the way they do natively.
  *
- * @method close
+ * @method close - Closes it, setting `returnValue` to the value given, as a native dialog's `close()` does.
  * @param {string} [returnValue]
  *
- * @method show
+ * @method show - Opens it.
  */
 @customElement('slab-alert-dialog')
 export default class AlertDialog extends Dialog {

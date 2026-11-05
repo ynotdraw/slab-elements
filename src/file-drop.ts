@@ -54,35 +54,35 @@ declare global {
  * `:state(drag-over)`, `:state(error)` and `:state(required)`. What the drop
  * target looks like, and how big it is, is left to the styles around it.
  *
- * @attr {string} label
+ * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
  * @attr {string} [accept] - Passed to the picker. Dropped files that don't match it are left out.
- * @attr {boolean} [disabled=false]
- * @attr {boolean} [hide-label=false]
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
+ * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {boolean} [multiple=false] - Without it, a drop of several files is ignored, as a native file input ignores it.
- * @attr {string} [name='']
- * @attr {boolean} [required=false]
+ * @attr {string} [name=''] - The name its value is submitted under, as a native control's `name`.
+ * @attr {boolean} [required=false] - Makes it invalid while it has no value, as `required` does a native control.
  * @attr {string} [too-many-label] - What screenreaders are told when a drop of several files is ignored, without `multiple`. "Only one file can be added" in English when unset.
  *
  * @readonly
  * @attr {string} [version]
  *
- * @slot {Element | string} [description]
+ * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
  *
  * @csspart description - Text about the field, and its validity message when it has one
- * @csspart input
+ * @csspart input - The input
  * @csspart label - The label
- * @csspart validity-message
+ * @csspart validity-message - The validity message, which says why the value is invalid
  *
- * @fires {Event} change
- * @fires {Event} input
+ * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
+ * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  *
  * @prop {(count: number) => string} addedLabel - What screenreaders are told when files are dropped, from how many were added. "1 file added" and so on in English when unset.
  *
  * @readonly
- * @prop {FileList | null} files
+ * @prop {FileList | null} files - The files chosen or dropped, as a native file input's `files`.
  *
  * @readonly
- * @prop {HTMLFormElement | null} form
+ * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
  * @prop {(count: number) => string} notAcceptedLabel - What screenreaders are told when dropped files are left out for not matching `accept`, from how many were. "1 file isn't an accepted type" and so on in English when unset.
  *
@@ -90,31 +90,31 @@ declare global {
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
  *
  * @readonly
- * @prop {ValidityState} validity
+ * @prop {ValidityState} validity - Its `ValidityState`, as a native control's.
  *
  * @readonly
- * @prop {boolean} willValidate
+ * @prop {boolean} willValidate - Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.
  *
- * @method checkValidity
+ * @method checkValidity - Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.
  * @returns boolean
  *
- * @method formDisabledCallback
+ * @method formDisabledCallback - Called by the browser when an ancestor `<fieldset>` is disabled or enabled. Not for calling yourself.
  * @param {boolean} isDisabled
  *
- * @method formResetCallback
+ * @method formResetCallback - Called by the browser when its form resets. Not for calling yourself.
  *
- * @method formStateRestoreCallback
+ * @method formStateRestoreCallback - Called by the browser when it restores the value, such as after the back button. Not for calling yourself.
  * @param {string | File | FormData | null} state
  *
- * @method reportValidity
+ * @method reportValidity - Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.
  * @returns boolean
  *
  * @method resetValidityFeedback - Clears the validity feedback without changing `validity`.
  *
- * @method setCustomValidity
+ * @method setCustomValidity - Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.
  * @param {string} message
  *
- * @method setValidity
+ * @method setValidity - Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.
  * @param {ValidityStateFlags} [flags]
  * @param {string} [message]
  */

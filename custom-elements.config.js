@@ -3,6 +3,7 @@
 // then compile and import them as JavaScript.
 import addCssParts from './dist/cem-analyzer-plugins/add-css-parts.js';
 import addCustomProperties from './dist/cem-analyzer-plugins/add-custom-properties.js';
+import addDescriptions from './dist/cem-analyzer-plugins/add-descriptions.js';
 import addEvents from './dist/cem-analyzer-plugins/add-events.js';
 import addRequiredToAttributes from './dist/cem-analyzer-plugins/add-required-to-attributes.js';
 import addSlots from './dist/cem-analyzer-plugins/add-slots.js';
@@ -35,6 +36,7 @@ export default {
     addEvents(),
     addRequiredToAttributes(),
     addSlots(),
+    addDescriptions(),
     writeJsxTypes(),
     writePublishedManifest(),
   ],

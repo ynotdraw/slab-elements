@@ -36,7 +36,7 @@ declare global {
  *
  * Style it through its part and `:state(pressed)`.
  *
- * @attr {boolean} [disabled=false]
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {string} [label] - Names the button when what's in it doesn't, such as when it holds only an icon.
  * @attr {boolean} [pressed=false] - Like a native checkbox's `checked`, the attribute is the default state and the property is the current one. Style `:state(pressed)` rather than `[pressed]`.
  *
@@ -45,10 +45,10 @@ declare global {
  *
  * @slot {Element | string} - The label, plus anything else a design puts in a button
  *
- * @csspart button
+ * @csspart button - The button
  *
- * @fires {Event} change
- * @fires {Event} input
+ * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
+ * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  */
 @customElement('slab-toggle-button')
 export default class ToggleButton extends LitElement {

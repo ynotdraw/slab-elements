@@ -59,12 +59,12 @@ declare global {
  * and `:state(required)`, and each Option through `:state(active)`,
  * `:state(disabled)`, and `:state(selected)`.
  *
- * @attr {string} label
- * @attr {boolean} [disabled=false]
- * @attr {boolean} [hide-label=false]
- * @attr {boolean} [multiple=false]
- * @attr {string} [name='']
- * @attr {boolean} [required=false]
+ * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
+ * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
+ * @attr {boolean} [multiple=false] - Lets more than one be selected at a time.
+ * @attr {string} [name=''] - The name its value is submitted under, as a native control's `name`.
+ * @attr {boolean} [required=false] - Makes it invalid while it has no value, as `required` does a native control.
  * @attr {string} [value=''] - The value of the first selected and enabled Option. Setting it selects the Option with that value, and only that one. Not reflected, to match a native control.
  *
  * @readonly
@@ -73,23 +73,23 @@ declare global {
  * @attr {boolean} [virtual=false] - Lays out only the Options in or near view, for a Listbox with thousands. Give `::part(listbox)` a block size so it scrolls. Options are taken to be the same height as each other.
  *
  * @slot {Option | OptionGroup}
- * @slot {Element | string} [description]
+ * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
  *
  * @csspart description - Text about the Listbox, and its validity message when it has one
  * @csspart label - The label
  * @csspart listbox - The Options
- * @csspart validity-message
+ * @csspart validity-message - The validity message, which says why the value is invalid
  *
- * @fires {Event} change
- * @fires {Event} input
+ * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
+ * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  *
  * @prop {Option | null} activeOption - The Option the user is on, which Space, Enter and typeahead act from. It's pointed at rather than focused, so focus stays where it is.
  *
  * @readonly
- * @prop {HTMLFormElement | null} form
+ * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
  * @readonly
- * @prop {Option[]} options
+ * @prop {Option[]} options - Its Options, in order.
  *
  * @readonly
  * @prop {Option[]} selectedOptions - Selected and enabled Options, in the order they appear.
@@ -98,33 +98,33 @@ declare global {
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
  *
  * @readonly
- * @prop {ValidityState} validity
+ * @prop {ValidityState} validity - Its `ValidityState`, as a native control's.
  *
  * @prop {string[]} values - The value of every selected and enabled Option, in the order they appear. Setting it selects the Options with those values, and only those.
  *
  * @readonly
- * @prop {boolean} willValidate
+ * @prop {boolean} willValidate - Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.
  *
- * @method checkValidity
+ * @method checkValidity - Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.
  * @returns boolean
  *
- * @method formDisabledCallback
+ * @method formDisabledCallback - Called by the browser when an ancestor `<fieldset>` is disabled or enabled. Not for calling yourself.
  * @param {boolean} isDisabled
  *
- * @method formResetCallback
+ * @method formResetCallback - Called by the browser when its form resets. Not for calling yourself.
  *
- * @method formStateRestoreCallback
+ * @method formStateRestoreCallback - Called by the browser when it restores the value, such as after the back button. Not for calling yourself.
  * @param {string | File | FormData | null} state
  *
- * @method reportValidity
+ * @method reportValidity - Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.
  * @returns boolean
  *
  * @method resetValidityFeedback - Clears the validity feedback without changing `validity`.
  *
- * @method setCustomValidity
+ * @method setCustomValidity - Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.
  * @param {string} message
  *
- * @method setValidity
+ * @method setValidity - Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.
  * @param {ValidityStateFlags} [flags]
  * @param {string} [message]
  */
