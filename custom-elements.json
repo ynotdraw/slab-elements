@@ -17881,6 +17881,15 @@
               "readonly": true
             },
             {
+              "kind": "field",
+              "name": "valueAsNumber",
+              "type": {
+                "text": "number"
+              },
+              "description": "`value` as a number, as on a native range input.",
+              "default": "NaN"
+            },
+            {
               "kind": "method",
               "name": "checkValidity",
               "return": {

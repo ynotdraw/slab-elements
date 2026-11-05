@@ -44,6 +44,52 @@ test(
 );
 
 test(
+  'has its value as a number in `valueAsNumber`, which can be set',
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-slider
+          label="Label"
+          max="10"
+          min="0"
+          value="4"
+        ></slab-slider>`,
+    );
+
+    const host = page.locator('slab-slider');
+
+    await expect(host).toHaveJSProperty('valueAsNumber', 4);
+
+    await setProperty(host, 'valueAsNumber', 7);
+    await expect(host).toHaveJSProperty('value', '7');
+
+    // Halfway, where a native range input settles an empty value.
+    await setProperty(host, 'valueAsNumber', Number.NaN);
+    await expect(host).toHaveJSProperty('valueAsNumber', 5);
+  },
+);
+
+test(
+  'has its value as a number in `valueAsNumber` before it renders',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(() => html`<slab-slider label="Label"></slab-slider>`);
+
+    const values = await page.evaluate(() => {
+      const slider = document.createElement('slab-slider');
+      const empty = slider.valueAsNumber;
+
+      slider.value = '3';
+
+      return [empty, slider.valueAsNumber];
+    });
+
+    expect(values).toStrictEqual([Number.NaN, 3]);
+  },
+);
+
+test(
   'passes `min`, `max` and `step` to its input',
   { tag: '@miscellaneous' },
   async ({ render, page }) => {
