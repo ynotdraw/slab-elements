@@ -184,30 +184,34 @@ const stats = [
     </div>
   </section>
 
-  <section aria-labelledby="check" class="block">
-    <h2 id="check">Before you upgrade</h2>
-    <p class="lede">
-      {
-        checks.length === 1
-          ? "One change can break what you have. It's why this is a minor release."
-          : `${checks.length} changes can break what you have. They're why this is a minor release.`
-      }
-    </p>
-    <ul class="checks">
-      {
-        checks.map(({ after, before, text, title }) => (
-          <li>
-            <h3>{title}</h3>
-            <p set:html={inline(text)} />
-            <div class="diff">
-              <CodeBlock code={before} label="Before" lang="css" />
-              <CodeBlock code={after} label="After" lang="css" />
-            </div>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+  {
+    checks.length > 0 && (
+      <section aria-labelledby="check" class="block">
+        <h2 id="check">Before you upgrade</h2>
+        <p class="lede">
+          {
+            checks.length === 1
+              ? "One change can break what you have. It's why this is a minor release."
+              : `${checks.length} changes can break what you have. They're why this is a minor release.`
+          }
+        </p>
+        <ul class="checks">
+          {
+            checks.map(({ after, before, text, title }) => (
+              <li>
+                <h3>{title}</h3>
+                <p set:html={inline(text)} />
+                <div class="diff">
+                  <CodeBlock code={before} label="Before" lang="css" />
+                  <CodeBlock code={after} label="After" lang="css" />
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    )
+  }
 
   <section aria-labelledby="upgrade" class="block upgrade">
     <h2 id="upgrade">Upgrade</h2>

@@ -73,17 +73,18 @@ const tldrSections = async (
         ),
       )),
     ].join('\n\n'),
-    [
-      '## Before you upgrade',
-      ...checks.map(({ after, before, text, title }) =>
-        [
-          `### ${title}`,
-          text,
-          `Before:\n\n\`\`\`css\n${before}\n\`\`\``,
-          `After:\n\n\`\`\`css\n${after}\n\`\`\``,
-        ].join('\n\n'),
-      ),
-    ].join('\n\n'),
+    checks.length > 0 &&
+      [
+        '## Before you upgrade',
+        ...checks.map(({ after, before, text, title }) =>
+          [
+            `### ${title}`,
+            text,
+            `Before:\n\n\`\`\`css\n${before}\n\`\`\``,
+            `After:\n\n\`\`\`css\n${after}\n\`\`\``,
+          ].join('\n\n'),
+        ),
+      ].join('\n\n'),
     ['## Upgrade', `\`\`\`sh\npnpm add slab-elements@${version}\n\`\`\``].join(
       '\n\n',
     ),
