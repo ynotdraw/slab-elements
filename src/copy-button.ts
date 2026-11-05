@@ -46,9 +46,6 @@ declare global {
  * @attr {string} [from] - The `id` of an element to copy from, instead of `value`.
  * @attr {string} [value=''] - The text to copy.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @csspart button
  *
  * @fires {Event} copied
@@ -104,6 +101,7 @@ export default class CopyButton extends LitElement {
   @property({ reflect: true, useDefault: true })
   value = '';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

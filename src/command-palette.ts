@@ -81,9 +81,6 @@ declare global {
  * @attr {boolean} [open=false]
  * @attr {string} [placeholder]
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Option}
  * @slot {Element | string} [close] - What the close button says. "Close" when nothing is slotted.
  * @slot {Element | string} [empty] - Shown when no Option matches what's been typed, such as "No results"

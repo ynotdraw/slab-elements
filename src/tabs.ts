@@ -46,9 +46,6 @@ declare global {
  * @attr {boolean} [manual=false] - Space and Enter select the focused Tab rather than focus itself, for Panels that are slow to show.
  * @attr {'horizontal'|'vertical'} [orientation='horizontal'] - Which arrow keys move between Tabs. Where they sit is still up to your styles.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Panel}
  * @slot {Tab} [tab]
  *
@@ -88,6 +85,7 @@ export default class Tabs extends LitElement {
   @property({ reflect: true, useDefault: true })
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

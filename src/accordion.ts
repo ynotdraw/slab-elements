@@ -39,9 +39,6 @@ declare global {
  *
  * @attr {boolean} [exclusive=false] - Whether opening a Disclosure closes the others.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Disclosure}
  */
 @customElement('slab-accordion')
@@ -50,6 +47,7 @@ export default class Accordion extends LitElement {
   @property({ reflect: true, type: Boolean })
   exclusive = false;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

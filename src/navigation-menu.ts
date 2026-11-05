@@ -41,9 +41,6 @@ declare global {
  *
  * @attr {string} label - Names the navigation.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element} - The links and Navigation Menu Items, each in an `<li>` of its own
  *
  * @csspart item
@@ -62,6 +59,7 @@ export default class NavigationMenu extends LitElement {
   @required
   label?: string;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

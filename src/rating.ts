@@ -53,9 +53,6 @@ declare global {
  * @attr {1|0.5} [step=1] - 1 for whole stars, or 0.5 for half stars. Anything else is 1.
  * @attr {string} [value=''] - The checked radio's number. Like a native input, the attribute is the default value and the property is the current one. A value that isn't one of the radios' numbers, from `step` to `max`, checks nothing and reads back as an empty string.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} [description]
  *
  * @csspart description - Text about the rating, and its validity message when it has one
@@ -169,6 +166,7 @@ export default class Rating extends LitElement {
     this.requestUpdate('value', old);
   }
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

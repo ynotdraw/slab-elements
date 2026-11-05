@@ -76,9 +76,6 @@ function triggerOf(menu: Element): MenuItem | undefined {
  * @attr {boolean} [open=false]
  * @attr {'bottom'|'left'|'right'|'top'} [placement='bottom'] - The side of its anchor it opens on, when there's room. It flips when there isn't. A submenu ignores it and opens beside its Menu Item.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {MenuItem | MenuGroup | Menu}
  * @slot {Element} anchor - What opens the menu, usually a `<button>`, or a Menu Item for a submenu
  *
@@ -112,6 +109,7 @@ export default class Menu extends LitElement {
   @property({ reflect: true, useDefault: true })
   placement: 'bottom' | 'left' | 'right' | 'top' = 'bottom';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

@@ -105,9 +105,6 @@ const controls: Record<keyof Color, Control> = {
  * @attr {string} [swatches-label] - Names the swatches, after `label`. "Swatches" in English when unset.
  * @attr {string} [value='#000000'] - Like a native input's `value`, the attribute is the default and the property is the current value. "#000000" when unset.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} [description] - Text about the color picker, such as a hint
  *
  * @csspart alpha - The alpha slider's track
@@ -249,6 +246,7 @@ export default class ColorPicker extends LitElement {
     this.requestUpdate('value', old);
   }
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

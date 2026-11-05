@@ -34,9 +34,6 @@ declare global {
  * @attr {string} label
  * @attr {boolean} [hide-label=false]
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {MenuItem}
  *
  * @csspart label - The label
@@ -50,6 +47,7 @@ export default class MenuGroup extends LitElement {
   @property({ attribute: 'hide-label', reflect: true, type: Boolean })
   hideLabel = false;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

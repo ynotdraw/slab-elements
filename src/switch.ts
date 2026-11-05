@@ -44,9 +44,6 @@ declare global {
  * @attr {boolean} [required=false]
  * @attr {string} [value='on']
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} [description]
  *
  * @csspart description - Text about the switch, and its validity message when it has one
@@ -129,6 +126,7 @@ export default class Switch extends LitElement {
   @property({ reflect: true, useDefault: true })
   value = 'on';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

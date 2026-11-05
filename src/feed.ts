@@ -49,9 +49,6 @@ const focusableSelector =
  * @attr {boolean} [busy=false] - Articles are being added or removed. A screenreader waits until it's unset.
  * @attr {number} [total] - How many articles there are in all, including those not added yet, or -1 when that's unknown. The number added when unset.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element} - The articles
  *
  * @csspart feed - The articles
@@ -82,6 +79,7 @@ export default class Feed extends LitElement {
   @property({ reflect: true, type: Number })
   total?: number;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

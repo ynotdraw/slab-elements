@@ -31,9 +31,6 @@ declare global {
  * @attr {boolean} [disabled=false]
  * @attr {string} [value='']
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - The label, plus anything else a design puts in a Radio
  *
  * @fires {Event} change
@@ -58,6 +55,7 @@ export default class Radio extends LitElement {
   @property({ reflect: true, useDefault: true })
   value = '';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

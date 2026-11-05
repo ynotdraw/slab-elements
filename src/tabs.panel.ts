@@ -27,9 +27,6 @@ declare global {
  *
  * @attr {string} name - What its Tab's `panel` names.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - The content
  */
 @customElement('slab-tabs-panel')
@@ -41,6 +38,7 @@ export default class Panel extends LitElement {
   @required
   name?: string;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

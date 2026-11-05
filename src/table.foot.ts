@@ -18,13 +18,11 @@ declare global {
 /**
  * A Table Foot with no visual styles: a `[role=rowgroup]` around the footer rows, such as totals. It goes last in its Table, wherever it is in the markup, as a `<tfoot>` does.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {TableRow} - The footer rows
  */
 @customElement('slab-table-foot')
 export default class TableFoot extends LitElement {
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

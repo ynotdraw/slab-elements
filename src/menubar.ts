@@ -42,9 +42,6 @@ declare global {
  *
  * @attr {string} label - Names the menubar.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Menu}
  *
  * @csspart menubar - The Menus
@@ -61,6 +58,7 @@ export default class Menubar extends LitElement {
   @required
   label?: string;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

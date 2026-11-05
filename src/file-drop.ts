@@ -63,9 +63,6 @@ declare global {
  * @attr {boolean} [required=false]
  * @attr {string} [too-many-label] - What screenreaders are told when a drop of several files is ignored, without `multiple`. "Only one file can be added" in English when unset.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} [description]
  *
  * @csspart description - Text about the field, and its validity message when it has one
@@ -180,6 +177,7 @@ export default class FileDrop extends LitElement {
   @property({ attribute: 'too-many-label', reflect: true })
   tooManyLabel?: string;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

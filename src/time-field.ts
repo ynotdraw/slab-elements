@@ -61,9 +61,6 @@ declare global {
  * @attr {string} [step] - In seconds, or "any". 60 when unset, so there's no seconds to fill in. Counted from `min` when there is one.
  * @attr {string} [value=''] - A 24-hour "hh:mm" string, with ":ss" and ".sss" when it has them. Like a native input, the attribute is the default value and the property is the current one, so the attribute doesn't change as the field is edited.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} [description]
  *
  * @csspart description - Text about the field, and its validity message when it has one
@@ -176,6 +173,7 @@ export default class TimeField extends LitElement {
   @property()
   value = '';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

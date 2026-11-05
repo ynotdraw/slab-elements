@@ -47,9 +47,6 @@ declare global {
  * @attr {boolean} [hide-label=false]
  * @attr {boolean} [required=false]
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string}
  * @slot {Element} [control]
  * @slot {Element | string} [description]
@@ -72,6 +69,7 @@ export default class Field extends LitElement {
   @property({ reflect: true, type: Boolean })
   required = false;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

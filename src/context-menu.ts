@@ -79,9 +79,6 @@ function fit(point: number, size: number, viewport: number, isAfter: boolean) {
  * @attr {string} label - Names the menu.
  * @attr {boolean} [open=false]
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {MenuItem | MenuGroup}
  * @slot {Element} target - Where a right-click, a long-press, or Shift+F10 opens the menu
  *
@@ -110,6 +107,7 @@ export default class ContextMenu extends LitElement {
   @property({ reflect: true, type: Boolean })
   open = false;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

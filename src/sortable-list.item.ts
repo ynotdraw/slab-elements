@@ -36,9 +36,6 @@ declare global {
  * @attr {string} label - Names the item, in its handle's name and in what screenreaders are told as it moves.
  * @attr {string} [handle-label] - Names the handle. "Reorder" and `label` in English when unset.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - The item's content
  * @slot {Element | string} [handle] - Shown in the handle, such as a grip icon
  *
@@ -76,6 +73,7 @@ export default class SortableListItem extends LitElement {
   @property({ attribute: false })
   instructions = '';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

@@ -60,9 +60,6 @@ declare global {
  * @attr {number|'any'} [step] - A number, or "any" to allow any value. Left unset, the input's own default of 1 applies.
  * @attr {string} [value=''] - Like a native input, the attribute is the default value and the property is the current one, so the attribute doesn't change as the field is typed into.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} [description]
  *
  * @csspart description - Text about the field, and its validity message when it has one
@@ -188,6 +185,7 @@ export default class NumberField extends LitElement {
   @property()
   value = '';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

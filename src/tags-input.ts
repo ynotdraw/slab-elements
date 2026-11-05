@@ -68,9 +68,6 @@ declare global {
  * @attr {boolean} [required=false]
  * @attr {string} [value=''] - The tags, separated by commas, each trimmed. Like a native input, the attribute is the default value and the property is the current one. Use `values` for tags with commas in them.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} [description]
  *
  * @csspart description - Text about the input, and its validity message when it has one
@@ -222,6 +219,7 @@ export default class TagsInput extends LitElement {
     this.requestUpdate('values', old);
   }
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

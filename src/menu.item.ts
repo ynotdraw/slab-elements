@@ -43,9 +43,6 @@ declare global {
  * @attr {string} [label] - Names the Menu Item in place of its text, and is what typeahead matches against.
  * @attr {'checkbox'|'item'|'radio'} [type='item']
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - The label, plus anything else a design puts in a Menu Item
  *
  * @readonly
@@ -72,6 +69,7 @@ export default class MenuItem extends LitElement {
   @property({ reflect: true, useDefault: true })
   type: 'checkbox' | 'item' | 'radio' = 'item';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

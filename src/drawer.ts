@@ -32,9 +32,6 @@ declare global {
  * @attr {string} [label]
  * @attr {boolean} [open=false]
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string}
  * @slot {Element | string} [label]
  *

@@ -52,9 +52,6 @@ interface Grab {
  * @attr {string} label - Names the list.
  * @attr {string} [instructions-label] - Describes each handle to screenreaders. "Press Space to pick it up…" in English when unset.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {SortableListItem} - The items, in order
  *
  * @csspart list - The items
@@ -121,6 +118,7 @@ export default class SortableList extends LitElement {
   movedLabel: Announcement = (...arguments_) =>
     this.#strings.value.sortableListMoved(...arguments_);
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

@@ -45,9 +45,6 @@ type Item = number | 'end-ellipsis' | 'start-ellipsis';
  * @attr {string} [previous-label] - The previous button's text and so its accessible name. "Previous" in English when unset.
  * @attr {number} [siblings=1] - How many pages are shown either side of the current one.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @csspart current - The current page's button
  * @csspart ellipsis - In place of the pages that aren't shown
  * @csspart item - Each button's or ellipsis's list item
@@ -110,6 +107,7 @@ export default class Pagination extends LitElement {
   @property({ reflect: true, type: Number, useDefault: true })
   siblings = 1;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

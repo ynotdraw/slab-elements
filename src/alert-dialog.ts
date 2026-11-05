@@ -48,9 +48,6 @@ declare global {
  * @attr {string} [label]
  * @attr {boolean} [open=false]
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - The action that does what the dialog asks, such as a Delete button in a form with method="dialog".
  * @slot {Element | string} [description]
  * @slot {Element | string} [label]

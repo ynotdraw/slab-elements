@@ -74,9 +74,6 @@ declare global {
  * @attr {string} [start-label] - The start input's label, read after `label`. "Start" in English when unset.
  * @attr {string} [start-value=''] - The first day of the range, as "yyyy-mm-dd". Like a native input's `value`, the attribute is the default and the property is the current value.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} [description]
  *
  * @csspart container - The label, the inputs and the description
@@ -209,6 +206,7 @@ export default class DateRangeField extends LitElement {
   @property({ attribute: 'start-value' })
   startValue = '';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

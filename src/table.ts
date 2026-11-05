@@ -37,9 +37,6 @@ declare global {
  * arrow keys, and the only things in it that take focus are a sortable Column
  * Header's button and whatever you put in a Cell.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {TableBody | TableFoot | TableHead} - The Table Head, Body and Foot
  *
  * @readonly
@@ -47,6 +44,7 @@ declare global {
  */
 @customElement('slab-table')
 export default class Table extends LitElement {
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

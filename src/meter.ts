@@ -47,9 +47,6 @@ declare global {
  * @attr {number} [optimum] - The best value, which decides which region is the optimum one. Halfway between `min` and `max` when unset.
  * @attr {number} [value=0]
  *
- * @readonly
- * @attr {string} [version]
- *
  * @csspart label - The label
  * @csspart meter
  *
@@ -105,6 +102,7 @@ export default class Meter extends LitElement {
   @property({ reflect: true, type: Number, useDefault: true })
   value = 0;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

@@ -72,10 +72,6 @@ declare global {
  * @attr {boolean} [required=false] - Requires both dates.
  * @attr {string} [start-label] - The start input's label, read after `label`. "Start" in English when unset.
  * @attr {string} [start-value=''] - The first day of the range, as "yyyy-mm-dd". Like a native input's `value`, the attribute is the default and the property is the current value.
- *
- * @readonly
- * @attr {string} [version]
- *
  * @attr {number} [week-start=0] - The day the Calendar's weeks start on, from 0 for Sunday to 6 for Saturday.
  *
  * @slot {Element | string} [description]

@@ -47,9 +47,6 @@ declare global {
  * @attr {boolean} [required=false]
  * @attr {string} [value=''] - An empty value is submitted as nothing, and counts for nothing in a Checkbox Group's `value`.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} [description]
  *
  * @csspart checkbox - Where a design draws its check or dash
@@ -141,6 +138,7 @@ export default class Checkbox extends LitElement {
   @property({ reflect: true, useDefault: true })
   value = '';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

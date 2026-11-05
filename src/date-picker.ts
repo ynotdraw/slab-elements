@@ -67,10 +67,6 @@ declare global {
  * @attr {boolean} [required=false]
  * @attr {string} [step] - In days, or "any". Counted from `min` when there is one.
  * @attr {string} [value=''] - An ISO "yyyy-mm-dd" string. Like a native input, the attribute is the default value and the property is the current one, so the attribute doesn't change as the field is edited.
- *
- * @readonly
- * @attr {string} [version]
- *
  * @attr {number} [week-start=0] - The day the Calendar's weeks start on, from 0 for Sunday to 6 for Saturday.
  *
  * @slot {Element | string} [description]

@@ -58,9 +58,6 @@ declare global {
  * @attr {number} [step=5] - How far each arrow key moves the separator, as a percentage.
  * @attr {number} [value=50] - How much of the splitter the primary pane takes up, as a percentage. It's always between `min` and `max`.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element} [primary]
  * @slot {Element} [secondary]
  *
@@ -119,6 +116,7 @@ export default class Splitter extends LitElement {
   @property({ reflect: true, type: Number, useDefault: true })
   value = 50;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

@@ -74,9 +74,6 @@ declare global {
  * @attr {boolean} [required=false]
  * @attr {string} [value=''] - Like a native input, the attribute is the default value and the property is the current one, so the attribute doesn't change as the field is typed into.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} [description]
  *
  * @csspart clear-button - The button that clears the input
@@ -189,6 +186,7 @@ export default class SearchField extends LitElement {
   @property()
   value = '';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

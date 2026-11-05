@@ -45,9 +45,6 @@ declare global {
  * @attr {boolean} [required=false]
  * @attr {string} [value=''] - The value of the checked and enabled Radio. Not reflected, to match a native control.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Radio}
  * @slot {Element | string} [description]
  *
@@ -145,6 +142,7 @@ export default class RadioGroup extends LitElement {
     }
   }
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

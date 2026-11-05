@@ -45,9 +45,6 @@ declare global {
  * @attr {string} [label]
  * @attr {boolean} [open=false]
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string}
  * @slot {Element | string} [label]
  *
@@ -82,6 +79,7 @@ export default class Dialog extends LitElement {
   @property({ reflect: true, type: Boolean })
   open = false;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

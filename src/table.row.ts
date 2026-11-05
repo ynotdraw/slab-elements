@@ -19,13 +19,11 @@ declare global {
  * A Table Row with no visual styles: a `[role=row]` of Column Headers or
  * Cells, in a Table Head, Body or Foot.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {TableCell | TableColumnHeader} - The row's Cells, or its Column Headers
  */
 @customElement('slab-table-row')
 export default class TableRow extends LitElement {
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

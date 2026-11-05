@@ -52,9 +52,6 @@ declare global {
  * @attr {string} label - Names the tree.
  * @attr {boolean} [multiple=false]
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {TreeItem}
  *
  * @csspart tree - The Tree Items
@@ -82,6 +79,7 @@ export default class Tree extends LitElement {
   @property({ reflect: true, type: Boolean })
   multiple = false;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

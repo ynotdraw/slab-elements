@@ -66,10 +66,6 @@ declare global {
  * @attr {string} [name='']
  * @attr {boolean} [required=false]
  * @attr {string} [value=''] - The value of the first selected and enabled Option. Setting it selects the Option with that value, and only that one. Not reflected, to match a native control.
- *
- * @readonly
- * @attr {string} [version]
- *
  * @attr {boolean} [virtual=false] - Lays out only the Options in or near view, for a Listbox with thousands. Give `::part(listbox)` a block size so it scrolls. Options are taken to be the same height as each other.
  *
  * @slot {Option | OptionGroup}
@@ -175,6 +171,7 @@ export default class Listbox extends LitElement {
     this.values = value === '' ? [] : [value];
   }
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

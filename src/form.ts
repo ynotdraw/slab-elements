@@ -57,9 +57,6 @@ declare global {
  * @attr {boolean} [novalidate=false]
  * @attr {string} [target]
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - Moved into the form
  *
  * @readonly
@@ -109,6 +106,7 @@ export default class Form extends LitElement {
   @property({ reflect: true })
   target?: string;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

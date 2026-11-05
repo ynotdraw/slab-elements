@@ -105,10 +105,6 @@ declare global {
  * @attr {'bottom'|'top'} [placement='bottom'] - The side of the input the listbox opens on, when there's room. It flips when there isn't.
  * @attr {boolean} [required=false]
  * @attr {string} [value=''] - The selected Option's value, or the typed text when `allow-custom` is set and it matches no Option. The first of `values` when `multiple` is set. Setting it selects the Option with that value, and only that one. Like a native input, the attribute is the default value and the property is the current one.
- *
- * @readonly
- * @attr {string} [version]
- *
  * @attr {boolean} [virtual=false] - Lays out only the Options in or near view, for a Combobox with thousands. Give `::part(listbox)` a maximum block size so it scrolls. Options are taken to be the same height as each other.
  *
  * @slot {Option | OptionGroup}
@@ -308,6 +304,7 @@ export default class Combobox extends LitElement {
     this.#values = values;
   }
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

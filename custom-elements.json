@@ -46,16 +46,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -85,14 +75,6 @@
               "default": "false",
               "description": "Whether opening a Disclosure closes the others.",
               "fieldName": "exclusive"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -303,20 +285,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "returnValue",
               "type": {
                 "text": "string"
@@ -423,18 +391,6 @@
               },
               "default": "false",
               "fieldName": "open",
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              }
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version",
               "inheritedFrom": {
                 "name": "Dialog",
                 "module": "src/dialog.ts"
@@ -552,16 +508,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -607,14 +553,6 @@
               },
               "description": "The dismiss button's text and so its accessible name. \"Dismiss\" in\nEnglish when unset.",
               "fieldName": "dismissLabel"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -704,16 +642,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "items",
               "type": {
                 "text": "Element[]"
@@ -749,14 +677,6 @@
               },
               "description": "Names the navigation. \"Breadcrumb\" in English when unset.",
               "fieldName": "label"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -956,16 +876,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "focus",
               "parameters": [
@@ -1066,14 +976,6 @@
               "default": "0",
               "description": "The day weeks start on, from 0 for Sunday to 6 for Saturday.",
               "fieldName": "weekStart"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -1285,16 +1187,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "slides",
               "type": {
                 "text": "Element[]"
@@ -1407,14 +1299,6 @@
               },
               "description": "The rotation button's text while the slides rotate. \"Stop slide rotation\"\nin English when unset.",
               "fieldName": "stopLabel"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -1567,16 +1451,6 @@
               "description": "The value of the first checked and enabled Checkbox, in the order they\nwere checked. Setting it checks the Checkbox with that value, and only\nthat one. Not reflected, to match a native control.",
               "default": "''",
               "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -1799,14 +1673,6 @@
               "description": "The value of the first checked and enabled Checkbox, in the order they\nwere checked. Setting it checks the Checkbox with that value, and only\nthat one. Not reflected, to match a native control.",
               "default": "''",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -1983,16 +1849,6 @@
               "default": "''",
               "description": "An empty value is submitted as nothing, and counts for nothing in a\nCheckbox Group's `value`.",
               "attribute": "value",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
               "reflects": true
             },
             {
@@ -2283,14 +2139,6 @@
               "default": "''",
               "description": "An empty value is submitted as nothing, and counts for nothing in a\nCheckbox Group's `value`.",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -2571,16 +2419,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "form",
               "type": {
                 "text": "HTMLFormElement | null"
@@ -2820,14 +2658,6 @@
               "description": "Like a native input's `value`, the attribute is the default and the\nproperty is the current value. \"#000000\" when unset.",
               "default": "'#000000'",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -3104,16 +2934,6 @@
               },
               "description": "Every selected value, in the order they were chosen. Only the first when\n`multiple` isn't set. Setting it selects the Options with those values,\nand only those.",
               "default": "[]"
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -3449,14 +3269,6 @@
               "description": "The selected Option's value, or the typed text when `allow-custom` is set\nand it matches no Option. The first of `values` when `multiple` is set.\nSetting it selects the Option with that value, and only that one. Like a\nnative input, the attribute is the default value and the property is the\ncurrent one.",
               "default": "''",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -3713,20 +3525,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "returnValue",
               "type": {
                 "text": "string"
@@ -3824,18 +3622,6 @@
               },
               "default": "false",
               "fieldName": "open",
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              }
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version",
               "inheritedFrom": {
                 "name": "Dialog",
                 "module": "src/dialog.ts"
@@ -3990,16 +3776,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "items",
               "type": {
                 "text": "MenuItem[]"
@@ -4080,14 +3856,6 @@
               },
               "default": "false",
               "fieldName": "open"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -4226,16 +3994,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "click"
             },
@@ -4345,14 +4103,6 @@
               "default": "''",
               "description": "The text to copy.",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -4555,16 +4305,6 @@
               "default": "''",
               "description": "An ISO \"yyyy-mm-dd\" string. Like a native input, the attribute is the\ndefault value and the property is the current one, so the attribute\ndoesn't change as the field is edited.",
               "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -4871,14 +4611,6 @@
               "default": "''",
               "description": "An ISO \"yyyy-mm-dd\" string. Like a native input, the attribute is the\ndefault value and the property is the current one, so the attribute\ndoesn't change as the field is edited.",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -5252,20 +4984,6 @@
               "default": "''",
               "description": "An ISO \"yyyy-mm-dd\" string. Like a native input, the attribute is the\ndefault value and the property is the current one, so the attribute\ndoesn't change as the field is edited.",
               "attribute": "value",
-              "inheritedFrom": {
-                "name": "DateField",
-                "module": "src/date-field.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "DateField",
                 "module": "src/date-field.ts"
@@ -5669,18 +5387,6 @@
                 "name": "DateField",
                 "module": "src/date-field.ts"
               }
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version",
-              "inheritedFrom": {
-                "name": "DateField",
-                "module": "src/date-field.ts"
-              }
             }
           ],
           "superclass": {
@@ -5948,16 +5654,6 @@
               "default": "''",
               "description": "The first day of the range, as \"yyyy-mm-dd\". Like a native input's\n`value`, the attribute is the default and the property is the current\nvalue.",
               "attribute": "start-value"
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -6254,14 +5950,6 @@
               "default": "''",
               "description": "The first day of the range, as \"yyyy-mm-dd\". Like a native input's\n`value`, the attribute is the default and the property is the current\nvalue.",
               "fieldName": "startValue"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -6734,20 +6422,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "DateRangeField",
-                "module": "src/date-range-field.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "form",
               "type": {
                 "text": "HTMLFormElement | null"
@@ -7140,18 +6814,6 @@
                 "name": "DateRangeField",
                 "module": "src/date-range-field.ts"
               }
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version",
-              "inheritedFrom": {
-                "name": "DateRangeField",
-                "module": "src/date-range-field.ts"
-              }
             }
           ],
           "superclass": {
@@ -7284,16 +6946,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "returnValue",
               "type": {
                 "text": "string"
@@ -7394,14 +7046,6 @@
               },
               "default": "false",
               "fieldName": "open"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -7522,16 +7166,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "click"
             },
@@ -7609,14 +7243,6 @@
               },
               "default": "false",
               "fieldName": "open"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -7743,20 +7369,6 @@
               },
               "default": "false",
               "attribute": "open",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
               "reflects": true,
               "inheritedFrom": {
                 "name": "Dialog",
@@ -7903,18 +7515,6 @@
               },
               "default": "false",
               "fieldName": "open",
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              }
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version",
               "inheritedFrom": {
                 "name": "Dialog",
                 "module": "src/dialog.ts"
@@ -8112,16 +7712,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "form",
               "type": {
                 "text": "HTMLFormElement | null"
@@ -8308,14 +7898,6 @@
               "default": "''",
               "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as edits are\ncommitted.",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -8416,16 +7998,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "items",
               "type": {
                 "text": "Element[]"
@@ -8479,14 +8051,6 @@
               },
               "description": "How many articles there are in all, including those not added yet, or -1\nwhen that's unknown. The number added when unset.",
               "fieldName": "total"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -8617,16 +8181,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -8679,14 +8233,6 @@
               },
               "default": "false",
               "fieldName": "required"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -8876,16 +8422,6 @@
               },
               "description": "What screenreaders are told when a drop of several files is ignored,\nwithout `multiple`. \"Only one file can be added\" in English when unset.",
               "attribute": "too-many-label",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
               "reflects": true
             },
             {
@@ -9159,14 +8695,6 @@
               },
               "description": "What screenreaders are told when a drop of several files is ignored,\nwithout `multiple`. \"Only one file can be added\" in English when unset.",
               "fieldName": "tooManyLabel"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -9300,16 +8828,6 @@
                 "text": "string | undefined"
               },
               "attribute": "target",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
               "reflects": true
             },
             {
@@ -9462,14 +8980,6 @@
                 "text": "string | undefined"
               },
               "fieldName": "target"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -9579,16 +9089,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "controls",
               "type": {
                 "text": "HTMLElement[]"
@@ -9672,14 +9172,6 @@
               "default": "false",
               "description": "Like Option's, the attribute is the default state and the property is the\ncurrent one. Style `:state(selected)` rather than `[selected]`.",
               "fieldName": "selected"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -9781,16 +9273,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "items",
               "type": {
                 "text": "GridListItem[]"
@@ -9882,14 +9364,6 @@
               "default": "false",
               "description": "Whether a row can be selected.",
               "fieldName": "selectable"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -10082,16 +9556,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -10170,14 +9634,6 @@
               "default": "'bottom'",
               "description": "The side of its anchor it opens on, when there's room. It flips when there\nisn't.",
               "fieldName": "placement"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -10351,16 +9807,6 @@
               "description": "The value of the first selected and enabled Option. Setting it selects\nthe Option with that value, and only that one. Not reflected, to match a\nnative control.",
               "default": "''",
               "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -10657,14 +10103,6 @@
               "description": "The value of the first selected and enabled Option. Setting it selects\nthe Option with that value, and only that one. Not reflected, to match a\nnative control.",
               "default": "''",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -10752,16 +10190,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -10806,14 +10234,6 @@
               },
               "default": "false",
               "fieldName": "hideLabel"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -10918,16 +10338,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "text",
               "type": {
                 "text": "string"
@@ -11003,14 +10413,6 @@
               },
               "default": "'item'",
               "fieldName": "type"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -11150,16 +10552,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "items",
               "type": {
                 "text": "MenuItem[]"
@@ -11239,14 +10631,6 @@
               "default": "'bottom'",
               "description": "The side of its anchor it opens on, when there's room. It flips when\nthere isn't. A submenu ignores it and opens beside its Menu Item.",
               "fieldName": "placement"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -11326,16 +10710,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "menus",
               "type": {
                 "text": "Menu[]"
@@ -11385,14 +10759,6 @@
               "description": "Names the menubar.",
               "fieldName": "label",
               "required": true
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -11542,16 +10908,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -11636,14 +10992,6 @@
               },
               "default": "0",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -11753,16 +11101,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "items",
               "type": {
                 "text": "Element[]"
@@ -11859,14 +11197,6 @@
               },
               "default": "false",
               "fieldName": "open"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -11953,16 +11283,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "items",
               "type": {
                 "text": "Element[]"
@@ -11999,14 +11319,6 @@
               "description": "Names the navigation.",
               "fieldName": "label",
               "required": true
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -12216,16 +11528,6 @@
               "default": "''",
               "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as the field is typed\ninto.",
               "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -12574,14 +11876,6 @@
               "default": "''",
               "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as the field is typed\ninto.",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -12669,16 +11963,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -12723,14 +12007,6 @@
               },
               "default": "false",
               "fieldName": "hideLabel"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -12834,16 +12110,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "text",
               "type": {
                 "text": "string"
@@ -12932,14 +12198,6 @@
               "description": "Its label, or its text when it has no label, when not set. The same as a\nnative option.",
               "default": "''",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -13097,16 +12355,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -13186,14 +12434,6 @@
               "default": "1",
               "description": "How many pages are shown either side of the current one.",
               "fieldName": "siblings"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -13431,16 +12671,6 @@
               "default": "''",
               "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as the field is typed\ninto.",
               "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -13795,14 +13025,6 @@
               "default": "''",
               "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as the field is typed\ninto.",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -14036,16 +13258,6 @@
               "default": "''",
               "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as the field is typed\ninto.",
               "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -14347,14 +13559,6 @@
               "default": "''",
               "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as the field is typed\ninto.",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -14461,16 +13665,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "hide",
               "return": {
@@ -14557,14 +13751,6 @@
               "default": "'bottom'",
               "description": "The side of its anchor it opens on, when there's room. It flips when\nthere isn't.",
               "fieldName": "placement"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -14674,16 +13860,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -14736,14 +13912,6 @@
               },
               "description": "How much of the task is done, from 0 to `max`. Indeterminate when unset,\nas on a native `<progress>`.",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -14845,16 +14013,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -14946,14 +14104,6 @@
               },
               "default": "''",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -15106,16 +14256,6 @@
               "description": "The value of the checked and enabled Radio. Not reflected, to match a\nnative control.",
               "default": "''",
               "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -15329,14 +14469,6 @@
               "description": "The value of the checked and enabled Radio. Not reflected, to match a\nnative control.",
               "default": "''",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -15571,16 +14703,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "form",
               "type": {
                 "text": "HTMLFormElement | null"
@@ -15796,14 +14918,6 @@
               },
               "default": "1",
               "fieldName": "step"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -15995,16 +15109,6 @@
               "description": "The checked radio's number. Like a native input, the attribute is the\ndefault value and the property is the current one. A value that isn't one\nof the radios' numbers, from `step` to `max`, checks nothing and reads\nback as an empty string.",
               "default": "''",
               "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -16267,14 +15371,6 @@
               "description": "The checked radio's number. Like a native input, the attribute is the\ndefault value and the property is the current one. A value that isn't one\nof the radios' numbers, from `step` to `max`, checks nothing and reads\nback as an empty string.",
               "default": "''",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -16501,16 +15597,6 @@
               "default": "''",
               "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as the field is typed\ninto.",
               "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -16849,14 +15935,6 @@
               "default": "''",
               "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as the field is typed\ninto.",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -17062,16 +16140,6 @@
               "description": "The value of the first selected and enabled Option. Setting it selects\nthe Option with that value, and only that one. Not reflected, to match a\nnative control.",
               "default": "''",
               "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -17399,14 +16467,6 @@
               "description": "The value of the first selected and enabled Option. Setting it selects\nthe Option with that value, and only that one. Not reflected, to match a\nnative control.",
               "default": "''",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -17585,16 +16645,6 @@
               "description": "Like a native input, the attribute is the default value and the property\nis the current one. The property is always the value the input settled\non, so it's never outside the range or off a step.",
               "default": "''",
               "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -17799,14 +16849,6 @@
               "description": "Like a native input, the attribute is the default value and the property\nis the current one. The property is always the value the input settled\non, so it's never outside the range or off a step.",
               "default": "''",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -17924,16 +16966,6 @@
               "description": "Set by its Sortable List."
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -17979,14 +17011,6 @@
               },
               "description": "Names the handle. \"Reorder\" and `label` in English when unset.",
               "fieldName": "handleLabel"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -18108,16 +17132,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "items",
               "type": {
                 "text": "SortableListItem[]"
@@ -18170,14 +17184,6 @@
               },
               "description": "Describes each handle to screenreaders. \"Press Space to pick it up…\" in\nEnglish when unset.",
               "fieldName": "instructionsLabel"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -18344,16 +17350,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "focus",
               "parameters": [
@@ -18463,14 +17459,6 @@
               "default": "50",
               "description": "How much of the splitter the primary pane takes up, as a percentage. It's\nalways between `min` and `max`.",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -18609,16 +17597,6 @@
               "description": "Set by its Steps."
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -18662,14 +17640,6 @@
               "default": "false",
               "description": "Keeps the user from going to it in a `navigable` Steps.",
               "fieldName": "disabled"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -18785,16 +17755,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "steps",
               "type": {
                 "text": "Step[]"
@@ -18885,14 +17845,6 @@
               "default": "1",
               "description": "The current Step, from 1. The Steps before it are complete.",
               "fieldName": "step"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -19082,16 +18034,6 @@
               },
               "default": "'on'",
               "attribute": "value",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
               "reflects": true
             },
             {
@@ -19349,14 +18291,6 @@
               },
               "default": "'on'",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -19419,16 +18353,6 @@
           ],
           "members": [
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -19447,16 +18371,6 @@
                   }
                 }
               ]
-            }
-          ],
-          "attributes": [
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -19530,16 +18444,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -19569,14 +18473,6 @@
               "default": "false",
               "description": "Makes the Cell its row's header, like a `<th scope=\"row\">`.",
               "fieldName": "rowHeader"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -19690,16 +18586,6 @@
               "description": "What screenreaders are told when the user sorts the column, from its\nname and `sort`. \"Sorted by\", the name and the direction in English when\nunset."
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -19752,14 +18638,6 @@
               "default": "false",
               "description": "Makes the Column Header a button that sorts the column.",
               "fieldName": "sortable"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -19822,16 +18700,6 @@
           ],
           "members": [
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -19850,16 +18718,6 @@
                   }
                 }
               ]
-            }
-          ],
-          "attributes": [
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -19922,16 +18780,6 @@
           ],
           "members": [
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -19950,16 +18798,6 @@
                   }
                 }
               ]
-            }
-          ],
-          "attributes": [
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -20022,16 +18860,6 @@
           ],
           "members": [
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -20050,16 +18878,6 @@
                   }
                 }
               ]
-            }
-          ],
-          "attributes": [
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -20123,16 +18941,6 @@
           "members": [
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "columnHeaders",
               "type": {
                 "text": "TableColumnHeader[]"
@@ -20158,16 +18966,6 @@
                   }
                 }
               ]
-            }
-          ],
-          "attributes": [
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -20240,16 +19038,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -20293,14 +19081,6 @@
               "description": "What its Tab's `panel` names.",
               "fieldName": "name",
               "required": true
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -20407,16 +19187,6 @@
               "attribute": "selected"
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -20489,14 +19259,6 @@
               "default": "false",
               "description": "Like Option's, the attribute is the default state and the property is the\ncurrent one. Style `:state(selected)` rather than `[selected]`.",
               "fieldName": "selected"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -20587,16 +19349,6 @@
               "default": "'horizontal'",
               "description": "Which arrow keys move between Tabs. Where they sit is still up to your\nstyles.",
               "attribute": "orientation",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
               "reflects": true
             },
             {
@@ -20692,14 +19444,6 @@
               "default": "'horizontal'",
               "description": "Which arrow keys move between Tabs. Where they sit is still up to your\nstyles.",
               "fieldName": "orientation"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -20924,16 +19668,6 @@
               },
               "description": "Every tag, in the order they were added.",
               "default": "[]"
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -21202,14 +19936,6 @@
               "description": "The tags, separated by commas, each trimmed. Like a native input, the\nattribute is the default value and the property is the current one. Use\n`values` for tags with commas in them.",
               "default": "''",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -21429,16 +20155,6 @@
               "default": "''",
               "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as the field is typed\ninto.",
               "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -21778,14 +20494,6 @@
               "default": "''",
               "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as the field is typed\ninto.",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -22003,16 +20711,6 @@
               "default": "''",
               "description": "Like a native textarea's content, the attribute is the default value and\nthe property is the current one, so the attribute doesn't change as the\nfield is typed into.",
               "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -22350,14 +21048,6 @@
               "default": "''",
               "description": "Like a native textarea's content, the attribute is the default value and\nthe property is the current one, so the attribute doesn't change as the\nfield is typed into.",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -22560,16 +21250,6 @@
               "default": "''",
               "description": "A 24-hour \"hh:mm\" string, with \":ss\" and \".sss\" when it has them. Like a\nnative input, the attribute is the default value and the property is the\ncurrent one, so the attribute doesn't change as the field is edited.",
               "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -22876,14 +21556,6 @@
               "default": "''",
               "description": "A 24-hour \"hh:mm\" string, with \":ss\" and \".sss\" when it has them. Like a\nnative input, the attribute is the default value and the property is the\ncurrent one, so the attribute doesn't change as the field is edited.",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -22963,16 +21635,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "open",
               "type": {
                 "text": "boolean"
@@ -23035,14 +21697,6 @@
               "default": "5000",
               "description": "Milliseconds until it dismisses itself. 0 keeps it until it's dismissed.",
               "fieldName": "duration"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -23149,16 +21803,6 @@
               "attribute": "pressed"
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "click"
             },
@@ -23235,14 +21879,6 @@
               "default": "false",
               "description": "Like a native checkbox's `checked`, the attribute is the default state and\nthe property is the current one. Style `:state(pressed)` rather than\n`[pressed]`.",
               "fieldName": "pressed"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -23345,16 +21981,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -23440,14 +22066,6 @@
               },
               "default": "''",
               "fieldName": "value"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -23560,16 +22178,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "buttons",
               "type": {
                 "text": "ToggleGroupButton[]"
@@ -23673,14 +22281,6 @@
               "default": "'horizontal'",
               "description": "Which arrow keys move between the buttons. Where they sit is still up to\nyour styles.",
               "fieldName": "orientation"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -23771,16 +22371,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "items",
               "type": {
                 "text": "HTMLElement[]"
@@ -23839,14 +22429,6 @@
               "default": "'horizontal'",
               "description": "Which arrow keys move between the controls. Where they sit is still up to\nyour styles.",
               "fieldName": "orientation"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -24029,16 +22611,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
               "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
@@ -24109,14 +22681,6 @@
               "default": "'bottom'",
               "description": "The side of its anchor it opens on, when there's room. It flips when there\nisn't.",
               "fieldName": "placement"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -24238,16 +22802,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "items",
               "type": {
                 "text": "TreeItem[]"
@@ -24345,14 +22899,6 @@
               "default": "false",
               "description": "Like Option's, the attribute is the default state and the property is the\ncurrent one. Style `:state(selected)` rather than `[selected]`.",
               "fieldName": "selected"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {
@@ -24442,16 +22988,6 @@
             },
             {
               "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "attribute": "version",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "items",
               "type": {
                 "text": "TreeItem[]"
@@ -24535,14 +23071,6 @@
               },
               "default": "false",
               "fieldName": "multiple"
-            },
-            {
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true,
-              "fieldName": "version"
             }
           ],
           "superclass": {

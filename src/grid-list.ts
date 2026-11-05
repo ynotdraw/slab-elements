@@ -64,9 +64,6 @@ declare global {
  * @attr {boolean} [multiple=false] - Whether more than one row can be selected. Rows are selectable when it's set, without `selectable`.
  * @attr {boolean} [selectable=false] - Whether a row can be selected.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {GridListItem}
  *
  * @csspart grid - The rows
@@ -104,6 +101,7 @@ export default class GridList extends LitElement {
   @property({ reflect: true, type: Boolean })
   selectable = false;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

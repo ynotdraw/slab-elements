@@ -73,9 +73,6 @@ declare global {
  * @attr {boolean} [required=false]
  * @attr {string} [value=''] - The value of the first selected and enabled Option. Setting it selects the Option with that value, and only that one. Not reflected, to match a native control.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Option | OptionGroup}
  * @slot {Element | string} [description]
  *
@@ -193,6 +190,7 @@ export default class Select extends LitElement {
     this.values = value === '' ? [] : [value];
   }
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

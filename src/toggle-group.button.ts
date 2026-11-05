@@ -34,9 +34,6 @@ declare global {
  * @attr {boolean} [pressed=false] - Like a native checkbox's `checked`, the attribute is the default state and the property is the current one. Style `:state(pressed)` rather than `[pressed]`.
  * @attr {string} [value='']
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - The label, plus anything else a design puts in a button
  *
  * @fires {Event} change
@@ -65,6 +62,7 @@ export default class ToggleGroupButton extends LitElement {
   @property({ reflect: true, useDefault: true })
   value = '';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

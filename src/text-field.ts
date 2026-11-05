@@ -57,9 +57,6 @@ declare global {
  * @attr {'text'|'email'|'password'|'search'|'tel'|'url'} [type='text'] - One of "text", "email", "password", "search", "tel" or "url". Number, date and time have components of their own.
  * @attr {string} [value=''] - Like a native input, the attribute is the default value and the property is the current one, so the attribute doesn't change as the field is typed into.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} [description]
  *
  * @csspart description - Text about the field, and its validity message when it has one
@@ -171,6 +168,7 @@ export default class TextField extends LitElement {
   @property()
   value = '';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

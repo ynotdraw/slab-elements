@@ -35,9 +35,6 @@ declare global {
  *
  * @attr {boolean} [disabled=false] - Keeps the user from going to it in a `navigable` Steps.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - The label
  * @slot {Element | string} [description] - Shown below the label
  *
@@ -84,6 +81,7 @@ export default class Step extends LitElement {
   @property({ attribute: false })
   status: 'complete' | 'current' | 'upcoming' = 'upcoming';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

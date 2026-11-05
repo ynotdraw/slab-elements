@@ -39,9 +39,6 @@ declare global {
  * @attr {number} [max] - 1 when unset, as on a native `<progress>`.
  * @attr {number} [value] - How much of the task is done, from 0 to `max`. Indeterminate when unset, as on a native `<progress>`.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @csspart label - The label
  * @csspart progress
  *
@@ -76,6 +73,7 @@ export default class Progress extends LitElement {
   @property({ reflect: true, type: Number })
   value?: number;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 
