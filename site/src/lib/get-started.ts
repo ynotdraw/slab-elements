@@ -173,6 +173,17 @@ registerStrings('de', {
     heading: 'Browsers',
     text: "Slab is tested in Chromium, Firefox and WebKit. Where a browser hasn't caught up on a feature, Slab uses it where it's there and leaves the platform's behavior where it isn't. Without CSS anchor positioning, for example, a popover is centered rather than placed beside its anchor. Every element still opens, closes, submits and is announced, everywhere.",
   },
+  {
+    id: 'api',
+    heading: 'What you can count on',
+    text: "Everything a component's page lists is public: its tag, attributes, properties, methods, events, slots, parts, states and custom properties. So are `registerStrings()` and the framework types. From 1.0, changing any of them waits for a major version. Before 1.0, a minor version is where a breaking change goes, and a patch never has one.",
+    coda: "Everything else is Slab's own and can change in any release: a member or event whose name starts with `private`, anything marked `@internal`, `slab-elements/library/*`, and whatever is in a shadow root other than its parts.",
+  },
+  {
+    id: 'conventions',
+    heading: 'The same everywhere',
+    text: "Elements that do the same thing do it the same way. `multiple` lets more than one be chosen, and `value` is the first of `values`. A number is a number where the native element's is, as on Meter and Progress, and a string where it isn't, as on Slider and Number, which add `valueAsNumber`. Anything with `open` dispatches a `ToggleEvent` named \"toggle\" that doesn't bubble, as a popover does. `readonly` is on the fields where a native input has it, and the form controls for a set of choices are Checkbox Group and Radio Group, since toggle buttons aren't form controls.",
+  },
 ];
 
 const escape = (text: string) =>
