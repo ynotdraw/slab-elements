@@ -96,6 +96,7 @@ export default class AlertDialog extends Dialog {
 
   // The Cancel button, unless something in the dialog is autofocused. Dialog
   // looks for `[autofocus]` the same way.
+  /** @internal For Slab's own subclasses. Not public API. */
   protected override focusContent(): void {
     const autofocused = this.querySelector<HTMLElement>('[autofocus]');
 
@@ -109,6 +110,7 @@ export default class AlertDialog extends Dialog {
 
   // The Cancel button comes before the slotted action, so it's first in
   // reading and Tab order, as it is in most platforms' alerts.
+  /** @internal For Slab's own subclasses. Not public API. */
   protected override renderContent(): TemplateResult {
     return html`<div id="description" part="description">
         <!-- The description -->
@@ -140,6 +142,7 @@ export default class AlertDialog extends Dialog {
   // Set here rather than in Dialog's template, which this shares. The role
   // and description only matter to an open dialog, since a closed one isn't
   // rendered.
+  /** @internal For Slab's own subclasses. Not public API. */
   protected override showDialog(dialog: HTMLDialogElement): void {
     dialog.setAttribute('role', 'alertdialog');
     dialog.setAttribute('aria-describedby', 'description');

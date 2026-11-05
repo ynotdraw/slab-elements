@@ -54,6 +54,7 @@ declare global {
 @customElement('slab-drawer')
 export default class Drawer extends Dialog {
   // `show()` rather than `showModal()`. The rest of the page stays interactive.
+  /** @internal For Slab's own subclasses. Not public API. */
   protected override showDialog(dialog: HTMLDialogElement): void {
     dialog.show();
   }

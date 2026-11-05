@@ -15,6 +15,10 @@
     "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
     "noUncheckedIndexedAccess": true,
+    // Leaves members marked `@internal` out of the published types, such as
+    // the protected render hooks Slab's own subclasses override. They aren't
+    // public API, so a subclass of yours shouldn't build on them.
+    "stripInternal": true,
     "plugins": [
       {
         "name": "ts-lit-plugin",

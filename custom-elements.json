@@ -238,56 +238,6 @@
             },
             {
               "kind": "method",
-              "name": "focusContent",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "renderContent",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "TemplateResult"
-                }
-              },
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "showDialog",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "dialog",
-                  "type": {
-                    "text": "HTMLDialogElement"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              }
-            },
-            {
-              "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
               "static": true,
@@ -3669,34 +3619,6 @@
             },
             {
               "kind": "method",
-              "name": "focusContent",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "renderContent",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "TemplateResult"
-                }
-              },
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              }
-            },
-            {
-              "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
               "static": true,
@@ -3831,28 +3753,6 @@
                   "text": "void"
                 }
               },
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "showDialog",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "dialog",
-                  "type": {
-                    "text": "HTMLDialogElement"
-                  }
-                }
-              ],
               "inheritedFrom": {
                 "name": "Dialog",
                 "module": "src/dialog.ts"
@@ -4756,24 +4656,6 @@
             },
             {
               "kind": "method",
-              "name": "renderControl",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "TemplateResult"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "input",
-                  "type": {
-                    "text": "TemplateResult"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "reportValidity",
               "return": {
                 "type": {
@@ -5135,28 +5017,6 @@
                 }
               },
               "description": "Closes the calendar."
-            },
-            {
-              "kind": "method",
-              "name": "renderControl",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "TemplateResult"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "input",
-                  "type": {
-                    "text": "TemplateResult"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DateField",
-                "module": "src/date-field.ts"
-              }
             },
             {
               "kind": "method",
@@ -6176,24 +6036,6 @@
             },
             {
               "kind": "method",
-              "name": "renderFields",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "TemplateResult"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "fields",
-                  "type": {
-                    "text": "TemplateResult"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "reportValidity",
               "return": {
                 "type": {
@@ -6636,28 +6478,6 @@
                 }
               },
               "description": "Closes the calendar."
-            },
-            {
-              "kind": "method",
-              "name": "renderFields",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "TemplateResult"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "fields",
-                  "type": {
-                    "text": "TemplateResult"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DateRangeField",
-                "module": "src/date-range-field.ts"
-              }
             },
             {
               "kind": "method",
@@ -7478,50 +7298,12 @@
             },
             {
               "kind": "method",
-              "name": "focusContent",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "renderContent",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "TemplateResult"
-                }
-              }
-            },
-            {
-              "kind": "method",
               "name": "show",
               "return": {
                 "type": {
                   "text": "void"
                 }
               }
-            },
-            {
-              "kind": "method",
-              "name": "showDialog",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "dialog",
-                  "type": {
-                    "text": "HTMLDialogElement"
-                  }
-                }
-              ]
             },
             {
               "kind": "method",
@@ -7866,28 +7648,6 @@
           "members": [
             {
               "kind": "method",
-              "name": "showDialog",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "dialog",
-                  "type": {
-                    "text": "HTMLDialogElement"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              }
-            },
-            {
-              "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
               "static": true,
@@ -8010,34 +7770,6 @@
                   }
                 }
               ],
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "focusContent",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "renderContent",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "TemplateResult"
-                }
-              },
               "inheritedFrom": {
                 "name": "Dialog",
                 "module": "src/dialog.ts"

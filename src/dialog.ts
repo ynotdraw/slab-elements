@@ -133,6 +133,7 @@ export default class Dialog extends LitElement {
   //
   // Command Palette overrides it to focus its input, which is in the shadow
   // root rather than slotted.
+  /** @internal For Slab's own subclasses. Not public API. */
   protected focusContent(): void {
     const elements = [
       ...this.querySelectorAll<HTMLElement>('[autofocus]'),
@@ -172,6 +173,7 @@ export default class Dialog extends LitElement {
 
   // What's in the `<dialog>` below the label. Command Palette overrides it to
   // put its input and listbox there, and inherits everything else.
+  /** @internal For Slab's own subclasses. Not public API. */
   protected renderContent(): TemplateResult {
     return html`<slot>
       <!-- @type {Element | string} -->
@@ -184,6 +186,7 @@ export default class Dialog extends LitElement {
 
   // How the `<dialog>` is opened. Drawer overrides it to open the same
   // `<dialog>` without making it modal, and inherits everything else.
+  /** @internal For Slab's own subclasses. Not public API. */
   protected showDialog(dialog: HTMLDialogElement): void {
     dialog.showModal();
   }

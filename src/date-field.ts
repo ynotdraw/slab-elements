@@ -304,6 +304,7 @@ export default class DateField extends LitElement {
   // What's between the label and the description, given the input. Date
   // Picker overrides it to put a button beside the input and a calendar in a
   // popover, and inherits everything else.
+  /** @internal For Slab's own subclasses. Not public API. */
   protected renderControl(input: TemplateResult): TemplateResult {
     return input;
   }

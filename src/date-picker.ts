@@ -176,6 +176,7 @@ export default class DatePicker extends DateField {
     }
   }
 
+  /** @internal For Slab's own subclasses. Not public API. */
   protected override renderControl(input: TemplateResult): TemplateResult {
     return html`<div part="control" @keydown=${this.#onControlKeydown}>
         <!-- The input and the button -->
