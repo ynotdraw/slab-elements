@@ -237,6 +237,69 @@ test(
 );
 
 test(
+  'disables its buttons when disabled initially',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-toggle-group label="Label" disabled>
+          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+          <slab-toggle-group-button value="two">Two</slab-toggle-group-button>
+        </slab-toggle-group>`,
+    );
+
+    const buttons = page.locator('slab-toggle-group-button');
+
+    await expect(buttons.nth(0)).toHaveJSProperty('disabled', true);
+    await expect(buttons.nth(1)).toHaveJSProperty('disabled', true);
+  },
+);
+
+test(
+  'disables and enables its buttons when `disabled` is set, including ones added while disabled',
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-toggle-group label="Label">
+          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+          <slab-toggle-group-button value="two" disabled
+            >Two</slab-toggle-group-button
+          >
+        </slab-toggle-group>`,
+    );
+
+    const host = page.locator('slab-toggle-group');
+    const buttons = page.locator('slab-toggle-group-button');
+
+    // One that disabled itself stays disabled.
+    await expect(buttons.nth(0)).toHaveJSProperty('disabled', false);
+    await expect(buttons.nth(1)).toHaveJSProperty('disabled', true);
+
+    await setProperty(host, 'disabled', true);
+
+    await expect(buttons.nth(0)).toHaveJSProperty('disabled', true);
+    await expect(buttons.nth(0)).toHaveAttribute('aria-disabled', 'true');
+
+    await host.evaluate((element) => {
+      const button = document.createElement('slab-toggle-group-button');
+
+      button.value = 'three';
+      button.textContent = 'Three';
+      element.append(button);
+    });
+
+    await expect(buttons.nth(2)).toHaveJSProperty('disabled', true);
+
+    await setProperty(host, 'disabled', false);
+
+    await expect(buttons.nth(0)).toHaveJSProperty('disabled', false);
+    await expect(buttons.nth(1)).toHaveJSProperty('disabled', false);
+    await expect(buttons.nth(2)).toHaveJSProperty('disabled', false);
+  },
+);
+
+test(
   'can be focused programmatically',
   { tag: '@miscellaneous' },
   async ({ callMethod, render, page }) => {

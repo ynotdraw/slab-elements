@@ -23729,6 +23729,17 @@
             },
             {
               "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables every button in the group.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "multiple",
               "type": {
                 "text": "boolean"
@@ -23837,6 +23848,15 @@
               "description": "Names the group.",
               "fieldName": "label",
               "required": true
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables every button in the group.",
+              "fieldName": "disabled"
             },
             {
               "name": "multiple",
