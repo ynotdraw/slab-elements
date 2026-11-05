@@ -43,10 +43,14 @@ declare global {
  * disabled ones, and Home and End go to the first and last. Moving focus
  * doesn't press anything. In a right-to-left page, Left and Right swap.
  *
+ * `disabled` disables every button, and buttons added while it's set. Taking
+ * it off enables them again, even one that was disabled on its own before.
+ *
  * Style it through its part, and the buttons through their
  * `:state(pressed)` and `:state(disabled)`.
  *
  * @attr {string} label - Names the group.
+ * @attr {boolean} [disabled=false] - Disables every button in the group.
  * @attr {boolean} [multiple=false] - Lets more than one button be pressed at a time.
  * @attr {'horizontal'|'vertical'} [orientation='horizontal'] - Which arrow keys move between the buttons. Where they sit is still up to your styles.
  *
@@ -74,6 +78,12 @@ export default class ToggleGroup extends LitElement {
   @property({ reflect: true })
   @required
   label?: string;
+
+  /**
+   * Disables every button in the group.
+   */
+  @property({ reflect: true, type: Boolean })
+  disabled = false;
 
   /**
    * Lets more than one button be pressed at a time.
@@ -173,6 +183,18 @@ export default class ToggleGroup extends LitElement {
   }
 
   override updated(changes: PropertyValues<this>) {
+    // Only pushed down when the group is disabled, or when it has actually
+    // changed. Otherwise the first update, where there's no previous value,
+    // would enable every button that disabled itself.
+    if (
+      changes.has('disabled') &&
+      (this.disabled || changes.get('disabled') !== undefined)
+    ) {
+      for (const button of this.buttons) {
+        button.disabled = this.disabled;
+      }
+    }
+
     // Only one stays pressed when a group that allowed more no longer does.
     if (changes.has('multiple') && !this.multiple) {
       this.#releaseAllBut(this.pressedButtons.at(-1));
@@ -224,6 +246,11 @@ export default class ToggleGroup extends LitElement {
 
   #onConnected = (event: Event) => {
     if (this.#isOwn(event)) {
+      // One added to a disabled group.
+      if (this.disabled && event.target instanceof ToggleGroupButton) {
+        event.target.disabled = true;
+      }
+
       this.#settle();
     }
   };
