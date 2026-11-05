@@ -4,7 +4,11 @@
 // the home page), and each renderer turns it into its own kind of link.
 
 type Section = {
-  code?: { code: string; label: string; lang: 'css' | 'html' | 'js' | 'sh' | 'ts' };
+  code?: {
+    code: string;
+    label: string;
+    lang: 'css' | 'html' | 'js' | 'sh' | 'ts';
+  };
   // Text after the code, if any.
   coda?: string;
   heading: string;
