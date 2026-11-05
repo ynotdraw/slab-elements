@@ -15967,6 +15967,17 @@
             },
             {
               "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows the value without letting the user change it, for a rating that's\nonly there to be read. It's still focusable and submitted, and never\ninvalid, as a native read-only input isn't.",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "required",
               "type": {
                 "text": "boolean"
@@ -16241,6 +16252,15 @@
               },
               "default": "''",
               "fieldName": "name"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows the value without letting the user change it, for a rating that's\nonly there to be read. It's still focusable and submitted, and never\ninvalid, as a native read-only input isn't.",
+              "fieldName": "readonly"
             },
             {
               "name": "required",

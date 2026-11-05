@@ -172,7 +172,13 @@ test(
   { tag: '@miscellaneous' },
   async ({ callMethod, render, page, setProperty }) => {
     await render(
-      () => html`<slab-rating label="Label" disabled required></slab-rating>`,
+      () =>
+        html`<slab-rating
+          label="Label"
+          disabled
+          readonly
+          required
+        ></slab-rating>`,
     );
 
     const host = page.locator('slab-rating');
@@ -181,21 +187,23 @@ test(
       return host.evaluate((element) => [
         element.matches(':state(disabled)'),
         element.matches(':state(error)'),
+        element.matches(':state(readonly)'),
         element.matches(':state(required)'),
       ]);
     };
 
-    expect(await getStates()).toStrictEqual([true, false, true]);
+    expect(await getStates()).toStrictEqual([true, false, true, true]);
 
     await setProperty(host, 'disabled', false);
+    await setProperty(host, 'readonly', false);
     await setProperty(host, 'required', false);
 
-    expect(await getStates()).toStrictEqual([false, false, false]);
+    expect(await getStates()).toStrictEqual([false, false, false, false]);
 
     await setProperty(host, 'required', true);
     await callMethod(host, 'reportValidity');
 
-    expect(await getStates()).toStrictEqual([false, true, true]);
+    expect(await getStates()).toStrictEqual([false, true, false, true]);
   },
 );
 
