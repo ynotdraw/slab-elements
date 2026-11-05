@@ -96,6 +96,108 @@ export interface Announcement {
 
 export const announcements: Announcement[] = [
   {
+    version: '0.3.1',
+    summary:
+      'Eight new components, from Table to Date Range Picker, submenus in Menu, and Listboxes of thousands of Options.',
+    intro:
+      "0.3.1 brings eight new components, submenus for Menu, and a `virtual` attribute for Listbox and Combobox that keeps a list of thousands of Options quick. It's a patch release with nothing to restyle, so updating is safe.",
+    tldr: {
+      points: [
+        'Eight new components, each headless, with its keyboard, ARIA and form support done.',
+        'Table, Grid List and Sortable List for data, and Date Picker and Date Range Picker for days.',
+        'Menus open submenus, from the keyboard, a click or the pointer resting on a Menu Item.',
+        'Listbox and Combobox take `virtual`, and are much faster with long lists either way.',
+        'Nothing to restyle: every change adds to what you have.',
+      ],
+      additions: [
+        {
+          title: 'Submenus',
+          href: 'components/menu/',
+          text: 'A `slab-menu` inside another, with a `slab-menu-item` as its anchor, opens beside that Menu Item. Right, Enter or a pause under the pointer opens it, and Left or Escape closes it.',
+        },
+        {
+          title: 'Virtual lists',
+          href: 'components/listbox/',
+          text: '`virtual` on Listbox and Combobox lays out only the Options near view, while the keys, typeahead, filtering and selection still reach every one.',
+        },
+        {
+          title: 'Showcase',
+          href: 'showcase/',
+          text: 'Four pages built from Slab and themed four ways, to see the components together in something like an app.',
+        },
+      ],
+      fixesTitle: 'Fixes',
+      fixesLede: "A line each, and the components it's in.",
+      fixes: [
+        {
+          title: 'Screenreaders',
+          fixes: [
+            {
+              text: "The anchor's `aria-details` points at the card, and a `label` makes the card a named group.",
+              components: ['hover-card'],
+            },
+          ],
+        },
+        {
+          title: 'Speed',
+          fixes: [
+            {
+              text: 'A thousand Options appear at once rather than in seconds, since an Option that connects or changes no longer makes work for every other.',
+              components: ['listbox', 'combobox'],
+            },
+          ],
+        },
+      ],
+      checks: [],
+    },
+    highlights: [
+      {
+        component: 'table',
+        wide: true,
+        title: 'Table',
+        text: 'Rows and cells that components can render into, laid out like a native `<table>`. A `sortable` Column Header sorts its column and says how.',
+      },
+      {
+        component: 'alert-dialog',
+        title: 'Alert Dialog',
+        text: "A modal Dialog that asks before something can't be undone. Focus starts on Cancel, and a click outside doesn't close it.",
+      },
+      {
+        component: 'toggle-button',
+        title: 'Toggle Button',
+        text: "A native button with `aria-pressed`, for one setting that's on or off, such as Bold or Mute.",
+      },
+      {
+        component: 'grid-list',
+        wide: true,
+        title: 'Grid List',
+        text: 'Rows that hold their own buttons, links and checkboxes. Up and Down move between rows, Left and Right into them, and rows can be selected.',
+      },
+      {
+        component: 'date-picker',
+        title: 'Date Picker',
+        text: 'A Date Field with a button that opens a Calendar in a popover, the same in every browser and yours to style.',
+      },
+      {
+        component: 'search-field',
+        title: 'Search Field',
+        text: 'A search input with a button that clears it, and Escape that does the same in every browser.',
+      },
+      {
+        component: 'date-range-picker',
+        wide: true,
+        title: 'Date Range Picker',
+        text: 'A Date Range Field with one range Calendar in a popover, so the start and the end are picked together.',
+      },
+      {
+        component: 'sortable-list',
+        wide: true,
+        title: 'Sortable List',
+        text: "A list put in order by dragging each item's handle or with the keyboard, while a screenreader hears where the item is.",
+      },
+    ],
+  },
+  {
     version: '0.3.0',
     summary:
       'Values screenreaders read the way you mean them, headings in Disclosure, dialogs in Popover, and the rest of the accessibility audit.',
