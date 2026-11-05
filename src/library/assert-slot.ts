@@ -6,9 +6,12 @@ import {
   type PartInfo,
 } from 'lit/directive.js';
 
-const isThrow = ['localhost', '127.0.0.1'].some((host) => {
-  return window.location.host.includes(host);
-});
+// No `location` on a server, where a module is imported to render it.
+const isThrow =
+  'location' in globalThis &&
+  ['localhost', '127.0.0.1'].some((host) => {
+    return globalThis.location.host.includes(host);
+  });
 
 class AssertSlot extends Directive {
   render(
