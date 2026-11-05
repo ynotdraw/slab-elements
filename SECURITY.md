@@ -2,13 +2,20 @@
 
 ## Supported versions
 
-Slab is pre-1.0. Fixes land in the latest release only, so upgrade to it to
-pick one up.
+Security fixes land in the latest minor release of the latest major version,
+so upgrading within that major picks one up without breaking changes. When a
+new major version comes out, the previous major gets security fixes for six
+months more, as a patch to its last minor release, to give you time to
+upgrade.
 
-| Version       | Supported |
-| ------------- | --------- |
-| Latest `0.x`  | Yes       |
-| Earlier `0.x` | No        |
+| Version                            | Supported                           |
+| ---------------------------------- | ----------------------------------- |
+| Latest minor of the latest major   | Yes                                 |
+| Latest minor of the previous major | For six months after the next major |
+| Older minors, and older majors     | No                                  |
+| `0.x`, once 1.0 is out             | No                                  |
+
+Until 1.0, only the latest `0.x` release gets fixes.
 
 ## Reporting a vulnerability
 
