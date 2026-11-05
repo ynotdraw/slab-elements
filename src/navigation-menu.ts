@@ -7,7 +7,7 @@ import {
 import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { repeat } from 'lit/directives/repeat.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import ListItemSlots from './library/list-item-slots.js';
 import required from './library/required.js';
@@ -63,7 +63,7 @@ export default class NavigationMenu extends LitElement {
   label?: string;
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   // Children rather than what's slotted, since each child is in a slot of its
   // own.

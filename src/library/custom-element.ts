@@ -1,4 +1,4 @@
-import packageJson from '../../package.json' with { type: 'json' };
+import slab from './version.js';
 
 // `Symbol.for()` so that two copies of Slab on the same page, which don't share
 // module state, can still read each other's version.
@@ -32,14 +32,14 @@ export default function customElement(name: string) {
 
     if (!existing) {
       Object.defineProperty(constructor, version, {
-        value: packageJson.version,
+        value: slab.version,
       });
 
       window.customElements.define(name, constructor);
       return;
     }
 
-    if (existing[version] === packageJson.version) {
+    if (existing[version] === slab.version) {
       return;
     }
 
@@ -48,7 +48,7 @@ export default function customElement(name: string) {
       : 'something other than Slab';
 
     throw new Error(
-      `"${name}" is already registered by ${owner}, so Slab ${packageJson.version} can't register it. Make sure only one version of Slab is on the page.`,
+      `"${name}" is already registered by ${owner}, so Slab ${slab.version} can't register it. Make sure only one version of Slab is on the page.`,
     );
   };
 }

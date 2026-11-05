@@ -6,7 +6,7 @@ import {
   type PropertyValues,
 } from 'lit';
 import { property } from 'lit/decorators.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import assertSlot from './library/assert-slot.js';
 import uniqueId from './library/unique-id.js';
@@ -73,7 +73,7 @@ export default class Field extends LitElement {
   required = false;
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   override render() {
     return html`<div part="label">

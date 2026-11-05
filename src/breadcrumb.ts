@@ -6,7 +6,7 @@ import {
 } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import StringsController from './library/strings.js';
 import styles from './breadcrumb.styles.js';
@@ -56,7 +56,7 @@ export default class Breadcrumb extends LitElement {
   label?: string;
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   // Children rather than what's slotted, since each child is in a slot of its
   // own.

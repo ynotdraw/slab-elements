@@ -5,7 +5,7 @@ import {
   type CSSResultOrNative,
 } from 'lit';
 import { property } from 'lit/decorators.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import styles from './table.row.styles.js';
 
@@ -27,7 +27,7 @@ declare global {
 @customElement('slab-table-row')
 export default class TableRow extends LitElement {
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   override connectedCallback() {
     super.connectedCallback();

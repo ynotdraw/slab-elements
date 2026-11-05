@@ -6,7 +6,7 @@ import {
   type PropertyValues,
 } from 'lit';
 import { property } from 'lit/decorators.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import announce from './library/announce.js';
 import customElement from './library/custom-element.js';
 import StringsController from './library/strings.js';
@@ -82,7 +82,7 @@ export default class TableColumnHeader extends LitElement {
   ) => this.#strings.value.tableSorted(column, sort);
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   override connectedCallback() {
     super.connectedCallback();

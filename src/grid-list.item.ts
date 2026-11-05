@@ -6,7 +6,7 @@ import {
   type PropertyValues,
 } from 'lit';
 import { property } from 'lit/decorators.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import styles from './grid-list.item.styles.js';
 
@@ -100,7 +100,7 @@ export default class GridListItem extends LitElement {
   selected = false;
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   /**
    * What in the row can take focus, in order, other than disabled controls.

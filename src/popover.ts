@@ -8,7 +8,7 @@ import {
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import styles from './popover.styles.js';
 
@@ -102,7 +102,7 @@ export default class Popover extends LitElement {
   placement: 'bottom' | 'left' | 'right' | 'top' = 'bottom';
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   hide(): void {
     if (this.#isPopoverOpen) {

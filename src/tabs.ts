@@ -6,7 +6,7 @@ import {
 } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import assertSlot from './library/assert-slot.js';
 import required from './library/required.js';
@@ -89,7 +89,7 @@ export default class Tabs extends LitElement {
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   // Direct children rather than a query, so a renamed subclass still counts
   // and a Panel inside another component doesn't.

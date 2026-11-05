@@ -6,7 +6,7 @@ import {
   type PropertyValues,
 } from 'lit';
 import { property } from 'lit/decorators.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import { markFormCheckingValidity } from './library/is-form-checking-validity.js';
 import styles from './form.styles.js';
@@ -110,7 +110,7 @@ export default class Form extends LitElement {
   target?: string;
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   get elements(): HTMLFormControlsCollection {
     return this.#form.elements;

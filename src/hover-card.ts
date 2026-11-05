@@ -8,7 +8,7 @@ import {
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import assertSlot from './library/assert-slot.js';
 import customElement from './library/custom-element.js';
 import uniqueId from './library/unique-id.js';
@@ -111,7 +111,7 @@ export default class HoverCard extends LitElement {
   placement: 'bottom' | 'left' | 'right' | 'top' = 'bottom';
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   override connectedCallback() {
     super.connectedCallback();

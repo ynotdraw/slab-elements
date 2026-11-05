@@ -8,7 +8,7 @@ import {
 import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef, ref } from 'lit/directives/ref.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import assertSlot from './library/assert-slot.js';
 import ItemsController from './library/items-controller.js';
@@ -110,7 +110,7 @@ export default class Menu extends LitElement {
   placement: 'bottom' | 'left' | 'right' | 'top' = 'bottom';
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   // Those assigned to its default slot, so a Menu Item nested in another, or
   // in another component, doesn't count. A submenu counts as the Menu Item
