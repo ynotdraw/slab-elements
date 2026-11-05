@@ -5,7 +5,7 @@ element: '[role=grid] + rows'
 tags: [slab-grid-list, slab-grid-list-item]
 summary: 'A list of rows that can hold their own buttons, links and checkboxes, moved through with the arrow keys and optionally selected.'
 example: |
-  <slab-styled-grid-list label="Pour tickets" selection-mode="multiple">
+  <slab-styled-grid-list label="Pour tickets" multiple>
     <slab-styled-grid-list-item label="Driveway" selected>
       <span>Driveway, 12 yards</span>
       <a href="#driveway">Ticket</a>
@@ -26,7 +26,7 @@ example: |
     </slab-styled-grid-list-item>
   </slab-styled-grid-list>
 usage: |
-  <slab-grid-list label="Files" selection-mode="multiple">
+  <slab-grid-list label="Files" multiple>
     <slab-grid-list-item label="plan.pdf">
       plan.pdf
       <button type="button">Share</button>
@@ -44,7 +44,7 @@ Use a Grid List where each item in a list has controls of its own, such as a row
 
 Each row takes the controls in it out of the Tab order with `tabindex="-1"`, Slab's own Checkbox and Copy Button included, so Tab leaves the Grid List rather than stopping at each. Give each row a `label` when it holds controls, so a screenreader reads "plan.pdf" rather than "plan.pdf Share Download".
 
-Rows aren't selected unless `selection-mode` is `"single"` or `"multiple"`. Then a click on a row, but not on a control in it, selects it, and Grid List dispatches "change". A design can draw a check box on `:state(selectable)` and fill it on `:state(selected)`, as the styled one does. It's only shown, since the row is what's selected and what a screenreader says is selected.
+Rows aren't selected unless `selectable` is set, or `multiple`, which allows more than one and needs no `selectable`. Then a click on a row, but not on a control in it, selects it, and Grid List dispatches "change". A design can draw a check box on `:state(selectable)` and fill it on `:state(selected)`, as the styled one does. It's only shown, since the row is what's selected and what a screenreader says is selected.
 
 ## Keyboard
 
@@ -56,7 +56,7 @@ Rows aren't selected unless `selection-mode` is `"single"` or `"multiple"`. Then
 | Right, Left  | Moves from a row to each of its controls and back to the row. Swapped right to left.       |
 | Escape       | Moves from a control back to its row.                                                      |
 | A character  | Moves to the next row whose text starts with what's typed.                                 |
-| Enter, Space | Selects the row, or toggles it when `multiple`. Does nothing when `none`.                  |
+| Enter, Space | Selects the row, or toggles it when `multiple`. Does nothing unless rows are selectable.   |
 
 A control that edits text, such as a text `<input>`, keeps its arrow keys,
 Home and End, so Escape is the way back to its row. With `multiple`, Shift

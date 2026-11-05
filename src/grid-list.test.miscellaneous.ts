@@ -22,7 +22,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-grid-list label="Label" selection-mode="multiple">
+        html`<slab-grid-list label="Label" multiple>
           <slab-grid-list-item>One</slab-grid-list-item>
           <slab-grid-list-item selected>Two</slab-grid-list-item>
           <slab-grid-list-item selected>Three</slab-grid-list-item>
@@ -56,7 +56,7 @@ test(
   async ({ render, page, setProperty }) => {
     await render(
       () =>
-        html`<slab-grid-list label="Label" selection-mode="single">
+        html`<slab-grid-list label="Label" selectable>
           <slab-grid-list-item selected>One</slab-grid-list-item>
           <slab-grid-list-item>Two</slab-grid-list-item>
           <slab-grid-list-item>Three</slab-grid-list-item>
@@ -73,14 +73,14 @@ test(
 
     await expect(items.nth(0)).toHaveJSProperty('selected', false);
 
-    await setProperty(host, 'selectionMode', 'multiple');
+    await setProperty(host, 'multiple', true);
     await setProperty(items.nth(2), 'selected', true);
 
     await expect(items.nth(1)).toHaveJSProperty('selected', true);
     await expect(items.nth(2)).toHaveJSProperty('selected', true);
 
     // Down to the last when it stops being `multiple`.
-    await setProperty(host, 'selectionMode', 'single');
+    await setProperty(host, 'multiple', false);
 
     await expect(items.nth(1)).toHaveJSProperty('selected', false);
     await expect(items.nth(2)).toHaveJSProperty('selected', true);
@@ -93,14 +93,14 @@ test(
   async ({ render, page, setProperty }) => {
     await render(
       () =>
-        html`<slab-grid-list label="Label" selection-mode="multiple">
+        html`<slab-grid-list label="Label" multiple>
           <slab-grid-list-item>One</slab-grid-list-item>
         </slab-grid-list>`,
     );
 
     const host = page.locator('slab-grid-list');
 
-    await setProperty(host, 'selectionMode', 'single');
+    await setProperty(host, 'multiple', false);
     await expect(host).toHaveJSProperty('selectedItem', null);
   },
 );
@@ -111,9 +111,9 @@ test(
   async ({ render, page, setProperty }) => {
     await render(
       () =>
-        html`<slab-grid-list id="outer" label="Outer" selection-mode="single">
+        html`<slab-grid-list id="outer" label="Outer" selectable>
             <slab-grid-list-item selected label="One">
-              <slab-grid-list id="inner" label="Inner" selection-mode="single">
+              <slab-grid-list id="inner" label="Inner" selectable>
                 <slab-grid-list-item>Inner</slab-grid-list-item>
               </slab-grid-list>
             </slab-grid-list-item>
@@ -297,7 +297,7 @@ test(
         class extends GridListItem {},
       );
 
-      document.body.innerHTML = `<acme-grid-list label='Label' selection-mode='single'><acme-grid-list-item>One</acme-grid-list-item></acme-grid-list>`;
+      document.body.innerHTML = `<acme-grid-list label='Label' selectable><acme-grid-list-item>One</acme-grid-list-item></acme-grid-list>`;
     });
 
     await expect(page.locator('acme-grid-list')).toBeInTheCustomElementRegistry(

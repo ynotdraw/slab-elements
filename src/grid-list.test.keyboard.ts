@@ -64,7 +64,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-grid-list label="Label" selection-mode="single">
+        html`<slab-grid-list label="Label" selectable>
           <slab-grid-list-item>One</slab-grid-list-item>
           <slab-grid-list-item selected>Two</slab-grid-list-item>
         </slab-grid-list>`,
@@ -243,7 +243,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-grid-list label="Label" selection-mode="single">
+        html`<slab-grid-list label="Label" selectable>
           <slab-grid-list-item label="One">
             <input aria-label="Name" value="One" />
             <button type="button">Save</button>
@@ -382,7 +382,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-grid-list label="Label" selection-mode="single">
+        html`<slab-grid-list label="Label" selectable>
           <slab-grid-list-item>One</slab-grid-list-item>
           <slab-grid-list-item>Two</slab-grid-list-item>
         </slab-grid-list>`,
@@ -422,7 +422,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-grid-list label="Label" selection-mode="multiple">
+        html`<slab-grid-list label="Label" multiple>
           <slab-grid-list-item>One</slab-grid-list-item>
           <slab-grid-list-item>Two</slab-grid-list-item>
           <slab-grid-list-item>Three</slab-grid-list-item>
@@ -451,7 +451,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-grid-list label="Label" selection-mode="multiple">
+        html`<slab-grid-list label="Label" multiple>
           <slab-grid-list-item>One</slab-grid-list-item>
           <slab-grid-list-item>Two</slab-grid-list-item>
           <slab-grid-list-item disabled>Three</slab-grid-list-item>
@@ -490,7 +490,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-grid-list label="Label" selection-mode="multiple">
+        html`<slab-grid-list label="Label" multiple>
           <slab-grid-list-item>One</slab-grid-list-item>
           <slab-grid-list-item>Two</slab-grid-list-item>
           <slab-grid-list-item>Three</slab-grid-list-item>
@@ -528,7 +528,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-grid-list label="Label" selection-mode="multiple">
+        html`<slab-grid-list label="Label" multiple>
           <slab-grid-list-item>One</slab-grid-list-item>
           <slab-grid-list-item>Two</slab-grid-list-item>
           <slab-grid-list-item disabled>Three</slab-grid-list-item>
@@ -580,7 +580,7 @@ test(
   async ({ render, page, setProperty }) => {
     await render(
       () =>
-        html`<slab-grid-list label="Label" selection-mode="multiple">
+        html`<slab-grid-list label="Label" multiple>
           <slab-grid-list-item>One</slab-grid-list-item>
           <slab-grid-list-item>Two</slab-grid-list-item>
           <slab-grid-list-item>Three</slab-grid-list-item>
