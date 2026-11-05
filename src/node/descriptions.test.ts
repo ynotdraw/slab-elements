@@ -3,7 +3,7 @@ import { type Package } from 'custom-elements-manifest' with { type: 'json' };
 import { expect, test } from '../playwright/test.js';
 
 // Each component's page lists its attributes, properties, methods, events,
-// slots and parts from the published manifest, and every one of them is public
+// slots and parts from the manifest, and every one of them is public
 // API. So each says what it is. Describe a new one in its JSDoc, or in a slot
 // or part's comment, or, for something many elements share, in
 // `add-descriptions`.
@@ -13,7 +13,7 @@ test(
   async () => {
     const manifest: Package = JSON.parse(
       await readFile(
-        new URL('../../dist/custom-elements.json', import.meta.url),
+        new URL('../../custom-elements.json', import.meta.url),
         'utf8',
       ),
     );
@@ -37,8 +37,7 @@ test(
             .filter((member) => {
               return (
                 !('privacy' in member && member.privacy) &&
-                !('static' in member && member.static) &&
-                member.name !== 'version'
+                !('static' in member && member.static)
               );
             })
             .map((entry) => [entry.kind, entry] as const),
@@ -56,6 +55,10 @@ test(
 
         undescribed.push(
           ...entries
+            // Slab's own, which the published manifest and the docs leave out.
+            .filter(([, { name }]) => {
+              return !name.startsWith('private') && name !== 'version';
+            })
             .filter(([, { description }]) => !description?.trim())
             .map(([kind, { name }]) => {
               return `${declaration.tagName} ${kind} ${name}`;
