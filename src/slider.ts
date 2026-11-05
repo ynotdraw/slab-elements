@@ -71,6 +71,8 @@ declare global {
  * @readonly
  * @prop {ValidityState} validity
  *
+ * @prop {number} valueAsNumber - `value` as a number, as on a native range input.
+ *
  * @method checkValidity
  * @returns boolean
  *
@@ -182,6 +184,27 @@ export default class Slider extends LitElement {
 
   get validity(): ValidityState {
     return this.#internals.validity;
+  }
+
+  /**
+   * `value` as a number, as on a native range input.
+   *
+   * @default NaN
+   */
+  get valueAsNumber(): number {
+    // From the input when there is one, which settles an empty value halfway
+    // between `min` and `max`.
+    const input = this.#inputElementRef.value;
+
+    if (input) {
+      return input.valueAsNumber;
+    }
+
+    return this.#value === '' ? Number.NaN : Number(this.#value);
+  }
+
+  set valueAsNumber(value: number) {
+    this.value = Number.isNaN(value) ? '' : String(value);
   }
 
   checkValidity(): boolean {
