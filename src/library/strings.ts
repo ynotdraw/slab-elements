@@ -40,6 +40,7 @@ export interface Strings {
   datePickerButton: string;
   dateRangeFieldEnd: string;
   dateRangeFieldStart: string;
+  dateRangePickerButton: string;
   fileDropAdded: (count: number) => string;
   fileDropNotAccepted: (count: number) => string;
   fileDropTooMany: string;
@@ -110,6 +111,7 @@ const english: Strings = {
   datePickerButton: 'Choose date',
   dateRangeFieldEnd: 'End',
   dateRangeFieldStart: 'Start',
+  dateRangePickerButton: 'Choose dates',
   fileDropAdded: (count) =>
     count === 1 ? '1 file added' : `${count} files added`,
   fileDropNotAccepted: (count) =>

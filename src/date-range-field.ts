@@ -4,6 +4,7 @@ import {
   type CSSResultGroup,
   type CSSResultOrNative,
   type PropertyValues,
+  type TemplateResult,
 } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property, state } from 'lit/decorators.js';
@@ -28,8 +29,8 @@ declare global {
  * A date range field with no visual styles: two native `<input type="date">`s,
  * a start and an end, for picking the first and last days of a range, such as
  * a stay or a reporting period. Each is typed into, picked from, and read the
- * way one is, with the browser's own picker. A calendar of Slab's making is
- * `slab-calendar`'s job, and its `range` picks the same thing.
+ * way one is, with the browser's own picker. For a calendar of Slab's making,
+ * use `slab-date-range-picker`.
  *
  * The values are the inputs': ISO "yyyy-mm-dd" strings, or empty ones, as on
  * a Date Field. What a person sees is formatted for their locale by the
@@ -299,64 +300,66 @@ export default class DateRangeField extends LitElement {
         ${this.label}
       </div>
 
-      <div part="fields">
-        <!-- Both inputs and their labels -->
-        <div part="field start-field">
-          <!-- The start input and its label -->
-          <label for="start" id="start-label" part="input-label start-label">
-            <!-- The start input's label -->
-            ${this.startLabel ?? this.#strings.value.dateRangeFieldStart}
-          </label>
+      ${this.renderFields(
+        html`<div part="fields">
+          <!-- Both inputs and their labels -->
+          <div part="field start-field">
+            <!-- The start input and its label -->
+            <label for="start" id="start-label" part="input-label start-label">
+              <!-- The start input's label -->
+              ${this.startLabel ?? this.#strings.value.dateRangeFieldStart}
+            </label>
 
-          <input
-            aria-describedby="description"
-            aria-invalid=${isInvalid}
-            aria-labelledby="label start-label"
-            data-test="start"
-            id="start"
-            max=${ifDefined(startMax)}
-            min=${ifDefined(this.min)}
-            part="input start"
-            type="date"
-            ?disabled=${this.#isDisabled}
-            ?readonly=${this.readonly}
-            ?required=${this.required}
-            @blur=${this.#onInputBlur}
-            @change=${this.#onInputChangeOrInput}
-            @input=${this.#onInputChangeOrInput}
-            @keydown=${this.#onInputKeydown}
-            ${ref(this.#startElementRef)}
-          />
-        </div>
+            <input
+              aria-describedby="description"
+              aria-invalid=${isInvalid}
+              aria-labelledby="label start-label"
+              data-test="start"
+              id="start"
+              max=${ifDefined(startMax)}
+              min=${ifDefined(this.min)}
+              part="input start"
+              type="date"
+              ?disabled=${this.#isDisabled}
+              ?readonly=${this.readonly}
+              ?required=${this.required}
+              @blur=${this.#onInputBlur}
+              @change=${this.#onInputChangeOrInput}
+              @input=${this.#onInputChangeOrInput}
+              @keydown=${this.#onInputKeydown}
+              ${ref(this.#startElementRef)}
+            />
+          </div>
 
-        <div part="field end-field">
-          <!-- The end input and its label -->
-          <label for="end" id="end-label" part="input-label end-label">
-            <!-- The end input's label -->
-            ${this.endLabel ?? this.#strings.value.dateRangeFieldEnd}
-          </label>
+          <div part="field end-field">
+            <!-- The end input and its label -->
+            <label for="end" id="end-label" part="input-label end-label">
+              <!-- The end input's label -->
+              ${this.endLabel ?? this.#strings.value.dateRangeFieldEnd}
+            </label>
 
-          <input
-            aria-describedby="description"
-            aria-invalid=${isInvalid}
-            aria-labelledby="label end-label"
-            data-test="end"
-            id="end"
-            max=${ifDefined(this.max)}
-            min=${ifDefined(endMin)}
-            part="input end"
-            type="date"
-            ?disabled=${this.#isDisabled}
-            ?readonly=${this.readonly}
-            ?required=${this.required}
-            @blur=${this.#onInputBlur}
-            @change=${this.#onInputChangeOrInput}
-            @input=${this.#onInputChangeOrInput}
-            @keydown=${this.#onInputKeydown}
-            ${ref(this.#endElementRef)}
-          />
-        </div>
-      </div>
+            <input
+              aria-describedby="description"
+              aria-invalid=${isInvalid}
+              aria-labelledby="label end-label"
+              data-test="end"
+              id="end"
+              max=${ifDefined(this.max)}
+              min=${ifDefined(endMin)}
+              part="input end"
+              type="date"
+              ?disabled=${this.#isDisabled}
+              ?readonly=${this.readonly}
+              ?required=${this.required}
+              @blur=${this.#onInputBlur}
+              @change=${this.#onInputChangeOrInput}
+              @input=${this.#onInputChangeOrInput}
+              @keydown=${this.#onInputKeydown}
+              ${ref(this.#endElementRef)}
+            />
+          </div>
+        </div>`,
+      )}
 
       <div id="description" part="description">
         <!-- Text about the field, and its validity message when it has one -->
@@ -373,6 +376,13 @@ export default class DateRangeField extends LitElement {
         )}
       </div>
     </div>`;
+  }
+
+  // The inputs and their labels. Date Range Picker overrides it to put a
+  // button beside them and a calendar in a popover, and inherits everything
+  // else.
+  protected renderFields(fields: TemplateResult): TemplateResult {
+    return fields;
   }
 
   reportValidity(): boolean {
