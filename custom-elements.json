@@ -10018,13 +10018,24 @@
             },
             {
               "kind": "field",
-              "name": "selectionMode",
+              "name": "multiple",
               "type": {
-                "text": "'multiple' | 'none' | 'single'"
+                "text": "boolean"
               },
-              "default": "'none'",
-              "description": "Whether rows can be selected, and how many at once.",
-              "attribute": "selection-mode",
+              "default": "false",
+              "description": "Whether more than one row can be selected. Rows are selectable when it's\nset, without `selectable`.",
+              "attribute": "multiple",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "selectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether a row can be selected.",
+              "attribute": "selectable",
               "reflects": true
             },
             {
@@ -10114,13 +10125,22 @@
               "required": true
             },
             {
-              "name": "selection-mode",
+              "name": "multiple",
               "type": {
-                "text": "'multiple' | 'none' | 'single'"
+                "text": "boolean"
               },
-              "default": "'none'",
-              "description": "Whether rows can be selected, and how many at once.",
-              "fieldName": "selectionMode"
+              "default": "false",
+              "description": "Whether more than one row can be selected. Rows are selectable when it's\nset, without `selectable`.",
+              "fieldName": "multiple"
+            },
+            {
+              "name": "selectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether a row can be selected.",
+              "fieldName": "selectable"
             },
             {
               "name": "version",

@@ -44,9 +44,10 @@ declare global {
  * keys, Home and End, and so does one that handles a key itself and cancels
  * it.
  *
- * Rows aren't selected unless `selection-mode` is `"single"` or `"multiple"`.
- * Then Space, Enter and a click on a row, but not on a control in it, select
- * the row, or toggle it when `"multiple"`. With `"multiple"`, Shift with Down
+ * Rows aren't selected unless `selectable` or `multiple` is set. Then Space,
+ * Enter and a click on a row, but not on a control in it, select the row, or
+ * toggle it when `multiple`, which makes rows selectable without
+ * `selectable`. With `multiple`, Shift with Down
  * or Up moves and toggles, Shift with Space selects every row from the one
  * last selected to the focused one, and Control or Command with Shift and Home
  * or End selects every one from the focused row to the first or last, moving
@@ -60,7 +61,8 @@ declare global {
  * Style it through its part, and each row through its part and states.
  *
  * @attr {string} label - Names the grid list.
- * @attr {'multiple'|'none'|'single'} [selection-mode='none'] - Whether rows can be selected, and how many at once.
+ * @attr {boolean} [multiple=false] - Whether more than one row can be selected. Rows are selectable when it's set, without `selectable`.
+ * @attr {boolean} [selectable=false] - Whether a row can be selected.
  *
  * @readonly
  * @attr {string} [version]
@@ -90,10 +92,17 @@ export default class GridList extends LitElement {
   label?: string;
 
   /**
-   * Whether rows can be selected, and how many at once.
+   * Whether more than one row can be selected. Rows are selectable when it's
+   * set, without `selectable`.
    */
-  @property({ attribute: 'selection-mode', reflect: true, useDefault: true })
-  selectionMode: 'multiple' | 'none' | 'single' = 'none';
+  @property({ reflect: true, type: Boolean })
+  multiple = false;
+
+  /**
+   * Whether a row can be selected.
+   */
+  @property({ reflect: true, type: Boolean })
+  selectable = false;
 
   @property({ reflect: true })
   readonly version: string = slab.version;
@@ -120,9 +129,7 @@ export default class GridList extends LitElement {
     // only read attributes, which would leave the ARIA untested.
     return html`<div
       aria-label=${ifDefined(this.label)}
-      aria-multiselectable=${ifDefined(
-        this.selectionMode === 'multiple' ? 'true' : undefined,
-      )}
+      aria-multiselectable=${ifDefined(this.multiple ? 'true' : undefined)}
       part="grid"
       role="grid"
       @click=${this.#onClick}
@@ -139,10 +146,7 @@ export default class GridList extends LitElement {
   override updated(changes: PropertyValues<this>) {
     // Down to one when it stops being `multiple`: the last selected, the one a
     // native `<select>` keeps.
-    if (
-      changes.get('selectionMode') === 'multiple' &&
-      this.selectionMode === 'single'
-    ) {
+    if (changes.get('multiple') === true && !this.multiple && this.selectable) {
       const last = this.selectedItems.at(-1);
 
       if (last) {
@@ -183,7 +187,7 @@ export default class GridList extends LitElement {
   #slotElementRef = createRef<HTMLSlotElement>();
 
   get #isSelectable() {
-    return this.selectionMode !== 'none';
+    return this.selectable || this.multiple;
   }
 
   // Where Tab lands: the active row, or else the first selected one, or else
@@ -215,7 +219,7 @@ export default class GridList extends LitElement {
       return;
     }
 
-    if (this.selectionMode === 'multiple') {
+    if (this.multiple) {
       this.#toggle(item);
     } else {
       this.#select(item);
@@ -275,7 +279,7 @@ export default class GridList extends LitElement {
     if (
       isOnRow &&
       isControl &&
-      this.selectionMode === 'multiple' &&
+      this.multiple &&
       this.#selectWithShortcut(event, item)
     ) {
       return;
@@ -304,7 +308,7 @@ export default class GridList extends LitElement {
       if (
         next &&
         next !== item &&
-        this.selectionMode === 'multiple' &&
+        this.multiple &&
         event.shiftKey &&
         (event.key === 'ArrowDown' || event.key === 'ArrowUp')
       ) {
@@ -344,15 +348,11 @@ export default class GridList extends LitElement {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault(); // Prevent page scroll and form submission
 
-      if (
-        this.selectionMode === 'multiple' &&
-        event.shiftKey &&
-        event.key === ' '
-      ) {
+      if (this.multiple && event.shiftKey && event.key === ' ') {
         this.#selectRange(this.#anchor ?? item, item);
-      } else if (this.selectionMode === 'multiple') {
+      } else if (this.multiple) {
         this.#toggle(item);
-      } else if (this.selectionMode === 'single') {
+      } else if (this.selectable) {
         this.#select(item);
       }
     }
@@ -360,7 +360,7 @@ export default class GridList extends LitElement {
 
   #onSelectedChange = (event: Event) => {
     if (
-      this.selectionMode !== 'multiple' &&
+      !this.multiple &&
       event.target instanceof GridListItem &&
       event.target.selected &&
       this.items.includes(event.target)

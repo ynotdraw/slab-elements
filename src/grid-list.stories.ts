@@ -30,7 +30,8 @@ const meta: Meta = {
     label: 'Label',
     'slot="default"': '',
     'addEventListener(event, handler)': '',
-    'selection-mode': 'none',
+    multiple: false,
+    selectable: false,
     version: '',
   },
   argTypes: {
@@ -61,12 +62,23 @@ const meta: Meta = {
       },
       type: { name: 'function' },
     },
-    'selection-mode': {
-      control: 'select',
-      options: ['none', 'single', 'multiple'],
+    multiple: {
       table: {
-        defaultValue: { summary: '"none"' },
-        type: { summary: '"multiple" | "none" | "single"' },
+        defaultValue: { summary: 'false' },
+        type: {
+          summary: 'boolean',
+          detail:
+            "// Whether more than one row can be selected. Rows are selectable when it's set, without `selectable`.",
+        },
+      },
+    },
+    selectable: {
+      table: {
+        defaultValue: { summary: 'false' },
+        type: {
+          summary: 'boolean',
+          detail: '// Whether a row can be selected.',
+        },
       },
     },
     version: {
@@ -82,7 +94,8 @@ const meta: Meta = {
   render(arguments_) {
     return html`<slab-grid-list
       label=${arguments_.label}
-      selection-mode=${arguments_['selection-mode']}
+      ?multiple=${arguments_.multiple}
+      ?selectable=${arguments_.selectable}
     >
       <slab-grid-list-item label="plan.pdf">
         plan.pdf

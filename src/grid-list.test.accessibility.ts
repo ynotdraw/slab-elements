@@ -4,7 +4,7 @@ import { expect, test } from './playwright/test.js';
 test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
   await render(
     () => html`
-      <slab-grid-list label="Label" selection-mode="multiple">
+      <slab-grid-list label="Label" multiple>
         <slab-grid-list-item label="One" selected>
           One
           <button type="button">Edit</button>
@@ -42,7 +42,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-grid-list label="Label" selection-mode="single">
+        html`<slab-grid-list label="Label" selectable>
           <slab-grid-list-item label="One" selected>
             One
             <button type="button">Edit</button>
@@ -69,10 +69,10 @@ test(
 test(
   'is multiselectable when `multiple`, and leaves rows unselected when rows can not be selected',
   { tag: '@accessibility' },
-  async ({ render, page, setAttribute }) => {
+  async ({ render, page, setProperty }) => {
     await render(
       () =>
-        html`<slab-grid-list label="Label" selection-mode="multiple">
+        html`<slab-grid-list label="Label" multiple>
           <slab-grid-list-item selected>One</slab-grid-list-item>
         </slab-grid-list>`,
     );
@@ -86,11 +86,7 @@ test(
 
     await expect(row).toHaveAttribute('aria-selected', 'true');
 
-    await setAttribute(
-      page.locator('slab-grid-list'),
-      'selection-mode',
-      'none',
-    );
+    await setProperty(page.locator('slab-grid-list'), 'multiple', false);
 
     await expect(row).not.toHaveAttribute('aria-selected');
     await expect(row).toHaveJSProperty('selected', true);

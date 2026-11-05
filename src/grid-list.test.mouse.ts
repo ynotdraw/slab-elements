@@ -7,7 +7,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-grid-list label="Label" selection-mode="single">
+        html`<slab-grid-list label="Label" selectable>
           <slab-grid-list-item label="One">
             <span>One</span>
             <button type="button"><span>Edit</span></button>
@@ -64,7 +64,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-grid-list label="Label" selection-mode="multiple">
+        html`<slab-grid-list label="Label" multiple>
           <slab-grid-list-item>One</slab-grid-list-item>
           <slab-grid-list-item>Two</slab-grid-list-item>
         </slab-grid-list>`,

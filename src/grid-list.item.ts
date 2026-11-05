@@ -48,8 +48,8 @@ declare global {
  * than "Driveway Details Remove".
  *
  * Its Grid List sets `:state(active)` on the row focus was last in, and
- * `:state(selectable)` on each row when its `selection-mode` isn't `"none"`,
- * so a design can draw a check box. It sets `:state(disabled)` and
+ * `:state(selectable)` on each row when it has `selectable` or `multiple`, so
+ * a design can draw a check box. It sets `:state(disabled)` and
  * `:state(selected)` itself.
  *
  * @attr {boolean} [disabled=false] - Can't be focused or selected. The controls in it are yours to disable.
