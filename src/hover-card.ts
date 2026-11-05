@@ -9,6 +9,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import packageJson from '../package.json' with { type: 'json' };
+import ToggleEvents from './library/toggle-events.js';
 import assertSlot from './library/assert-slot.js';
 import customElement from './library/custom-element.js';
 import uniqueId from './library/unique-id.js';
@@ -68,7 +69,7 @@ declare global {
  *
  * @csspart card
  *
- * @fires {Event} toggle
+ * @fires {ToggleEvent} toggle
  */
 @customElement('slab-hover-card')
 export default class HoverCard extends LitElement {
@@ -196,10 +197,10 @@ export default class HoverCard extends LitElement {
       this.#sync();
     }
 
-    if (changes.has('open') && changes.get('open') !== undefined) {
-      this.dispatchEvent(
-        new Event('toggle', { bubbles: true, composed: true }),
-      );
+    const toggle = this.#toggleEvents.update(this.open);
+
+    if (toggle) {
+      this.dispatchEvent(new ToggleEvent('toggle', toggle));
     }
 
     if (changes.has('disabled')) {
@@ -251,6 +252,8 @@ export default class HoverCard extends LitElement {
   #isHovered = false;
 
   #timeoutId?: ReturnType<typeof setTimeout>;
+
+  #toggleEvents = new ToggleEvents();
 
   get #anchor(): Element | undefined {
     return this.#anchorSlotElementRef.value?.assignedElements().at(0);

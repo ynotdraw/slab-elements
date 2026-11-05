@@ -20,9 +20,9 @@ test(
       [
         {
           type: 'toggle',
-          bubbles: true,
+          bubbles: false,
           cancelable: false,
-          composed: true,
+          composed: false,
         },
       ],
     );

@@ -178,9 +178,9 @@ test(
       [
         {
           type: 'toggle',
-          bubbles: true,
+          bubbles: false,
           cancelable: false,
-          composed: true,
+          composed: false,
         },
       ],
     );
@@ -261,5 +261,42 @@ test(
           </slab-hover-card>`,
       ),
     ).rejects.toThrow();
+  },
+);
+
+test(
+  'dispatches "toggle" when it opens and closes',
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-hover-card>
+          <div><a href="#">Link</a></div>
+          <a href="#" slot="anchor">Anchor</a>
+        </slab-hover-card>`,
+    );
+
+    const host = page.locator('slab-hover-card');
+
+    await host.evaluate((element) => {
+      const events: string[] = [];
+
+      element.addEventListener('toggle', (event) => {
+        if (event instanceof ToggleEvent && event.target === element) {
+          events.push(`${event.oldState} ${event.newState}`);
+          element.dataset.events = events.join(', ');
+        }
+      });
+    });
+
+    await setProperty(host, 'open', true);
+    await expect(host).toHaveAttribute('data-events', 'closed open');
+
+    await setProperty(host, 'open', false);
+
+    await expect(host).toHaveAttribute(
+      'data-events',
+      'closed open, open closed',
+    );
   },
 );
