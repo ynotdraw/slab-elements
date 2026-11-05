@@ -1,0 +1,21 @@
+---
+import Guide from '../components/Guide.astro';
+import { sections, summary, title } from '../lib/upgrade.ts';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<Guide markdown="upgrade.md" sections={sections} summary={summary} title={title}>
+  <div class="ctas">
+    <a class="button button--primary" href={`${base}releases/`}>See every release</a>
+    <a class="button" href={`${base}get-started/#api`}>What you can count on</a>
+  </div>
+</Guide>
+
+<style>
+  .ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+</style>

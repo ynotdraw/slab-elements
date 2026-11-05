@@ -1,0 +1,132 @@
+---
+// A guide page: numbered sections, each with text, maybe code, and maybe more
+// text after it, beside a sidebar of its sections. Get started and Upgrade to
+// 1.0 are both one.
+import { type Section, html } from '../lib/get-started.ts';
+import Base from '../layouts/Base.astro';
+import CodeBlock from './CodeBlock.astro';
+import PageActions from './PageActions.astro';
+import Sidebar from './Sidebar.astro';
+
+type Props = {
+  // The page's Markdown twin, such as "get-started.md".
+  markdown: string;
+  sections: Section[];
+  summary: string;
+  title: string;
+};
+
+const { markdown, sections, summary, title } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+// The sections, as the sidebar's one group.
+const sidebar = [
+  {
+    heading: title,
+    links: sections.map(({ heading, id }) => ({ href: `#${id}`, text: heading })),
+  },
+];
+---
+
+
+<Base description={summary} markdown={markdown} title={`${title} · Slab`}>
+  <div class="layout">
+    <Sidebar label="On this page" sections={sidebar} />
+
+    <article class="doc">
+      <header class="intro">
+        <p class="eyebrow">Guide</p>
+        <h1>{title}</h1>
+        <p>{summary}</p>
+        <PageActions markdown={markdown} />
+      </header>
+
+      {
+        sections.map(({ code, coda, heading, id, text }, index) => (
+          <section aria-labelledby={id} class="step">
+            <h2 id={id}>
+              <span>{String(index + 1).padStart(2, '0')}</span> {heading}
+            </h2>
+            <p set:html={html(text, base)} />
+            {code && <CodeBlock code={code.code} label={code.label} lang={code.lang} />}
+            {coda && <p set:html={html(coda, base)} />}
+          </section>
+        ))
+      }
+
+      <slot />
+    </article>
+  </div>
+</Base>
+
+<style>
+  /* The same layout as a component's page, the sidebar beside it. */
+  .layout {
+    display: grid;
+    gap: 1rem 3rem;
+    grid-template-columns: minmax(0, 1fr);
+    margin-inline: auto;
+    max-inline-size: 78rem;
+    padding: 1.5rem var(--gutter) 4rem;
+  }
+
+  @media (width >= 56rem) {
+    .layout {
+      grid-template-columns: 12rem minmax(0, 1fr);
+    }
+  }
+
+  .doc {
+    display: grid;
+    gap: 3rem;
+    grid-template-columns: minmax(0, 46rem);
+    min-inline-size: 0;
+  }
+
+  .intro {
+    border-block-end: 4px solid var(--ink);
+    display: grid;
+    gap: 0.75rem;
+    padding-block-end: 1.5rem;
+
+    p:last-of-type {
+      font-size: 1.25rem;
+      margin: 0;
+      max-inline-size: 52ch;
+    }
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 6vw, 3.75rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin: 0;
+  }
+
+  .step {
+    display: grid;
+    gap: 1rem;
+    min-inline-size: 0;
+    scroll-margin-block-start: 1.5rem;
+
+    h2 {
+      font-size: 1.625rem;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin: 0;
+    }
+
+    h2 span {
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      font-weight: 400;
+      margin-inline-end: 0.25rem;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+</style>
