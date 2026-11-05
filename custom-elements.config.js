@@ -8,6 +8,7 @@ import addRequiredToAttributes from './dist/cem-analyzer-plugins/add-required-to
 import addSlots from './dist/cem-analyzer-plugins/add-slots.js';
 import removeBlockComments from './dist/cem-analyzer-plugins/remove-block-comments.js';
 import removePrivateMembers from './dist/cem-analyzer-plugins/remove-private-members.js';
+import writeJsxTypes from './dist/cem-analyzer-plugins/write-jsx-types.js';
 import writePublishedManifest from './dist/cem-analyzer-plugins/write-published-manifest.js';
 
 export default {
@@ -34,6 +35,7 @@ export default {
     addEvents(),
     addRequiredToAttributes(),
     addSlots(),
+    writeJsxTypes(),
     writePublishedManifest(),
   ],
 };

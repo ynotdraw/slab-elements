@@ -4,7 +4,11 @@
 // the home page), and each renderer turns it into its own kind of link.
 
 type Section = {
-  code?: { code: string; label: string; lang: 'css' | 'html' | 'js' | 'sh' };
+  code?: {
+    code: string;
+    label: string;
+    lang: 'css' | 'html' | 'js' | 'sh' | 'ts';
+  };
   // Text after the code, if any.
   coda?: string;
   heading: string;
@@ -166,7 +170,15 @@ registerStrings('de', {
   {
     id: 'typescript',
     heading: 'TypeScript',
-    text: "The types come with the package. Each element adds its tag to `HTMLElementTagNameMap`, so `document.querySelector('slab-switch')` is typed as Slab's `Switch`. There are no JSX types yet, so in React with TypeScript, declare the tags you use yourself.",
+    text: "The types come with the package. Each element adds its tag to `HTMLElementTagNameMap`, so `document.querySelector('slab-switch')` is typed as Slab's `Switch`. For your templates, import your framework's types once, and every tag's properties are checked, so a misspelled `hideLabel` or a wrong `orientation` is a type error.",
+    code: {
+      code: `// React. Or 'slab-elements/svelte.js' for Svelte 5,
+// or 'slab-elements/vue.js' for Vue.
+import type {} from 'slab-elements/react.js';`,
+      label: 'slab.d.ts',
+      lang: 'ts',
+    },
+    coda: '`SlabElementProps` in `slab-elements/jsx.js` lists every tag and its properties, for any other framework.',
   },
   {
     id: 'browsers',
