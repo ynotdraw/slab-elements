@@ -45,7 +45,8 @@ const meta: Meta = {
     'setCustomValidity(message)': '',
     'setValidity(flags, message)': '',
     'slot="description"': '',
-    value: [],
+    value: '',
+    values: [],
     version: '',
     '<slab-checkbox>.one.checked': false,
     '<slab-checkbox>.two.checked': false,
@@ -157,6 +158,17 @@ const meta: Meta = {
       },
     },
     value: {
+      control: false,
+      table: {
+        defaultValue: { summary: '""' },
+        type: {
+          summary: 'string',
+          detail:
+            '// The first checked and enabled Checkbox, in the order they were checked.',
+        },
+      },
+    },
+    values: {
       table: {
         defaultValue: { summary: '[]' },
         type: {
@@ -219,6 +231,7 @@ const meta: Meta = {
           storyId: context.id,
           updatedArgs: {
             value: checkboxGroup.value,
+            values: checkboxGroup.values,
           },
         });
 
@@ -230,7 +243,7 @@ const meta: Meta = {
             storyId: context.id,
             updatedArgs: {
               [`<slab-checkbox>.${checkbox.value}.checked`]:
-                checkboxGroup.value.includes(checkbox.value),
+                checkboxGroup.values.includes(checkbox.value),
             },
           });
         }
@@ -256,7 +269,7 @@ const meta: Meta = {
         ?disabled=${arguments_.disabled}
         ?hide-label=${arguments_['hide-label'] || nothing}
         ?required=${arguments_.required}
-        .value=${arguments_.value || []}
+        .values=${arguments_.values || []}
       >
         <slab-checkbox
           label="One"

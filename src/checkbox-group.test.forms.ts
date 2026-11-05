@@ -48,7 +48,7 @@ test(
 
     await expect(checkboxes.nth(0)).toHaveJSProperty('checked', true);
     await expect(checkboxes.nth(1)).toHaveJSProperty('checked', false);
-    await expect(host).toHaveJSProperty('value', ['one']);
+    await expect(host).toHaveJSProperty('values', ['one']);
     await expect(host).toHaveJSProperty('validity.valid', true);
     await expect(host).toHaveJSProperty('validity.valueMissing', false);
   },
@@ -780,7 +780,7 @@ test(
     const host = page.locator('slab-checkbox-group');
 
     // It counts toward the group, so the group isn't empty.
-    await expect(host).toHaveJSProperty('value', ['']);
+    await expect(host).toHaveJSProperty('values', ['']);
 
     // But there's nothing to submit.
     await expect(page.locator('form')).toHaveFormData('name', null);

@@ -1612,10 +1612,10 @@
               "kind": "field",
               "name": "value",
               "type": {
-                "text": "string[]"
+                "text": "string"
               },
-              "description": "The value of every checked and enabled Checkbox, in the order they were\nchecked. Not reflected, to match a native control.",
-              "default": "[]",
+              "description": "The value of the first checked and enabled Checkbox, in the order they\nwere checked. Setting it checks the Checkbox with that value, and only\nthat one. Not reflected, to match a native control.",
+              "default": "''",
               "attribute": "value"
             },
             {
@@ -1660,6 +1660,15 @@
                 "text": "boolean"
               },
               "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "values",
+              "type": {
+                "text": "string[]"
+              },
+              "description": "The value of every checked and enabled Checkbox, in the order they were\nchecked. Setting it checks the Checkboxes with those values, and only\nthose.",
+              "default": "[]"
             },
             {
               "kind": "method",
@@ -1835,10 +1844,10 @@
             {
               "name": "value",
               "type": {
-                "text": "string[]"
+                "text": "string"
               },
-              "description": "The value of every checked and enabled Checkbox, in the order they were\nchecked. Not reflected, to match a native control.",
-              "default": "[]",
+              "description": "The value of the first checked and enabled Checkbox, in the order they\nwere checked. Setting it checks the Checkbox with that value, and only\nthat one. Not reflected, to match a native control.",
+              "default": "''",
               "fieldName": "value"
             },
             {
