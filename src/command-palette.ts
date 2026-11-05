@@ -170,10 +170,12 @@ export default class CommandPalette extends Dialog {
 
   // Its input, which is in the shadow root, where Dialog's search of its
   // slotted content wouldn't find it.
+  /** @internal For Slab's own subclasses. Not public API. */
   protected override focusContent(): void {
     this.#inputElementRef.value?.focus();
   }
 
+  /** @internal For Slab's own subclasses. Not public API. */
   protected override renderContent(): TemplateResult {
     const isEmpty = this.#visible.length === 0;
 

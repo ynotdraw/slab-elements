@@ -381,6 +381,7 @@ export default class DateRangeField extends LitElement {
   // The inputs and their labels. Date Range Picker overrides it to put a
   // button beside them and a calendar in a popover, and inherits everything
   // else.
+  /** @internal For Slab's own subclasses. Not public API. */
   protected renderFields(fields: TemplateResult): TemplateResult {
     return fields;
   }

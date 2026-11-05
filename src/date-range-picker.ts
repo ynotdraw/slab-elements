@@ -189,6 +189,7 @@ export default class DateRangePicker extends DateRangeField {
     }
   }
 
+  /** @internal For Slab's own subclasses. Not public API. */
   protected override renderFields(fields: TemplateResult): TemplateResult {
     return html`<div part="control" @keydown=${this.#onControlKeydown}>
         <!-- The inputs and the button -->
