@@ -9,6 +9,7 @@ import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import slab from './library/version.js';
+import ToggleEvents from './library/toggle-events.js';
 import customElement from './library/custom-element.js';
 import assertSlot from './library/assert-slot.js';
 import ItemsController from './library/items-controller.js';
@@ -83,6 +84,8 @@ function triggerOf(menu: Element): MenuItem | undefined {
  *
  * @csspart menu - The Menu Items
  * @csspart popover - What the menu opens in
+ *
+ * @fires {ToggleEvent} toggle
  *
  * @readonly
  * @prop {MenuItem[]} items
@@ -221,6 +224,11 @@ export default class Menu extends LitElement {
     }
 
     this.#setState('open', this.open);
+    const toggle = this.#toggleEvents.update(this.open);
+
+    if (toggle) {
+      this.dispatchEvent(new ToggleEvent('toggle', toggle));
+    }
   }
 
   // Functional styles go in here rather than in `styles`, so a subclass that
@@ -271,6 +279,8 @@ export default class Menu extends LitElement {
   #popoverElementRef = createRef<HTMLDivElement>();
 
   #slotElementRef = createRef<HTMLSlotElement>();
+
+  #toggleEvents = new ToggleEvents();
 
   // The Menu it's a submenu of, when it is one.
   get #parentMenu(): Menu | undefined {
@@ -544,7 +554,11 @@ export default class Menu extends LitElement {
     }
   };
 
-  #onPopoverToggle = () => {
+  #onPopoverToggle = (event: ToggleEvent) => {
+    // Chromium lets the popover's own "toggle" out of the shadow root, where
+    // Firefox and WebKit don't. The host dispatches its own instead.
+    event.stopPropagation();
+
     // From the popover rather than the event's `newState`. "toggle" is
     // queued, so the popover may have changed again since.
     this.#sync(this.#isPopoverOpen);

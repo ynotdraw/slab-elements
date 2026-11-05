@@ -10,6 +10,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { when } from 'lit/directives/when.js';
 import slab from './library/version.js';
+import ToggleEvents from './library/toggle-events.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
 import StringsController from './library/strings.js';
@@ -123,6 +124,7 @@ declare global {
  *
  * @fires {Event} change
  * @fires {Event} input
+ * @fires {ToggleEvent} toggle
  *
  * @prop {Option | null} activeOption - The Option the user is on, which Enter selects. It's pointed at rather than focused, so focus stays in the input.
  * @prop {(option: Option, query: string) => boolean} filter - Whether an Option matches what's been typed. A case-insensitive substring of its text by default.
@@ -490,6 +492,7 @@ export default class Combobox extends LitElement {
         role="listbox"
         @click=${this.#onListboxClick}
         @mousedown=${this.#onListboxMousedown}
+        @toggle=${this.#onListboxToggle}
         ${ref(this.#listboxElementRef)}
       >
         ${this.#renderSpacer(this.#spacerBeforeElementRef)}
@@ -608,6 +611,12 @@ export default class Combobox extends LitElement {
     this.#setState('disabled', this.#isDisabled);
     this.#setState('empty', visible.length === 0);
     this.#setState('open', this.open);
+    const toggle = this.#toggleEvents.update(this.open);
+
+    if (toggle) {
+      this.dispatchEvent(new ToggleEvent('toggle', toggle));
+    }
+
     this.#setState('required', this.required);
     this.#updateFormValue();
     this.#updateValidity();
@@ -734,6 +743,8 @@ export default class Combobox extends LitElement {
       this.#remove(this.values[index]);
     },
   });
+
+  #toggleEvents = new ToggleEvents();
 
   // What `values` was set to. Until it's set, the Options that say they're
   // `selected` are the values, the way a `<select>`'s are.
@@ -962,6 +973,12 @@ export default class Combobox extends LitElement {
 
   #onListboxMousedown = (event: MouseEvent) => {
     event.preventDefault();
+  };
+
+  // Chromium lets the popover's own "toggle" out of the shadow root, where
+  // Firefox and WebKit don't. The host dispatches its own instead.
+  #onListboxToggle = (event: ToggleEvent) => {
+    event.stopPropagation();
   };
 
   // Settles what's been typed into a value. See the class description.

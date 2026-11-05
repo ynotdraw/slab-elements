@@ -610,3 +610,39 @@ test(
     await expect(page.getByRole('option', { name: 'Option 999' })).toBeHidden();
   },
 );
+
+test(
+  'dispatches "toggle" when it opens and closes',
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label">
+          <slab-option>One</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await host.evaluate((element) => {
+      const events: string[] = [];
+
+      element.addEventListener('toggle', (event) => {
+        if (event instanceof ToggleEvent && event.target === element) {
+          events.push(`${event.oldState} ${event.newState}`);
+          element.dataset.events = events.join(', ');
+        }
+      });
+    });
+
+    await setProperty(host, 'open', true);
+    await expect(host).toHaveAttribute('data-events', 'closed open');
+
+    await setProperty(host, 'open', false);
+
+    await expect(host).toHaveAttribute(
+      'data-events',
+      'closed open, open closed',
+    );
+  },
+);

@@ -8,6 +8,7 @@ import {
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property } from 'lit/decorators.js';
 import slab from './library/version.js';
+import ToggleEvents from './library/toggle-events.js';
 import assertSlot from './library/assert-slot.js';
 import customElement from './library/custom-element.js';
 import uniqueId from './library/unique-id.js';
@@ -57,7 +58,7 @@ declare global {
  *
  * @csspart tooltip
  *
- * @fires {Event} toggle
+ * @fires {ToggleEvent} toggle
  */
 @customElement('slab-tooltip')
 export default class Tooltip extends LitElement {
@@ -174,10 +175,10 @@ export default class Tooltip extends LitElement {
       this.#sync();
     }
 
-    if (changes.has('open') && changes.get('open') !== undefined) {
-      this.dispatchEvent(
-        new Event('toggle', { bubbles: true, composed: true }),
-      );
+    const toggle = this.#toggleEvents.update(this.open);
+
+    if (toggle) {
+      this.dispatchEvent(new ToggleEvent('toggle', toggle));
     }
 
     if (changes.has('disabled')) {
@@ -210,15 +211,17 @@ export default class Tooltip extends LitElement {
 
   #defaultSlotElementRef = createRef<HTMLSlotElement>();
 
-  // The IDs this tooltip added to its anchor's `aria-describedby`, so they,
   #describedAnchor: Element | null = null;
 
+  // The IDs this tooltip added to its anchor's `aria-describedby`, so they,
   // and only they, can be taken back out.
   #describedByIds: string[] = [];
 
   #internals: ElementInternals;
 
   #timeoutId?: ReturnType<typeof setTimeout>;
+
+  #toggleEvents = new ToggleEvents();
 
   #tooltipElementRef = createRef<HTMLElement>();
 

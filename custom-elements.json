@@ -3372,6 +3372,12 @@
           ],
           "events": [
             {
+              "name": "toggle",
+              "type": {
+                "text": "ToggleEvent"
+              }
+            },
+            {
               "name": "input",
               "type": {
                 "text": "Event"
@@ -4138,6 +4144,14 @@
                   }
                 }
               ]
+            }
+          ],
+          "events": [
+            {
+              "name": "toggle",
+              "type": {
+                "text": "ToggleEvent"
+              }
             }
           ],
           "attributes": [
@@ -10341,7 +10355,7 @@
             {
               "name": "toggle",
               "type": {
-                "text": "Event"
+                "text": "ToggleEvent"
               }
             }
           ],
@@ -11428,6 +11442,14 @@
                   }
                 }
               ]
+            }
+          ],
+          "events": [
+            {
+              "name": "toggle",
+              "type": {
+                "text": "ToggleEvent"
+              }
             }
           ],
           "attributes": [
@@ -17515,6 +17537,12 @@
             }
           ],
           "events": [
+            {
+              "name": "toggle",
+              "type": {
+                "text": "ToggleEvent"
+              }
+            },
             {
               "name": "input",
               "type": {
@@ -24245,7 +24273,7 @@
             {
               "name": "toggle",
               "type": {
-                "text": "Event"
+                "text": "ToggleEvent"
               }
             }
           ],

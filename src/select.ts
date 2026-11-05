@@ -10,6 +10,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { when } from 'lit/directives/when.js';
 import slab from './library/version.js';
+import ToggleEvents from './library/toggle-events.js';
 import customElement from './library/custom-element.js';
 import assertSlot from './library/assert-slot.js';
 import afterReflection from './library/after-reflection.js';
@@ -88,6 +89,7 @@ declare global {
  *
  * @fires {Event} change
  * @fires {Event} input
+ * @fires {ToggleEvent} toggle
  *
  * @readonly
  * @prop {HTMLFormElement | null} form
@@ -502,6 +504,12 @@ export default class Select extends LitElement {
 
     this.#setState('error', this.#isShowValidationFeedback);
     this.#setState('open', this.open);
+    const toggle = this.#toggleEvents.update(this.open);
+
+    if (toggle) {
+      this.dispatchEvent(new ToggleEvent('toggle', toggle));
+    }
+
     this.#setState('placeholder-shown', this.#isPlaceholderShown);
   }
 
@@ -584,6 +592,8 @@ export default class Select extends LitElement {
   #rangeStart?: Option;
 
   #slotElementRef = createRef<HTMLSlotElement>();
+
+  #toggleEvents = new ToggleEvents();
 
   // What a validation message is anchored to, so reporting validity takes
   // focus somewhere sensible.
@@ -849,7 +859,11 @@ export default class Select extends LitElement {
     event.preventDefault();
   };
 
-  #onPopoverToggle = () => {
+  #onPopoverToggle = (event: ToggleEvent) => {
+    // Chromium lets the popover's own "toggle" out of the shadow root, where
+    // Firefox and WebKit don't. The host dispatches its own instead.
+    event.stopPropagation();
+
     // From the popover rather than the event's `newState`. "toggle" is
     // queued, so the popover may have changed again since.
     this.open = this.#isPopoverOpen;
