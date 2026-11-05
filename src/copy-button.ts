@@ -6,7 +6,7 @@ import {
 } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property } from 'lit/decorators.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
 import StringsController from './library/strings.js';
@@ -105,7 +105,7 @@ export default class CopyButton extends LitElement {
   value = '';
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   override click() {
     this.#buttonElementRef.value?.click();

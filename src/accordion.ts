@@ -6,7 +6,7 @@ import {
   type PropertyValues,
 } from 'lit';
 import { property } from 'lit/decorators.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import assertSlot from './library/assert-slot.js';
 import Disclosure from './disclosure.js';
@@ -51,7 +51,7 @@ export default class Accordion extends LitElement {
   exclusive = false;
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   // "toggle" is heard on the slot rather than the host. A Disclosure is
   // slotted, so its "toggle" passes through the slot on the way up.

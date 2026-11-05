@@ -7,7 +7,7 @@ import {
 } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property } from 'lit/decorators.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import assertSlot from './library/assert-slot.js';
 import customElement from './library/custom-element.js';
 import uniqueId from './library/unique-id.js';
@@ -94,7 +94,7 @@ export default class Tooltip extends LitElement {
   placement: 'bottom' | 'left' | 'right' | 'top' = 'bottom';
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   override connectedCallback() {
     super.connectedCallback();
@@ -208,19 +208,15 @@ export default class Tooltip extends LitElement {
 
   #anchorSlotElementRef = createRef<HTMLSlotElement>();
 
-#defaultSlotElementRef = createRef<HTMLSlotElement>();
+  #defaultSlotElementRef = createRef<HTMLSlotElement>();
 
   // The IDs this tooltip added to its anchor's `aria-describedby`, so they,
   #describedAnchor: Element | null = null;
 
-// and only they, can be taken back out.
+  // and only they, can be taken back out.
   #describedByIds: string[] = [];
 
-  
-
   #internals: ElementInternals;
-
-  
 
   #timeoutId?: ReturnType<typeof setTimeout>;
 

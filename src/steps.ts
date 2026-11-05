@@ -7,7 +7,7 @@ import {
 import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { repeat } from 'lit/directives/repeat.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import StringsController from './library/strings.js';
 import ListItemSlots from './library/list-item-slots.js';
@@ -92,7 +92,7 @@ export default class Steps extends LitElement {
   step = 1;
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   // Direct children rather than a query, so a renamed subclass still counts
   // and a Step inside another component doesn't.

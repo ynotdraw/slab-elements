@@ -8,7 +8,7 @@ import {
 } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property, state } from 'lit/decorators.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import styles from './toast.styles.js';
 
@@ -91,7 +91,7 @@ export default class Toast extends LitElement {
   duration = 5000;
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   get open(): boolean {
     return this.isOpen;

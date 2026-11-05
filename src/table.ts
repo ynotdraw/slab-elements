@@ -5,7 +5,7 @@ import {
   type CSSResultOrNative,
 } from 'lit';
 import { property } from 'lit/decorators.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import TableColumnHeader from './table.column-header.js';
 import styles from './table.styles.js';
@@ -48,7 +48,7 @@ declare global {
 @customElement('slab-table')
 export default class Table extends LitElement {
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   // Its own, rather than every one inside it, so the Column Headers of a
   // Table in one of its Cells are that Table's.

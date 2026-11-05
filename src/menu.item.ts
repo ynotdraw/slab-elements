@@ -6,7 +6,7 @@ import {
   type PropertyValues,
 } from 'lit';
 import { property } from 'lit/decorators.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import styles from './menu.item.styles.js';
 
@@ -73,7 +73,7 @@ export default class MenuItem extends LitElement {
   type: 'checkbox' | 'item' | 'radio' = 'item';
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   /**
    * What the user reads as the Menu Item's name: its label, or its text when

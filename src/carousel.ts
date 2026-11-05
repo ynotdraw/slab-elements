@@ -8,7 +8,7 @@ import {
 import { property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { createRef, ref } from 'lit/directives/ref.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import StringsController from './library/strings.js';
 import required from './library/required.js';
@@ -165,7 +165,7 @@ export default class Carousel extends LitElement {
   stopLabel?: string;
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   // Children rather than what's slotted, so they're known before the first
   // render, and `index` isn't clamped to a carousel with no slides.

@@ -10,7 +10,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { live } from 'lit/directives/live.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import assertSlot from './library/assert-slot.js';
 import customElement from './library/custom-element.js';
 import required from './library/required.js';
@@ -120,7 +120,7 @@ export default class Splitter extends LitElement {
   value = 50;
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   override focus(options?: FocusOptions) {
     this.#inputElementRef.value?.focus(options);

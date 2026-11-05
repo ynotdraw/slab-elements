@@ -7,7 +7,7 @@ import {
 } from 'lit';
 import { property } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
-import packageJson from '../package.json' with { type: 'json' };
+import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import StringsController from './library/strings.js';
 import required from './library/required.js';
@@ -111,7 +111,7 @@ export default class Pagination extends LitElement {
   siblings = 1;
 
   @property({ reflect: true })
-  readonly version: string = packageJson.version;
+  readonly version: string = slab.version;
 
   override render() {
     return html`<nav
