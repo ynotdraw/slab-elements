@@ -1,5 +1,33 @@
 # slab-elements
 
+## 0.3.1
+
+### Patch Changes
+
+- [#86](https://github.com/ynotdraw/slab-elements/pull/86) [`a866d14`](https://github.com/ynotdraw/slab-elements/commit/a866d14e0bc47179fb3dd8a74045f66c3cac08e5) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Adds Alert Dialog, `slab-alert-dialog`: a modal Dialog with `role="alertdialog"` for a question that needs an answer, such as confirming a delete. It has a built-in Cancel button that focus starts on, a `description` that's read with the label, and no light dismiss. Change the Cancel button's text with `cancel-label`, or with `alertDialogCancel` in `registerStrings()`.
+
+- [#88](https://github.com/ynotdraw/slab-elements/pull/88) [`8c56b61`](https://github.com/ynotdraw/slab-elements/commit/8c56b619eae9d9a4ee1fc605fd9a62fad75cc084) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Adds Date Picker, `slab-date-picker`: a Date Field with a button that opens a Calendar in a popover, so the picker looks and works the same in every browser and can be styled. Pick a day with the mouse or keyboard, or open it with Alt+ArrowDown from the input.
+
+- [#96](https://github.com/ynotdraw/slab-elements/pull/96) [`4f8ec31`](https://github.com/ynotdraw/slab-elements/commit/4f8ec3192f50fe5cd023d33d319facecfc2ffaec) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Adds Date Range Picker, `slab-date-range-picker`: a Date Range Field with a button that opens a range Calendar in a popover, so the start and end are picked in one calendar that looks and works the same in every browser and can be styled. Open it with the button or with Alt+ArrowDown from either input.
+
+- [#98](https://github.com/ynotdraw/slab-elements/pull/98) [`8a8486f`](https://github.com/ynotdraw/slab-elements/commit/8a8486f0e30b14ca4c0b19a309725b76027a9563) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Adds Grid List, `slab-grid-list` and `slab-grid-list-item`: a list of rows that can hold their own buttons, links and checkboxes, like React Aria's GridList. Tab reaches it once, Up and Down move between rows, Left and Right move between a row and its controls, and Escape goes back to the row. Set `selection-mode` to `"single"` or `"multiple"` to select rows with a click, Space or Enter.
+
+- [#90](https://github.com/ynotdraw/slab-elements/pull/90) [`2e78fc6`](https://github.com/ynotdraw/slab-elements/commit/2e78fc67552933cd05e54095678849b2719dd82e) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Hover Card points its anchor's `aria-details` at the card's content, so a screenreader can tell there's more about the anchor, and has a `label` attribute that makes the card a group named by it.
+
+- [#97](https://github.com/ynotdraw/slab-elements/pull/97) [`0e7020e`](https://github.com/ynotdraw/slab-elements/commit/0e7020e543e426a72a02042d34837785dd85ec95) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Menu has submenus. Put a `slab-menu` inside another with a `slab-menu-item` as its anchor, and it opens beside that Menu Item. The Right arrow, Enter, Space, a click, or resting the pointer on the Menu Item for a moment opens it. Left and Escape close it and return focus to its Menu Item, and a click on any Menu Item in it closes every Menu. In a right-to-left page, Left and Right swap.
+
+- [#87](https://github.com/ynotdraw/slab-elements/pull/87) [`1016b06`](https://github.com/ynotdraw/slab-elements/commit/1016b0689eedf0860ae3acc105c9b9cb884f2460) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Adds Search Field, `slab-search-field`: a native search input with a button that clears it, and Escape that clears it in every browser. It's form-associated like Text Field.
+
+- [#89](https://github.com/ynotdraw/slab-elements/pull/89) [`80636f5`](https://github.com/ynotdraw/slab-elements/commit/80636f58829566898e15bc62de43ee6c2a3100e6) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Adds Sortable List, `slab-sortable-list` and `slab-sortable-list-item`: a list the user puts in order by dragging each item's handle, or with Space, the arrow keys, Home and End. Screenreaders are told where an item is as it's picked up, moved, dropped or put back.
+
+- [#94](https://github.com/ynotdraw/slab-elements/pull/94) [`d9a5acd`](https://github.com/ynotdraw/slab-elements/commit/d9a5acdbd14fd850a6e2b4502cc07f0606480841) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Adds Table, `slab-table`, with `slab-table-head`, `slab-table-body`, `slab-table-foot`, `slab-table-row`, `slab-table-column-header` and `slab-table-cell`: a table that components can render rows and cells into, laid out like a native `<table>` with the same roles. A `sortable` Column Header is a button that sorts its column, sets `aria-sort`, dispatches "sort" and tells screenreaders how the column is sorted. Change what they're told with `tableSorted` in `registerStrings()`.
+
+- [#85](https://github.com/ynotdraw/slab-elements/pull/85) [`9239b91`](https://github.com/ynotdraw/slab-elements/commit/9239b91c8442d54567206a28b76d16b54db07b4c) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Toggle Button is new: a native `<button>` with `aria-pressed`, for one setting that's on or off, such as Bold or Mute. A click, Space or Enter presses it or releases it.
+
+- [#99](https://github.com/ynotdraw/slab-elements/pull/99) [`699f5b2`](https://github.com/ynotdraw/slab-elements/commit/699f5b22277f17d10525c0d340236ce18ce2af75) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Listbox and Combobox have a `virtual` attribute for lists of thousands of Options. Only the Options in or near view are laid out, with spacers in place of the rest, while the keys, typeahead, filtering and selection still reach every Option. Rendered Options get `aria-posinset` and `aria-setsize`, and the active one stays in the accessibility tree when it's scrolled away from.
+
+  Listbox and Combobox are also much faster with long lists whether or not they're virtual: they no longer do work for every Option each time one of them connects or changes, which made a thousand Options take seconds to appear.
+
 ## 0.3.0
 
 ### Minor Changes
