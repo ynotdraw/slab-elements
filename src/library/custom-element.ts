@@ -28,14 +28,14 @@ type VersionedConstructor = CustomElementConstructor & {
 export default function customElement(name: string) {
   return (constructor: CustomElementConstructor) => {
     const existing: VersionedConstructor | undefined =
-      window.customElements.get(name);
+      globalThis.customElements.get(name);
 
     if (!existing) {
       Object.defineProperty(constructor, version, {
         value: slab.version,
       });
 
-      window.customElements.define(name, constructor);
+      globalThis.customElements.define(name, constructor);
       return;
     }
 

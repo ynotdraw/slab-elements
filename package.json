@@ -38,6 +38,7 @@
     "!dist/library/*.test.d.ts",
     "!dist/library/*.test.js",
     "!dist/playwright",
+    "!dist/node",
     "!dist/storybook",
     "!dist/styled",
     "!dist/stylelint",

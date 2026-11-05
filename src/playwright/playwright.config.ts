@@ -15,8 +15,11 @@ export default defineConfig({
     {
       name: 'lint rules',
 
+      // With `./src/node`'s tests, which run in Node.js against `./dist` just
+      // as these do, rather than in a browser.
       testMatch: [
         'src/eslint/rules/*.test.ts',
+        'src/node/*.test.ts',
         'src/stylelint/rules/*.test.ts',
       ],
     },

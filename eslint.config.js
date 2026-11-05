@@ -366,6 +366,7 @@ export default defineConfig([
       'src/*.test.*.ts',
       'src/library/*.test.ts',
       'src/eslint/rules/*.test.ts',
+      'src/node/*.test.ts',
       'src/stylelint/rules/*.test.ts',
     ],
     rules: {
