@@ -36,6 +36,6 @@ test(
     await expect(checkboxes.nth(0)).toHaveJSProperty('checked', true);
     await expect(checkboxes.nth(1)).toHaveJSProperty('checked', true);
     await expect(checkboxes.nth(2)).toHaveJSProperty('checked', false);
-    await expect(host).toHaveJSProperty('value', ['two', 'one']);
+    await expect(host).toHaveJSProperty('values', ['two', 'one']);
   },
 );

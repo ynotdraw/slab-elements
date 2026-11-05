@@ -57,12 +57,12 @@ test(
 );
 
 test(
-  'enables checkboxes when its value is set initially',
+  'enables checkboxes when its values are set initially',
   { tag: '@miscellaneous' },
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-checkbox-group label="Label" .value=${['one', 'two']}>
+        html`<slab-checkbox-group label="Label" .values=${['one', 'two']}>
           <slab-checkbox label="One" value="one" disabled></slab-checkbox>
 
           <slab-checkbox label="Two" value="two" disabled></slab-checkbox>
@@ -101,7 +101,7 @@ test(
 
     await setProperty(checkboxes.nth(0), 'disabled', false);
 
-    await expect(host).toHaveJSProperty('value', ['two', 'one']);
+    await expect(host).toHaveJSProperty('values', ['two', 'one']);
   },
 );
 
@@ -125,12 +125,12 @@ test(
 
     await setProperty(checkboxes.nth(0), 'disabled', true);
 
-    await expect(host).toHaveJSProperty('value', ['two', 'three']);
+    await expect(host).toHaveJSProperty('values', ['two', 'three']);
   },
 );
 
 test(
-  'enables checkboxes when its value is set programmatically',
+  'enables checkboxes when its values are set programmatically',
   { tag: '@miscellaneous' },
   async ({ render, page, setProperty }) => {
     await render(
@@ -145,7 +145,7 @@ test(
     const host = page.locator('slab-checkbox-group');
     const checkboxes = page.locator('slab-checkbox');
 
-    await setProperty(host, 'value', ['one', 'two']);
+    await setProperty(host, 'values', ['one', 'two']);
 
     await expect(checkboxes.nth(0)).not.toHaveAttribute('disabled');
     await expect(checkboxes.nth(1)).not.toHaveAttribute('disabled');
@@ -153,7 +153,7 @@ test(
 );
 
 test(
-  'checks and unchecks checkboxes when its `value` is set programmatically',
+  'checks and unchecks checkboxes when its `values` are set programmatically',
   { tag: '@miscellaneous' },
   async ({ render, page, setProperty }) => {
     await render(
@@ -168,10 +168,43 @@ test(
     const host = page.locator('slab-checkbox-group');
     const checkboxes = page.locator('slab-checkbox');
 
-    await setProperty(host, 'value', ['two']);
+    await setProperty(host, 'values', ['two']);
 
     await expect(checkboxes.nth(0)).toHaveJSProperty('checked', false);
     await expect(checkboxes.nth(1)).toHaveJSProperty('checked', true);
+  },
+);
+
+test(
+  'has the first of its `values` as its `value`, and checks only that one when it is set',
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-checkbox-group label="Label">
+          <slab-checkbox label="One" value="one"></slab-checkbox>
+          <slab-checkbox label="Two" value="two" checked></slab-checkbox>
+          <slab-checkbox label="Three" value="three" checked></slab-checkbox>
+        </slab-checkbox-group>`,
+    );
+
+    const host = page.locator('slab-checkbox-group');
+    const checkboxes = page.locator('slab-checkbox');
+
+    await expect(host).toHaveJSProperty('value', 'two');
+
+    await setProperty(host, 'value', 'one');
+
+    await expect(checkboxes.nth(0)).toHaveJSProperty('checked', true);
+    await expect(checkboxes.nth(1)).toHaveJSProperty('checked', false);
+    await expect(checkboxes.nth(2)).toHaveJSProperty('checked', false);
+    await expect(host).toHaveJSProperty('values', ['one']);
+
+    await setProperty(host, 'value', '');
+
+    await expect(checkboxes.nth(0)).toHaveJSProperty('checked', false);
+    await expect(host).toHaveJSProperty('value', '');
+    await expect(host).toHaveJSProperty('values', []);
   },
 );
 
@@ -193,7 +226,7 @@ test(
 
     await setProperty(checkboxes.nth(0), 'checked', true);
 
-    await expect(host).toHaveJSProperty('value', ['two', 'one']);
+    await expect(host).toHaveJSProperty('values', ['two', 'one']);
   },
 );
 
@@ -215,7 +248,7 @@ test(
 
     await setProperty(checkboxes.nth(0), 'checked', false);
 
-    await expect(host).toHaveJSProperty('value', ['two']);
+    await expect(host).toHaveJSProperty('values', ['two']);
   },
 );
 
@@ -237,7 +270,7 @@ test(
 
     await setProperty(checkboxes.nth(0), 'value', 'three');
 
-    await expect(host).toHaveJSProperty('value', ['three', 'two']);
+    await expect(host).toHaveJSProperty('values', ['three', 'two']);
   },
 );
 
@@ -378,6 +411,6 @@ test(
     await setProperty(nested, 'value', 'other');
     await setProperty(nested, 'disabled', true);
 
-    await expect(host).toHaveJSProperty('value', []);
+    await expect(host).toHaveJSProperty('values', []);
   },
 );

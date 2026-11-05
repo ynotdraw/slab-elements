@@ -28,8 +28,9 @@ declare global {
  * for all of them.
  *
  * Checkboxes are found by class rather than by tag name, so your subclass of
- * Checkbox can be named anything. The group's `value` is the value of every
- * Checkbox that is checked and enabled, in the order they were checked.
+ * Checkbox can be named anything. The group's `values` are the values of every
+ * Checkbox that is checked and enabled, in the order they were checked, and
+ * its `value` is the first of them, as a Listbox's are.
  *
  * Style it through its parts and through `:state(disabled)`, `:state(error)`,
  * and `:state(required)`. How the Checkboxes are arranged is layout, so it's
@@ -40,7 +41,7 @@ declare global {
  * @attr {boolean} [hide-label=false]
  * @attr {string} [name='']
  * @attr {boolean} [required=false]
- * @attr {string[]} [value=[]] - The value of every checked and enabled Checkbox, in the order they were checked. Not reflected, to match a native control.
+ * @attr {string} [value=''] - The value of the first checked and enabled Checkbox, in the order they were checked. Setting it checks the Checkbox with that value, and only that one. Not reflected, to match a native control.
  *
  * @readonly
  * @attr {string} [version]
@@ -61,6 +62,8 @@ declare global {
  *
  * @readonly
  * @prop {ValidityState} validity
+ *
+ * @prop {string[]} values - The value of every checked and enabled Checkbox, in the order they were checked. Setting it checks the Checkboxes with those values, and only those.
  *
  * @readonly
  * @prop {boolean} willValidate
@@ -106,41 +109,19 @@ export default class CheckboxGroup extends LitElement {
   required = false;
 
   /**
-   * The value of every checked and enabled Checkbox, in the order they were
-   * checked. Not reflected, to match a native control.
+   * The value of the first checked and enabled Checkbox, in the order they
+   * were checked. Setting it checks the Checkbox with that value, and only
+   * that one. Not reflected, to match a native control.
    *
-   * @default []
+   * @default ''
    */
-  @property({ type: Array })
-  get value(): string[] {
-    return this.#value;
+  @property()
+  get value(): string {
+    return this.#values.at(0) ?? '';
   }
 
-  set value(value: string[]) {
-    this.#value = value;
-
-    for (const checkbox of this.#checkboxes) {
-      // An empty value means "no value", so it never matches.
-      const isChecked = value.some(
-        (value) => value !== '' && value === checkbox.value,
-      );
-
-      // Only Checkboxes with a value are unchecked, so one the user checked
-      // that has no value is left alone. As little of what isn't ours to
-      // change as possible.
-      if (isChecked) {
-        checkbox.checked = true;
-      } else if (checkbox.value !== '') {
-        checkbox.checked = false;
-      }
-
-      // A disabled Checkbox named in `value` is likely a mistake, but the
-      // value will be submitted either way. Enabling it at least makes that
-      // visible rather than silent.
-      if (checkbox.checked && checkbox.disabled) {
-        checkbox.disabled = false;
-      }
-    }
+  set value(value: string) {
+    this.values = value === '' ? [] : [value];
   }
 
   @property({ reflect: true })
@@ -175,6 +156,48 @@ export default class CheckboxGroup extends LitElement {
 
   get willValidate(): boolean {
     return this.#internals.willValidate;
+  }
+
+  /**
+   * The value of every checked and enabled Checkbox, in the order they were
+   * checked. Setting it checks the Checkboxes with those values, and only
+   * those.
+   *
+   * @default []
+   */
+  @property({ attribute: false })
+  get values(): string[] {
+    return this.#values;
+  }
+
+  set values(values: string[]) {
+    this.#values = values;
+
+    for (const checkbox of this.#checkboxes) {
+      // An empty value means "no value", so it never matches.
+      const isChecked = values.some(
+        (value) => value !== '' && value === checkbox.value,
+      );
+
+      // Only Checkboxes with a value are unchecked, so one the user checked
+      // that has no value is left alone. As little of what isn't ours to
+      // change as possible.
+      if (isChecked) {
+        checkbox.checked = true;
+      } else if (checkbox.value !== '') {
+        checkbox.checked = false;
+      }
+
+      // A disabled Checkbox named in `values` is likely a mistake, but the
+      // value will be submitted either way. Enabling it at least makes that
+      // visible rather than silent.
+      if (checkbox.checked && checkbox.disabled) {
+        checkbox.disabled = false;
+      }
+    }
+
+    this.#updateFormValue();
+    this.requestUpdate();
   }
 
   checkValidity(): boolean {
@@ -388,7 +411,7 @@ export default class CheckboxGroup extends LitElement {
   private validityMessage?: string;
 
   // Checked and enabled Checkboxes, in the order they were checked, which is
-  // the order of `value`.
+  // the order of `values`.
   #checked = new Set<Checkbox>();
 
   #focused: Checkbox | null = null;
@@ -397,7 +420,7 @@ export default class CheckboxGroup extends LitElement {
 
   #internals: ElementInternals;
 
-  #value: string[] = [];
+  #values: string[] = [];
 
   // What a validation message is anchored to, so reporting validity takes
   // focus somewhere sensible.
@@ -486,9 +509,10 @@ export default class CheckboxGroup extends LitElement {
     }
   };
 
+  // Set from the Checkboxes rather than through `values`, whose setter is for
   // the consumer and would check and uncheck them right back.
   #deriveValue() {
-    this.#value = [...this.#checked].map(({ value }) => value);
+    this.#values = [...this.#checked].map(({ value }) => value);
 
     this.#updateFormValue();
     this.#updateValidity();
@@ -501,8 +525,6 @@ export default class CheckboxGroup extends LitElement {
     );
   }
 
-  // Set from the Checkboxes rather than through `value`, whose setter is for
-
   #setState(state: string, isActive: boolean) {
     if (isActive) {
       this.#internals.states.add(state);
@@ -512,7 +534,7 @@ export default class CheckboxGroup extends LitElement {
   }
 
   #updateFormValue() {
-    if (this.name === '' || this.#isDisabled || this.#value.length === 0) {
+    if (this.name === '' || this.#isDisabled || this.#values.length === 0) {
       this.#internals.setFormValue(null);
 
       return;
@@ -521,7 +543,7 @@ export default class CheckboxGroup extends LitElement {
     // One entry per value, the way a group of native checkboxes submits,
     // rather than one entry holding all of them. A Checkbox with no value
     // counts toward the group but has nothing to submit.
-    const values = this.#value.filter((value) => value !== '');
+    const values = this.#values.filter((value) => value !== '');
 
     if (values.length === 0) {
       this.#internals.setFormValue(null);
@@ -544,7 +566,7 @@ export default class CheckboxGroup extends LitElement {
       return;
     }
 
-    if (this.required && this.#value.length === 0) {
+    if (this.required && this.#values.length === 0) {
       this.#internals.setValidity(
         { customError: Boolean(this.validityMessage), valueMissing: true },
         browserValidationMessage('choose'),
