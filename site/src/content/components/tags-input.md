@@ -18,6 +18,8 @@ Each tag is a button before the input that removes it, named "Remove" and the ta
 
 Style a field with no tags through `:state(empty)` and one with `max` tags through `:state(full)`.
 
+With `readonly`, tags can't be added or removed but the field can still be focused, read and submitted, where `disabled` leaves it out of the form. The tags are text rather than buttons, and the host is `:state(readonly)`.
+
 ## Keyboard
 
 | Key                             | What it does                                                                                    |

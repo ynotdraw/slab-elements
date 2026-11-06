@@ -171,24 +171,57 @@ test(
         element.matches(':state(empty)'),
         element.matches(':state(error)'),
         element.matches(':state(full)'),
+        element.matches(':state(readonly)'),
         element.matches(':state(required)'),
       ]);
     };
 
-    expect(await getStates()).toStrictEqual([true, true, false, false, true]);
+    expect(await getStates()).toStrictEqual([
+      true,
+      true,
+      false,
+      false,
+      false,
+      true,
+    ]);
 
     await setProperty(host, 'disabled', false);
     await setProperty(host, 'required', false);
     await setProperty(host, 'values', ['one']);
 
-    expect(await getStates()).toStrictEqual([false, false, false, true, false]);
+    expect(await getStates()).toStrictEqual([
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+    ]);
 
     await setProperty(host, 'max', 2);
     await setProperty(host, 'values', []);
     await setProperty(host, 'required', true);
     await callMethod(host, 'reportValidity');
 
-    expect(await getStates()).toStrictEqual([false, true, true, false, true]);
+    expect(await getStates()).toStrictEqual([
+      false,
+      true,
+      true,
+      false,
+      false,
+      true,
+    ]);
+
+    await setProperty(host, 'readonly', true);
+
+    expect(await getStates()).toStrictEqual([
+      false,
+      true,
+      false,
+      false,
+      true,
+      true,
+    ]);
   },
 );
 

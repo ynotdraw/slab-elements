@@ -565,3 +565,32 @@ test(
     );
   },
 );
+
+test(
+  'neither adds nor removes tags from the keyboard when read-only',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-tags-input
+          label="Label"
+          readonly
+          value="red,green"
+        ></slab-tags-input>`,
+    );
+
+    const host = page.locator('slab-tags-input');
+    const textbox = page.getByRole('textbox');
+
+    await expect(host).not.toDispatchEvents(async () => {
+      await textbox.pressSequentially('blue,');
+      await textbox.press('Enter');
+      await textbox.press('Backspace');
+      await textbox.press('ArrowLeft');
+    }, [{ type: 'input' }, { type: 'change' }]);
+
+    await expect(textbox).toHaveValue('');
+    await expect(textbox).toBeFocused();
+    await expect(host).toHaveJSProperty('values', ['red', 'green']);
+  },
+);

@@ -33,6 +33,8 @@ Its Options, and Option Groups, are the same ones [Listbox](../listbox/) uses.
 
 With `multiple`, each selected Option is shown before the input as a tag, a button that removes it. Choosing an Option toggles it and leaves the listbox open for the next one. `values` lists them in the order they were chosen, and each is submitted as its own entry, the way a `<select multiple>` submits them. `removeLabel` names the tags' buttons, "Remove" and the Option's text by default.
 
+With `readonly`, the value can't be changed but the Combobox can still be focused, read and submitted, where `disabled` leaves it out of the form. The listbox doesn't open, the tags are text rather than buttons, and the host is `:state(readonly)`.
+
 ## Long lists
 
 For thousands of Options, set `virtual`, as on [Listbox](../listbox/#long-lists). Only the Options in or near view are laid out, filtering and the arrow keys still reach every one, and the listbox scrolls to the selected Option as it opens. Give `::part(listbox)` a maximum block size so it scrolls.
