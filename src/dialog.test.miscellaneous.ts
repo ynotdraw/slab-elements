@@ -196,3 +196,70 @@ test(
     );
   },
 );
+
+test(
+  'dispatches "cancel" and then closes with a return value when `requestClose()` is called',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-dialog label="Label" open>Content</slab-dialog>`,
+    );
+
+    const host = page.locator('slab-dialog');
+
+    await expect(host).toDispatchEvents(async () => {
+      await host.evaluate<void, void, Dialog>((element) => {
+        element.requestClose('confirm');
+      });
+    }, [
+      { type: 'cancel', bubbles: false, cancelable: true, composed: false },
+      { type: 'close', bubbles: false, cancelable: false, composed: false },
+    ]);
+
+    await expect(page.getByTestId('dialog')).toBeHidden();
+    await expect(host).toHaveJSProperty('open', false);
+    await expect(host).toHaveJSProperty('returnValue', 'confirm');
+  },
+);
+
+test(
+  'stays open, with its `returnValue` unchanged, when the "cancel" from `requestClose()` is canceled',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-dialog label="Label" open>Content</slab-dialog>`,
+    );
+
+    const host = page.locator('slab-dialog');
+
+    await host.evaluate<void, void, Dialog>((element) => {
+      element.addEventListener('cancel', (event) => {
+        event.preventDefault();
+      });
+
+      element.requestClose('confirm');
+    });
+
+    await expect(page.getByTestId('dialog')).toBeVisible();
+    await expect(host).toHaveJSProperty('open', true);
+    await expect(host).toHaveJSProperty('returnValue', '');
+  },
+);
+
+test(
+  'does nothing when `requestClose()` is called while closed',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(() => html`<slab-dialog label="Label">Content</slab-dialog>`);
+
+    const host = page.locator('slab-dialog');
+
+    await expect(host).not.toDispatchEvents(async () => {
+      await host.evaluate<void, void, Dialog>((element) => {
+        element.requestClose('confirm');
+      });
+    }, [{ type: 'cancel' }]);
+
+    await expect(host).toHaveJSProperty('returnValue', '');
+  },
+);

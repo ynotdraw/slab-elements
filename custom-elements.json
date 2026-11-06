@@ -323,6 +323,29 @@
             },
             {
               "kind": "method",
+              "name": "requestClose",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "returnValue",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              },
+              "description": "Asks it to close, as a native dialog's `requestClose()` does: \"cancel\" first, then a close that sets `returnValue` to the value given, unless \"cancel\" is canceled."
+            },
+            {
+              "kind": "method",
               "name": "show",
               "return": {
                 "type": {
@@ -412,6 +435,17 @@
           "customElement": true,
           "events": [
             {
+              "name": "cancel",
+              "type": {
+                "text": "Event"
+              },
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              },
+              "description": "When something asks it to close: Escape, a click outside with `closedby=\"any\"`, or `requestClose()`. Cancel it to keep it open, as a native dialog's."
+            },
+            {
               "name": "toggle",
               "type": {
                 "text": "ToggleEvent"
@@ -421,17 +455,6 @@
                 "module": "src/dialog.ts"
               },
               "description": "When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does."
-            },
-            {
-              "name": "cancel",
-              "type": {
-                "text": "Event"
-              },
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              },
-              "description": "When the user asks to close it, with Escape or, with `closedby=\"any\"`, a click outside. Cancel it to keep it open, as a native dialog's."
             },
             {
               "name": "close",
@@ -3905,6 +3928,29 @@
             },
             {
               "kind": "method",
+              "name": "requestClose",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "returnValue",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              },
+              "description": "Asks it to close, as a native dialog's `requestClose()` does: \"cancel\" first, then a close that sets `returnValue` to the value given, unless \"cancel\" is canceled."
+            },
+            {
+              "kind": "method",
               "name": "show",
               "return": {
                 "type": {
@@ -3992,6 +4038,17 @@
           "customElement": true,
           "events": [
             {
+              "name": "cancel",
+              "type": {
+                "text": "Event"
+              },
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              },
+              "description": "When something asks it to close: Escape, a click outside with `closedby=\"any\"`, or `requestClose()`. Cancel it to keep it open, as a native dialog's."
+            },
+            {
               "name": "toggle",
               "type": {
                 "text": "ToggleEvent"
@@ -4001,17 +4058,6 @@
                 "module": "src/dialog.ts"
               },
               "description": "When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does."
-            },
-            {
-              "name": "cancel",
-              "type": {
-                "text": "Event"
-              },
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              },
-              "description": "When the user asks to close it, with Escape or, with `closedby=\"any\"`, a click outside. Cancel it to keep it open, as a native dialog's."
             },
             {
               "name": "close",
@@ -7609,6 +7655,25 @@
             },
             {
               "kind": "method",
+              "name": "requestClose",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "returnValue",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Asks it to close, as a native dialog's `requestClose()` does: \"cancel\" first, then a close that sets `returnValue` to the value given, unless \"cancel\" is canceled."
+            },
+            {
+              "kind": "method",
               "name": "show",
               "return": {
                 "type": {
@@ -7640,18 +7705,18 @@
           ],
           "events": [
             {
+              "name": "cancel",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When something asks it to close: Escape, a click outside with `closedby=\"any\"`, or `requestClose()`. Cancel it to keep it open, as a native dialog's."
+            },
+            {
               "name": "toggle",
               "type": {
                 "text": "ToggleEvent"
               },
               "description": "When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does."
-            },
-            {
-              "name": "cancel",
-              "type": {
-                "text": "Event"
-              },
-              "description": "When the user asks to close it, with Escape or, with `closedby=\"any\"`, a click outside. Cancel it to keep it open, as a native dialog's."
             },
             {
               "name": "close",
@@ -8073,6 +8138,29 @@
             },
             {
               "kind": "method",
+              "name": "requestClose",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "returnValue",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              },
+              "description": "Asks it to close, as a native dialog's `requestClose()` does: \"cancel\" first, then a close that sets `returnValue` to the value given, unless \"cancel\" is canceled."
+            },
+            {
+              "kind": "method",
               "name": "show",
               "return": {
                 "type": {
@@ -8187,6 +8275,17 @@
           ],
           "events": [
             {
+              "name": "cancel",
+              "type": {
+                "text": "Event"
+              },
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              },
+              "description": "When something asks it to close: Escape, a click outside with `closedby=\"any\"`, or `requestClose()`. Cancel it to keep it open, as a native dialog's."
+            },
+            {
               "name": "toggle",
               "type": {
                 "text": "ToggleEvent"
@@ -8196,17 +8295,6 @@
                 "module": "src/dialog.ts"
               },
               "description": "When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does."
-            },
-            {
-              "name": "cancel",
-              "type": {
-                "text": "Event"
-              },
-              "inheritedFrom": {
-                "name": "Dialog",
-                "module": "src/dialog.ts"
-              },
-              "description": "When the user asks to close it, with Escape or, with `closedby=\"any\"`, a click outside. Cancel it to keep it open, as a native dialog's."
             },
             {
               "name": "close",

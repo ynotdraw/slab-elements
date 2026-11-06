@@ -205,12 +205,14 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
   'slab-dialog': {
     events: {
       cancel:
-        'When the user asks to close it, with Escape or, with `closedby="any"`, a click outside. Cancel it to keep it open, as a native dialog\'s.',
+        'When something asks it to close: Escape, a click outside with `closedby="any"`, or `requestClose()`. Cancel it to keep it open, as a native dialog\'s.',
       close: "When it closes, as a native dialog's does.",
     },
     members: {
       close:
         "Closes it, setting `returnValue` to the value given, as a native dialog's `close()` does.",
+      requestClose:
+        'Asks it to close, as a native dialog\'s `requestClose()` does: "cancel" first, then a close that sets `returnValue` to the value given, unless "cancel" is canceled.',
     },
     slots: { label: 'Its heading, in place of `label`' },
   },
