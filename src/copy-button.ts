@@ -3,6 +3,7 @@ import {
   LitElement,
   type CSSResultGroup,
   type CSSResultOrNative,
+  type PropertyValues,
 } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property } from 'lit/decorators.js';
@@ -49,6 +50,7 @@ declare global {
  * @csspart button - The button
  *
  * @cssstate copied - For `feedback-duration` after the text is copied.
+ * @cssstate disabled - While it's disabled.
  * @cssstate failed - For `feedback-duration` after the clipboard refuses.
  *
  * @fires {Event} copied - When the text is copied.
@@ -137,6 +139,16 @@ export default class CopyButton extends LitElement {
       </button>
 
       <span data-test="status" role="status">${this.#status}</span>`;
+  }
+
+  override updated(changes: PropertyValues<this>) {
+    if (changes.has('disabled')) {
+      if (this.disabled) {
+        this.#internals.states.add('disabled');
+      } else {
+        this.#internals.states.delete('disabled');
+      }
+    }
   }
 
   // Functional styles go in here rather than in `styles`, so a subclass that

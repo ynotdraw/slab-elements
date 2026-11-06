@@ -44,6 +44,7 @@ declare global {
  *
  * @csspart button - The button
  *
+ * @cssstate disabled - While it's disabled.
  * @cssstate pressed - While it's pressed.
  *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
@@ -106,6 +107,14 @@ export default class ToggleButton extends LitElement {
   }
 
   override updated(changes: PropertyValues<this>) {
+    if (changes.has('disabled')) {
+      if (this.disabled) {
+        this.#internals.states.add('disabled');
+      } else {
+        this.#internals.states.delete('disabled');
+      }
+    }
+
     if (changes.has('pressed')) {
       if (this.pressed) {
         this.#internals.states.add('pressed');

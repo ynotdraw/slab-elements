@@ -4506,6 +4506,10 @@
               "name": "copied"
             },
             {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
               "description": "For `feedback-duration` after the clipboard refuses.",
               "name": "failed"
             }
@@ -10598,6 +10602,10 @@
             }
           ],
           "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
             {
               "description": "While it's open.",
               "name": "open"
@@ -19431,6 +19439,10 @@
               "name": "current"
             },
             {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
               "description": "While its Steps is `navigable`, so it can be moved to.",
               "name": "navigable"
             },
@@ -24024,6 +24036,10 @@
           ],
           "cssStates": [
             {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
               "description": "While it's pressed.",
               "name": "pressed"
             }
@@ -24445,6 +24461,12 @@
               "default": "'horizontal'",
               "description": "Which arrow keys move between the buttons. Where they sit is still up to\nyour styles.",
               "fieldName": "orientation"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
             }
           ],
           "superclass": {
@@ -24884,6 +24906,10 @@
             }
           ],
           "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
             {
               "description": "While it's open.",
               "name": "open"

@@ -124,3 +124,29 @@ test('has a version', { tag: '@miscellaneous' }, async ({ render, page }) => {
     /^\d+\.\d+\.\d+/,
   );
 });
+
+test(
+  "matches `:state(disabled)` while it's disabled",
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () => html`<slab-toggle-button disabled>Bold</slab-toggle-button>`,
+    );
+
+    const host = page.locator('slab-toggle-button');
+
+    await expect
+      .poll(() =>
+        host.evaluate((element) => element.matches(':state(disabled)')),
+      )
+      .toBe(true);
+
+    await setProperty(host, 'disabled', false);
+
+    await expect
+      .poll(() =>
+        host.evaluate((element) => element.matches(':state(disabled)')),
+      )
+      .toBe(false);
+  },
+);
