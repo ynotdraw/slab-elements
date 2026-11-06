@@ -14,7 +14,7 @@ usage: |
 
 Until it's pressed, it's a button showing the value, named by the label and then the value, so it reads as "Job name, 14 Alder Lane". Clicking it, or its label, starts editing, with the text selected so typing replaces it. Enter keeps what's typed and Escape discards it, and both put focus back on the button. Moving focus away keeps it too, so a click elsewhere or a Tab doesn't lose an edit.
 
-`value` is what was last committed, and it's what the form gets under `name`. It doesn't change while the input is typed into, only when an edit is committed, and that's when "change" is dispatched, if the value is different. The `value` attribute is the default, which a form reset goes back to. `edit()`, `commit()` and `cancel()` do what the keys do, and `editing` says which is showing.
+`value` is what was last committed, and it's what the form gets under `name`. It doesn't change while the input is typed into, only when an edit is committed, and that's when "input" and then "change" are dispatched, as a native `<select>` dispatches them, if the value is different. The `value` attribute is the default, which a form reset goes back to. `edit()`, `commit()` and `cancel()` do what the keys do, and `editing` says which is showing.
 
 While it's empty, the button shows `placeholder`, and `:state(empty)` styles it. A field that's disabled while it's being edited stops, and what was typed is discarded. For a field that's always an input, use [Text Field](../text-field/).
 

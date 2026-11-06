@@ -225,6 +225,10 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     cssStates: {
       editing: "While it's being edited.",
     },
+    events: {
+      input:
+        'When an edit that changes its value is committed, just before "change", as a native `<select>` dispatches it. Not as it\'s typed, since `value` only changes on commit.',
+    },
   },
   'slab-feed': {
     members: { items: 'Its Feed Items, in order.' },
