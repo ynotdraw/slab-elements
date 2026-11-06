@@ -84,6 +84,7 @@ declare global {
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} complete - When the user fills the last box.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
+ * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown.
  *
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
