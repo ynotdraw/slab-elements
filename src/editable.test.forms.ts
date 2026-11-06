@@ -251,3 +251,164 @@ test(
     ).toBe(true);
   },
 );
+
+test(
+  'marks its input invalid once reported, while editing',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`<slab-editable editing label="Label"></slab-editable>`,
+    );
+
+    const host = page.locator('slab-editable');
+    const input = page.getByTestId('input');
+
+    await callMethod(host, 'setCustomValidity', 'Message');
+    await expect(input).toHaveAttribute('aria-invalid', 'false');
+
+    await callMethod(host, 'reportValidity');
+    await expect(input).toHaveAttribute('aria-invalid', 'true');
+  },
+);
+
+test(
+  'is invalid with a custom validity message, shown once reported',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-editable label="Label"></slab-editable>`);
+
+    const host = page.locator('slab-editable');
+    const message = page.getByTestId('validity-message');
+
+    const isError = () => {
+      return host.evaluate((element) => element.matches(':state(error)'));
+    };
+
+    await callMethod(host, 'setCustomValidity', 'Message');
+
+    await expect(host).toHaveJSProperty('validity.customError', true);
+    await expect(host).toHaveJSProperty('validationMessage', 'Message');
+    await expect(host).toHaveJSProperty('willValidate', true);
+
+    // Checking shows nothing. Reporting does.
+    expect(await callMethod(host, 'checkValidity')).toBe(false);
+    await expect(message).toHaveCount(0);
+
+    expect(await callMethod(host, 'reportValidity')).toBe(false);
+    await expect(message).toHaveText('Message');
+    expect(await isError()).toBe(true);
+
+    await callMethod(host, 'setCustomValidity', '');
+
+    await expect(host).toHaveJSProperty('validity.valid', true);
+    await expect(host).toHaveJSProperty('validationMessage', '');
+    await expect(message).toHaveCount(0);
+    expect(await isError()).toBe(false);
+  },
+);
+
+test(
+  'takes a validity of its own',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-editable label="Label"></slab-editable>`);
+
+    const host = page.locator('slab-editable');
+
+    await host.evaluate<void, void, Editable>((element) => {
+      element.setValidity({ rangeUnderflow: true }, 'Message');
+    });
+
+    await expect(host).toHaveJSProperty('validity.rangeUnderflow', true);
+    await expect(host).toHaveJSProperty('validationMessage', 'Message');
+
+    await callMethod(host, 'setValidity');
+
+    await expect(host).toHaveJSProperty('validity.valid', true);
+  },
+);
+
+test(
+  'shows its validity message and takes focus when its form is submitted',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-editable label="Label"></slab-editable>
+          <button>Submit</button>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-editable');
+
+    let isSubmitted = false;
+
+    await page.exposeFunction('onSubmit', () => {
+      isSubmitted = true;
+    });
+
+    await page.locator('form').evaluate((form) => {
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        // @ts-expect-error Exposed above.
+        window.onSubmit();
+      });
+    });
+
+    await callMethod(host, 'setCustomValidity', 'Message');
+    await page.getByRole('button', { name: 'Submit' }).click();
+
+    await expect(page.getByTestId('validity-message')).toHaveText('Message');
+    await expect(page.getByTestId('preview')).toBeFocused();
+    expect(isSubmitted).toBe(false);
+  },
+);
+
+test(
+  'shows its validity message when focus leaves',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-editable label="Label"></slab-editable>`);
+
+    const host = page.locator('slab-editable');
+
+    await callMethod(host, 'setCustomValidity', 'Message');
+    await page.getByTestId('preview').focus();
+
+    await expect(page.getByTestId('validity-message')).toHaveCount(0);
+
+    await page.getByTestId('preview').blur();
+
+    await expect(page.getByTestId('validity-message')).toHaveText('Message');
+  },
+);
+
+test(
+  'hides its validity message when its form resets',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-editable label="Label"></slab-editable>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-editable');
+
+    await callMethod(host, 'setCustomValidity', 'Message');
+    await callMethod(host, 'reportValidity');
+
+    await expect(page.getByTestId('validity-message')).toHaveText('Message');
+
+    await page.locator('form').evaluate((form: HTMLFormElement) => {
+      form.reset();
+    });
+
+    await expect(page.getByTestId('validity-message')).toHaveCount(0);
+    await expect(host).toHaveJSProperty('validity.valid', false);
+  },
+);

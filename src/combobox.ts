@@ -89,8 +89,13 @@ declare global {
  * own entry, as a `<select multiple>` submits them. Text that names an Option
  * adds it, and with `allow-custom` so does text that names none.
  *
+ * `readonly` shows the value without letting the user change it: the input
+ * can't be typed in, the listbox doesn't open, and the tags are text rather
+ * than buttons. It's still focused, read and submitted, where `disabled` leaves
+ * it out of the form, and never invalid.
+ *
  * Style it through its parts and through `:state(disabled)`, `:state(empty)`,
- * `:state(error)`, `:state(open)` and `:state(required)`, and each Option
+ * `:state(error)`, `:state(open)`, `:state(readonly)` and `:state(required)`, and each Option
  * through `:state(active)`, `:state(disabled)` and `:state(selected)`. The
  * tags are `::part(tag)`, in `::part(tags)`.
  *
@@ -103,6 +108,7 @@ declare global {
  * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
  * @attr {string} [placeholder] - Shown while it's empty, as a native input's `placeholder`. It's a hint, not a label.
  * @attr {'bottom'|'top'} [placement='bottom'] - The side of the input the listbox opens on, when there's room. It flips when there isn't.
+ * @attr {boolean} [readonly=false] - Shows the value without letting the user change it. The listbox doesn't open and the tags can't be removed. It's still focusable and submitted, and never invalid, as a native read-only input isn't.
  * @attr {boolean} [required=false] - Makes it invalid while it has no value, as `required` does a native control.
  * @attr {string} [value=''] - The selected Option's value, or the typed text when `allow-custom` is set and it matches no Option. The first of `values` when `multiple` is set. Setting it selects the Option with that value, and only that one. Like a native input, the attribute is the default value and the property is the current one.
  * @attr {boolean} [virtual=false] - Lays out only the Options in or near view, for a Combobox with thousands. Give `::part(listbox)` a maximum block size so it scrolls. Options are taken to be the same height as each other.
@@ -122,6 +128,7 @@ declare global {
  * @cssstate empty - While no option matches what the user typed, for a "no results" message of your own.
  * @cssstate error - While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.
  * @cssstate open - While it's open.
+ * @cssstate readonly - While it's read-only.
  * @cssstate required - While it's required, for styles such as an asterisk.
  *
  * @fires {ToggleEvent} beforetoggle - Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed.
@@ -231,6 +238,14 @@ export default class Combobox extends LitElement {
 
   @property({ reflect: true })
   placeholder?: string;
+
+  /**
+   * Shows the value without letting the user change it. The listbox doesn't
+   * open and the tags can't be removed. It's still focusable and submitted,
+   * and never invalid, as a native read-only input isn't.
+   */
+  @property({ reflect: true, type: Boolean })
+  readonly = false;
 
   /**
    * The side of the input the listbox opens on, when there's room. It flips
@@ -461,6 +476,7 @@ export default class Combobox extends LitElement {
         aria-describedby=${this.multiple ? 'selected description' : 'description'}
         aria-expanded=${this.open ? 'true' : 'false'}
         aria-invalid=${this.#isShowValidationFeedback ? 'true' : 'false'}
+        aria-readonly=${this.readonly ? 'true' : 'false'}
         autocomplete="off"
         data-test="input"
         id="input"
@@ -469,6 +485,7 @@ export default class Combobox extends LitElement {
         role="combobox"
         type="text"
         ?disabled=${this.#isDisabled}
+        ?readonly=${this.readonly}
         @blur=${this.#onInputBlur}
         @change=${this.#onInputChange}
         @click=${this.#onInputClick}
@@ -616,6 +633,7 @@ export default class Combobox extends LitElement {
     this.#setState('disabled', this.#isDisabled);
     this.#setState('empty', visible.length === 0);
     this.#setState('open', this.open);
+    this.#setState('readonly', this.readonly);
     const toggle = this.#toggleEvents.update(this.open);
 
     if (toggle) {
@@ -632,8 +650,9 @@ export default class Combobox extends LitElement {
   }
 
   override willUpdate() {
-    // Nothing to show, or nothing to choose from.
-    if (this.#isDisabled || this.#visible.length === 0) {
+    // Nothing to show, or nothing to choose from, or nothing that can be
+    // chosen.
+    if (this.#isDisabled || this.readonly || this.#visible.length === 0) {
       this.open = false;
     }
   }
@@ -740,6 +759,7 @@ export default class Combobox extends LitElement {
   #tags = new TagsController(this, {
     input: () => this.#inputElementRef.value,
     isDisabled: () => this.#isDisabled,
+    isReadonly: () => this.readonly,
     label: (text) => this.removeLabel(text),
     onBlur: (event) => {
       this.#onBlur(event);
@@ -841,6 +861,17 @@ export default class Combobox extends LitElement {
     // Enter, Escape and the arrows belong to an input method while it's
     // composing.
     if (isComposing(event)) {
+      return;
+    }
+
+    // Enter still submits the form, as it does from a native read-only
+    // input, and the other keys are the input's own. Nothing opens or
+    // changes the value.
+    if (this.readonly) {
+      if (event.key === 'Enter') {
+        this.form?.requestSubmit();
+      }
+
       return;
     }
 
@@ -1227,7 +1258,11 @@ export default class Combobox extends LitElement {
       return;
     }
 
-    if (this.required && this.values.every((value) => value === '')) {
+    if (
+      this.required &&
+      !this.readonly &&
+      this.values.every((value) => value === '')
+    ) {
       this.#internals.setValidity(
         { customError: Boolean(this.validityMessage), valueMissing: true },
         browserValidationMessage(this.allowCustom ? 'fill' : 'select'),

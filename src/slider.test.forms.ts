@@ -200,7 +200,7 @@ test(
 );
 
 test(
-  'is always valid',
+  'is valid on its own',
   { tag: '@forms' },
   async ({ callMethod, render, page }) => {
     await render(() => html`<slab-slider label="Label"></slab-slider>`);
@@ -342,5 +342,153 @@ test(
     expect(
       await host.evaluate((element) => element.matches(':focus-within')),
     ).toBe(true);
+  },
+);
+
+test(
+  'is invalid with a custom validity message, shown once reported',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-slider label="Label"></slab-slider>`);
+
+    const host = page.locator('slab-slider');
+    const message = page.getByTestId('validity-message');
+
+    const isError = () => {
+      return host.evaluate((element) => element.matches(':state(error)'));
+    };
+
+    await callMethod(host, 'setCustomValidity', 'Message');
+
+    await expect(host).toHaveJSProperty('validity.customError', true);
+    await expect(host).toHaveJSProperty('validationMessage', 'Message');
+    await expect(host).toHaveJSProperty('willValidate', true);
+
+    // Checking shows nothing. Reporting does.
+    expect(await callMethod(host, 'checkValidity')).toBe(false);
+    await expect(message).toHaveCount(0);
+
+    expect(await callMethod(host, 'reportValidity')).toBe(false);
+    await expect(message).toHaveText('Message');
+    expect(await isError()).toBe(true);
+
+    await callMethod(host, 'setCustomValidity', '');
+
+    await expect(host).toHaveJSProperty('validity.valid', true);
+    await expect(host).toHaveJSProperty('validationMessage', '');
+    await expect(message).toHaveCount(0);
+    expect(await isError()).toBe(false);
+  },
+);
+
+test(
+  'takes a validity of its own',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-slider label="Label"></slab-slider>`);
+
+    const host = page.locator('slab-slider');
+
+    await host.evaluate<void, void, Slider>((element) => {
+      element.setValidity({ rangeUnderflow: true }, 'Message');
+    });
+
+    await expect(host).toHaveJSProperty('validity.rangeUnderflow', true);
+    await expect(host).toHaveJSProperty('validationMessage', 'Message');
+
+    // Invalid without a message of its own, which reads as empty.
+    await callMethod(host, 'setValidity', { customError: true });
+
+    await expect(host).toHaveJSProperty('validity.valid', false);
+    await expect(host).toHaveJSProperty('validationMessage', '');
+
+    await callMethod(host, 'setValidity');
+
+    await expect(host).toHaveJSProperty('validity.valid', true);
+  },
+);
+
+test(
+  'shows its validity message and takes focus when its form is submitted',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-slider label="Label"></slab-slider>
+          <button>Submit</button>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-slider');
+
+    let isSubmitted = false;
+
+    await page.exposeFunction('onSubmit', () => {
+      isSubmitted = true;
+    });
+
+    await page.locator('form').evaluate((form) => {
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        // @ts-expect-error Exposed above.
+        window.onSubmit();
+      });
+    });
+
+    await callMethod(host, 'setCustomValidity', 'Message');
+    await page.getByRole('button', { name: 'Submit' }).click();
+
+    await expect(page.getByTestId('validity-message')).toHaveText('Message');
+    await expect(page.getByRole('slider')).toBeFocused();
+    expect(isSubmitted).toBe(false);
+  },
+);
+
+test(
+  'shows its validity message when focus leaves',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-slider label="Label"></slab-slider>`);
+
+    const host = page.locator('slab-slider');
+
+    await callMethod(host, 'setCustomValidity', 'Message');
+    await page.getByRole('slider').focus();
+
+    await expect(page.getByTestId('validity-message')).toHaveCount(0);
+
+    await page.getByRole('slider').blur();
+
+    await expect(page.getByTestId('validity-message')).toHaveText('Message');
+  },
+);
+
+test(
+  'hides its validity message when its form resets',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-slider label="Label"></slab-slider>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-slider');
+
+    await callMethod(host, 'setCustomValidity', 'Message');
+    await callMethod(host, 'reportValidity');
+
+    await expect(page.getByTestId('validity-message')).toHaveText('Message');
+
+    await page.locator('form').evaluate((form: HTMLFormElement) => {
+      form.reset();
+    });
+
+    await expect(page.getByTestId('validity-message')).toHaveCount(0);
+    await expect(host).toHaveJSProperty('validity.valid', false);
   },
 );

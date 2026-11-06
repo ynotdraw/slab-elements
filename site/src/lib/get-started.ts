@@ -67,7 +67,7 @@ import 'slab-elements/tabs.panel.js';`,
   {
     id: 'frameworks',
     heading: 'In your framework',
-    text: "There's no wrapper package. The tag is the component, in React, Vue, Svelte, Rails, or plain HTML. React listens for events through a ref, Svelte needs nothing, and Vue needs to know which tags are custom elements. The [home page](#usage) shows the same Disclosure in each.",
+    text: "There's no wrapper package. The tag is the component, in React, Vue, Svelte, Rails, or plain HTML. React 19 and Svelte listen for an event through `on` and its exact name, such as `onchange` or `oncopy-error`, and Vue needs to know which tags are custom elements. The [home page](#usage) shows the same Disclosure in each.",
     code: {
       code: `import vue from '@vitejs/plugin-vue';
 
@@ -178,7 +178,7 @@ import type {} from 'slab-elements/react.js';`,
       label: 'slab.d.ts',
       lang: 'ts',
     },
-    coda: '`SlabElementProps` in `slab-elements/jsx.js` lists every tag and its properties, for any other framework.',
+    coda: 'Events are typed too: a handler such as `oncopy-error` in React and Svelte, or `@copy-error` in Vue, gets the event with the element as its `currentTarget`. For any other framework, `slab-elements/jsx.js` has `SlabElementProps`, every tag and its properties, and `SlabElementEvents`, every tag and its events.',
   },
   {
     id: 'browsers',
@@ -195,7 +195,7 @@ import type {} from 'slab-elements/react.js';`,
   {
     id: 'conventions',
     heading: 'The same everywhere',
-    text: 'Elements that do the same thing do it the same way. `multiple` lets more than one be chosen, and `value` is the first of `values`. A number is a number where the native element\'s is, as on Meter and Progress, and a string where it isn\'t, as on Slider and Number, which add `valueAsNumber`. Anything with `open` dispatches a `ToggleEvent` named "toggle" that doesn\'t bubble, as a popover does. Those that open a popup, such as Popover, Select, Combobox, Menu, Tooltip and the date pickers, dispatch "beforetoggle" first, and cancelling it keeps one from opening. `readonly` is on the fields where a native input has it, and the form controls for a set of choices are Checkbox Group and Radio Group, since toggle buttons aren\'t form controls.',
+    text: "Elements that do the same thing do it the same way. `multiple` lets more than one be chosen, and `value` is the first of `values`. A number is a number where the native element's is, as on Meter and Progress, and a string where it isn't, as on Slider and Number, which add `valueAsNumber`. Anything with `open` dispatches a `ToggleEvent` named \"toggle\" that doesn't bubble, as a popover does. Those that open a popup, such as Popover, Select, Combobox, Menu, Tooltip and the date pickers, dispatch \"beforetoggle\" first, and cancelling it keeps one from opening. `readonly` is on the fields that take typing, Combobox and Tags Input among them, and on Rating, and leaves the value focusable and submitted. Controls a native `readonly` does nothing to, like Checkbox, Select and Slider, don't have it. And the form controls for a set of choices are Checkbox Group and Radio Group, since toggle buttons aren't form controls.",
   },
 ];
 

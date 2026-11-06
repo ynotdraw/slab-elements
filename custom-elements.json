@@ -2373,13 +2373,17 @@
             },
             {
               "name": "description",
-              "description": "Text about the color picker, such as a hint"
+              "description": "Text about the color picker, and its validity message when it has one"
+            },
+            {
+              "name": "validity-message",
+              "description": "The validity message, which says why the value is invalid"
             }
           ],
           "slots": [
             {
               "name": "description",
-              "description": "Text about the color picker, such as a hint",
+              "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
               "type": {
                 "text": "Element | string"
               }
@@ -2560,12 +2564,30 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`. Empty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
               },
               "readonly": true,
               "description": "Its `ValidityState`, as a native control's."
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
+              },
+              "readonly": true,
+              "description": "Whether its validity is checked when its form submits. It isn't while it's disabled or read-only."
             },
             {
               "kind": "method",
@@ -2646,6 +2668,60 @@
                 }
               },
               "description": "Whether its value is valid. When it isn't, dispatches \"invalid\" and shows the validity message, as a native control's does."
+            },
+            {
+              "kind": "method",
+              "name": "resetValidityFeedback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears the validity feedback without changing `validity`."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does."
+            },
+            {
+              "kind": "method",
+              "name": "setValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "flags",
+                  "optional": true,
+                  "type": {
+                    "text": "ValidityStateFlags"
+                  }
+                },
+                {
+                  "name": "message",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`."
             },
             {
               "kind": "method",
@@ -2813,6 +2889,10 @@
             {
               "description": "While the user drags a thumb.",
               "name": "dragging"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
             }
           ],
           "superclass": {
@@ -3021,6 +3101,17 @@
               "attribute": "placeholder",
               "reflects": true,
               "description": "Shown while it's empty, as a native input's `placeholder`. It's a hint, not a label."
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows the value without letting the user change it. The listbox doesn't\nopen and the tags can't be removed. It's still focusable and submitted,\nand never invalid, as a native read-only input isn't.",
+              "attribute": "readonly",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3428,6 +3519,15 @@
               "description": "Shown while it's empty, as a native input's `placeholder`. It's a hint, not a label."
             },
             {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows the value without letting the user change it. The listbox doesn't\nopen and the tags can't be removed. It's still focusable and submitted,\nand never invalid, as a native read-only input isn't.",
+              "fieldName": "readonly"
+            },
+            {
               "name": "placement",
               "type": {
                 "text": "'bottom' | 'top'"
@@ -3480,6 +3580,10 @@
             {
               "description": "While it's open.",
               "name": "open"
+            },
+            {
+              "description": "While it's read-only.",
+              "name": "readonly"
             },
             {
               "description": "While it's required, for styles such as an asterisk.",
@@ -8154,7 +8258,11 @@
             },
             {
               "name": "description",
-              "description": "Text about the field"
+              "description": "Text about the field, and its validity message when it has one"
+            },
+            {
+              "name": "validity-message",
+              "description": "The validity message, which says why the value is invalid"
             }
           ],
           "slots": [
@@ -8279,6 +8387,33 @@
               "description": "The form it belongs to, or `null`."
             },
             {
+              "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`. Empty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true,
+              "description": "Its `ValidityState`, as a native control's."
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
+              },
+              "readonly": true,
+              "description": "Whether its validity is checked when its form submits. It isn't while it's disabled or read-only."
+            },
+            {
               "kind": "method",
               "name": "cancel",
               "return": {
@@ -8287,6 +8422,16 @@
                 }
               },
               "description": "Stops editing and discards what's typed."
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether its value is valid. Dispatches \"invalid\" when it isn't, as a native control's does."
             },
             {
               "kind": "method",
@@ -8367,6 +8512,70 @@
                 }
               ],
               "description": "Called by the browser when it restores the value, such as after the back button. Not for calling yourself."
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether its value is valid. When it isn't, dispatches \"invalid\" and shows the validity message, as a native control's does."
+            },
+            {
+              "kind": "method",
+              "name": "resetValidityFeedback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears the validity feedback without changing `validity`."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does."
+            },
+            {
+              "kind": "method",
+              "name": "setValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "flags",
+                  "optional": true,
+                  "type": {
+                    "text": "ValidityStateFlags"
+                  }
+                },
+                {
+                  "name": "message",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`."
             },
             {
               "kind": "method",
@@ -8482,6 +8691,10 @@
             {
               "description": "While it has no value.",
               "name": "empty"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
             }
           ],
           "superclass": {
@@ -15646,13 +15859,17 @@
             },
             {
               "name": "description",
-              "description": "Text about the slider, such as a hint"
+              "description": "Text about the slider, and its validity message when it has one"
+            },
+            {
+              "name": "validity-message",
+              "description": "The validity message, which says why the value is invalid"
             }
           ],
           "slots": [
             {
               "name": "description",
-              "description": "Text about the slider, such as a hint",
+              "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
               "type": {
                 "text": "Element | string"
               }
@@ -15812,12 +16029,30 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`. Empty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
               },
               "readonly": true,
               "description": "Its `ValidityState`, as a native control's."
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
+              },
+              "readonly": true,
+              "description": "Whether its validity is checked when its form submits. It isn't while it's disabled or read-only."
             },
             {
               "kind": "method",
@@ -15898,6 +16133,60 @@
                 }
               },
               "description": "Whether its value is valid. When it isn't, dispatches \"invalid\" and shows the validity message, as a native control's does."
+            },
+            {
+              "kind": "method",
+              "name": "resetValidityFeedback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears the validity feedback without changing `validity`."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does."
+            },
+            {
+              "kind": "method",
+              "name": "setValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "flags",
+                  "optional": true,
+                  "type": {
+                    "text": "ValidityStateFlags"
+                  }
+                },
+                {
+                  "name": "message",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`."
             },
             {
               "kind": "method",
@@ -16043,6 +16332,10 @@
             {
               "description": "While the user drags a thumb.",
               "name": "dragging"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
             }
           ],
           "superclass": {
@@ -17842,13 +18135,17 @@
             },
             {
               "name": "description",
-              "description": "Text about the slider, such as a hint"
+              "description": "Text about the slider, and its validity message when it has one"
+            },
+            {
+              "name": "validity-message",
+              "description": "The validity message, which says why the value is invalid"
             }
           ],
           "slots": [
             {
               "name": "description",
-              "description": "Text about the slider, such as a hint",
+              "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
               "type": {
                 "text": "Element | string"
               }
@@ -17975,6 +18272,15 @@
             },
             {
               "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "What's wrong, as the validity message says it: the message given to\n`setCustomValidity()` or `setValidity()`. Empty while it's valid.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
@@ -17990,6 +18296,15 @@
               },
               "description": "`value` as a number, as on a native range input.",
               "default": "NaN"
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "type": {
+                "text": "boolean"
+              },
+              "readonly": true,
+              "description": "Whether its validity is checked when its form submits. It isn't while it's disabled or read-only."
             },
             {
               "kind": "method",
@@ -18075,6 +18390,60 @@
                 }
               },
               "description": "Whether its value is valid. When it isn't, dispatches \"invalid\" and shows the validity message, as a native control's does."
+            },
+            {
+              "kind": "method",
+              "name": "resetValidityFeedback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears the validity feedback without changing `validity`."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does."
+            },
+            {
+              "kind": "method",
+              "name": "setValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "flags",
+                  "optional": true,
+                  "type": {
+                    "text": "ValidityStateFlags"
+                  }
+                },
+                {
+                  "name": "message",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`."
             },
             {
               "kind": "method",
@@ -18188,6 +18557,10 @@
             {
               "description": "While it's disabled.",
               "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
             }
           ],
           "superclass": {
@@ -21089,6 +21462,17 @@
             },
             {
               "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows the tags without letting the user add or remove any. It's still\nfocusable and submitted, and never invalid, as a native read-only input\nisn't.",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "removeLabel",
               "type": {
                 "text": "(text: string) => string"
@@ -21411,6 +21795,15 @@
               "description": "Shown while it's empty, as a native input's `placeholder`. It's a hint, not a label."
             },
             {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows the tags without letting the user add or remove any. It's still\nfocusable and submitted, and never invalid, as a native read-only input\nisn't.",
+              "fieldName": "readonly"
+            },
+            {
               "name": "required",
               "type": {
                 "text": "boolean"
@@ -21445,6 +21838,10 @@
             {
               "description": "While it has `max` tags.",
               "name": "full"
+            },
+            {
+              "description": "While it's read-only.",
+              "name": "readonly"
             },
             {
               "description": "While it's required, for styles such as an asterisk.",

@@ -162,4 +162,16 @@ export default css`
   :host(:state(disabled)) [part~='swatch'] {
     cursor: not-allowed;
   }
+
+  [part~='validity-message'] {
+    color: var(--ember-deep);
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-block-start: 0.375rem;
+
+    &::before {
+      content: '■ ' / '';
+    }
+  }
 `;

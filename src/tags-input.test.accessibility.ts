@@ -103,3 +103,25 @@ test(
     await expect(page.getByRole('textbox', { name: 'Label' })).toBeVisible();
   },
 );
+
+test(
+  'readonly=${true}',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-tags-input
+          label="Label"
+          readonly
+          value="red"
+        ></slab-tags-input>`,
+    );
+
+    await expect(page.getByRole('textbox')).toHaveAttribute(
+      'aria-readonly',
+      'true',
+    );
+
+    await expect(page).toBeAccessible('slab-tags-input');
+  },
+);

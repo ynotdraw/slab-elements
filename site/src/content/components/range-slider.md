@@ -18,6 +18,8 @@ Inside each thumb is a visually hidden range input. It's what has focus and what
 
 Screenreaders read each thumb's value as a bare number. When it means more than that, set `formatValue` to a function of the value, such as `` (value) => `$${value}` ``, and they'll read what it returns instead.
 
+Its range is always in bounds, so it's never invalid on its own. For a rule of your own, such as a minimum width, call `setCustomValidity()` with a message. It shows in `::part(validity-message)`, and the host matches `:state(error)`, once validity is reported, as on [Text Field](../text-field/): when focus leaves the slider, when its form is submitted, or on `reportValidity()`.
+
 ## Keyboard
 
 | Key                   | What it does                                                                                   |

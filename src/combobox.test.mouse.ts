@@ -182,3 +182,42 @@ test(
     await expect(page.getByRole('listbox')).toBeVisible();
   },
 );
+
+test(
+  'does not open on a click when read-only',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label" readonly>
+          <slab-option>Apple</slab-option>
+        </slab-combobox>`,
+    );
+
+    await page.getByRole('combobox').click();
+
+    await expect(page.getByRole('listbox')).toBeHidden();
+    await expect(page.getByRole('combobox')).toBeFocused();
+  },
+);
+
+test(
+  'shows its tags as text when read-only and `multiple`',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label" multiple readonly>
+          <slab-option selected value="apple">Apple</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await expect(page.getByRole('button')).toHaveCount(0);
+
+    await page.getByTestId('tag').click();
+
+    await expect(host).toHaveJSProperty('values', ['apple']);
+  },
+);

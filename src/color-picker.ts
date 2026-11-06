@@ -11,9 +11,11 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { live } from 'lit/directives/live.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
+import { when } from 'lit/directives/when.js';
 import slab from './library/version.js';
 import afterReflection from './library/after-reflection.js';
 import AriaForwarding from './library/aria-forwarding.js';
+import CustomValidity from './library/custom-validity.js';
 import customElement from './library/custom-element.js';
 import required from './library/required.js';
 import RovingTabindex from './library/roving-tabindex.js';
@@ -79,12 +81,18 @@ const controls: Record<keyof Color, Control> = {
  * space-separated list of colors, shown as a listbox whose selected option is
  * the swatch that's `value`. Selection follows focus.
  *
+ * Every color is a valid value, so it's never invalid on its own. For a rule
+ * of your own, such as enough contrast, call `setCustomValidity()` or
+ * `setValidity()`. The validity message shows in its description, as on Text
+ * Field, once validity is reported: when focus leaves it, its form is
+ * submitted, or `reportValidity()` is called.
+ *
  * What makes a color picker a color picker is functional, so that's done
  * here: the area is the hue from white to fully saturated, darkening toward
  * black. The hue slider is the spectrum, the alpha slider is clear to opaque,
  * and each thumb and swatch is placed and colored. Give the area and the
  * sliders a size, and style the rest through its parts and through
- * `:state(disabled)` and `:state(dragging)`. A thumb isn't focused itself, so
+ * `:state(disabled)`, `:state(dragging)` and `:state(error)`. A thumb isn't focused itself, so
  * one whose input has visible focus has a `focus-visible` part for a focus
  * ring. The container sets
  * `--color-picker-hue`, `--color-picker-opaque` and `--color-picker-value`,
@@ -105,14 +113,14 @@ const controls: Record<keyof Color, Control> = {
  * @attr {string} [swatches-label] - Names the swatches, after `label`. "Swatches" in English when unset.
  * @attr {string} [value='#000000'] - Like a native input's `value`, the attribute is the default and the property is the current value. "#000000" when unset.
  *
- * @slot {Element | string} [description] - Text about the color picker, such as a hint
+ * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
  *
  * @csspart alpha - The alpha slider's track
  * @csspart alpha-thumb - The alpha slider's thumb
  * @csspart area - The saturation and brightness area
  * @csspart area-thumb - The area's thumb
  * @csspart container - The label, the controls and the description
- * @csspart description - Text about the color picker, such as a hint
+ * @csspart description - Text about the color picker, and its validity message when it has one
  * @csspart focus-visible - The thumb whose input has visible focus
  * @csspart hex - The text input for the color as a hex code
  * @csspart hue - The hue slider's track
@@ -121,9 +129,11 @@ const controls: Record<keyof Color, Control> = {
  * @csspart selected - The swatch that's value
  * @csspart swatch - A swatch
  * @csspart swatches - The swatches
+ * @csspart validity-message - The validity message, which says why the value is invalid
  *
  * @cssstate disabled - While it's disabled.
  * @cssstate dragging - While the user drags a thumb.
+ * @cssstate error - While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.
  *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
@@ -132,7 +142,13 @@ const controls: Record<keyof Color, Control> = {
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
  * @readonly
+ * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`. Empty while it's valid.
+ *
+ * @readonly
  * @prop {ValidityState} validity - Its `ValidityState`, as a native control's.
+ *
+ * @readonly
+ * @prop {boolean} willValidate - Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.
  *
  * @method checkValidity - Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.
  * @returns boolean
@@ -147,6 +163,15 @@ const controls: Record<keyof Color, Control> = {
  *
  * @method reportValidity - Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.
  * @returns boolean
+ *
+ * @method resetValidityFeedback - Clears the validity feedback without changing `validity`.
+ *
+ * @method setCustomValidity - Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.
+ * @param {string} message
+ *
+ * @method setValidity - Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.
+ * @param {ValidityStateFlags} [flags]
+ * @param {string} [message]
  */
 @customElement('slab-color-picker')
 export default class ColorPicker extends LitElement {
@@ -257,12 +282,24 @@ export default class ColorPicker extends LitElement {
     return this.#internals.form;
   }
 
+  /**
+   * What's wrong, as the validity message says it: the message given to
+   * `setCustomValidity()` or `setValidity()`. Empty while it's valid.
+   */
+  get validationMessage(): string {
+    return this.#customValidity.validationMessage;
+  }
+
   get validity(): ValidityState {
     return this.#internals.validity;
   }
 
+  get willValidate(): boolean {
+    return this.#internals.willValidate;
+  }
+
   checkValidity(): boolean {
-    return this.#internals.checkValidity();
+    return this.#customValidity.checkValidity();
   }
 
   override focus(options?: FocusOptions) {
@@ -277,6 +314,7 @@ export default class ColorPicker extends LitElement {
 
   formResetCallback(): void {
     this.value = this.getAttribute('value') ?? '';
+    this.resetValidityFeedback();
   }
 
   formStateRestoreCallback(state: string | File | FormData | null): void {
@@ -342,6 +380,7 @@ export default class ColorPicker extends LitElement {
           -->
           <input
             aria-describedby="description"
+            aria-invalid=${this.#customValidity.isShowingFeedback ? 'true' : 'false'}
             aria-label=${this.areaLabel ?? this.#strings.value.colorPickerArea}
             aria-labelledby="label area-thumb"
             aria-valuetext=${areaText}
@@ -358,6 +397,7 @@ export default class ColorPicker extends LitElement {
 
           <input
             aria-describedby="description"
+            aria-invalid=${this.#customValidity.isShowingFeedback ? 'true' : 'false'}
             aria-label=${this.brightnessLabel ?? this.#strings.value.colorPickerBrightness}
             aria-labelledby="label brightness-thumb"
             aria-valuetext=${brightnessText}
@@ -392,6 +432,7 @@ export default class ColorPicker extends LitElement {
           <!-- @part hue-thumb - The hue slider's thumb -->
           <input
             aria-describedby="description"
+            aria-invalid=${this.#customValidity.isShowingFeedback ? 'true' : 'false'}
             aria-label=${this.hueLabel ?? this.#strings.value.colorPickerHue}
             aria-labelledby="label hue-thumb"
             data-channel="hue"
@@ -427,6 +468,7 @@ export default class ColorPicker extends LitElement {
                 <!-- @part alpha-thumb - The alpha slider's thumb -->
                 <input
                   aria-describedby="description"
+                  aria-invalid=${this.#customValidity.isShowingFeedback ? 'true' : 'false'}
                   aria-label=${this.alphaLabel ?? this.#strings.value.colorPickerAlpha}
                   aria-labelledby="label alpha-thumb"
                   aria-valuetext=${String(Math.round(alpha)) + '%'}
@@ -447,6 +489,7 @@ export default class ColorPicker extends LitElement {
 
       <input
         aria-describedby="description"
+        aria-invalid=${this.#customValidity.isShowingFeedback ? 'true' : 'false'}
         aria-label=${this.hexLabel ?? this.#strings.value.colorPickerHex}
         aria-labelledby="label hex"
         autocomplete="off"
@@ -495,17 +538,42 @@ export default class ColorPicker extends LitElement {
           : nothing
       }
 
-      <slot id="description" name="description" part="description">
+      <div id="description" part="description">
         <!--
-          Text about the color picker, such as a hint
-          @type {Element | string}
+          Text about the color picker, and its validity message when it has one
         -->
-      </slot>
+        <slot name="description">
+          <!-- @type {Element | string} -->
+        </slot>
+
+        ${when(
+          this.#customValidity.isShowingFeedback && this.validationMessage,
+          () =>
+            html`<span data-test="validity-message" part="validity-message">
+              ${this.validationMessage}
+            </span>`,
+        )}
+      </div>
     </div>`;
   }
 
   reportValidity(): boolean {
-    return this.#internals.reportValidity();
+    return this.#customValidity.reportValidity();
+  }
+
+  /**
+   * Clears the validity feedback without changing `validity`.
+   */
+  resetValidityFeedback(): void {
+    this.#customValidity.resetFeedback();
+  }
+
+  setCustomValidity(message: string): void {
+    this.#customValidity.setCustomValidity(message);
+  }
+
+  setValidity(flags?: ValidityStateFlags, message?: string): void {
+    this.#customValidity.setValidity(flags, message);
   }
 
   // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
@@ -514,6 +582,8 @@ export default class ColorPicker extends LitElement {
     if (changes.has('disabled') || changes.has('isFormDisabled')) {
       this.#setState('disabled', this.#isDisabled);
     }
+
+    this.#setState('error', this.#customValidity.isShowingFeedback);
 
     this.#rovingTabindex.makeTabbable(
       this.#swatchElements.find(
@@ -557,6 +627,12 @@ export default class ColorPicker extends LitElement {
   });
 
   #color: Color = black;
+
+  #customValidity = new CustomValidity(this, {
+    anchor: () => this.#areaInputElementRef.value,
+    internals: () => this.#internals,
+    isDisabled: () => this.#isDisabled,
+  });
 
   // The control being dragged and `value` before the pointer went down, to
   // tell whether the drag changed anything.
@@ -629,8 +705,18 @@ export default class ColorPicker extends LitElement {
         : undefined;
   };
 
-  #onFocusOut = () => {
+  #onFocusOut = (event: FocusEvent) => {
     this.focusVisibleThumb = undefined;
+
+    // Only when focus leaves the picker. Moving between its controls is
+    // still being in it.
+    const isInside =
+      event.relatedTarget instanceof Node &&
+      this.renderRoot.contains(event.relatedTarget);
+
+    if (!isInside) {
+      this.#customValidity.reportOnBlur();
+    }
   };
 
   // The "#" is optional, since it's easy to leave off.
