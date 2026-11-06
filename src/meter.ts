@@ -50,6 +50,10 @@ declare global {
  * @csspart label - The label
  * @csspart meter - The meter
  *
+ * @cssstate even-less-good - While its value is in the region furthest from the optimum one.
+ * @cssstate optimum - While its value is in the optimum region, as a native `<meter>` works it out.
+ * @cssstate suboptimum - While its value is in a region next to the optimum one.
+ *
  * @prop {(value: number) => string | undefined} formatValue - What screenreaders read for the value, such as "3 of 5 GB" rather than "3". The value itself when unset.
  */
 @customElement('slab-meter')

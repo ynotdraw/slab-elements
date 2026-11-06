@@ -35,6 +35,10 @@ declare global {
  *
  * @slot {Element | string} - The label, plus anything else a design puts in an Option
  *
+ * @cssstate active - While it's the active one, which the keyboard moves through while focus stays on its container.
+ * @cssstate disabled - While it's disabled.
+ * @cssstate selected - While it's selected.
+ *
  * @readonly
  * @prop {string} text - What the user reads as the Option's name: its label, or its text when it has no label.
  */

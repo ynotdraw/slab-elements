@@ -52,6 +52,11 @@ declare global {
  * @csspart switch - The switch itself
  * @csspart validity-message - The validity message, which says why the value is invalid
  *
+ * @cssstate checked - While it's checked.
+ * @cssstate disabled - While it's disabled.
+ * @cssstate error - While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.
+ * @cssstate required - While it's required, for styles such as an asterisk.
+ *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  *

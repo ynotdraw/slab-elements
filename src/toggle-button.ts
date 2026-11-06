@@ -44,6 +44,8 @@ declare global {
  *
  * @csspart button - The button
  *
+ * @cssstate pressed - While it's pressed.
+ *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  */

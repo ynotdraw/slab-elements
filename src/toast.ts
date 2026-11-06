@@ -69,6 +69,8 @@ declare global {
  *
  * @csspart region - The region it's shown in
  *
+ * @cssstate open - While it's shown.
+ *
  * @fires {Event} dismiss - When it's dismissed, by Escape, its timer or `dismiss()`. Cancel it to keep it shown.
  *
  * @readonly

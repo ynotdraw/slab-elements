@@ -92,6 +92,9 @@ interface Drag {
  * @csspart start - The start thumb
  * @csspart track - The thumbs and the range between them
  *
+ * @cssstate disabled - While it's disabled.
+ * @cssstate dragging - While the user drags a thumb.
+ *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  *

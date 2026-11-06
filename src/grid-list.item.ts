@@ -60,6 +60,11 @@ declare global {
  *
  * @csspart cell - Holds the content
  *
+ * @cssstate active - While it's the active one, which the keyboard moves through while focus stays on its container.
+ * @cssstate disabled - While it's disabled.
+ * @cssstate selectable - While its Grid List is selectable.
+ * @cssstate selected - While it's selected.
+ *
  * @readonly
  * @prop {HTMLElement[]} controls - What in the row can take focus, in order, other than disabled controls.
  *
