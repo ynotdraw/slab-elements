@@ -23,6 +23,8 @@ usage: |
   </slab-radio-group>
 ---
 
+The group dispatches no "input" or "change" of its own. Each Radio's bubble up through it, as a native radio's do through a `<fieldset>`, so listen on the group and read its `value`.
+
 ## Keyboard
 
 | Key                   | What it does                                                                            |

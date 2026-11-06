@@ -34,6 +34,10 @@ declare global {
  * between them, wrapping at each end and skipping disabled ones. In a
  * right-to-left page, Left and Right swap, as they do for native radios.
  *
+ * It dispatches no "input" or "change" of its own. A Radio's bubble up through
+ * it, as a native radio's do through a `<fieldset>`, so a listener on the group
+ * hears every one and reads the group's `value`.
+ *
  * Style it through its parts and through `:state(disabled)`, `:state(error)`,
  * and `:state(required)`. How the Radios are arranged is layout, so it's left
  * to the styles around them.

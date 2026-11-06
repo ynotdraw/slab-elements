@@ -46,6 +46,7 @@ declare global {
  *
  * @cssstate complete - While its `status` is "complete".
  * @cssstate current - While its `status` is "current".
+ * @cssstate disabled - While it's disabled.
  * @cssstate navigable - While its Steps is `navigable`, so it can be moved to.
  * @cssstate upcoming - While its `status` is "upcoming".
  *
@@ -130,6 +131,10 @@ export default class Step extends LitElement {
   }
 
   override updated(changes: PropertyValues<this>) {
+    if (changes.has('disabled')) {
+      this.#setState('disabled', this.disabled);
+    }
+
     if (changes.has('navigable')) {
       this.#setState('navigable', this.navigable);
     }

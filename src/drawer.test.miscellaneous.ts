@@ -77,3 +77,25 @@ test(
     );
   },
 );
+
+test(
+  "matches `:state(open)` while it's open",
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () => html`<slab-drawer label="Label" open>Content</slab-drawer>`,
+    );
+
+    const host = page.locator('slab-drawer');
+
+    await expect
+      .poll(() => host.evaluate((element) => element.matches(':state(open)')))
+      .toBe(true);
+
+    await setProperty(host, 'open', false);
+
+    await expect
+      .poll(() => host.evaluate((element) => element.matches(':state(open)')))
+      .toBe(false);
+  },
+);

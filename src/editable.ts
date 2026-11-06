@@ -36,7 +36,8 @@ declare global {
  *
  * `value` is what was last committed, and it's what the form gets under
  * `name`. It doesn't change as the input is typed into, only when an edit is
- * committed, which is when "change" is dispatched.
+ * committed, which is when "input" and "change" are dispatched, one after the
+ * other, as a native `<select>` dispatches them.
  *
  * It's never invalid on its own. For a rule of your own, such as a name that
  * can't be empty, call `setCustomValidity()` or `setValidity()`, from "change"
@@ -71,6 +72,7 @@ declare global {
  * @cssstate error - While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.
  *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
+ * @fires {Event} input - When an edit that changes its value is committed, just before "change", as a native `<select>` dispatches it. Not as it's typed, since `value` only changes on commit.
  * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown.
  *
  * @readonly
@@ -477,8 +479,12 @@ export default class Editable extends LitElement {
     // render, and so nothing typed to commit.
     const input = this.#inputElementRef.value;
 
+    // "input" and then "change", together, as a native `<select>` dispatches
+    // them, since `value` changes once, on commit, rather than as it's typed.
     if (isCommit && input && input.value !== this.value) {
       this.value = input.value;
+
+      this.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
 
       this.dispatchEvent(
         new Event('change', { bubbles: true, composed: true }),

@@ -82,6 +82,7 @@ declare global {
  *
  * @cssstate disabled - While it's disabled.
  * @cssstate error - While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.
+ * @cssstate open - While it's open.
  * @cssstate readonly - While it's read-only.
  * @cssstate required - While it's required, for styles such as an asterisk.
  *
@@ -276,6 +277,12 @@ export default class DatePicker extends DateField {
       // A disabled or readonly one stays closed, so `open` goes back to the
       // popover's word for it.
       this.open = popover?.matches(':popover-open') ?? false;
+    }
+
+    if (this.open) {
+      this.internals.states.add('open');
+    } else {
+      this.internals.states.delete('open');
     }
   }
 
