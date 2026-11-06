@@ -14169,7 +14169,7 @@
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
             },
             {
-              "name": "toggle",
+              "name": "reveal-change",
               "type": {
                 "text": "Event"
               },

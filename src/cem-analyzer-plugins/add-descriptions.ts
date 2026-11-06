@@ -277,8 +277,6 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     events: {
       'reveal-change':
         'When the user shows or hides the password. Read `revealed` for which.',
-      toggle:
-        'When the user shows or hides the password. Read `revealed` for which.',
     },
   },
   'slab-pin-input': {

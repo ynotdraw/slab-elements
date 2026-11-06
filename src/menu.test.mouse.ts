@@ -286,7 +286,7 @@ test(
   'keeps a submenu open when the pointer crosses another Menu Item on its way in',
   { tag: '@mouse' },
   async ({ render, page }) => {
-    await page.clock.install();
+    await page.clock.install({ time: 0 });
 
     await render(
       () =>
@@ -300,14 +300,21 @@ test(
         </slab-menu>`,
     );
 
+    // Paused, so only `runFor()` moves time on. Otherwise a slow hover over
+    // "Email" lets time run past the delay for "Two", which closes the submenu
+    // before the pointer gets there.
+    await page.clock.pauseAt(60_000);
+
     const host = page.locator('slab-menu slab-menu');
     const trigger = page.getByRole('menuitem', { name: 'Share' });
+    const email = page.getByRole('menuitem', { name: 'Email' });
 
     await trigger.hover();
     await page.clock.runFor(200);
+    await expect(email).toBeVisible();
     await page.getByRole('menuitem', { name: 'Two' }).hover();
     await page.clock.runFor(100);
-    await page.getByRole('menuitem', { name: 'Email' }).hover();
+    await email.hover();
     await page.clock.runFor(500);
 
     await expect(host).toHaveJSProperty('open', true);

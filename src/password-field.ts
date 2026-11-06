@@ -82,7 +82,7 @@ declare global {
  *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
- * @fires {Event} toggle - When the user shows or hides the password. Read `revealed` for which.
+ * @fires {Event} reveal-change - When the user shows or hides the password. Read `revealed` for which.
  *
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
@@ -554,7 +554,10 @@ export default class PasswordField extends LitElement {
 
   #onToggleButtonClick() {
     this.revealed = !this.revealed;
-    this.dispatchEvent(new Event('toggle', { bubbles: true, composed: true }));
+
+    this.dispatchEvent(
+      new Event('reveal-change', { bubbles: true, composed: true }),
+    );
   }
 
   #setState(state: string, isActive: boolean) {
