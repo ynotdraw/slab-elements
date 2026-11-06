@@ -10,9 +10,11 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { live } from 'lit/directives/live.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
+import { when } from 'lit/directives/when.js';
 import slab from './library/version.js';
 import afterReflection from './library/after-reflection.js';
 import AriaForwarding from './library/aria-forwarding.js';
+import CustomValidity from './library/custom-validity.js';
 import customElement from './library/custom-element.js';
 import StringsController from './library/strings.js';
 import required from './library/required.js';
@@ -62,11 +64,17 @@ interface Drag {
  * function of it that says what it means, such as "$40", which becomes each
  * input's `aria-valuetext`.
  *
+ * Its range is always in bounds, so it's never invalid on its own. For a rule
+ * of your own, such as a minimum width, call `setCustomValidity()` or
+ * `setValidity()`. The validity message shows in its description, as on Text
+ * Field, once validity is reported: when focus leaves it, its form is
+ * submitted, or `reportValidity()` is called.
+ *
  * Placing the thumbs and the range between them along the track is what a
  * slider does, so that's functional and done here: each thumb is centered on
  * its value, and the range spans from one to the other. Give the track a size,
- * and style the rest through its parts and through `:state(disabled)` and
- * `:state(dragging)`. Focus is on the input inside a thumb, so a thumb whose
+ * and style the rest through its parts and through `:state(disabled)`,
+ * `:state(dragging)` and `:state(error)`. Focus is on the input inside a thumb, so a thumb whose
  * input has visible focus has a `focus-visible` part for a focus ring.
  *
  * @attr {string} label - Names the group. Each thumb is named by it and its own label.
@@ -81,16 +89,17 @@ interface Drag {
  * @attr {number} [start-value] - Like a native input's `value`, the attribute is the default and the property is the current value. Between `min` and `end-value`, on a step. `min` when unset.
  * @attr {number} [step=1] - How far apart the values either end can take are, as a native range input's `step`.
  *
- * @slot {Element | string} [description] - Text about the slider, such as a hint
+ * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
  *
  * @csspart container - The label, the track and the description
- * @csspart description - Text about the slider, such as a hint
+ * @csspart description - Text about the slider, and its validity message when it has one
  * @csspart end - The end thumb
  * @csspart focus-visible - The thumb whose input has visible focus
  * @csspart label - The label
  * @csspart range - The part of the track between the thumbs
  * @csspart start - The start thumb
  * @csspart track - The thumbs and the range between them
+ * @csspart validity-message - The validity message, which says why the value is invalid
  *
  * @cssstate disabled - While it's disabled.
  * @cssstate dragging - While the user drags a thumb.
@@ -104,7 +113,13 @@ interface Drag {
  * @prop {(value: number) => string | undefined} formatValue - What screenreaders read for each thumb's value, such as "$40" rather than "40". The value itself when unset.
  *
  * @readonly
+ * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`. Empty while it's valid.
+ *
+ * @readonly
  * @prop {ValidityState} validity - Its `ValidityState`, as a native control's.
+ *
+ * @readonly
+ * @prop {boolean} willValidate - Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.
  *
  * @method checkValidity - Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.
  * @returns boolean
@@ -119,6 +134,15 @@ interface Drag {
  *
  * @method reportValidity - Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.
  * @returns boolean
+ *
+ * @method resetValidityFeedback - Clears the validity feedback without changing `validity`.
+ *
+ * @method setCustomValidity - Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.
+ * @param {string} message
+ *
+ * @method setValidity - Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.
+ * @param {ValidityStateFlags} [flags]
+ * @param {string} [message]
  */
 @customElement('slab-range-slider')
 export default class RangeSlider extends LitElement {
@@ -227,12 +251,24 @@ export default class RangeSlider extends LitElement {
     return this.#internals.form;
   }
 
+  /**
+   * What's wrong, as the validity message says it: the message given to
+   * `setCustomValidity()` or `setValidity()`. Empty while it's valid.
+   */
+  get validationMessage(): string {
+    return this.#customValidity.validationMessage;
+  }
+
   get validity(): ValidityState {
     return this.#internals.validity;
   }
 
+  get willValidate(): boolean {
+    return this.#internals.willValidate;
+  }
+
   checkValidity(): boolean {
-    return this.#internals.checkValidity();
+    return this.#customValidity.checkValidity();
   }
 
   override focus(options?: FocusOptions) {
@@ -248,6 +284,7 @@ export default class RangeSlider extends LitElement {
   formResetCallback(): void {
     this.startValue = toNumber(this.getAttribute('start-value'));
     this.endValue = toNumber(this.getAttribute('end-value'));
+    this.resetValidityFeedback();
   }
 
   formStateRestoreCallback(state: string | File | FormData | null): void {
@@ -314,6 +351,7 @@ export default class RangeSlider extends LitElement {
           -->
           <input
             aria-describedby="description"
+            aria-invalid=${this.#customValidity.isShowingFeedback ? 'true' : 'false'}
             aria-label=${this.startLabel ?? this.#strings.value.rangeSliderMinimum}
             aria-labelledby="label start"
             aria-valuetext=${ifDefined(this.formatValue?.(start))}
@@ -342,6 +380,7 @@ export default class RangeSlider extends LitElement {
           <!-- @part end - The end thumb -->
           <input
             aria-describedby="description"
+            aria-invalid=${this.#customValidity.isShowingFeedback ? 'true' : 'false'}
             aria-label=${this.endLabel ?? this.#strings.value.rangeSliderMaximum}
             aria-labelledby="label end"
             aria-valuetext=${ifDefined(this.formatValue?.(end))}
@@ -362,17 +401,40 @@ export default class RangeSlider extends LitElement {
         </div>
       </div>
 
-      <slot id="description" name="description" part="description">
-        <!--
-          Text about the slider, such as a hint
-          @type {Element | string}
-        -->
-      </slot>
+      <div id="description" part="description">
+        <!-- Text about the slider, and its validity message when it has one -->
+        <slot name="description">
+          <!-- @type {Element | string} -->
+        </slot>
+
+        ${when(
+          this.#customValidity.isShowingFeedback && this.validationMessage,
+          () =>
+            html`<span data-test="validity-message" part="validity-message">
+              ${this.validationMessage}
+            </span>`,
+        )}
+      </div>
     </div>`;
   }
 
   reportValidity(): boolean {
-    return this.#internals.reportValidity();
+    return this.#customValidity.reportValidity();
+  }
+
+  /**
+   * Clears the validity feedback without changing `validity`.
+   */
+  resetValidityFeedback(): void {
+    this.#customValidity.resetFeedback();
+  }
+
+  setCustomValidity(message: string): void {
+    this.#customValidity.setCustomValidity(message);
+  }
+
+  setValidity(flags?: ValidityStateFlags, message?: string): void {
+    this.#customValidity.setValidity(flags, message);
   }
 
   // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
@@ -382,6 +444,7 @@ export default class RangeSlider extends LitElement {
       this.#setState('disabled', this.#isDisabled);
     }
 
+    this.#setState('error', this.#customValidity.isShowingFeedback);
     this.#updateFormValue();
   }
 
@@ -418,6 +481,12 @@ export default class RangeSlider extends LitElement {
   // thumbs are on top of each other and the drag hasn't gone either way yet.
   // `start` and `end` are what they were before the pointer went down, to
   // tell whether the drag changed anything.
+  #customValidity = new CustomValidity(this, {
+    anchor: () => this.#startInputElementRef.value,
+    internals: () => this.#internals,
+    isDisabled: () => this.#isDisabled,
+  });
+
   #drag?: Drag;
 
   #endElementRef = createRef<HTMLDivElement>();
@@ -466,8 +535,18 @@ export default class RangeSlider extends LitElement {
 
   // After "pointerup" and "pointercancel" both, so a drag the browser takes
   // over, such as to scroll, still ends.
-  #onInputBlur = () => {
+  #onInputBlur = (event: FocusEvent) => {
     this.focusVisibleThumb = undefined;
+
+    // Only when focus leaves the slider. Moving from one thumb to the other
+    // is still being in it.
+    const isInside =
+      event.relatedTarget instanceof Node &&
+      this.renderRoot.contains(event.relatedTarget);
+
+    if (!isInside) {
+      this.#customValidity.reportOnBlur();
+    }
   };
 
   // The input's own "change" doesn't compose, so it never leaves the shadow

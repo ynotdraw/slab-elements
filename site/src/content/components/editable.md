@@ -18,6 +18,8 @@ Until it's pressed, it's a button showing the value, named by the label and then
 
 While it's empty, the button shows `placeholder`, and `:state(empty)` styles it. A field that's disabled while it's being edited stops, and what was typed is discarded. For a field that's always an input, use [Text Field](../text-field/).
 
+It's never invalid on its own. For a rule of your own, such as a name that can't be empty, call `setCustomValidity()` with a message from its "change" listener. It shows in `::part(validity-message)`, and the host matches `:state(error)`, once validity is reported, as on [Text Field](../text-field/): when focus leaves, when its form is submitted, or on `reportValidity()`.
+
 ## Keyboard
 
 | Key          | What it does                                                         |
