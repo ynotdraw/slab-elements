@@ -9,6 +9,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { property } from 'lit/decorators.js';
 import slab from './library/version.js';
 import customElement from './library/custom-element.js';
+import ToggleEvents from './library/toggle-events.js';
 import styles from './dialog.styles.js';
 
 declare global {
@@ -53,6 +54,7 @@ declare global {
  *
  * @fires {Event} cancel - When the user asks to close it, with Escape or, with `closedby="any"`, a click outside. Cancel it to keep it open, as a native dialog's.
  * @fires {Event} close - When it closes, as a native dialog's does.
+ * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
  * @prop {string} returnValue - The `<dialog>`'s, so `close(returnValue)` and a `<form method="dialog">` set it the way they do natively.
  *
@@ -213,6 +215,14 @@ export default class Dialog extends LitElement {
     } else if (!this.open && dialog.open) {
       dialog.close();
     }
+
+    // After the `<dialog>` has opened or closed, so a listener finds it as
+    // "toggle" says.
+    const toggle = this.#toggleEvents.update(this.open);
+
+    if (toggle) {
+      this.dispatchEvent(new ToggleEvent('toggle', toggle));
+    }
   }
 
   // Functional styles go in here rather than in `styles`, so a subclass that
@@ -237,6 +247,8 @@ export default class Dialog extends LitElement {
 
   // For a `returnValue` set before the `<dialog>` is rendered.
   #returnValue = '';
+
+  #toggleEvents = new ToggleEvents();
 
   // What a `<form method="dialog">` does natively: close the dialog, with the
   // submitter's value as its `returnValue`.

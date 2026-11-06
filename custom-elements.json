@@ -412,6 +412,17 @@
           "customElement": true,
           "events": [
             {
+              "name": "toggle",
+              "type": {
+                "text": "ToggleEvent"
+              },
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              },
+              "description": "When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does."
+            },
+            {
               "name": "cancel",
               "type": {
                 "text": "Event"
@@ -3761,6 +3772,17 @@
           "tagName": "slab-command-palette",
           "customElement": true,
           "events": [
+            {
+              "name": "toggle",
+              "type": {
+                "text": "ToggleEvent"
+              },
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              },
+              "description": "When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does."
+            },
             {
               "name": "cancel",
               "type": {
@@ -7258,6 +7280,13 @@
           ],
           "events": [
             {
+              "name": "toggle",
+              "type": {
+                "text": "ToggleEvent"
+              },
+              "description": "When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does."
+            },
+            {
               "name": "cancel",
               "type": {
                 "text": "Event"
@@ -7797,6 +7826,17 @@
             }
           ],
           "events": [
+            {
+              "name": "toggle",
+              "type": {
+                "text": "ToggleEvent"
+              },
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              },
+              "description": "When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does."
+            },
             {
               "name": "cancel",
               "type": {
@@ -22597,6 +22637,13 @@
                 "text": "Event"
               },
               "description": "When it's dismissed, by Escape, its timer or `dismiss()`. Cancel it to keep it shown."
+            },
+            {
+              "name": "toggle",
+              "type": {
+                "text": "ToggleEvent"
+              },
+              "description": "When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does."
             }
           ],
           "attributes": [
