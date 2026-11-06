@@ -103,7 +103,7 @@ test(
       await page.evaluate(
         () => new Promise((resolve) => setTimeout(resolve, 300)),
       );
-    }, [{ type: 'dismiss', bubbles: true, cancelable: false, composed: true }]);
+    }, [{ type: 'dismiss', bubbles: true, cancelable: true, composed: true }]);
 
     await expect(host).toHaveJSProperty('open', false);
     await expect(page.locator('[data-test="region"] slot')).toHaveCount(0);
@@ -148,10 +148,32 @@ test(
 
     await expect(host).toDispatchEvents(
       () => callMethod(host, 'dismiss'),
-      [{ type: 'dismiss', bubbles: true, cancelable: false, composed: true }],
+      [{ type: 'dismiss', bubbles: true, cancelable: true, composed: true }],
     );
 
     await expect(host).toHaveJSProperty('open', false);
+  },
+);
+
+test(
+  'stays shown when "dismiss" is canceled',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-toast>Changes saved</slab-toast>`);
+
+    const host = page.locator('slab-toast');
+
+    await callMethod(host, 'show');
+
+    await host.evaluate((element) => {
+      element.addEventListener('dismiss', (event) => {
+        event.preventDefault();
+      });
+    });
+
+    await callMethod(host, 'dismiss');
+
+    await expect(host).toHaveJSProperty('open', true);
   },
 );
 
