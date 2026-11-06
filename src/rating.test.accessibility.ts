@@ -45,6 +45,23 @@ test(
 );
 
 test(
+  'readonly=${true}',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-rating label="Label" readonly value="2"></slab-rating>`,
+    );
+
+    await expect(page.getByRole('radiogroup')).toHaveAttribute(
+      'aria-readonly',
+      'true',
+    );
+
+    await expect(page).toBeAccessible('slab-rating');
+  },
+);
+
+test(
   'required=${true}',
   { tag: '@accessibility' },
   async ({ render, page }) => {

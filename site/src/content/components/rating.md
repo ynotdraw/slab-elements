@@ -18,6 +18,8 @@ To name the radios by what they mean, such as "3 stars", set `formatValue` to a 
 
 With `step="0.5"`, each star is two radios, named "0.5", "1", "1.5" and so on, and the value can be a half. A star's first radio is also `::part(start)` and its second `::part(end)`, so style each as half of a star, such as by clipping each to its half.
 
+With `readonly`, the value can't be changed but the rating can still be focused, read and submitted, where `disabled` leaves it out of the form. It doesn't preview under the pointer, and the host is `:state(readonly)`.
+
 ## Keyboard
 
 | Key                   | What it does                                                       |

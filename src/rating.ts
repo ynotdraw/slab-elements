@@ -40,15 +40,20 @@ declare global {
  * decide. With half steps, each star's two radios are its `start` and `end`
  * halves, so a half-filled star is a filled `start` beside an unfilled `end`.
  *
+ * `readonly` shows the value without letting the user change it. Native radios
+ * have no `readonly`, so a click, Space and the arrow keys are kept from
+ * checking a different radio instead, and the group is `aria-readonly`.
+ *
  * Style it through its parts and through `:state(disabled)`, `:state(error)`,
- * `:state(previewing)`, and `:state(required)`. How the radios are arranged is
- * layout, so it's left to the styles around them.
+ * `:state(previewing)`, `:state(readonly)`, and `:state(required)`. How the
+ * radios are arranged is layout, so it's left to the styles around them.
  *
  * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
  * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {number} [max=5] - How many stars there are. Anything but a whole number of 1 or more is 5.
  * @attr {string} [name=''] - The name its value is submitted under, as a native control's `name`.
+ * @attr {boolean} [readonly=false] - Shows the value without letting the user change it, for a rating that's only there to be read. It's still focusable and submitted, and never invalid, as a native read-only input isn't.
  * @attr {boolean} [required=false] - Makes it invalid while it has no value, as `required` does a native control.
  * @attr {1|0.5} [step=1] - 1 for whole stars, or 0.5 for half stars. Anything else is 1.
  * @attr {string} [value=''] - The checked radio's number. Like a native input, the attribute is the default value and the property is the current one. A value that isn't one of the radios' numbers, from `step` to `max`, checks nothing and reads back as an empty string.
@@ -133,6 +138,14 @@ export default class Rating extends LitElement {
 
   @property({ reflect: true, useDefault: true })
   name = '';
+
+  /**
+   * Shows the value without letting the user change it, for a rating that's
+   * only there to be read. It's still focusable and submitted, and never
+   * invalid, as a native read-only input isn't.
+   */
+  @property({ reflect: true, type: Boolean })
+  readonly = false;
 
   @property({ reflect: true, type: Boolean })
   required = false;
@@ -248,10 +261,12 @@ export default class Rating extends LitElement {
 
       <div
         aria-labelledby="label description"
+        aria-readonly=${this.readonly ? 'true' : 'false'}
         aria-required=${this.required ? 'true' : 'false'}
         part="stars"
         role="radiogroup"
         @change=${this.#onChangeOrInput}
+        @click=${this.#onClick}
         @focusout=${this.#onFocusOut}
         @input=${this.#onChangeOrInput}
         @keydown=${this.#onKeydown}
@@ -356,6 +371,10 @@ export default class Rating extends LitElement {
       this.#setState('disabled', this.#isDisabled);
     }
 
+    if (changes.has('readonly')) {
+      this.#setState('readonly', this.readonly);
+    }
+
     if (changes.has('required')) {
       this.#setState('required', this.required);
     }
@@ -365,6 +384,7 @@ export default class Rating extends LitElement {
     // the rating with no value.
     if (
       changes.has('max') ||
+      changes.has('readonly') ||
       changes.has('required') ||
       changes.has('step') ||
       changes.has('value')
@@ -460,10 +480,10 @@ export default class Rating extends LitElement {
     );
   }
 
-  // A rating disabled under the pointer has nothing to preview, even before the
-  // pointer leaves.
+  // A rating disabled or read-only under the pointer has nothing to preview,
+  // even before the pointer leaves.
   get #previewValue() {
-    return this.#isDisabled ? 0 : this.previewValue;
+    return this.#isDisabled || this.readonly ? 0 : this.previewValue;
   }
 
   get #points() {
@@ -502,6 +522,14 @@ export default class Rating extends LitElement {
     }
   }
 
+  // Canceling a radio's click unchecks it again, whether a pointer or Space
+  // clicked it.
+  #onClick(event: MouseEvent) {
+    if (this.readonly && event.target instanceof HTMLInputElement) {
+      event.preventDefault();
+    }
+  }
+
   #onFocusOut(event: FocusEvent) {
     // The arrow keys move focus from one radio to the next, which isn't
     // leaving the rating.
@@ -522,6 +550,15 @@ export default class Rating extends LitElement {
     // so they have no form, and the host's is submitted for them.
     if (event.key === 'Enter') {
       this.form?.requestSubmit();
+    }
+
+    // The arrow keys check the radio they move to, so they're kept from
+    // moving at all. Tab still leaves.
+    if (
+      this.readonly &&
+      ['ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp'].includes(event.key)
+    ) {
+      event.preventDefault();
     }
   }
 
@@ -559,7 +596,7 @@ export default class Rating extends LitElement {
       return;
     }
 
-    if (this.required && this.value === '') {
+    if (this.required && !this.readonly && this.value === '') {
       this.#internals.setValidity(
         { customError: Boolean(this.validityMessage), valueMissing: true },
         browserValidationMessage('choose'),

@@ -121,3 +121,39 @@ test(
     await expect(host).toHaveJSProperty('value', '1.5');
   },
 );
+
+test(
+  'does not change its value with the keyboard when read-only',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-rating label="Label" readonly value="2"></slab-rating>`,
+    );
+
+    const host = page.locator('slab-rating');
+    const radio = page.getByRole('radio', { name: '2' });
+
+    await radio.press('ArrowRight');
+    await radio.press('ArrowLeft');
+
+    await expect(host).toHaveJSProperty('value', '2');
+    await expect(radio).toBeFocused();
+  },
+);
+
+test(
+  'does not check a radio with Space when read-only',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-rating label="Label" readonly></slab-rating>`,
+    );
+
+    const host = page.locator('slab-rating');
+
+    await page.getByRole('radio', { name: '1' }).press('Space');
+
+    await expect(host).toHaveJSProperty('value', '');
+    await expect(page.getByRole('radio', { name: '1' })).not.toBeChecked();
+  },
+);

@@ -625,3 +625,35 @@ test(
     expect(await getValidationMessage()).toBe('');
   },
 );
+
+test(
+  'has form data and is valid when read-only',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-rating
+            label="Label"
+            name="name"
+            readonly
+            required
+          ></slab-rating>
+          <slab-rating
+            label="Label"
+            name="other"
+            readonly
+            value="3"
+          ></slab-rating>
+        </form>
+      `,
+    );
+
+    await expect(page.locator('slab-rating').first()).toHaveJSProperty(
+      'validity.valid',
+      true,
+    );
+
+    await expect(page.locator('form')).toHaveFormData('other', '3');
+  },
+);
