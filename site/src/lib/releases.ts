@@ -123,7 +123,7 @@ export const announcements: Announcement[] = [
     dedication: {
       by: 'Tony Ward',
       donation:
-        "If you'd like to remember Doug too, please consider a donation to the [Melanoma Research Alliance](https://www.curemelanoma.org/mra-overview/donate), which funds melanoma research.",
+        "If you'd like to remember Doug too, please consider a donation to the [Melanoma Research Alliance](https://give.curemelanoma.org/give/296895/#!/donation/checkout), which funds melanoma research.",
       href: 'https://github.com/dmiller9911',
       name: 'Doug Miller',
       text: 'This 1.0 release is dedicated to my childhood friend, Doug Miller. We were friends for 30 years. He got me into web development and open source software. He lost his battle with melanoma last year. Today is his birthday. So I dedicate this to him. Rest in peace, buddy. I love and miss you.',
