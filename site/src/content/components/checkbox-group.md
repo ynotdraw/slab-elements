@@ -21,6 +21,8 @@ usage: |
 
 Each item is a [Checkbox](../checkbox/).
 
+The group dispatches no "input" or "change" of its own. Each Checkbox's bubble up through it, as a native checkbox's do through a `<fieldset>`, so listen on the group and read its `values`.
+
 ## Keyboard
 
 | Key   | What it does                                     |
