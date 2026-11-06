@@ -94,6 +94,21 @@ Pick the bump type that matches your change under
 consumer reading the changelog would want it described — what changed and what
 they need to do about it, not how you implemented it.
 
+### Deprecating something
+
+From 1.0, public API is removed or renamed only in a major version, and only
+after a minor release has deprecated it. To deprecate an attribute, property
+or method:
+
+1. Keep it working exactly as it did, alongside whatever replaces it.
+2. Add `@deprecated` to its JSDoc, followed by what to use instead, such as
+   ``@deprecated Use `values` instead.`` The analyzer puts it in the manifest,
+   and its component's page marks it.
+3. Add a `minor` changeset that names it and its replacement.
+
+The next major version removes it, and its upgrade guide says what to do
+instead.
+
 ### Text Slab generates
 
 Consumers supply the text Slab renders, and translate it. Slab doesn't localize

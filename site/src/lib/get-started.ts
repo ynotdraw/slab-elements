@@ -193,6 +193,12 @@ import type {} from 'slab-elements/react.js';`,
     coda: "Everything else is Slab's own and can change in any release: a member or event whose name starts with `private`, anything marked `@internal`, `slab-elements/library/*`, and whatever is in a shadow root other than its parts. Coming from 0.x? [Upgrade to 1.0](upgrade/) lists what changed.",
   },
   {
+    id: 'deprecations',
+    heading: 'How things go away',
+    text: "From 1.0, nothing public is removed or renamed without warning. It's deprecated in a minor release first, and keeps working, unchanged, until the next major version removes it. A deprecated attribute, property or method says so on its component's page, with what to use instead, and its `@deprecated` tag has your editor strike it through. Each deprecation is in its release's notes.",
+    coda: 'Every major version lists what it removes, and what to do about each, in its upgrade guide, as [Upgrade to 1.0](upgrade/) does for 0.x.',
+  },
+  {
     id: 'conventions',
     heading: 'The same everywhere',
     text: "Elements that do the same thing do it the same way. `multiple` lets more than one be chosen, and `value` is the first of `values`. A number is a number where the native element's is, as on Meter and Progress, and a string where it isn't, as on Slider and Number, which add `valueAsNumber`. Anything with `open` dispatches a `ToggleEvent` named \"toggle\" that doesn't bubble, as a popover does. `readonly` is on the fields where a native input has it, and the form controls for a set of choices are Checkbox Group and Radio Group, since toggle buttons aren't form controls.",

@@ -9,6 +9,10 @@ interface Props {
 }
 
 const { tag } = Astro.props;
+
+// What to use instead of a deprecated one comes first.
+const describe = (entry: { deprecated?: string; description?: string }) =>
+  [entry.deprecated, entry.description].filter(Boolean).join(' ');
 const { attributes, events, methods, parts, properties, slots } = api(tag);
 ---
 
@@ -34,10 +38,13 @@ const { attributes, events, methods, parts, properties, slots } = api(tag);
                 <th scope="row">
                   <code>{attribute.name}</code>
                   {attribute.required && <span class="required">Required</span>}
+                  {attribute.deprecated !== undefined && (
+                    <span class="required">Deprecated</span>
+                  )}
                 </th>
                 <td>{attribute.type && <code>{attribute.type}</code>}</td>
                 <td>{attribute.default && <code>{attribute.default}</code>}</td>
-                <td set:html={inline(attribute.description)} />
+                <td set:html={inline(describe(attribute))} />
               </tr>
             ))}
           </tbody>
@@ -64,9 +71,12 @@ const { attributes, events, methods, parts, properties, slots } = api(tag);
                 <th scope="row">
                   <code>{property.name}</code>
                   {property.readonly && <span class="required">Read-only</span>}
+                  {property.deprecated !== undefined && (
+                    <span class="required">Deprecated</span>
+                  )}
                 </th>
                 <td>{property.type && <code>{property.type}</code>}</td>
-                <td set:html={inline(property.description)} />
+                <td set:html={inline(describe(property))} />
               </tr>
             ))}
           </tbody>
@@ -91,8 +101,11 @@ const { attributes, events, methods, parts, properties, slots } = api(tag);
               <tr>
                 <th scope="row">
                   <code>{method.signature}</code>
+                  {method.deprecated !== undefined && (
+                    <span class="required">Deprecated</span>
+                  )}
                 </th>
-                <td set:html={inline(method.description)} />
+                <td set:html={inline(describe(method))} />
               </tr>
             ))}
           </tbody>
