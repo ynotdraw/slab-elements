@@ -5,6 +5,7 @@
 import { getEntry } from 'astro:content';
 import { inline } from '../lib/prose.ts';
 import { isPublished, type Announcement, type Tldr } from '../lib/releases.ts';
+import { sections as upgradeSections, title as upgradeTitle } from '../lib/upgrade.ts';
 import CodeBlock from './CodeBlock.astro';
 import PageActions from './PageActions.astro';
 
@@ -20,9 +21,23 @@ const {
   fixesLede = "From an accessibility audit of every component. A line each, and the components it's in.",
   fixesTitle = 'Accessibility, everywhere',
   points,
+  upgradeGuide = false,
 } = tldr;
 const published = isPublished(version);
 const base = import.meta.env.BASE_URL;
+
+// "1.0.0" is a major release, "0.2.0" a minor one.
+const kind = version.endsWith('.0.0') ? 'major' : 'minor';
+
+// The upgrade guide's sections but its first, which is how to read it.
+const breaking = upgradeGuide
+  ? upgradeSections.slice(1).map(({ heading, id }) => ({
+      heading,
+      href: `${base}upgrade/#${id}`,
+    }))
+  : [];
+
+const changesToCheck = checks.length + breaking.length;
 
 const page = async (component: string) => {
   const entry = await getEntry('components', component);
@@ -75,7 +90,7 @@ const stats = [
     label: tldr.fixesTitle ? 'fixes' : 'accessibility fixes',
     value: fixes.flatMap((group) => group.fixes).length },
   { label: 'components fixed', value: fixed.size },
-  { label: checks.length === 1 ? 'change to check' : 'changes to check', value: checks.length },
+  { label: changesToCheck === 1 ? 'change to check' : 'changes to check', value: changesToCheck },
 ].filter(({ value }) => value > 0);
 ---
 
@@ -156,6 +171,8 @@ const stats = [
     </ul>
   </section>
 
+  {
+    groups.length > 0 && (
   <section aria-labelledby="fixes" class="block">
     <h2 id="fixes">{fixesTitle}</h2>
     <p class="lede" set:html={inline(fixesLede)} />
@@ -183,6 +200,8 @@ const stats = [
       }
     </div>
   </section>
+    )
+  }
 
   {
     checks.length > 0 && (
@@ -191,8 +210,8 @@ const stats = [
         <p class="lede">
           {
             checks.length === 1
-              ? "One change can break what you have. It's why this is a minor release."
-              : `${checks.length} changes can break what you have. They're why this is a minor release.`
+              ? `One change can break what you have. It's why this is a ${kind} release.`
+              : `${checks.length} changes can break what you have. They're why this is a ${kind} release.`
           }
         </p>
         <ul class="checks">
@@ -205,6 +224,27 @@ const stats = [
                   <CodeBlock code={before} label="Before" lang="css" />
                   <CodeBlock code={after} label="After" lang="css" />
                 </div>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    breaking.length > 0 && (
+      <section aria-labelledby="check" class="block">
+        <h2 id="check">Before you upgrade</h2>
+        <p class="lede">
+          {breaking.length} changes can break what you have. They're why this is a {kind}{' '}
+          release. <a href={`${base}upgrade/`}>{upgradeTitle}</a> says what to change for each.
+        </p>
+        <ul class="breaking">
+          {
+            breaking.map(({ heading, href }) => (
+              <li>
+                <a href={href}>{heading}</a>
               </li>
             ))
           }
@@ -566,6 +606,17 @@ const stats = [
     p {
       margin: 0;
       max-inline-size: 62ch;
+    }
+  }
+
+  .breaking {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+    padding-inline-start: 1.25rem;
+
+    li::marker {
+      color: var(--ember);
     }
   }
 
