@@ -108,3 +108,26 @@ test(
     ).toBe(false);
   },
 );
+
+test(
+  'does not change its value or preview one when read-only',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-rating label="Label" readonly value="2"></slab-rating>`,
+    );
+
+    const host = page.locator('slab-rating');
+    const radio = page.getByRole('radio', { name: '4' });
+
+    await radio.hover();
+
+    expect(
+      await host.evaluate((element) => element.matches(':state(previewing)')),
+    ).toBe(false);
+
+    await radio.click();
+    await expect(host).toHaveJSProperty('value', '2');
+    await expect(radio).not.toBeChecked();
+  },
+);
