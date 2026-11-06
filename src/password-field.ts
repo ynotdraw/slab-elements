@@ -82,7 +82,7 @@ declare global {
  *
  * @fires {Event} change
  * @fires {Event} input
- * @fires {Event} toggle
+ * @fires {Event} reveal-change
  *
  * @readonly
  * @prop {HTMLFormElement | null} form
@@ -554,7 +554,10 @@ export default class PasswordField extends LitElement {
 
   #onToggleButtonClick() {
     this.revealed = !this.revealed;
-    this.dispatchEvent(new Event('toggle', { bubbles: true, composed: true }));
+
+    this.dispatchEvent(
+      new Event('reveal-change', { bubbles: true, composed: true }),
+    );
   }
 
   #setState(state: string, isActive: boolean) {

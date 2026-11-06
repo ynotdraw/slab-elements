@@ -13679,7 +13679,7 @@
               }
             },
             {
-              "name": "toggle",
+              "name": "reveal-change",
               "type": {
                 "text": "Event"
               }
