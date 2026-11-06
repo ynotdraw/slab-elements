@@ -2,6 +2,10 @@ import type { APIRoute, GetStaticPaths } from 'astro';
 import { getEntry } from 'astro:content';
 import { markdown } from '../../lib/get-started.ts';
 import {
+  sections as upgradeSections,
+  title as upgradeTitle,
+} from '../../lib/upgrade.ts';
+import {
   announcements,
   isPublished,
   type Announcement,
@@ -29,6 +33,7 @@ const tldrSections = async (
     fixes,
     fixesTitle = 'Accessibility, everywhere',
     points,
+    upgradeGuide = false,
   }: Tldr,
 ) => {
   const title = async (component: string) =>
@@ -55,24 +60,25 @@ const tldrSections = async (
         )
         .join('\n'),
     ].join('\n\n'),
-    [
-      `## ${fixesTitle}`,
-      ...(await Promise.all(
-        fixes.map(async (group) =>
-          [
-            `### ${group.title}`,
-            (
-              await Promise.all(
-                group.fixes.map(
-                  async ({ components, text }) =>
-                    `- ${text} In ${(await Promise.all(components.map(title))).join(', ')}.`,
-                ),
-              )
-            ).join('\n'),
-          ].join('\n\n'),
-        ),
-      )),
-    ].join('\n\n'),
+    fixes.length > 0 &&
+      [
+        `## ${fixesTitle}`,
+        ...(await Promise.all(
+          fixes.map(async (group) =>
+            [
+              `### ${group.title}`,
+              (
+                await Promise.all(
+                  group.fixes.map(
+                    async ({ components, text }) =>
+                      `- ${text} In ${(await Promise.all(components.map(title))).join(', ')}.`,
+                  ),
+                )
+              ).join('\n'),
+            ].join('\n\n'),
+          ),
+        )),
+      ].join('\n\n'),
     checks.length > 0 &&
       [
         '## Before you upgrade',
@@ -84,6 +90,15 @@ const tldrSections = async (
             `After:\n\n\`\`\`css\n${after}\n\`\`\``,
           ].join('\n\n'),
         ),
+      ].join('\n\n'),
+    upgradeGuide &&
+      [
+        '## Before you upgrade',
+        `${upgradeSections.length - 1} changes can break what you have. They're why this is a major release. [${upgradeTitle}](../upgrade.md) says what to change for each.`,
+        upgradeSections
+          .slice(1)
+          .map(({ heading, id }) => `- [${heading}](../upgrade.md#${id})`)
+          .join('\n'),
       ].join('\n\n'),
     ['## Upgrade', `\`\`\`sh\npnpm add slab-elements@${version}\n\`\`\``].join(
       '\n\n',

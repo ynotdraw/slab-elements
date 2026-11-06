@@ -79,6 +79,10 @@ export interface Tldr {
 
   // The short version, a line each, with `code` spans.
   points: string[];
+
+  // A major version's breaking changes are in its upgrade guide rather than
+  // in `checks`, and "Before you upgrade" links to each of its sections.
+  upgradeGuide?: boolean;
 }
 
 export interface Announcement {
@@ -95,6 +99,73 @@ export interface Announcement {
 }
 
 export const announcements: Announcement[] = [
+  {
+    version: '1.0.0',
+    summary:
+      'A stable API: typed events for every framework, custom states in the manifest, and validity, read-only fields and opening from code where they were missing.',
+    intro:
+      "1.0.0 adds no components. It fills the gaps between the ones there are, so each attribute, method and event works the same way wherever it appears, and it settles the API: from here, nothing is removed without a deprecation first. It's a major release, with a few changes to check before you upgrade.",
+    tldr: {
+      points: [
+        'Every event is typed in React, Vue, Svelte and plain TypeScript, down to its `detail`.',
+        'Each custom state is in `custom-elements.json` with a description, so `:state()` selectors are documented beside parts and attributes.',
+        '`readonly`, the validity API, `show()` and `hide()`, and a cancelable "beforetoggle" are on every element they make sense for.',
+        'Every element with `open` dispatches "toggle" as a `ToggleEvent`.',
+        'Nothing goes away without a deprecation first, and a deprecated API lasts until the next major version.',
+      ],
+      additions: [
+        {
+          title: 'Typed events',
+          href: 'get-started/#typescript',
+          text: 'The JSX, Vue and Svelte types include an `on` prop for each event, and `SlabElementEvents` maps each element to its events for `addEventListener`.',
+        },
+        {
+          title: 'Custom states',
+          href: 'components/',
+          text: "Each component's page lists its `:state()`s in a table beside its parts, and so does `custom-elements.json`.",
+        },
+        {
+          title: 'Read-only fields',
+          href: 'components/combobox/',
+          text: "Combobox and Tags Input take `readonly`, as Rating does: the value stays focusable and is submitted, but can't be changed.",
+        },
+        {
+          title: 'Validity',
+          href: 'components/slider/',
+          text: 'Slider, Range Slider, Color Picker and Editable have `setCustomValidity()`, `validationMessage` and a `validity-message` part, like the other fields.',
+        },
+        {
+          title: 'Opening from code',
+          href: 'components/tooltip/',
+          text: 'Tooltip, Hover Card and Combobox open and close from code without their delays, as Popover and Menu do.',
+        },
+        {
+          title: 'Stopping an open',
+          href: 'get-started/',
+          text: 'Every element built on a popover dispatches a cancelable "beforetoggle" before it opens or closes, so an open can be stopped.',
+        },
+        {
+          title: 'Toggle events everywhere',
+          href: 'components/dialog/',
+          text: 'Dialog, Alert Dialog, Drawer and Toast dispatch "toggle" too, so every element with `open` has it.',
+        },
+        {
+          title: 'Deprecations',
+          href: 'get-started/#deprecations',
+          text: 'How an API goes away after 1.0: a `@deprecated` note in the types and the manifest, a badge in these docs, and a minor release or more before the next major removes it.',
+        },
+        {
+          title: 'Upgrade to 1.0',
+          href: 'upgrade/',
+          text: 'Every change since 0.1 that can break something, in one guide, with what to change for each.',
+        },
+      ],
+      fixes: [],
+      checks: [],
+      upgradeGuide: true,
+    },
+    highlights: [],
+  },
   {
     version: '0.3.1',
     summary:
