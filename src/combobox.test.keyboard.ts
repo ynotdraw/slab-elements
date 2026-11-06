@@ -1150,7 +1150,7 @@ test(
 test(
   'submits its form on Enter when read-only',
   { tag: '@keyboard' },
-  async ({ render, page }) => {
+  async ({ addEventListener, render, page }) => {
     await render(
       () =>
         html`<form>
@@ -1160,17 +1160,14 @@ test(
         </form>`,
     );
 
-    const isSubmitted = page.locator('form').evaluate((form) => {
-      return new Promise<boolean>((resolve) => {
-        form.addEventListener('submit', (event) => {
-          event.preventDefault();
-          resolve(true);
-        });
-      });
-    });
+    const form = page.locator('form');
 
-    await page.getByRole('combobox').press('Enter');
+    // Otherwise the form navigates and takes the page with it.
+    await addEventListener(form, 'submit', { preventDefault: true });
 
-    expect(await isSubmitted).toBe(true);
+    await expect(form).toDispatchEvents(
+      () => page.getByRole('combobox').press('Enter'),
+      [{ type: 'submit' }],
+    );
   },
 );
