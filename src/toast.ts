@@ -10,6 +10,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { property, state } from 'lit/decorators.js';
 import slab from './library/version.js';
 import customElement from './library/custom-element.js';
+import ToggleEvents from './library/toggle-events.js';
 import styles from './toast.styles.js';
 
 declare global {
@@ -70,6 +71,7 @@ declare global {
  * @csspart region - The region it's shown in
  *
  * @fires {Event} dismiss - When it's dismissed, by Escape, its timer or `dismiss()`. Cancel it to keep it shown.
+ * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
  * @readonly
  * @prop {boolean} open - Whether it's shown.
@@ -236,9 +238,14 @@ export default class Toast extends LitElement {
         this.#internals.states.delete('open');
       }
     }
+
+    const toggle = this.#toggleEvents.update(this.isOpen);
+
+    if (toggle) {
+      this.dispatchEvent(new ToggleEvent('toggle', toggle));
+    }
   }
 
-  // Functional styles go in here rather than in `styles`, so a subclass that
   // sets its own `styles` keeps them.
   protected static override finalizeStyles(
     subclassStyles?: CSSResultGroup,
@@ -256,6 +263,7 @@ export default class Toast extends LitElement {
     Toast.openToasts.add(toast);
   }
 
+  // Functional styles go in here rather than in `styles`, so a subclass that
   private static untrack(toast: Toast) {
     Toast.openToasts.delete(toast);
 
@@ -321,6 +329,8 @@ export default class Toast extends LitElement {
   #returnFocusTo?: HTMLElement;
 
   #timeoutId?: ReturnType<typeof setTimeout>;
+
+  #toggleEvents = new ToggleEvents();
 
   #clearTimer() {
     clearTimeout(this.#timeoutId);

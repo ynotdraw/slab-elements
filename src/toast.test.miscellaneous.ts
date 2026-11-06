@@ -371,3 +371,39 @@ test(
     await expect(custom).toHaveJSProperty('open', true);
   },
 );
+
+test(
+  'dispatches "toggle" when it is shown and dismissed',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-toast duration="0">Changes saved</slab-toast>`,
+    );
+
+    const host = page.locator('slab-toast');
+
+    await host.evaluate(async (element: Toast) => {
+      const events: string[] = [];
+
+      element.addEventListener('toggle', (event) => {
+        if (event instanceof ToggleEvent && event.target === element) {
+          events.push(`${event.oldState} ${event.newState}`);
+          element.dataset.events = events.join(', ');
+        }
+      });
+
+      await element.show();
+    });
+
+    await expect(host).toHaveAttribute('data-events', 'closed open');
+
+    await host.evaluate((element: Toast) => {
+      element.dismiss();
+    });
+
+    await expect(host).toHaveAttribute(
+      'data-events',
+      'closed open, open closed',
+    );
+  },
+);

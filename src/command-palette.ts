@@ -95,6 +95,7 @@ declare global {
  *
  * @fires {Event} cancel - When the user asks to close it, with Escape or, with `closedby="any"`, a click outside. Cancel it to keep it open, as a native dialog's.
  * @fires {Event} close - When it closes, as a native dialog's does.
+ * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
  * @prop {Option | null} activeOption - The Option the user is on, which Enter chooses. It's pointed at rather than focused, so focus stays in the input.
  * @prop {(option: Option, query: string) => boolean} filter - Whether an Option matches what's been typed. A case-insensitive substring of its text by default.
