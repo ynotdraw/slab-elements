@@ -31,6 +31,9 @@ declare global {
  * @attr {boolean} [selected=false] - Like Option's, the attribute is the default state and the property is the current one. Style `:state(selected)` rather than `[selected]`.
  *
  * @slot {Element | string} - The label, plus anything else a design puts in a Tab
+ *
+ * @cssstate disabled - While it's disabled.
+ * @cssstate selected - While it's selected.
  */
 @customElement('slab-tabs-tab')
 export default class Tab extends LitElement {

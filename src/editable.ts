@@ -8,9 +8,11 @@ import {
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { when } from 'lit/directives/when.js';
 import slab from './library/version.js';
 import afterReflection from './library/after-reflection.js';
 import AriaForwarding from './library/aria-forwarding.js';
+import CustomValidity from './library/custom-validity.js';
 import customElement from './library/custom-element.js';
 import required from './library/required.js';
 import styles from './editable.styles.js';
@@ -36,8 +38,14 @@ declare global {
  * `name`. It doesn't change as the input is typed into, only when an edit is
  * committed, which is when "change" is dispatched.
  *
+ * It's never invalid on its own. For a rule of your own, such as a name that
+ * can't be empty, call `setCustomValidity()` or `setValidity()`, from "change"
+ * for one that depends on the value. The validity message shows in its
+ * description, as on Text Field, once validity is reported: when focus leaves
+ * it, its form is submitted, or `reportValidity()` is called.
+ *
  * Style it through its parts and through `:state(disabled)`,
- * `:state(editing)` and `:state(empty)`. While it's empty, the button shows
+ * `:state(editing)`, `:state(empty)` and `:state(error)`. While it's empty, the button shows
  * `placeholder`.
  *
  * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
@@ -51,17 +59,35 @@ declare global {
  *
  * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
  *
- * @csspart description - Text about the field
+ * @csspart description - Text about the field, and its validity message when it has one
  * @csspart input - The input
  * @csspart label - The label
  * @csspart preview - The button, while not editing
+ * @csspart validity-message - The validity message, which says why the value is invalid
+ *
+ * @cssstate disabled - While it's disabled.
+ * @cssstate editing - While it's being edited.
+ * @cssstate empty - While it has no value.
  *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  *
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
+ * @readonly
+ * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`. Empty while it's valid.
+ *
+ * @readonly
+ * @prop {ValidityState} validity - Its `ValidityState`, as a native control's.
+ *
+ * @readonly
+ * @prop {boolean} willValidate - Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.
+ *
  * @method cancel - Stops editing and discards what's typed.
+ *
+ * @method checkValidity - Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.
+ * @returns boolean
+ *
  * @method commit - Stops editing and keeps what's typed.
  *
  * @method edit - Starts editing and focuses the input, with its text selected.
@@ -74,6 +100,18 @@ declare global {
  *
  * @method formStateRestoreCallback - Called by the browser when it restores the value, such as after the back button. Not for calling yourself.
  * @param {string | File | FormData | null} state
+ *
+ * @method reportValidity - Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.
+ * @returns boolean
+ *
+ * @method resetValidityFeedback - Clears the validity feedback without changing `validity`.
+ *
+ * @method setCustomValidity - Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.
+ * @param {string} message
+ *
+ * @method setValidity - Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.
+ * @param {ValidityStateFlags} [flags]
+ * @param {string} [message]
  */
 @customElement('slab-editable')
 export default class Editable extends LitElement {
@@ -130,10 +168,30 @@ export default class Editable extends LitElement {
   }
 
   /**
+   * What's wrong, as the validity message says it: the message given to
+   * `setCustomValidity()` or `setValidity()`. Empty while it's valid.
+   */
+  get validationMessage(): string {
+    return this.#customValidity.validationMessage;
+  }
+
+  get validity(): ValidityState {
+    return this.#internals.validity;
+  }
+
+  get willValidate(): boolean {
+    return this.#internals.willValidate;
+  }
+
+  /**
    * Stops editing and discards what's typed.
    */
   cancel(): void {
     this.#stopEditing({ isCommit: false });
+  }
+
+  checkValidity(): boolean {
+    return this.#customValidity.checkValidity();
   }
 
   /**
@@ -173,6 +231,7 @@ export default class Editable extends LitElement {
   formResetCallback(): void {
     this.editing = false;
     this.value = this.getAttribute('value') ?? '';
+    this.resetValidityFeedback();
   }
 
   formStateRestoreCallback(state: string | File | FormData | null): void {
@@ -200,6 +259,7 @@ export default class Editable extends LitElement {
         this.editing
           ? html`<input
               aria-describedby="description"
+              aria-invalid=${this.#customValidity.isShowingFeedback ? 'true' : 'false'}
               data-test="input"
               id="input"
               maxlength=${ifDefined(this.maxlength)}
@@ -219,6 +279,7 @@ export default class Editable extends LitElement {
               part="preview"
               type="button"
               ?disabled=${this.#isDisabled}
+              @blur=${this.#onPreviewBlur}
               @click=${this.#onPreviewClick}
               ${ref(this.#previewElementRef)}
             >
@@ -228,11 +289,38 @@ export default class Editable extends LitElement {
       }
 
       <div id="description" part="description">
-        <!-- Text about the field -->
+        <!-- Text about the field, and its validity message when it has one -->
         <slot name="description">
           <!-- @type {Element | string} -->
         </slot>
+
+        ${when(
+          this.#customValidity.isShowingFeedback && this.validationMessage,
+          () =>
+            html`<span data-test="validity-message" part="validity-message">
+              ${this.validationMessage}
+            </span>`,
+        )}
       </div>`;
+  }
+
+  reportValidity(): boolean {
+    return this.#customValidity.reportValidity();
+  }
+
+  /**
+   * Clears the validity feedback without changing `validity`.
+   */
+  resetValidityFeedback(): void {
+    this.#customValidity.resetFeedback();
+  }
+
+  setCustomValidity(message: string): void {
+    this.#customValidity.setCustomValidity(message);
+  }
+
+  setValidity(flags?: ValidityStateFlags, message?: string): void {
+    this.#customValidity.setValidity(flags, message);
   }
 
   // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
@@ -252,6 +340,7 @@ export default class Editable extends LitElement {
 
     this.#setState('editing', this.editing);
     this.#setState('empty', this.value === '');
+    this.#setState('error', this.#customValidity.isShowingFeedback);
     this.#updateFormValue();
   }
 
@@ -291,6 +380,12 @@ export default class Editable extends LitElement {
     target: () => this.#inputElementRef.value ?? this.#previewElementRef.value,
   });
 
+  #customValidity = new CustomValidity(this, {
+    anchor: () => this.#inputElementRef.value ?? this.#previewElementRef.value,
+    internals: () => this.#internals,
+    isDisabled: () => this.#isDisabled,
+  });
+
   #inputElementRef = createRef<HTMLInputElement>();
 
   #internals: ElementInternals;
@@ -301,7 +396,21 @@ export default class Editable extends LitElement {
     return this.disabled || this.isFormDisabled;
   }
 
-  #onInputBlur() {
+  // Only when focus leaves the field. Moving from the button to the input is
+  // still being in it, as is the button going when editing starts, which some
+  // browsers count as a blur.
+  #onBlur(event: FocusEvent) {
+    const isInside =
+      this.editing ||
+      (event.relatedTarget instanceof Node &&
+        this.renderRoot.contains(event.relatedTarget));
+
+    if (!isInside) {
+      this.#customValidity.reportOnBlur();
+    }
+  }
+
+  #onInputBlur(event: FocusEvent) {
     // Enter and Escape stop editing before the input goes, so there's nothing
     // left to commit when a browser blurs it on the way out. And a browser
     // blurs it when a fieldset around the host is disabled, before
@@ -310,6 +419,8 @@ export default class Editable extends LitElement {
     if (this.editing && !this.matches(':disabled')) {
       this.commit();
     }
+
+    this.#onBlur(event);
   }
 
   // The native input's "input" composes, and would leave the shadow root as
@@ -335,6 +446,10 @@ export default class Editable extends LitElement {
       await this.updateComplete;
       this.#previewElementRef.value?.focus();
     }
+  }
+
+  #onPreviewBlur(event: FocusEvent) {
+    this.#onBlur(event);
   }
 
   #onPreviewClick() {

@@ -42,6 +42,8 @@ declare global {
  * @csspart label - The label
  * @csspart progress - The progress bar
  *
+ * @cssstate indeterminate - While it has no `value`, so how far along the task is isn't known.
+ *
  * @prop {(value: number) => string | undefined} formatValue - What screenreaders read for the value, such as "3 of 10 files" rather than "30%". A percentage when unset.
  */
 @customElement('slab-progress')

@@ -18,6 +18,8 @@ Since a thumb isn't focused itself, it can't match `:focus-visible`. Style its f
 
 The hex field commits when it's blurred or Enter is pressed, with or without the "#", and goes back to `value` when what's typed isn't a color. The swatches are a listbox whose selection follows focus.
 
+Every color is a valid value, so it's never invalid on its own. For a rule of your own, such as enough contrast with a background, call `setCustomValidity()` with a message. It shows in `::part(validity-message)`, and the host matches `:state(error)`, once validity is reported, as on [Text Field](../text-field/): when focus leaves the picker, when its form is submitted, or on `reportValidity()`.
+
 ## Keyboard
 
 | Key                   | What it does                                                                                  |

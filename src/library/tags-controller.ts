@@ -20,6 +20,12 @@ export interface TagsControllerConfig {
   isDisabled: () => boolean;
 
   /**
+   * Whether the tags are only there to be read. They're text rather than
+   * buttons then, since there's nothing to remove, and aren't moved to.
+   */
+  isReadonly: () => boolean;
+
+  /**
    * Names a tag's button, which shows only the tag's text, from that text.
    */
   label: (text: string) => string;
@@ -47,7 +53,7 @@ export interface TagsControllerConfig {
  * to the input's right, Left and Right swap (`backKey`). Backspace, Delete, Enter and Space remove
  * one, and focus moves to the tag that takes its place, or the input when
  * there's none. A click from a pointer removes one too, and leaves focus where
- * it was.
+ * it was. While the host is read-only, they're text that can't be removed.
  */
 export default class TagsController implements ReactiveController {
   /**
@@ -75,6 +81,10 @@ export default class TagsController implements ReactiveController {
    * Moves focus to the last tag. False when there are none.
    */
   focusLast(): boolean {
+    if (this.#config.isReadonly()) {
+      return false;
+    }
+
     const last = this.elements.at(-1);
 
     last?.focus();
@@ -104,6 +114,16 @@ export default class TagsController implements ReactiveController {
    * `tags` part, where they're documented.
    */
   render(tags: { text: string; value: string }[]) {
+    // The host's input is described by the tags' text, so a read-only tag
+    // needs no more than its text.
+    if (this.#config.isReadonly()) {
+      return repeat(
+        tags,
+        ({ value }) => value,
+        ({ text }) => html`<span data-test="tag" part="tag">${text}</span>`,
+      );
+    }
+
     return repeat(
       tags,
       ({ value }) => value,

@@ -8,12 +8,14 @@ import {
 import { createRef, ref } from 'lit/directives/ref.js';
 import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { when } from 'lit/directives/when.js';
 import slab from './library/version.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
 import required from './library/required.js';
 import styles from './slider.styles.js';
 import afterReflection from './library/after-reflection.js';
+import CustomValidity from './library/custom-validity.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -39,8 +41,15 @@ declare global {
  * of it that says what it means, such as "$40" or "3 of 5 GB", which becomes
  * the input's `aria-valuetext`.
  *
- * Style it through its parts and through `:state(disabled)`. Where the label
- * sits relative to the input is layout, so it's left to the styles around it.
+ * Its value is always in range, so it's never invalid on its own. For a rule
+ * of your own, such as a minimum, call `setCustomValidity()` or
+ * `setValidity()`. The validity message shows in its description, as on Text
+ * Field, once validity is reported: when focus leaves it, its form is
+ * submitted, or `reportValidity()` is called.
+ *
+ * Style it through its parts and through `:state(disabled)` and
+ * `:state(error)`. Where the label sits relative to the input is layout, so
+ * it's left to the styles around it.
  *
  * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
  * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
@@ -51,11 +60,14 @@ declare global {
  * @attr {number|'any'} [step] - A number, or "any" to allow any value. Left unset, the input's own default of 1 applies.
  * @attr {string} [value=''] - Like a native input, the attribute is the default value and the property is the current one. The property is always the value the input settled on, so it's never outside the range or off a step.
  *
- * @slot {Element | string} [description] - Text about the slider, such as a hint
+ * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
  *
- * @csspart description - Text about the slider, such as a hint
+ * @csspart description - Text about the slider, and its validity message when it has one
  * @csspart input - The input
  * @csspart label - The label
+ * @csspart validity-message - The validity message, which says why the value is invalid
+ *
+ * @cssstate disabled - While it's disabled.
  *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
@@ -66,9 +78,15 @@ declare global {
  * @prop {(value: number) => string | undefined} formatValue - What screenreaders read for the value, such as "$40" rather than "40". The value itself when unset.
  *
  * @readonly
+ * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`. Empty while it's valid.
+ *
+ * @readonly
  * @prop {ValidityState} validity - Its `ValidityState`, as a native control's.
  *
  * @prop {number} valueAsNumber - `value` as a number, as on a native range input.
+ *
+ * @readonly
+ * @prop {boolean} willValidate - Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.
  *
  * @method checkValidity - Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.
  * @returns boolean
@@ -83,6 +101,15 @@ declare global {
  *
  * @method reportValidity - Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.
  * @returns boolean
+ *
+ * @method resetValidityFeedback - Clears the validity feedback without changing `validity`.
+ *
+ * @method setCustomValidity - Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.
+ * @param {string} message
+ *
+ * @method setValidity - Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.
+ * @param {ValidityStateFlags} [flags]
+ * @param {string} [message]
  */
 @customElement('slab-slider')
 export default class Slider extends LitElement {
@@ -180,6 +207,14 @@ export default class Slider extends LitElement {
     return this.#internals.form;
   }
 
+  /**
+   * What's wrong, as the validity message says it: the message given to
+   * `setCustomValidity()` or `setValidity()`. Empty while it's valid.
+   */
+  get validationMessage(): string {
+    return this.#customValidity.validationMessage;
+  }
+
   get validity(): ValidityState {
     return this.#internals.validity;
   }
@@ -205,8 +240,12 @@ export default class Slider extends LitElement {
     this.value = Number.isNaN(value) ? '' : String(value);
   }
 
+  get willValidate(): boolean {
+    return this.#internals.willValidate;
+  }
+
   checkValidity(): boolean {
-    return this.#internals.checkValidity();
+    return this.#customValidity.checkValidity();
   }
 
   override click() {
@@ -227,6 +266,7 @@ export default class Slider extends LitElement {
     // An empty value puts a range input back halfway, which is also what a
     // native one resets to when it has no `value` attribute.
     this.value = this.getAttribute('value') ?? '';
+    this.resetValidityFeedback();
   }
 
   formStateRestoreCallback(state: string | File | FormData | null): void {
@@ -247,6 +287,7 @@ export default class Slider extends LitElement {
 
       <input
         aria-describedby="description"
+        aria-invalid=${this.#customValidity.isShowingFeedback ? 'true' : 'false'}
         data-test="input"
         id="input"
         max=${ifDefined(this.max)}
@@ -254,21 +295,45 @@ export default class Slider extends LitElement {
         part="input"
         type="range"
         ?disabled=${this.#isDisabled}
+        @blur=${this.#onInputBlur}
         @change=${this.#onInputChangeOrInput}
         @input=${this.#onInputChangeOrInput}
         ${ref(this.#inputElementRef)}
       />
 
-      <slot id="description" name="description" part="description">
-        <!--
-          Text about the slider, such as a hint
-          @type {Element | string}
-        -->
-      </slot>`;
+      <div id="description" part="description">
+        <!-- Text about the slider, and its validity message when it has one -->
+        <slot name="description">
+          <!-- @type {Element | string} -->
+        </slot>
+
+        ${when(
+          this.#customValidity.isShowingFeedback && this.validationMessage,
+          () =>
+            html`<span data-test="validity-message" part="validity-message">
+              ${this.validationMessage}
+            </span>`,
+        )}
+      </div>`;
   }
 
   reportValidity(): boolean {
-    return this.#internals.reportValidity();
+    return this.#customValidity.reportValidity();
+  }
+
+  /**
+   * Clears the validity feedback without changing `validity`.
+   */
+  resetValidityFeedback(): void {
+    this.#customValidity.resetFeedback();
+  }
+
+  setCustomValidity(message: string): void {
+    this.#customValidity.setCustomValidity(message);
+  }
+
+  setValidity(flags?: ValidityStateFlags, message?: string): void {
+    this.#customValidity.setValidity(flags, message);
   }
 
   // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
@@ -315,6 +380,7 @@ export default class Slider extends LitElement {
       this.#setState('disabled', this.#isDisabled);
     }
 
+    this.#setState('error', this.#customValidity.isShowingFeedback);
     this.#updateFormValue();
   }
 
@@ -341,6 +407,12 @@ export default class Slider extends LitElement {
     target: () => this.#inputElementRef.value,
   });
 
+  #customValidity = new CustomValidity(this, {
+    anchor: () => this.#inputElementRef.value,
+    internals: () => this.#internals,
+    isDisabled: () => this.#isDisabled,
+  });
+
   #inputElementRef = createRef<HTMLInputElement>();
 
   #internals: ElementInternals;
@@ -349,6 +421,10 @@ export default class Slider extends LitElement {
 
   get #isDisabled() {
     return this.disabled || this.isFormDisabled;
+  }
+
+  #onInputBlur() {
+    this.#customValidity.reportOnBlur();
   }
 
   #onInputChangeOrInput(event: Event) {

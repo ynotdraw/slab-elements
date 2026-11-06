@@ -42,6 +42,12 @@ declare global {
  * @csspart group - Its children
  * @csspart label - The label
  *
+ * @cssstate active - While it's the active one, which the keyboard moves through while focus stays on its container.
+ * @cssstate disabled - While it's disabled.
+ * @cssstate expanded - While it's expanded, showing its children.
+ * @cssstate parent - While it has child items.
+ * @cssstate selected - While it's selected.
+ *
  * @readonly
  * @prop {TreeItem[]} items - Its children.
  *

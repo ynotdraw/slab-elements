@@ -45,6 +45,10 @@ declare global {
  *
  * @slot {Element | string} - The label, plus anything else a design puts in a Menu Item
  *
+ * @cssstate active - While it's the active one, which the keyboard moves through while focus stays on its container.
+ * @cssstate checked - While it's checked.
+ * @cssstate disabled - While it's disabled.
+ *
  * @readonly
  * @prop {string} text - What the user reads as the Menu Item's name: its label, or its text when it has no label.
  */

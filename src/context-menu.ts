@@ -85,6 +85,8 @@ function fit(point: number, size: number, viewport: number, isAfter: boolean) {
  * @csspart menu - The Menu Items
  * @csspart popover - What the menu opens in
  *
+ * @cssstate open - While it's open.
+ *
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
  * @readonly
