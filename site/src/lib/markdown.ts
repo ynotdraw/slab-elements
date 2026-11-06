@@ -45,7 +45,7 @@ const describe = (entry: { deprecated?: string; description?: string }) =>
 
 function apiMarkdown(
   tag: string,
-  { attributes, events, methods, parts, properties, slots }: Api,
+  { attributes, events, methods, parts, properties, slots, states }: Api,
 ) {
   const sections = [
     [
@@ -108,6 +108,16 @@ function apiMarkdown(
       table(
         ['Name', 'Description'],
         parts.map((part) => [code(part.name), part.description ?? '']),
+      ),
+    ],
+    [
+      'CSS states',
+      table(
+        ['Name', 'Description'],
+        states.map((state) => [
+          code(`:state(${state.name})`),
+          state.description ?? '',
+        ]),
       ),
     ],
   ].filter(([, content]) => content);

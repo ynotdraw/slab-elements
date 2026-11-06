@@ -152,3 +152,47 @@ test(
     await expect(page.getByRole('dialog', { name: 'Label' })).toBeVisible();
   },
 );
+
+test(
+  'dispatches "toggle" when it opens and closes',
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(() => html`<slab-dialog label="Label"></slab-dialog>`);
+
+    const host = page.locator('slab-dialog');
+
+    await page.evaluate(() => {
+      const host = document.querySelector('slab-dialog');
+
+      if (!host) {
+        return;
+      }
+
+      const events: string[] = [];
+
+      // On the document too, which sees a "toggle" only if it bubbles or
+      // escapes the shadow root.
+      for (const target of [host, document]) {
+        target.addEventListener('toggle', (event) => {
+          if (event instanceof ToggleEvent) {
+            events.push(
+              `${target === document ? 'document' : 'host'} ${event.oldState} ${event.newState}`,
+            );
+
+            host.dataset.events = events.join(', ');
+          }
+        });
+      }
+    });
+
+    await setProperty(host, 'open', true);
+    await expect(host).toHaveAttribute('data-events', 'host closed open');
+
+    await page.keyboard.press('Escape');
+
+    await expect(host).toHaveAttribute(
+      'data-events',
+      'host closed open, host open closed',
+    );
+  },
+);

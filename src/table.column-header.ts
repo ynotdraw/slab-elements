@@ -49,6 +49,10 @@ declare global {
  * @csspart sort-button - The button in a sortable Column Header
  * @csspart sort-indicator - Holds the sort indicator in a sortable Column Header, hidden from screenreaders
  *
+ * @cssstate ascending - While the table is sorted by it, ascending.
+ * @cssstate descending - While the table is sorted by it, descending.
+ * @cssstate sortable - While it's `sortable`.
+ *
  * @fires {Event} sort - When the user presses the button to sort by its column. Set `sort` in your handler.
  *
  * @prop {(column: string, sort: 'ascending' | 'descending') => string} sortedLabel - What screenreaders are told when the user sorts the column, from its name and `sort`. "Sorted by", the name and the direction in English when unset.

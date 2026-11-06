@@ -17,6 +17,7 @@ type Declaration = {
     type?: Type;
   }[];
   cssParts?: { description?: string; name: string }[];
+  cssStates?: { description?: string; name: string }[];
   events?: { description?: string; name: string; type?: Type }[];
   members?: {
     deprecated?: boolean | string;
@@ -141,6 +142,7 @@ export type Api = {
     type?: string;
   }[];
   slots: { description?: string; name: string; type?: string }[];
+  states: { description?: string; name: string }[];
 };
 
 export function api(tag: string): Api {
@@ -230,6 +232,9 @@ export function api(tag: string): Api {
       name: slot.name === '' ? '(default)' : slot.name,
       type: slot.type?.text,
     })),
+    states: (declaration.cssStates ?? []).toSorted((a, b) =>
+      a.name.localeCompare(b.name),
+    ),
   };
 }
 

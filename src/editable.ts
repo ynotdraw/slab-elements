@@ -56,6 +56,10 @@ declare global {
  * @csspart label - The label
  * @csspart preview - The button, while not editing
  *
+ * @cssstate disabled - While it's disabled.
+ * @cssstate editing - While it's being edited.
+ * @cssstate empty - While it has no value.
+ *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  *
  * @readonly

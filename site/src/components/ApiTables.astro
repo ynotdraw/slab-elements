@@ -13,7 +13,8 @@ const { tag } = Astro.props;
 // What to use instead of a deprecated one comes first.
 const describe = (entry: { deprecated?: string; description?: string }) =>
   [entry.deprecated, entry.description].filter(Boolean).join(' ');
-const { attributes, events, methods, parts, properties, slots } = api(tag);
+const { attributes, events, methods, parts, properties, slots, states } =
+  api(tag);
 ---
 
 <section class="api">
@@ -188,6 +189,32 @@ const { attributes, events, methods, parts, properties, slots } = api(tag);
                   <code>{part.name}</code>
                 </th>
                 <td set:html={inline(part.description)} />
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+
+  {
+    states.length > 0 && (
+      <div class="table">
+        <table>
+          <caption>CSS states</caption>
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {states.map((state) => (
+              <tr>
+                <th scope="row">
+                  <code>:state({state.name})</code>
+                </th>
+                <td set:html={inline(state.description)} />
               </tr>
             ))}
           </tbody>
