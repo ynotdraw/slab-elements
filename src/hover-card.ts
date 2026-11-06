@@ -68,6 +68,7 @@ declare global {
  *
  * @cssstate open - While it's open.
  *
+ * @fires {ToggleEvent} beforetoggle - Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed.
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
  * @method hide - Closes it at once, without waiting for `close-delay`. Focus in the card goes back to the anchor, as it does on Escape.
@@ -182,6 +183,7 @@ export default class HoverCard extends LitElement {
         part="card"
         .popover=${'manual'}
         role=${ifDefined(this.label ? 'group' : undefined)}
+        @beforetoggle=${this.#onCardBeforeToggle}
         ${ref(this.#cardElementRef)}
       >
         <slot
@@ -281,6 +283,26 @@ export default class HoverCard extends LitElement {
   get #anchor(): Element | undefined {
     return this.#anchorSlotElementRef.value?.assignedElements().at(0);
   }
+
+  // The popover's own, dispatched again from the host, where a consumer can
+  // cancel an opening, as on a native popover. Chromium lets the popover's
+  // out of the shadow root, where Firefox and WebKit don't, so it's stopped
+  // and there's only ever the host's.
+  #onCardBeforeToggle = (event: ToggleEvent) => {
+    event.stopPropagation();
+
+    const isCancelled = !this.dispatchEvent(
+      new ToggleEvent('beforetoggle', {
+        cancelable: event.cancelable,
+        newState: event.newState,
+        oldState: event.oldState,
+      }),
+    );
+
+    if (isCancelled) {
+      event.preventDefault();
+    }
+  };
 
   #onDocumentKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Escape' && this.open) {
@@ -463,6 +485,12 @@ export default class HoverCard extends LitElement {
 
       if (!card.matches(':popover-open')) {
         card.showPopover();
+      }
+
+      // A "beforetoggle" listener can keep it closed.
+      if (!card.matches(':popover-open')) {
+        this.#internals.states.delete('open');
+        this.open = false;
       }
 
       return;

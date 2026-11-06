@@ -718,3 +718,69 @@ test(
     await expect(host).toHaveJSProperty('open', false);
   },
 );
+
+test(
+  'dispatches "beforetoggle", and stays closed when it\'s cancelled',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label">
+          <slab-option>One</slab-option>
+        </slab-combobox>`,
+    );
+
+    const events = await page
+      .locator('slab-combobox')
+      .evaluate(async (element: HTMLElement & { open: boolean }) => {
+        const events: string[] = [];
+        let isCancelling = true;
+
+        element.addEventListener('beforetoggle', (event) => {
+          const { cancelable, newState } = event as ToggleEvent;
+
+          events.push(`beforetoggle ${newState} ${String(cancelable)}`);
+
+          if (isCancelling) {
+            event.preventDefault();
+          }
+        });
+
+        element.addEventListener('toggle', (event) => {
+          events.push(`toggle ${(event as ToggleEvent).newState}`);
+        });
+
+        // In the page, where `evaluate()` runs it, so it can't move out.
+        // eslint-disable-next-line unicorn/consistent-function-scoping
+        const settle = () => {
+          return new Promise((resolve) => setTimeout(resolve, 100));
+        };
+
+        element.open = true;
+        await settle();
+        events.push(`open ${String(element.open)}`);
+
+        isCancelling = false;
+        element.open = true;
+        await settle();
+        events.push(`open ${String(element.open)}`);
+
+        element.open = false;
+        await settle();
+        events.push(`open ${String(element.open)}`);
+
+        return events;
+      });
+
+    expect(events).toStrictEqual([
+      'beforetoggle open true',
+      'open false',
+      'beforetoggle open true',
+      'toggle open',
+      'open true',
+      'beforetoggle closed false',
+      'toggle closed',
+      'open false',
+    ]);
+  },
+);

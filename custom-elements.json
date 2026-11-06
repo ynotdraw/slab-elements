@@ -3457,6 +3457,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "beforetoggle",
+              "type": {
+                "text": "ToggleEvent"
+              },
+              "description": "Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed."
             }
           ],
           "attributes": [
@@ -4202,6 +4209,13 @@
                 "text": "ToggleEvent"
               },
               "description": "When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does."
+            },
+            {
+              "name": "beforetoggle",
+              "type": {
+                "text": "ToggleEvent"
+              },
+              "description": "Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed."
             }
           ],
           "attributes": [
@@ -5684,6 +5698,13 @@
                 "module": "src/date-field.ts"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "beforetoggle",
+              "type": {
+                "text": "ToggleEvent"
+              },
+              "description": "Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed."
             },
             {
               "name": "toggle",
@@ -7198,6 +7219,13 @@
                 "module": "src/date-range-field.ts"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "beforetoggle",
+              "type": {
+                "text": "ToggleEvent"
+              },
+              "description": "Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed."
             },
             {
               "name": "toggle",
@@ -10505,6 +10533,13 @@
                 "text": "ToggleEvent"
               },
               "description": "When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does."
+            },
+            {
+              "name": "beforetoggle",
+              "type": {
+                "text": "ToggleEvent"
+              },
+              "description": "Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed."
             }
           ],
           "attributes": [
@@ -11600,6 +11635,13 @@
                 "text": "ToggleEvent"
               },
               "description": "When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does."
+            },
+            {
+              "name": "beforetoggle",
+              "type": {
+                "text": "ToggleEvent"
+              },
+              "description": "Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed."
             }
           ],
           "attributes": [
@@ -17951,6 +17993,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "beforetoggle",
+              "type": {
+                "text": "ToggleEvent"
+              },
+              "description": "Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed."
             }
           ],
           "attributes": [
@@ -24778,6 +24827,13 @@
                 "text": "ToggleEvent"
               },
               "description": "When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does."
+            },
+            {
+              "name": "beforetoggle",
+              "type": {
+                "text": "ToggleEvent"
+              },
+              "description": "Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed."
             }
           ],
           "attributes": [

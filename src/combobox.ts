@@ -131,6 +131,7 @@ declare global {
  * @cssstate readonly - While it's read-only.
  * @cssstate required - While it's required, for styles such as an asterisk.
  *
+ * @fires {ToggleEvent} beforetoggle - Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed.
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
@@ -521,6 +522,7 @@ export default class Combobox extends LitElement {
         part="listbox"
         .popover=${'manual'}
         role="listbox"
+        @beforetoggle=${this.#onListboxBeforeToggle}
         @click=${this.#onListboxClick}
         @mousedown=${this.#onListboxMousedown}
         @toggle=${this.#onListboxToggle}
@@ -1009,6 +1011,26 @@ export default class Combobox extends LitElement {
     }
   };
 
+  // The popover's own, dispatched again from the host, where a consumer can
+  // cancel an opening, as on a native popover. Chromium lets the popover's
+  // out of the shadow root, where Firefox and WebKit don't, so it's stopped
+  // and there's only ever the host's.
+  #onListboxBeforeToggle = (event: ToggleEvent) => {
+    event.stopPropagation();
+
+    const isCancelled = !this.dispatchEvent(
+      new ToggleEvent('beforetoggle', {
+        cancelable: event.cancelable,
+        newState: event.newState,
+        oldState: event.oldState,
+      }),
+    );
+
+    if (isCancelled) {
+      event.preventDefault();
+    }
+  };
+
   #onListboxClick = (event: MouseEvent) => {
     const option = this.options.find((option) => {
       return event.target instanceof Node && option.contains(event.target);
@@ -1203,6 +1225,9 @@ export default class Combobox extends LitElement {
 
     if (this.open && !isOpen) {
       listbox.showPopover();
+
+      // A "beforetoggle" listener can keep it closed.
+      this.open = listbox.matches(':popover-open');
     } else if (!this.open && isOpen) {
       listbox.hidePopover();
     }

@@ -87,6 +87,7 @@ function fit(point: number, size: number, viewport: number, isAfter: boolean) {
  *
  * @cssstate open - While it's open.
  *
+ * @fires {ToggleEvent} beforetoggle - Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed.
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
  * @readonly
@@ -402,8 +403,23 @@ export default class ContextMenu extends LitElement {
 
   #onPopoverBeforeToggle = (event: ToggleEvent) => {
     // Chromium lets the popover's own "beforetoggle" out of the shadow root,
-    // where Firefox and WebKit don't. It's an implementation detail.
+    // where Firefox and WebKit don't. Stopped so there's only ever the host's,
+    // where a consumer can cancel an opening, as on a native popover.
     event.stopPropagation();
+
+    const isCancelled = !this.dispatchEvent(
+      new ToggleEvent('beforetoggle', {
+        cancelable: event.cancelable,
+        newState: event.newState,
+        oldState: event.oldState,
+      }),
+    );
+
+    if (isCancelled) {
+      event.preventDefault();
+
+      return;
+    }
 
     // Focus goes back to where it was when the menu had it, before the popover
     // closes and takes focus with it. Not when the user has already moved it
@@ -591,6 +607,12 @@ export default class ContextMenu extends LitElement {
       focused instanceof HTMLElement ? focused : undefined;
 
     popover.showPopover();
+
+    // A "beforetoggle" listener can keep it closed.
+    if (!this.#isPopoverOpen) {
+      return;
+    }
+
     this.#place(popover, position);
     this.#menuElementRef.value?.focus();
     this.#items.first();
