@@ -54,9 +54,14 @@ declare global {
  * ones, joined by commas. "input" and "change" are dispatched together when a
  * tag is added or removed, rather than on every keystroke.
  *
+ * `readonly` shows the tags without letting the user change them: the input
+ * can't be typed in, and the tags are text rather than buttons. It's still
+ * focused, read and submitted, where `disabled` leaves it out of the form, and
+ * never invalid.
+ *
  * Style it through its parts and through `:state(disabled)`, `:state(empty)`
  * when it has no tags, `:state(error)`, `:state(full)` when it has `max` tags,
- * and `:state(required)`.
+ * `:state(readonly)` and `:state(required)`.
  *
  * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
  * @attr {string} [delimiter=','] - Typed or pasted, adds what's before it as a tag. Only Enter does when it's empty.
@@ -65,6 +70,7 @@ declare global {
  * @attr {number} [max] - The most tags the user can add. A `values` set with more keeps them all.
  * @attr {string} [name=''] - The name its value is submitted under, as a native control's `name`.
  * @attr {string} [placeholder] - Shown while it's empty, as a native input's `placeholder`. It's a hint, not a label.
+ * @attr {boolean} [readonly=false] - Shows the tags without letting the user add or remove any. It's still focusable and submitted, and never invalid, as a native read-only input isn't.
  * @attr {boolean} [required=false] - Makes it invalid while it has no value, as `required` does a native control.
  * @attr {string} [value=''] - The tags, separated by commas, each trimmed. Like a native input, the attribute is the default value and the property is the current one. Use `values` for tags with commas in them.
  *
@@ -165,6 +171,14 @@ export default class TagsInput extends LitElement {
 
   @property({ reflect: true })
   placeholder?: string;
+
+  /**
+   * Shows the tags without letting the user add or remove any. It's still
+   * focusable and submitted, and never invalid, as a native read-only input
+   * isn't.
+   */
+  @property({ reflect: true, type: Boolean })
+  readonly = false;
 
   /**
    * Names each tag's button, which shows only the tag, from the tag. "Remove"
@@ -309,6 +323,7 @@ export default class TagsInput extends LitElement {
       <input
         aria-describedby="values description"
         aria-invalid=${this.#isShowValidationFeedback ? 'true' : 'false'}
+        aria-readonly=${this.readonly ? 'true' : 'false'}
         aria-required=${this.required ? 'true' : 'false'}
         autocomplete="off"
         data-test="input"
@@ -317,6 +332,7 @@ export default class TagsInput extends LitElement {
         placeholder=${ifDefined(this.placeholder)}
         type="text"
         ?disabled=${this.#isDisabled}
+        ?readonly=${this.readonly}
         @blur=${this.#onInputBlur}
         @change=${this.#onInputChange}
         @input=${this.#onInputInput}
@@ -389,6 +405,7 @@ export default class TagsInput extends LitElement {
     this.#setState('disabled', this.#isDisabled);
     this.#setState('empty', this.values.length === 0);
     this.#setState('full', this.#isFull);
+    this.#setState('readonly', this.readonly);
     this.#setState('required', this.required);
     this.#updateFormValue();
     this.#updateValidity();
@@ -464,6 +481,7 @@ export default class TagsInput extends LitElement {
   #tags = new TagsController(this, {
     input: () => this.#inputElementRef.value,
     isDisabled: () => this.#isDisabled,
+    isReadonly: () => this.readonly,
     label: (text) => this.removeLabel(text),
     onBlur: (event) => {
       this.#onBlur(event);
@@ -576,7 +594,7 @@ export default class TagsInput extends LitElement {
     }
 
     if (event.key === 'Backspace' && this.#text === '') {
-      if (this.values.length > 0) {
+      if (this.values.length > 0 && !this.readonly) {
         event.preventDefault();
         this.#remove(this.values.length - 1);
       }
@@ -724,7 +742,9 @@ export default class TagsInput extends LitElement {
     }
 
     const customError = Boolean(this.validityMessage);
-    const valueMissing = this.required && this.values.length === 0;
+
+    const valueMissing =
+      this.required && !this.readonly && this.values.length === 0;
 
     // A message from `setCustomValidity()` is kept until it's cleared, however
     // the tags change.
