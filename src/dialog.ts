@@ -54,13 +54,16 @@ declare global {
  *
  * @cssstate open - While it's open.
  *
- * @fires {Event} cancel - When the user asks to close it, with Escape or, with `closedby="any"`, a click outside. Cancel it to keep it open, as a native dialog's.
+ * @fires {Event} cancel - When something asks it to close: Escape, a click outside with `closedby="any"`, or `requestClose()`. Cancel it to keep it open, as a native dialog's.
  * @fires {Event} close - When it closes, as a native dialog's does.
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
  * @prop {string} returnValue - The `<dialog>`'s, so `close(returnValue)` and a `<form method="dialog">` set it the way they do natively.
  *
  * @method close - Closes it, setting `returnValue` to the value given, as a native dialog's `close()` does.
+ * @param {string} [returnValue]
+ *
+ * @method requestClose - Asks it to close, as a native dialog's `requestClose()` does: "cancel" first, then a close that sets `returnValue` to the value given, unless "cancel" is canceled.
  * @param {string} [returnValue]
  *
  * @method show - Opens it.
@@ -187,6 +190,23 @@ export default class Dialog extends LitElement {
     return html`<slot>
       <!-- @type {Element | string} -->
     </slot>`;
+  }
+
+  // Not left to the `<dialog>`'s own `requestClose()`, which Slab's browser
+  // minimums predate. It does what that does: a cancelable "cancel", then a
+  // close with `returnValue` unless "cancel" was canceled.
+  requestClose(returnValue?: string): void {
+    if (!this.#dialogElementRef.value?.open) {
+      return;
+    }
+
+    const isAllowed = this.dispatchEvent(
+      new Event('cancel', { cancelable: true }),
+    );
+
+    if (isAllowed) {
+      this.close(returnValue);
+    }
   }
 
   show(): void {

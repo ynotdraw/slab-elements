@@ -17,6 +17,14 @@ export function inline(text = ''): string {
   );
 }
 
+/** One line of text, with its `code` spans and its [links](https://…). */
+export function linked(text = ''): string {
+  return inline(text).replaceAll(
+    /\[([^\]]+)\]\((https:[^)\s]+)\)/g,
+    '<a href="$2">$1</a>',
+  );
+}
+
 /** Paragraphs separated by blank lines, each a <p>. */
 export function paragraphs(text = ''): string {
   return text

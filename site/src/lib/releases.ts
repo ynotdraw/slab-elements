@@ -6,7 +6,7 @@
 
 import changelog from '../../../CHANGELOG.md?raw';
 import { version as current } from '../../../package.json';
-import { inline } from './prose.ts';
+import { linked } from './prose.ts';
 
 export interface Highlight {
   // The component's page, from `src/content/components`, whose summary,
@@ -85,6 +85,24 @@ export interface Tldr {
   upgradeGuide?: boolean;
 }
 
+// A release dedicated to someone, at the top of its page.
+export interface Dedication {
+  // Who wrote it.
+  by: string;
+
+  // Where to give in their memory, a sentence with a [link](https://…).
+  donation: string;
+
+  // A link to them, such as their GitHub profile.
+  href: string;
+
+  // Who it's dedicated to.
+  name: string;
+
+  // The dedication, word for word as it was written.
+  text: string;
+}
+
 export interface Announcement {
   // For the page's description and its card. One sentence.
   summary: string;
@@ -92,6 +110,7 @@ export interface Announcement {
   // The page's opening paragraph, with `code` spans.
   intro: string;
 
+  dedication?: Dedication;
   highlights: Highlight[];
   notes?: Note[];
   tldr?: Tldr;
@@ -101,6 +120,14 @@ export interface Announcement {
 export const announcements: Announcement[] = [
   {
     version: '1.0.0',
+    dedication: {
+      by: 'Tony Ward',
+      donation:
+        "If you'd like to remember Doug too, please consider a donation to the [Melanoma Research Alliance](https://give.curemelanoma.org/give/296895/#!/donation/checkout), which funds melanoma research.",
+      href: 'https://github.com/dmiller9911',
+      name: 'Doug Miller',
+      text: 'This 1.0 release is dedicated to my childhood friend, Doug Miller. We were friends for 30 years. He got me into web development and open source software. He lost his battle with melanoma last year. Today is his birthday. So I dedicate this to him. Rest in peace, buddy. I love and miss you.',
+    },
     summary:
       'A stable API: typed events for every framework, custom states in the manifest, and validity, read-only fields and opening from code where they were missing.',
     intro:
@@ -684,10 +711,7 @@ const change = (text: string) => {
   const { body, pr } = parse(text);
 
   // Links in the change itself, after it's escaped.
-  const html = inline(body).replaceAll(
-    /\[([^\]]+)\]\((https:[^)\s]+)\)/g,
-    '<a href="$2">$1</a>',
-  );
+  const html = linked(body);
 
   return pr ? `${html} <a class="pr" href="${pr[2]}">#${pr[1]}</a>` : html;
 };
