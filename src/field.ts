@@ -54,6 +54,10 @@ declare global {
  * @csspart control - The control the label names
  * @csspart description - Text about the control, such as a hint or an error
  * @csspart label - The label
+ *
+ * @cssstate disabled - While `disabled` is set.
+ * @cssstate error - While `error` is set.
+ * @cssstate required - While `required` is set, for styles such as an asterisk.
  */
 @customElement('slab-field')
 export default class Field extends LitElement {

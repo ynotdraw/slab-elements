@@ -44,6 +44,11 @@ declare global {
  * @csspart status - Its Steps' complete label, hidden visually, on a complete Step
  * @csspart step - The number, label and status. A button when its Steps is navigable.
  *
+ * @cssstate complete - While its `status` is "complete".
+ * @cssstate current - While its `status` is "current".
+ * @cssstate navigable - While its Steps is `navigable`, so it can be moved to.
+ * @cssstate upcoming - While its `status` is "upcoming".
+ *
  * @prop {string} completeLabel - Set by its Steps.
  * @prop {number} index - Its position, from 1. Set by its Steps.
  * @prop {boolean} navigable - Set by its Steps.

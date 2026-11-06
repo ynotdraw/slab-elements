@@ -186,7 +186,7 @@ test(
   'opens a submenu when its Menu Item is pointed at, after a moment',
   { tag: '@mouse' },
   async ({ render, page }) => {
-    await page.clock.install();
+    await page.clock.install({ time: 0 });
 
     await render(
       () =>
@@ -199,6 +199,10 @@ test(
           </slab-menu>
         </slab-menu>`,
     );
+
+    // Paused, so only `runFor()` moves time on. A slow hover would let
+    // time run on by itself and past the delay being tested.
+    await page.clock.pauseAt(60_000);
 
     const host = page.locator('slab-menu slab-menu');
     const trigger = page.getByRole('menuitem', { name: 'Share' });
@@ -245,7 +249,7 @@ test(
   'closes a submenu when another Menu Item is pointed at, after a moment',
   { tag: '@mouse' },
   async ({ render, page }) => {
-    await page.clock.install();
+    await page.clock.install({ time: 0 });
 
     await render(
       () =>
@@ -258,6 +262,10 @@ test(
           <slab-menu-item>Two</slab-menu-item>
         </slab-menu>`,
     );
+
+    // Paused, so only `runFor()` moves time on. A slow hover would let
+    // time run on by itself and past the delay being tested.
+    await page.clock.pauseAt(60_000);
 
     const host = page.locator('slab-menu slab-menu');
 
@@ -326,7 +334,7 @@ test(
   'keeps a submenu open when the pointer moves over it between its Menu Items',
   { tag: '@mouse' },
   async ({ render, page }) => {
-    await page.clock.install();
+    await page.clock.install({ time: 0 });
 
     await render(
       () =>
@@ -339,6 +347,10 @@ test(
           <slab-menu-item>Two</slab-menu-item>
         </slab-menu>`,
     );
+
+    // Paused, so only `runFor()` moves time on. A slow hover would let
+    // time run on by itself and past the delay being tested.
+    await page.clock.pauseAt(60_000);
 
     const host = page.locator('slab-menu slab-menu');
 

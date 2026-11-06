@@ -48,6 +48,9 @@ declare global {
  *
  * @csspart button - The button
  *
+ * @cssstate copied - For `feedback-duration` after the text is copied.
+ * @cssstate failed - For `feedback-duration` after the clipboard refuses.
+ *
  * @fires {Event} copied - When the text is copied.
  * @fires {Event} copy-error - When the text can't be copied, such as when the browser doesn't allow it.
  */

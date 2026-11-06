@@ -84,6 +84,12 @@ declare global {
  * @csspart validity-message - The validity message, which says why the value is invalid
  * @csspart value - The selected Options' labels, or the placeholder when there are none
  *
+ * @cssstate disabled - While it's disabled.
+ * @cssstate error - While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.
+ * @cssstate open - While it's open.
+ * @cssstate placeholder-shown - While nothing is selected and its placeholder shows, as `:placeholder-shown` matches a native input's.
+ * @cssstate required - While it's required, for styles such as an asterisk.
+ *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
