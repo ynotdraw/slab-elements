@@ -183,7 +183,8 @@ import type {} from 'slab-elements/react.js';`,
   {
     id: 'browsers',
     heading: 'Browsers',
-    text: "Slab is tested in Chromium, Firefox and WebKit. Where a browser hasn't caught up on a feature, Slab uses it where it's there and leaves the platform's behavior where it isn't. Without CSS anchor positioning, for example, a popover is centered rather than placed beside its anchor. Every element still opens, closes, submits and is announced, everywhere.",
+    text: 'Slab needs Chrome and Edge 125, Firefox 126, or Safari 17.4, on desktop or mobile, or anything newer. Those are the first versions with both popovers and custom states, which every element depends on, and from 1.0, raising them waits for a major version. Slab is tested in the latest Chromium, Firefox and WebKit.',
+    coda: "Where a browser hasn't caught up on a newer feature, Slab uses it where it's there and leaves the platform's behavior where it isn't. Without CSS anchor positioning, for example, a popover is centered rather than placed beside its anchor, and without ARIA element reflection, an `aria-labelledby` or `aria-describedby` on the host doesn't reach the element inside. Every element still opens, closes, submits and is announced, everywhere.",
   },
   {
     id: 'api',
