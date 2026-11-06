@@ -52,7 +52,10 @@ test(
 
     await expect(host).toDispatchEvents(
       () => page.keyboard.press('Enter'),
-      [{ type: 'change', bubbles: true, cancelable: false, composed: true }],
+      [
+        { type: 'input', bubbles: true, cancelable: false, composed: true },
+        { type: 'change', bubbles: true, cancelable: false, composed: true },
+      ],
     );
 
     await expect(host).toHaveJSProperty('value', 'Two');
@@ -133,7 +136,7 @@ test(
     await page.getByRole('button').press('Enter');
 
     // `value` only changes when an edit is committed, so there's nothing for
-    // an "input" from the host to report.
+    // an "input" from the host to report until then.
     await expect(host).not.toDispatchEvents(
       () => page.keyboard.type('Two'),
       [{ type: 'input' }],

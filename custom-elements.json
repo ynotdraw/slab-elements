@@ -8620,6 +8620,13 @@
           ],
           "events": [
             {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When an edit that changes its value is committed, just before \"change\", as a native `<select>` dispatches it. Not as it's typed, since `value` only changes on commit."
+            },
+            {
               "name": "change",
               "type": {
                 "text": "Event"
