@@ -133,6 +133,7 @@ const controls: Record<keyof Color, Control> = {
  *
  * @cssstate disabled - While it's disabled.
  * @cssstate dragging - While the user drags a thumb.
+ * @cssstate error - While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.
  *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.

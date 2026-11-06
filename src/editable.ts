@@ -68,6 +68,7 @@ declare global {
  * @cssstate disabled - While it's disabled.
  * @cssstate editing - While it's being edited.
  * @cssstate empty - While it has no value.
+ * @cssstate error - While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.
  *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  *
