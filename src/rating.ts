@@ -69,6 +69,12 @@ declare global {
  * @csspart start - With half steps, the radio for the first half of a star
  * @csspart validity-message - The validity message, which says why the value is invalid
  *
+ * @cssstate disabled - While it's disabled.
+ * @cssstate error - While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.
+ * @cssstate previewing - While the pointer rests on a rating other than its value, showing what it would change to.
+ * @cssstate readonly - While it's read-only.
+ * @cssstate required - While it's required, for styles such as an asterisk.
+ *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  *

@@ -3,7 +3,7 @@ import { type Package } from 'custom-elements-manifest' with { type: 'json' };
 import { expect, test } from '../playwright/test.js';
 
 // Each component's page lists its attributes, properties, methods, events,
-// slots and parts from the manifest, and every one of them is public
+// slots, parts and states from the manifest, and every one of them is public
 // API. So each says what it is. Describe a new one in its JSDoc, or in a slot
 // or part's comment, or, for something many elements share, in
 // `add-descriptions`.
@@ -50,6 +50,9 @@ test(
             .map((entry) => ['slot', entry] as const),
           ...(declaration.cssParts ?? []).map((entry) => {
             return ['part', entry] as const;
+          }),
+          ...(declaration.cssStates ?? []).map((entry) => {
+            return ['state', entry] as const;
           }),
         ];
 

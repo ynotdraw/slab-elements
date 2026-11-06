@@ -4,6 +4,7 @@ import manifest from '../../custom-elements.json' with { type: 'json' };
 import getAttributeTags from './get-attribute-tags.js';
 import getCssPartTags from './get-css-part-tags.js';
 import getCssPropertyTags from './get-css-property-tags.js';
+import getCssStateTags from './get-css-state-tags.js';
 import getPropertyTags from './get-property-tags.js';
 import getSlotTags from './get-slot-tags.js';
 import getEventTags from './get-event-tags.js';
@@ -51,13 +52,14 @@ for (const file of project.getSourceFiles()) {
       // Attributes at the top because some are required and everyone uses them.
       // Then slots for the same reason.
       //
-      // Parts and custom properties are rare and could get lost in the noise. So
-      // they're next. Then events because they're commonly used but optional.
-      // Then the rest.
+      // Parts, custom properties and states are rare and could get lost in the
+      // noise. So they're next. Then events because they're commonly used but
+      // optional. Then the rest.
       ...getAttributeTags(declaration),
       ...getSlotTags(declaration),
       ...getCssPartTags(declaration),
       ...getCssPropertyTags(declaration),
+      ...getCssStateTags(declaration),
       ...getEventTags(declaration),
       ...getPropertyTags(declaration),
       ...getMethodTags(declaration),
@@ -67,7 +69,7 @@ for (const file of project.getSourceFiles()) {
     const currentComment = documentation?.getText();
 
     // Only the tags are generated. Prose above them is written by hand and kept,
-    // for things the manifest can't express, like custom states.
+    // for what the tags can't say, like how a component's states fit together.
     const description = documentation?.getDescription().trim();
 
     node.set({

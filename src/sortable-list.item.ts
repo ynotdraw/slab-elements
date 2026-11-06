@@ -42,6 +42,8 @@ declare global {
  * @csspart content - Holds the content
  * @csspart handle - The button that moves the item
  *
+ * @cssstate grabbed - While it's picked up or dragged.
+ *
  * @prop {boolean} grabbed - Set by its Sortable List.
  * @prop {string} instructions - Set by its Sortable List.
  */

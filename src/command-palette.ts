@@ -93,6 +93,8 @@ declare global {
  * @csspart label - The label
  * @csspart listbox - The Options, below the input
  *
+ * @cssstate empty - While no command matches what the user typed, for a "no results" message of your own.
+ *
  * @fires {Event} cancel - When the user asks to close it, with Escape or, with `closedby="any"`, a click outside. Cancel it to keep it open, as a native dialog's.
  * @fires {Event} close - When it closes, as a native dialog's does.
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.

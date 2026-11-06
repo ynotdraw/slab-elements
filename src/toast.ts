@@ -70,6 +70,8 @@ declare global {
  *
  * @csspart region - The region it's shown in
  *
+ * @cssstate open - While it's shown.
+ *
  * @fires {Event} dismiss - When it's dismissed, by Escape, its timer or `dismiss()`. Cancel it to keep it shown.
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *

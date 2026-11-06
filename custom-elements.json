@@ -1331,6 +1331,20 @@
               "fieldName": "stopLabel"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While its first slide shows.",
+              "name": "first"
+            },
+            {
+              "description": "While its last slide shows.",
+              "name": "last"
+            },
+            {
+              "description": "While it's rotating through its slides on its own.",
+              "name": "rotating"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -1723,6 +1737,20 @@
               "description": "The value of the first checked and enabled Checkbox, in the order they\nwere checked. Setting it checks the Checkbox with that value, and only\nthat one. Not reflected, to match a native control.",
               "default": "''",
               "fieldName": "value"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
             }
           ],
           "superclass": {
@@ -2217,6 +2245,28 @@
               "default": "''",
               "description": "An empty value is submitted as nothing, and counts for nothing in a\nCheckbox Group's `value`.",
               "fieldName": "value"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's checked.",
+              "name": "checked"
+            },
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it's indeterminate, neither checked nor unchecked.",
+              "name": "indeterminate"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
             }
           ],
           "superclass": {
@@ -2753,6 +2803,16 @@
               "description": "Like a native input's `value`, the attribute is the default and the\nproperty is the current value. \"#000000\" when unset.",
               "default": "'#000000'",
               "fieldName": "value"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While the user drags a thumb.",
+              "name": "dragging"
             }
           ],
           "superclass": {
@@ -3397,6 +3457,28 @@
               "fieldName": "value"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While no option matches what the user typed, for a \"no results\" message of your own.",
+              "name": "empty"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it's open.",
+              "name": "open"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -3765,6 +3847,12 @@
               "description": "Whether it's open. Set it to open or close it."
             }
           ],
+          "cssStates": [
+            {
+              "description": "While no command matches what the user typed, for a \"no results\" message of your own.",
+              "name": "empty"
+            }
+          ],
           "superclass": {
             "name": "Dialog",
             "module": "/src/dialog.js"
@@ -4010,6 +4098,12 @@
               "default": "false",
               "fieldName": "open",
               "description": "Whether it's open. Set it to open or close it."
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's open.",
+              "name": "open"
             }
           ],
           "superclass": {
@@ -4266,6 +4360,16 @@
               "default": "''",
               "description": "The text to copy.",
               "fieldName": "value"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "For `feedback-duration` after the text is copied.",
+              "name": "copied"
+            },
+            {
+              "description": "For `feedback-duration` after the clipboard refuses.",
+              "name": "failed"
             }
           ],
           "superclass": {
@@ -4804,6 +4908,24 @@
               "default": "''",
               "description": "An ISO \"yyyy-mm-dd\" string. Like a native input, the attribute is the\ndefault value and the property is the current one, so the attribute\ndoesn't change as the field is edited.",
               "fieldName": "value"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it's read-only.",
+              "name": "readonly"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
             }
           ],
           "superclass": {
@@ -5632,6 +5754,40 @@
                 "module": "src/date-field.ts"
               }
             }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "description": "While it's read-only.",
+              "name": "readonly",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            }
           ]
         }
       ],
@@ -6198,6 +6354,24 @@
               "default": "''",
               "description": "The first day of the range, as \"yyyy-mm-dd\". Like a native input's\n`value`, the attribute is the default and the property is the current\nvalue.",
               "fieldName": "startValue"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it's read-only.",
+              "name": "readonly"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
             }
           ],
           "superclass": {
@@ -7102,6 +7276,40 @@
               "type": {
                 "text": "Element | string"
               },
+              "inheritedFrom": {
+                "name": "DateRangeField",
+                "module": "src/date-range-field.ts"
+              }
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled",
+              "inheritedFrom": {
+                "name": "DateRangeField",
+                "module": "src/date-range-field.ts"
+              }
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error",
+              "inheritedFrom": {
+                "name": "DateRangeField",
+                "module": "src/date-range-field.ts"
+              }
+            },
+            {
+              "description": "While it's read-only.",
+              "name": "readonly",
+              "inheritedFrom": {
+                "name": "DateRangeField",
+                "module": "src/date-range-field.ts"
+              }
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required",
               "inheritedFrom": {
                 "name": "DateRangeField",
                 "module": "src/date-range-field.ts"
@@ -8234,6 +8442,20 @@
               "fieldName": "value"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's being edited.",
+              "name": "editing"
+            },
+            {
+              "description": "While it has no value.",
+              "name": "empty"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -8575,6 +8797,20 @@
               "default": "false",
               "fieldName": "required",
               "description": "Matches `:state(required)`, for styles such as an asterisk. Make the control itself required too."
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While `disabled` is set.",
+              "name": "disabled"
+            },
+            {
+              "description": "While `error` is set.",
+              "name": "error"
+            },
+            {
+              "description": "While `required` is set, for styles such as an asterisk.",
+              "name": "required"
             }
           ],
           "superclass": {
@@ -9064,6 +9300,24 @@
               },
               "description": "What screenreaders are told when a drop of several files is ignored,\nwithout `multiple`. \"Only one file can be added\" in English when unset.",
               "fieldName": "tooManyLabel"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While the user drags files over it.",
+              "name": "drag-over"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
             }
           ],
           "superclass": {
@@ -9563,6 +9817,24 @@
               "fieldName": "selected"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's the active one, which the keyboard moves through while focus stays on its container.",
+              "name": "active"
+            },
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While its Grid List is selectable.",
+              "name": "selectable"
+            },
+            {
+              "description": "While it's selected.",
+              "name": "selected"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -10035,6 +10307,12 @@
               "default": "'bottom'",
               "description": "The side of its anchor it opens on, when there's room. It flips when there\nisn't.",
               "fieldName": "placement"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's open.",
+              "name": "open"
             }
           ],
           "superclass": {
@@ -10532,6 +10810,20 @@
               "fieldName": "value"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -10849,6 +11141,20 @@
               "description": "\"checkbox\" for an item that's checked and unchecked, \"radio\" for one that's checked within its Menu Group, or \"item\"."
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's the active one, which the keyboard moves through while focus stays on its container.",
+              "name": "active"
+            },
+            {
+              "description": "While it's checked.",
+              "name": "checked"
+            },
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -11070,6 +11376,16 @@
               "default": "'bottom'",
               "description": "The side of its anchor it opens on, when there's room. It flips when\nthere isn't. A submenu ignores it and opens beside its Menu Item.",
               "fieldName": "placement"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's open.",
+              "name": "open"
+            },
+            {
+              "description": "While it's a submenu, opened from an item of another Menu.",
+              "name": "submenu"
             }
           ],
           "superclass": {
@@ -11439,6 +11755,20 @@
               "default": "0",
               "fieldName": "value",
               "description": "The measurement, between `min` and `max`."
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While its value is in the region furthest from the optimum one.",
+              "name": "even-less-good"
+            },
+            {
+              "description": "While its value is in the optimum region, as a native `<meter>` works it out.",
+              "name": "optimum"
+            },
+            {
+              "description": "While its value is in a region next to the optimum one.",
+              "name": "suboptimum"
             }
           ],
           "superclass": {
@@ -12374,6 +12704,24 @@
               "fieldName": "value"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it's read-only.",
+              "name": "readonly"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -12701,6 +13049,20 @@
               "fieldName": "value"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's the active one, which the keyboard moves through while focus stays on its container.",
+              "name": "active"
+            },
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's selected.",
+              "name": "selected"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -12936,6 +13298,16 @@
               "default": "1",
               "description": "How many pages are shown either side of the current one.",
               "fieldName": "siblings"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's on the first page.",
+              "name": "first"
+            },
+            {
+              "description": "While it's on the last page.",
+              "name": "last"
             }
           ],
           "superclass": {
@@ -13568,6 +13940,28 @@
               "fieldName": "value"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it's read-only.",
+              "name": "readonly"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
+            },
+            {
+              "description": "While the password shows as text.",
+              "name": "revealed"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -14129,6 +14523,28 @@
               "fieldName": "value"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While every box has a character.",
+              "name": "complete"
+            },
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it's read-only.",
+              "name": "readonly"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -14493,6 +14909,12 @@
               "fieldName": "value"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it has no `value`, so how far along the task is isn't known.",
+              "name": "indeterminate"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -14691,6 +15113,16 @@
               "default": "''",
               "fieldName": "value",
               "description": "What its Radio Group submits while it's checked."
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's checked.",
+              "name": "checked"
+            },
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
             }
           ],
           "superclass": {
@@ -15076,6 +15508,20 @@
               "description": "The value of the checked and enabled Radio. Not reflected, to match a\nnative control.",
               "default": "''",
               "fieldName": "value"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
             }
           ],
           "superclass": {
@@ -15545,6 +15991,16 @@
               "default": "1",
               "fieldName": "step",
               "description": "How far apart the values either end can take are, as a native range input's `step`."
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While the user drags a thumb.",
+              "name": "dragging"
             }
           ],
           "superclass": {
@@ -16042,6 +16498,28 @@
               "description": "The checked radio's number. Like a native input, the attribute is the\ndefault value and the property is the current one. A value that isn't one\nof the radios' numbers, from `step` to `max`, checks nothing and reads\nback as an empty string.",
               "default": "''",
               "fieldName": "value"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While the pointer rests on a rating other than its value, showing what it would change to.",
+              "name": "previewing"
+            },
+            {
+              "description": "While it's read-only.",
+              "name": "readonly"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
             }
           ],
           "superclass": {
@@ -16648,6 +17126,28 @@
               "fieldName": "value"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it has no value.",
+              "name": "empty"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it's read-only.",
+              "name": "readonly"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -17211,6 +17711,28 @@
               "fieldName": "value"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it's open.",
+              "name": "open"
+            },
+            {
+              "description": "While nothing is selected and its placeholder shows, as `:placeholder-shown` matches a native input's.",
+              "name": "placeholder-shown"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -17613,6 +18135,12 @@
               "fieldName": "value"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -17773,6 +18301,12 @@
               },
               "description": "Names the handle. \"Reorder\" and `label` in English when unset.",
               "fieldName": "handleLabel"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's picked up or dragged.",
+              "name": "grabbed"
             }
           ],
           "superclass": {
@@ -18230,6 +18764,20 @@
               "fieldName": "value"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While its primary pane is collapsed to `min`.",
+              "name": "collapsed"
+            },
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While the user drags its separator.",
+              "name": "dragging"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -18409,6 +18957,24 @@
               "default": "false",
               "description": "Keeps the user from going to it in a `navigable` Steps.",
               "fieldName": "disabled"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While its `status` is \"complete\".",
+              "name": "complete"
+            },
+            {
+              "description": "While its `status` is \"current\".",
+              "name": "current"
+            },
+            {
+              "description": "While its Steps is `navigable`, so it can be moved to.",
+              "name": "navigable"
+            },
+            {
+              "description": "While its `status` is \"upcoming\".",
+              "name": "upcoming"
             }
           ],
           "superclass": {
@@ -19092,6 +19658,24 @@
               "description": "What it submits while it's on, as a native checkbox's `value`."
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's checked.",
+              "name": "checked"
+            },
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -19438,6 +20022,20 @@
               "default": "false",
               "description": "Makes the Column Header a button that sorts the column.",
               "fieldName": "sortable"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While the table is sorted by it, ascending.",
+              "name": "ascending"
+            },
+            {
+              "description": "While the table is sorted by it, descending.",
+              "name": "descending"
+            },
+            {
+              "description": "While it's `sortable`.",
+              "name": "sortable"
             }
           ],
           "superclass": {
@@ -20062,6 +20660,16 @@
               "default": "false",
               "description": "Like Option's, the attribute is the default state and the property is the\ncurrent one. Style `:state(selected)` rather than `[selected]`.",
               "fieldName": "selected"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's selected.",
+              "name": "selected"
             }
           ],
           "superclass": {
@@ -20772,6 +21380,28 @@
               "fieldName": "value"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it has no tags.",
+              "name": "empty"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it has `max` tags.",
+              "name": "full"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -21370,6 +22000,24 @@
               "fieldName": "value"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it's read-only.",
+              "name": "readonly"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -21966,6 +22614,24 @@
               "fieldName": "value"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it's read-only.",
+              "name": "readonly"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -22504,6 +23170,24 @@
               "fieldName": "value"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
+            },
+            {
+              "description": "While it's read-only.",
+              "name": "readonly"
+            },
+            {
+              "description": "While it's required, for styles such as an asterisk.",
+              "name": "required"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -22655,6 +23339,12 @@
               "default": "5000",
               "description": "Milliseconds until it dismisses itself. 0 keeps it until it's dismissed.",
               "fieldName": "duration"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's shown.",
+              "name": "open"
             }
           ],
           "superclass": {
@@ -22844,6 +23534,12 @@
               "default": "false",
               "description": "Like a native checkbox's `checked`, the attribute is the default state and\nthe property is the current one. Style `:state(pressed)` rather than\n`[pressed]`.",
               "fieldName": "pressed"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's pressed.",
+              "name": "pressed"
             }
           ],
           "superclass": {
@@ -23037,6 +23733,16 @@
               "default": "''",
               "fieldName": "value",
               "description": "What its Toggle Group's `value` and `values` hold while it's pressed."
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's pressed.",
+              "name": "pressed"
             }
           ],
           "superclass": {
@@ -23664,6 +24370,12 @@
               "fieldName": "placement"
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's open.",
+              "name": "open"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -23882,6 +24594,28 @@
               "default": "false",
               "description": "Like Option's, the attribute is the default state and the property is the\ncurrent one. Style `:state(selected)` rather than `[selected]`.",
               "fieldName": "selected"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's the active one, which the keyboard moves through while focus stays on its container.",
+              "name": "active"
+            },
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While it's expanded, showing its children.",
+              "name": "expanded"
+            },
+            {
+              "description": "While it has child items.",
+              "name": "parent"
+            },
+            {
+              "description": "While it's selected.",
+              "name": "selected"
             }
           ],
           "superclass": {

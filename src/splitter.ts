@@ -67,6 +67,10 @@ declare global {
  * @csspart secondary - The secondary pane
  * @csspart separator - The separator between the panes
  *
+ * @cssstate collapsed - While its primary pane is collapsed to `min`.
+ * @cssstate disabled - While it's disabled.
+ * @cssstate dragging - While the user drags its separator.
+ *
  * @fires {Event} change - When the user finishes moving the divider. Setting `value` doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  */
