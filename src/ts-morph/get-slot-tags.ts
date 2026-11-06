@@ -38,7 +38,7 @@ export default (
           writer.write(`{${slot.type.text}}`);
         }
 
-        if (slot.description) {
+        if ('description' in slot && slot.description) {
           // Multi-line comments are hard to read unless we indent them. Figured
           // doing so isn't worthwhile given the complexity of indenting them
           // correctly. So we simply reduce the comment to a single line.

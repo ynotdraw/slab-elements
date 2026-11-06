@@ -46,12 +46,12 @@ declare global {
  *
  * @slot {Element} - The links and Navigation Menu Items, each in an `<li>` of its own
  *
- * @csspart item
+ * @csspart item - Each item's list item
  * @csspart list - The links and Items
  * @csspart nav - The navigation
  *
  * @readonly
- * @prop {Element[]} items
+ * @prop {Element[]} items - Its Navigation Menu Items, in order.
  */
 @customElement('slab-navigation-menu')
 export default class NavigationMenu extends LitElement {

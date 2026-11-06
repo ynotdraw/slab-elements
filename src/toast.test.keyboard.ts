@@ -19,7 +19,7 @@ test(
 
     await expect(host).toDispatchEvents(
       () => page.keyboard.press('Escape'),
-      [{ type: 'dismiss', bubbles: true, cancelable: false, composed: true }],
+      [{ type: 'dismiss', bubbles: true, cancelable: true, composed: true }],
     );
 
     await expect(host).toHaveJSProperty('open', false);

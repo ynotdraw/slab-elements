@@ -27,6 +27,10 @@ export default (
             ? `{${event.type?.text}} ${event.name}`
             : `${event.name}`,
         );
+
+        if ('description' in event && event.description) {
+          writer.write(` - ${event.description.replaceAll('\n', ' ')}`);
+        }
       },
     });
   }

@@ -50,7 +50,7 @@ declare global {
  * @csspart menubar - The Menus
  *
  * @readonly
- * @prop {Menu[]} menus
+ * @prop {Menu[]} menus - Its Menus, in order.
  */
 @customElement('slab-menubar')
 export default class Menubar extends LitElement {

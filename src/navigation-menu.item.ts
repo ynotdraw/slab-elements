@@ -48,7 +48,7 @@ const focusableSelector =
  * between the links. Up from the first goes back to the button.
  *
  * @attr {string} label - The button's text and so its accessible name.
- * @attr {boolean} [open=false]
+ * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
  *
  * @readonly
  * @attr {string} [version]
@@ -56,18 +56,18 @@ const focusableSelector =
  * @slot {Element} - The links, each in an `<li>` of its own
  *
  * @csspart content - The content shown when open
- * @csspart item
+ * @csspart item - Each link's list item
  * @csspart list - The links
  * @csspart trigger - The button that shows and hides the content
  *
- * @fires {ToggleEvent} toggle
+ * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
  * @readonly
- * @prop {Element[]} items
+ * @prop {Element[]} items - What's in its panel, in order.
  *
- * @method hide
- * @method show
- * @method toggle
+ * @method hide - Closes it.
+ * @method show - Opens it.
+ * @method toggle - Opens it when it's closed, and closes it when it's open.
  */
 @customElement('slab-navigation-menu-item')
 export default class NavigationMenuItem extends LitElement {

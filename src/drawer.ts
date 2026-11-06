@@ -28,28 +28,28 @@ declare global {
  * it through `::part(dialog)`.
  *
  * @attr {'any'|'closerequest'|'none'} [closedby] - Passed to the `<dialog>`. "any" closes it on a click outside it where the browser supports that. Browsers that don't ignore it.
- * @attr {boolean} [hide-label=false]
- * @attr {string} [label]
- * @attr {boolean} [open=false]
+ * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
+ * @attr {string} [label] - Names it. It's the accessible name, and the visible label where there is one.
+ * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
  *
  * @readonly
  * @attr {string} [version]
  *
  * @slot {Element | string}
- * @slot {Element | string} [label]
+ * @slot {Element | string} [label] - Its heading, in place of `label`
  *
  * @csspart dialog - The native dialog. A modal one's backdrop is its ::backdrop
  * @csspart label - The label
  *
- * @fires {Event} cancel
- * @fires {Event} close
+ * @fires {Event} cancel - When the user asks to close it, with Escape or, with `closedby="any"`, a click outside. Cancel it to keep it open, as a native dialog's.
+ * @fires {Event} close - When it closes, as a native dialog's does.
  *
  * @prop {string} returnValue - The `<dialog>`'s, so `close(returnValue)` and a `<form method="dialog">` set it the way they do natively.
  *
- * @method close
+ * @method close - Closes it, setting `returnValue` to the value given, as a native dialog's `close()` does.
  * @param {string} [returnValue]
  *
- * @method show
+ * @method show - Opens it.
  */
 @customElement('slab-drawer')
 export default class Drawer extends Dialog {

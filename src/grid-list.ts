@@ -71,16 +71,16 @@ declare global {
  *
  * @csspart grid - The rows
  *
- * @fires {Event} change
+ * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  *
  * @readonly
- * @prop {GridListItem[]} items
+ * @prop {GridListItem[]} items - Its Grid List Items, in order.
  *
  * @readonly
- * @prop {GridListItem | null} selectedItem
+ * @prop {GridListItem | null} selectedItem - The first selected item, or `null`.
  *
  * @readonly
- * @prop {GridListItem[]} selectedItems
+ * @prop {GridListItem[]} selectedItems - Every selected item, in order.
  */
 @customElement('slab-grid-list')
 export default class GridList extends LitElement {

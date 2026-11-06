@@ -57,6 +57,9 @@ declare global {
  *
  * Escape dismisses it while focus is in it.
  *
+ * However it's dismissed, by Escape, its timer or `dismiss()`, it dispatches
+ * "dismiss" first. Cancel that to keep it shown, as Alert's can be.
+ *
  * Style it through its part and through `:state(open)`. Where it sits on the
  * page, and whether several stack, is left to the styles around it.
  *
@@ -67,16 +70,16 @@ declare global {
  *
  * @slot {Element | string} - What's announced
  *
- * @csspart region
+ * @csspart region - The region it's shown in
  *
- * @fires {Event} dismiss
+ * @fires {Event} dismiss - When it's dismissed, by Escape, its timer or `dismiss()`. Cancel it to keep it shown.
  *
  * @readonly
- * @prop {boolean} open
+ * @prop {boolean} open - Whether it's shown.
  *
- * @method dismiss
+ * @method dismiss - Hides it.
  *
- * @method show
+ * @method show - Shows it.
  * @returns Promise<void>
  */
 @customElement('slab-toast')
@@ -145,6 +148,16 @@ export default class Toast extends LitElement {
       return;
     }
 
+    // Before anything changes, so a listener can cancel it and keep the toast,
+    // as Alert's can.
+    const isAllowed = this.dispatchEvent(
+      new Event('dismiss', { bubbles: true, cancelable: true, composed: true }),
+    );
+
+    if (!isAllowed) {
+      return;
+    }
+
     this.#clearTimer();
 
     this.isOpen = false;
@@ -155,8 +168,6 @@ export default class Toast extends LitElement {
     if (this.#isFocusWithin) {
       this.#returnFocus();
     }
-
-    this.dispatchEvent(new Event('dismiss', { bubbles: true, composed: true }));
   }
 
   override firstUpdated() {

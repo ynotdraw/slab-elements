@@ -54,11 +54,11 @@ declare global {
  *
  * Style it through its `card` part and `:state(open)`.
  *
- * @attr {number} [close-delay=300]
+ * @attr {number} [close-delay=300] - How many milliseconds it waits after the pointer and focus leave before it closes.
  * @attr {boolean} [disabled=false] - The card doesn't open.
  * @attr {string} [label] - Makes the card a group named by it, announced when focus moves into it.
- * @attr {boolean} [open=false]
- * @attr {number} [open-delay=700]
+ * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
+ * @attr {number} [open-delay=700] - How many milliseconds the pointer rests on the anchor before it opens.
  * @attr {'bottom'|'left'|'right'|'top'} [placement='bottom'] - The side of its anchor it opens on, when there's room. It flips when there isn't.
  *
  * @readonly
@@ -67,9 +67,9 @@ declare global {
  * @slot {Element} - The card's content, which can hold links, buttons and anything else that can be focused
  * @slot {Element} anchor - The element the card is for, usually a link. It should be one that can be focused.
  *
- * @csspart card
+ * @csspart card - The card
  *
- * @fires {ToggleEvent} toggle
+ * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  */
 @customElement('slab-hover-card')
 export default class HoverCard extends LitElement {

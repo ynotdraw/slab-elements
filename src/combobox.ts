@@ -94,16 +94,16 @@ declare global {
  * through `:state(active)`, `:state(disabled)` and `:state(selected)`. The
  * tags are `::part(tag)`, in `::part(tags)`.
  *
- * @attr {string} label
+ * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
  * @attr {boolean} [allow-custom=false] - Lets the value be text that matches no Option.
- * @attr {boolean} [disabled=false]
- * @attr {boolean} [hide-label=false]
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
+ * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {boolean} [multiple=false] - Lets more than one Option be selected, each shown as a tag that removes it.
- * @attr {string} [name='']
- * @attr {boolean} [open=false]
- * @attr {string} [placeholder]
+ * @attr {string} [name=''] - The name its value is submitted under, as a native control's `name`.
+ * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
+ * @attr {string} [placeholder] - Shown while it's empty, as a native input's `placeholder`. It's a hint, not a label.
  * @attr {'bottom'|'top'} [placement='bottom'] - The side of the input the listbox opens on, when there's room. It flips when there isn't.
- * @attr {boolean} [required=false]
+ * @attr {boolean} [required=false] - Makes it invalid while it has no value, as `required` does a native control.
  * @attr {string} [value=''] - The selected Option's value, or the typed text when `allow-custom` is set and it matches no Option. The first of `values` when `multiple` is set. Setting it selects the Option with that value, and only that one. Like a native input, the attribute is the default value and the property is the current one.
  *
  * @readonly
@@ -112,35 +112,35 @@ declare global {
  * @attr {boolean} [virtual=false] - Lays out only the Options in or near view, for a Combobox with thousands. Give `::part(listbox)` a maximum block size so it scrolls. Options are taken to be the same height as each other.
  *
  * @slot {Option | OptionGroup}
- * @slot {Element | string} [description]
+ * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
  *
  * @csspart description - Text about the Combobox, and its validity message when it has one
- * @csspart input
+ * @csspart input - The input
  * @csspart label - The label
  * @csspart listbox - The Options, in a popover beside the input
  * @csspart tag - A selected value's button, which removes it
  * @csspart tags - The tags
- * @csspart validity-message
+ * @csspart validity-message - The validity message, which says why the value is invalid
  *
- * @fires {Event} change
- * @fires {Event} input
- * @fires {ToggleEvent} toggle
+ * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
+ * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
+ * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
  * @prop {Option | null} activeOption - The Option the user is on, which Enter selects. It's pointed at rather than focused, so focus stays in the input.
  * @prop {(option: Option, query: string) => boolean} filter - Whether an Option matches what's been typed. A case-insensitive substring of its text by default.
  *
  * @readonly
- * @prop {HTMLFormElement | null} form
+ * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
  * @readonly
- * @prop {Option[]} options
+ * @prop {Option[]} options - Its Options, in order.
  *
  * @prop {(text: string) => string} removeLabel - Names each tag's button, which shows only the selected Option's text, from that text. "Remove" and the text in English when unset.
  * @prop {(text: string) => string} removedLabel - What screenreaders are told when a tag is removed, from its text. The text and "removed" in English when unset.
  * @prop {(count: number) => string} resultsLabel - What screenreaders are told once typing pauses, from how many Options are left. "No results", "1 result" and so on in English when unset.
  *
  * @readonly
- * @prop {Option | null} selectedOption
+ * @prop {Option | null} selectedOption - The first selected Option, or `null`.
  *
  * @readonly
  * @prop {Option[]} selectedOptions - The Options of `values`, in the same order. Values that name no Option are left out.
@@ -149,33 +149,33 @@ declare global {
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
  *
  * @readonly
- * @prop {ValidityState} validity
+ * @prop {ValidityState} validity - Its `ValidityState`, as a native control's.
  *
  * @prop {string[]} values - Every selected value, in the order they were chosen. Only the first when `multiple` isn't set. Setting it selects the Options with those values, and only those.
  *
  * @readonly
- * @prop {boolean} willValidate
+ * @prop {boolean} willValidate - Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.
  *
- * @method checkValidity
+ * @method checkValidity - Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.
  * @returns boolean
  *
- * @method formDisabledCallback
+ * @method formDisabledCallback - Called by the browser when an ancestor `<fieldset>` is disabled or enabled. Not for calling yourself.
  * @param {boolean} isDisabled
  *
- * @method formResetCallback
+ * @method formResetCallback - Called by the browser when its form resets. Not for calling yourself.
  *
- * @method formStateRestoreCallback
+ * @method formStateRestoreCallback - Called by the browser when it restores the value, such as after the back button. Not for calling yourself.
  * @param {string | File | FormData | null} state
  *
- * @method reportValidity
+ * @method reportValidity - Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.
  * @returns boolean
  *
  * @method resetValidityFeedback - Clears the validity feedback without changing `validity`.
  *
- * @method setCustomValidity
+ * @method setCustomValidity - Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.
  * @param {string} message
  *
- * @method setValidity
+ * @method setValidity - Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.
  * @param {ValidityStateFlags} [flags]
  * @param {string} [message]
  */

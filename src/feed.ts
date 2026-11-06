@@ -57,7 +57,7 @@ const focusableSelector =
  * @csspart feed - The articles
  *
  * @readonly
- * @prop {Element[]} items
+ * @prop {Element[]} items - Its Feed Items, in order.
  */
 @customElement('slab-feed')
 export default class Feed extends LitElement {

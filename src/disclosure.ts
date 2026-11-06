@@ -44,10 +44,10 @@ declare global {
  * `<summary>` has to be the `<details>`'s first child. Most screenreaders read
  * it as a heading there, though some read only the `<summary>`'s button.
  *
- * @attr {string} label
+ * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
  * @attr {1|2|3|4|5|6} [heading-level] - Makes the label a heading of this level, from 1 to 6.
- * @attr {string} [name='']
- * @attr {boolean} [open=false]
+ * @attr {string} [name=''] - Groups it with every other Disclosure of the same name, so opening one closes the rest, as a native `<details>`'s `name` does.
+ * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
  *
  * @readonly
  * @attr {string} [version]
@@ -57,7 +57,7 @@ declare global {
  * @csspart content - The content revealed when open
  * @csspart details - The label, and the control that toggles the content
  *
- * @fires {ToggleEvent} toggle
+ * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  */
 @customElement('slab-disclosure')
 export default class Disclosure extends LitElement {

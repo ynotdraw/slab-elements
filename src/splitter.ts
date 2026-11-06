@@ -51,7 +51,7 @@ declare global {
  * focus is visible, for a focus ring.
  *
  * @attr {string} label - Names the separator. Name it after the primary pane, as the separator resizes it.
- * @attr {boolean} [disabled=false]
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {number} [max=100] - The most of the splitter the primary pane can take up, as a percentage.
  * @attr {number} [min=0] - The least of the splitter the primary pane can take up, as a percentage. Enter collapses the primary pane to it.
  * @attr {'horizontal'|'vertical'} [orientation='vertical'] - The separator's. A vertical one sits between panes side by side, and a horizontal one between panes stacked on top of each other.
@@ -61,8 +61,8 @@ declare global {
  * @readonly
  * @attr {string} [version]
  *
- * @slot {Element} [primary]
- * @slot {Element} [secondary]
+ * @slot {Element} [primary] - The pane `value` sizes, before the divider
+ * @slot {Element} [secondary] - The pane after the divider, which takes the rest
  *
  * @csspart container - The panes and the separator
  * @csspart focus-visible - The separator while its input has visible focus
@@ -70,8 +70,8 @@ declare global {
  * @csspart secondary - The secondary pane
  * @csspart separator - The separator between the panes
  *
- * @fires {Event} change
- * @fires {Event} input
+ * @fires {Event} change - When the user finishes moving the divider. Setting `value` doesn't dispatch it.
+ * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  */
 @customElement('slab-splitter')
 export default class Splitter extends LitElement {

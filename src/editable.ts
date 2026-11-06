@@ -40,29 +40,29 @@ declare global {
  * `:state(editing)` and `:state(empty)`. While it's empty, the button shows
  * `placeholder`.
  *
- * @attr {string} label
- * @attr {boolean} [disabled=false]
+ * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {boolean} [editing=false] - Whether the input is showing rather than the button. Setting it doesn't move focus. `edit()` does.
- * @attr {boolean} [hide-label=false]
- * @attr {number} [maxlength]
- * @attr {string} [name='']
+ * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
+ * @attr {number} [maxlength] - The most characters the user can type, as a native input's `maxlength`.
+ * @attr {string} [name=''] - The name its value is submitted under, as a native control's `name`.
  * @attr {string} [placeholder] - Shown on the button while it's empty, and in the input.
  * @attr {string} [value=''] - Like a native input, the attribute is the default value and the property is the current one, so the attribute doesn't change as edits are committed.
  *
  * @readonly
  * @attr {string} [version]
  *
- * @slot {Element | string} [description]
+ * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
  *
  * @csspart description - Text about the field
- * @csspart input
+ * @csspart input - The input
  * @csspart label - The label
  * @csspart preview - The button, while not editing
  *
- * @fires {Event} change
+ * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  *
  * @readonly
- * @prop {HTMLFormElement | null} form
+ * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
  * @method cancel - Stops editing and discards what's typed.
  * @method commit - Stops editing and keeps what's typed.
@@ -70,12 +70,12 @@ declare global {
  * @method edit - Starts editing and focuses the input, with its text selected.
  * @returns Promise<void>
  *
- * @method formDisabledCallback
+ * @method formDisabledCallback - Called by the browser when an ancestor `<fieldset>` is disabled or enabled. Not for calling yourself.
  * @param {boolean} isDisabled
  *
- * @method formResetCallback
+ * @method formResetCallback - Called by the browser when its form resets. Not for calling yourself.
  *
- * @method formStateRestoreCallback
+ * @method formStateRestoreCallback - Called by the browser when it restores the value, such as after the back button. Not for calling yourself.
  * @param {string | File | FormData | null} state
  */
 @customElement('slab-editable')

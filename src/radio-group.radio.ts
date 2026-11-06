@@ -26,18 +26,18 @@ declare global {
  *
  * Radio Group sets its `:state(checked)` and `:state(disabled)`.
  *
- * @attr {string} label
+ * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
  * @attr {boolean} [checked=false] - Like a native radio, the attribute is the default state and the property is the current one. Style `:state(checked)` rather than `[checked]`.
- * @attr {boolean} [disabled=false]
- * @attr {string} [value='']
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
+ * @attr {string} [value=''] - What its Radio Group submits while it's checked.
  *
  * @readonly
  * @attr {string} [version]
  *
  * @slot {Element | string} - The label, plus anything else a design puts in a Radio
  *
- * @fires {Event} change
- * @fires {Event} input
+ * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
+ * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  */
 @customElement('slab-radio-group-radio')
 export default class Radio extends LitElement {
