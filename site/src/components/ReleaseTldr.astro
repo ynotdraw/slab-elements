@@ -3,7 +3,7 @@
 // component at a time: its numbers, the short version, a tile per new
 // component with its example live, and every fix on a line.
 import { getEntry } from 'astro:content';
-import { inline } from '../lib/prose.ts';
+import { inline, linked } from '../lib/prose.ts';
 import { isPublished, type Announcement, type Tldr } from '../lib/releases.ts';
 import { sections as upgradeSections, title as upgradeTitle } from '../lib/upgrade.ts';
 import CodeBlock from './CodeBlock.astro';
@@ -13,7 +13,7 @@ interface Props {
   announcement: Announcement & { tldr: Tldr };
 }
 
-const { highlights, intro, summary, tldr, version } = Astro.props.announcement;
+const { dedication, highlights, intro, summary, tldr, version } = Astro.props.announcement;
 const {
   additions,
   checks,
@@ -113,6 +113,23 @@ const stats = [
     }
     <PageActions markdown={`releases/${version}.md`} />
   </header>
+
+  {
+    dedication && (
+      <section aria-labelledby="dedication" class="dedication">
+        <h2 id="dedication">
+          In memory of <a href={dedication.href}>{dedication.name}</a>
+        </h2>
+        <figure>
+          <blockquote>
+            <p>{dedication.text}</p>
+          </blockquote>
+          <figcaption>{dedication.by}</figcaption>
+        </figure>
+        <p class="donation" set:html={linked(dedication.donation)} />
+      </section>
+    )
+  }
 
   <ul class="stats">
     {
@@ -335,6 +352,49 @@ const stats = [
     border-inline-start: 8px solid var(--ember);
     max-inline-size: 62ch;
     padding: 0.75rem 1rem;
+  }
+
+  /* Quiet beside the rest: no ember, no shadow. */
+  .dedication {
+    border-block: 1px solid var(--ink);
+    display: grid;
+    gap: 1rem;
+    max-inline-size: 62ch;
+    padding-block: 2rem;
+
+    h2 {
+      font-size: clamp(1.375rem, 3vw, 1.75rem);
+    }
+
+    figure,
+    blockquote,
+    p {
+      margin: 0;
+    }
+
+    figure {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    blockquote p {
+      font-size: 1.1875rem;
+      line-height: 1.6;
+    }
+
+    figcaption {
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+
+      &::before {
+        content: '— ';
+      }
+    }
+  }
+
+  .donation {
+    color: var(--muted);
   }
 
   /* The numbers, on ink, a slab each, with the logo's ember course below. */

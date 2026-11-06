@@ -110,6 +110,7 @@ export const GET: APIRoute<{ announcement: Announcement }> = async ({
   props,
 }) => {
   const {
+    dedication,
     highlights,
     intro,
     notes = [],
@@ -126,6 +127,12 @@ export const GET: APIRoute<{ announcement: Announcement }> = async ({
       intro,
       !published &&
         `${version} isn't on npm yet. This is what's in it, from \`main\`, ahead of the release.`,
+      dedication &&
+        [
+          `## In memory of [${dedication.name}](${dedication.href})`,
+          `> ${dedication.text}\n>\n> — ${dedication.by}`,
+          dedication.donation,
+        ].join('\n\n'),
       ...(await tldrSections(props.announcement, tldr)),
     ]
       .filter(Boolean)
