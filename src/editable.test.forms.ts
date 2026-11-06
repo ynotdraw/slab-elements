@@ -253,6 +253,25 @@ test(
 );
 
 test(
+  'marks its input invalid once reported, while editing',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`<slab-editable editing label="Label"></slab-editable>`,
+    );
+
+    const host = page.locator('slab-editable');
+    const input = page.getByTestId('input');
+
+    await callMethod(host, 'setCustomValidity', 'Message');
+    await expect(input).toHaveAttribute('aria-invalid', 'false');
+
+    await callMethod(host, 'reportValidity');
+    await expect(input).toHaveAttribute('aria-invalid', 'true');
+  },
+);
+
+test(
   'is invalid with a custom validity message, shown once reported',
   { tag: '@forms' },
   async ({ callMethod, render, page }) => {

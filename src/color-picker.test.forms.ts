@@ -295,6 +295,25 @@ test(
 );
 
 test(
+  'marks each of its inputs invalid once reported, the alpha slider too',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`<slab-color-picker alpha label="Label"></slab-color-picker>`,
+    );
+
+    const host = page.locator('slab-color-picker');
+    const alpha = page.locator('#alpha-thumb');
+
+    await callMethod(host, 'setCustomValidity', 'Message');
+    await expect(alpha).toHaveAttribute('aria-invalid', 'false');
+
+    await callMethod(host, 'reportValidity');
+    await expect(alpha).toHaveAttribute('aria-invalid', 'true');
+  },
+);
+
+test(
   'is invalid with a custom validity message, shown once reported',
   { tag: '@forms' },
   async ({ callMethod, render, page }) => {
