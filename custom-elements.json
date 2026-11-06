@@ -2889,6 +2889,10 @@
             {
               "description": "While the user drags a thumb.",
               "name": "dragging"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
             }
           ],
           "superclass": {
@@ -3569,6 +3573,10 @@
             {
               "description": "While it's open.",
               "name": "open"
+            },
+            {
+              "description": "While it's read-only.",
+              "name": "readonly"
             },
             {
               "description": "While it's required, for styles such as an asterisk.",
@@ -8655,6 +8663,10 @@
             {
               "description": "While it has no value.",
               "name": "empty"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
             }
           ],
           "superclass": {
@@ -16278,6 +16290,10 @@
             {
               "description": "While the user drags a thumb.",
               "name": "dragging"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
             }
           ],
           "superclass": {
@@ -18492,6 +18508,10 @@
             {
               "description": "While it's disabled.",
               "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
             }
           ],
           "superclass": {
@@ -21769,6 +21789,10 @@
             {
               "description": "While it has `max` tags.",
               "name": "full"
+            },
+            {
+              "description": "While it's read-only.",
+              "name": "readonly"
             },
             {
               "description": "While it's required, for styles such as an asterisk.",
