@@ -87,6 +87,7 @@ declare global {
  * @cssstate empty - While it has no tags.
  * @cssstate error - While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.
  * @cssstate full - While it has `max` tags.
+ * @cssstate readonly - While it's read-only.
  * @cssstate required - While it's required, for styles such as an asterisk.
  *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.

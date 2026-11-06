@@ -2889,6 +2889,10 @@
             {
               "description": "While the user drags a thumb.",
               "name": "dragging"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
             }
           ],
           "superclass": {
@@ -3329,6 +3333,16 @@
             },
             {
               "kind": "method",
+              "name": "hide",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Closes the listbox."
+            },
+            {
+              "kind": "method",
               "name": "reportValidity",
               "return": {
                 "type": {
@@ -3390,6 +3404,16 @@
                 }
               ],
               "description": "Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`."
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Opens the listbox, unless there's nothing in it to choose: while it's\ndisabled, or when no Option matches what's typed."
             },
             {
               "kind": "method",
@@ -3569,6 +3593,10 @@
             {
               "description": "While it's open.",
               "name": "open"
+            },
+            {
+              "description": "While it's read-only.",
+              "name": "readonly"
             },
             {
               "description": "While it's required, for styles such as an asterisk.",
@@ -8655,6 +8683,10 @@
             {
               "description": "While it has no value.",
               "name": "empty"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
             }
           ],
           "superclass": {
@@ -10424,6 +10456,26 @@
               "description": "The side of its anchor it opens on, when there's room. It flips when there\nisn't.",
               "attribute": "placement",
               "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Closes it at once, without waiting for `close-delay`. Focus in the card\ngoes back to the anchor, as it does on Escape."
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Opens it at once, without waiting for `open-delay`. It doesn't open while\nit's disabled."
             },
             {
               "kind": "method",
@@ -16278,6 +16330,10 @@
             {
               "description": "While the user drags a thumb.",
               "name": "dragging"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
             }
           ],
           "superclass": {
@@ -18492,6 +18548,10 @@
             {
               "description": "While it's disabled.",
               "name": "disabled"
+            },
+            {
+              "description": "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+              "name": "error"
             }
           ],
           "superclass": {
@@ -21771,6 +21831,10 @@
               "name": "full"
             },
             {
+              "description": "While it's read-only.",
+              "name": "readonly"
+            },
+            {
               "description": "While it's required, for styles such as an asterisk.",
               "name": "required"
             }
@@ -24665,6 +24729,26 @@
               "description": "The side of its anchor it opens on, when there's room. It flips when there\nisn't.",
               "attribute": "placement",
               "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Closes it at once, without waiting for `close-delay`."
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Opens it at once, without waiting for `open-delay`. It doesn't open while\nit's disabled."
             },
             {
               "kind": "method",
