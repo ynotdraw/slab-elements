@@ -321,3 +321,25 @@ test(
     ]);
   },
 );
+
+test(
+  "matches `:state(open)` while it's open",
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () => html`<slab-date-picker label="Label" open></slab-date-picker>`,
+    );
+
+    const host = page.locator('slab-date-picker');
+
+    await expect
+      .poll(() => host.evaluate((element) => element.matches(':state(open)')))
+      .toBe(true);
+
+    await setProperty(host, 'open', false);
+
+    await expect
+      .poll(() => host.evaluate((element) => element.matches(':state(open)')))
+      .toBe(false);
+  },
+);

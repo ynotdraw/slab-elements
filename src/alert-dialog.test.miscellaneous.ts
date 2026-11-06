@@ -86,3 +86,28 @@ test(
     await expect(page.getByTestId('cancel')).toHaveText('Keep it');
   },
 );
+
+test(
+  "matches `:state(open)` while it's open",
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-alert-dialog label="Label" open>
+          <button>Delete</button>
+        </slab-alert-dialog>`,
+    );
+
+    const host = page.locator('slab-alert-dialog');
+
+    await expect
+      .poll(() => host.evaluate((element) => element.matches(':state(open)')))
+      .toBe(true);
+
+    await setProperty(host, 'open', false);
+
+    await expect
+      .poll(() => host.evaluate((element) => element.matches(':state(open)')))
+      .toBe(false);
+  },
+);

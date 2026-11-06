@@ -235,3 +235,30 @@ test(
     ).rejects.toThrow();
   },
 );
+
+test(
+  "matches `:state(open)` while it's open",
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-navigation-menu label="Main">
+          <slab-navigation-menu-item label="Services" open>
+            <a href="#">Pouring</a>
+          </slab-navigation-menu-item>
+        </slab-navigation-menu>`,
+    );
+
+    const host = page.locator('slab-navigation-menu-item');
+
+    await expect
+      .poll(() => host.evaluate((element) => element.matches(':state(open)')))
+      .toBe(true);
+
+    await setProperty(host, 'open', false);
+
+    await expect
+      .poll(() => host.evaluate((element) => element.matches(':state(open)')))
+      .toBe(false);
+  },
+);

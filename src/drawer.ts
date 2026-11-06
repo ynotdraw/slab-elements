@@ -38,6 +38,8 @@ declare global {
  * @csspart dialog - The native dialog. A modal one's backdrop is its ::backdrop
  * @csspart label - The label
  *
+ * @cssstate open - While it's open.
+ *
  * @fires {Event} cancel - When something asks it to close: Escape, a click outside with `closedby="any"`, or `requestClose()`. Cancel it to keep it open, as a native dialog's.
  * @fires {Event} close - When it closes, as a native dialog's does.
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.

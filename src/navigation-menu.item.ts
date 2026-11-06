@@ -57,6 +57,8 @@ const focusableSelector =
  * @csspart list - The links
  * @csspart trigger - The button that shows and hides the content
  *
+ * @cssstate open - While it's open.
+ *
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
  * @readonly
@@ -194,6 +196,12 @@ export default class NavigationMenuItem extends LitElement {
         );
       }
     }
+
+    if (this.open) {
+      this.#internals.states.add('open');
+    } else {
+      this.#internals.states.delete('open');
+    }
   }
 
   // Functional styles go in here rather than in `styles`, so a subclass that
@@ -204,12 +212,19 @@ export default class NavigationMenuItem extends LitElement {
     return super.finalizeStyles([styles, subclassStyles ?? []]);
   }
 
+  constructor() {
+    super();
+    this.#internals = this.attachInternals();
+  }
+
   // A consumer's `aria-*`, and Tooltip's, Popover's and Menu's, on the host.
   // It does its work through the host's lifecycle, so nothing calls it.
   // eslint-disable-next-line no-unused-private-class-members
   #ariaForwarding = new AriaForwarding(this, {
     target: () => this.#triggerElementRef.value,
   });
+
+  #internals: ElementInternals;
 
   #isPointerDown = false;
 

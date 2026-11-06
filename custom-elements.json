@@ -467,6 +467,16 @@
               },
               "description": "When it closes, as a native dialog's does."
             }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's open.",
+              "name": "open",
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            }
           ]
         }
       ],
@@ -4028,6 +4038,14 @@
             {
               "description": "While no command matches what the user typed, for a \"no results\" message of your own.",
               "name": "empty"
+            },
+            {
+              "description": "While it's open.",
+              "name": "open",
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
             }
           ],
           "superclass": {
@@ -5927,26 +5945,11 @@
               }
             }
           ],
-          "superclass": {
-            "name": "DateField",
-            "module": "/src/date-field.js"
-          },
-          "tagName": "slab-date-picker",
-          "customElement": true,
-          "slots": [
-            {
-              "name": "description",
-              "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
-              "type": {
-                "text": "Element | string"
-              },
-              "inheritedFrom": {
-                "name": "DateField",
-                "module": "src/date-field.ts"
-              }
-            }
-          ],
           "cssStates": [
+            {
+              "description": "While it's open.",
+              "name": "open"
+            },
             {
               "description": "While it's disabled.",
               "name": "disabled",
@@ -5974,6 +5977,25 @@
             {
               "description": "While it's required, for styles such as an asterisk.",
               "name": "required",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "DateField",
+            "module": "/src/date-field.js"
+          },
+          "tagName": "slab-date-picker",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "description",
+              "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+              "type": {
+                "text": "Element | string"
+              },
               "inheritedFrom": {
                 "name": "DateField",
                 "module": "src/date-field.ts"
@@ -7461,26 +7483,11 @@
               }
             }
           ],
-          "superclass": {
-            "name": "DateRangeField",
-            "module": "/src/date-range-field.js"
-          },
-          "tagName": "slab-date-range-picker",
-          "customElement": true,
-          "slots": [
-            {
-              "name": "description",
-              "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
-              "type": {
-                "text": "Element | string"
-              },
-              "inheritedFrom": {
-                "name": "DateRangeField",
-                "module": "src/date-range-field.ts"
-              }
-            }
-          ],
           "cssStates": [
+            {
+              "description": "While it's open.",
+              "name": "open"
+            },
             {
               "description": "While it's disabled.",
               "name": "disabled",
@@ -7508,6 +7515,25 @@
             {
               "description": "While it's required, for styles such as an asterisk.",
               "name": "required",
+              "inheritedFrom": {
+                "name": "DateRangeField",
+                "module": "src/date-range-field.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "DateRangeField",
+            "module": "/src/date-range-field.js"
+          },
+          "tagName": "slab-date-range-picker",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "description",
+              "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+              "type": {
+                "text": "Element | string"
+              },
               "inheritedFrom": {
                 "name": "DateRangeField",
                 "module": "src/date-range-field.ts"
@@ -7762,6 +7788,12 @@
               "description": "Whether it's open. Set it to open or close it."
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's open.",
+              "name": "open"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -7965,6 +7997,12 @@
               "default": "false",
               "fieldName": "open",
               "description": "Whether it's open. Set it to open or close it."
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's open.",
+              "name": "open"
             }
           ],
           "superclass": {
@@ -8306,6 +8344,16 @@
                 "module": "src/dialog.ts"
               },
               "description": "When it closes, as a native dialog's does."
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's open.",
+              "name": "open",
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
             }
           ]
         }
@@ -12369,6 +12417,12 @@
               "description": "Whether it's open. Set it to open or close it."
             }
           ],
+          "cssStates": [
+            {
+              "description": "While it's open.",
+              "name": "open"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -15124,6 +15178,12 @@
               "default": "'bottom'",
               "description": "The side of its anchor it opens on, when there's room. It flips when\nthere isn't.",
               "fieldName": "placement"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's open.",
+              "name": "open"
             }
           ],
           "superclass": {

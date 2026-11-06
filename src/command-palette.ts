@@ -94,6 +94,7 @@ declare global {
  * @csspart listbox - The Options, below the input
  *
  * @cssstate empty - While no command matches what the user typed, for a "no results" message of your own.
+ * @cssstate open - While it's open.
  *
  * @fires {Event} cancel - When something asks it to close: Escape, a click outside with `closedby="any"`, or `requestClose()`. Cancel it to keep it open, as a native dialog's.
  * @fires {Event} close - When it closes, as a native dialog's does.
@@ -305,16 +306,9 @@ export default class CommandPalette extends Dialog {
     return super.finalizeStyles([styles, subclassStyles ?? []]);
   }
 
-  constructor() {
-    super();
-    this.#internals = this.attachInternals();
-  }
-
   #announceTimeout?: ReturnType<typeof setTimeout>;
 
   #inputElementRef = createRef<HTMLInputElement>();
-
-  #internals: ElementInternals;
 
   // Selection is left off. Choosing an Option closes the palette rather than
   // selecting it. Options that don't match what's been typed aren't shown, so
@@ -424,9 +418,9 @@ export default class CommandPalette extends Dialog {
 
   #setState(state: string, isActive: boolean) {
     if (isActive) {
-      this.#internals.states.add(state);
+      this.internals.states.add(state);
     } else {
-      this.#internals.states.delete(state);
+      this.internals.states.delete(state);
     }
   }
 }
