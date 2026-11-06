@@ -646,3 +646,50 @@ test(
     );
   },
 );
+
+test(
+  'opens and closes with `show()` and `hide()`',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label">
+          <slab-option>One</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await expect(host).toDispatchEvents(
+      () => callMethod(host, 'show'),
+      [{ type: 'toggle', bubbles: false, cancelable: false, composed: false }],
+    );
+
+    await expect(page.getByRole('listbox')).toBeVisible();
+
+    await callMethod(host, 'hide');
+
+    await expect(page.getByRole('listbox')).toBeHidden();
+    await expect(host).toHaveJSProperty('open', false);
+  },
+);
+
+test(
+  'does not open with `show()` when disabled',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label" disabled>
+          <slab-option>One</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await callMethod(host, 'show');
+
+    await expect(page.getByRole('listbox')).toBeHidden();
+    await expect(host).toHaveJSProperty('open', false);
+  },
+);

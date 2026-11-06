@@ -56,6 +56,9 @@ declare global {
  * @csspart tooltip - The tooltip
  *
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
+ *
+ * @method hide - Closes it at once, without waiting for `close-delay`.
+ * @method show - Opens it at once, without waiting for `open-delay`. It doesn't open while it's disabled.
  */
 @customElement('slab-tooltip')
 export default class Tooltip extends LitElement {
@@ -120,6 +123,14 @@ export default class Tooltip extends LitElement {
     this.#sync();
   }
 
+  /**
+   * Closes it at once, without waiting for `close-delay`.
+   */
+  hide(): void {
+    clearTimeout(this.#timeoutId);
+    this.open = false;
+  }
+
   override render() {
     /* eslint-disable lit-a11y/accessible-name */
     return html`<slot
@@ -162,6 +173,18 @@ export default class Tooltip extends LitElement {
           -->
         </slot>
       </div>`;
+  }
+
+  /**
+   * Opens it at once, without waiting for `open-delay`. It doesn't open while
+   * it's disabled.
+   */
+  show(): void {
+    clearTimeout(this.#timeoutId);
+
+    if (!this.disabled) {
+      this.open = true;
+    }
   }
 
   override updated(changes: PropertyValues<this>) {

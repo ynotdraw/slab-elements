@@ -300,3 +300,70 @@ test(
     );
   },
 );
+
+test(
+  'opens and closes at once with `show()` and `hide()`',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<slab-hover-card close-delay="60000" open-delay="60000">
+          <div><a href="#">Link</a></div>
+          <a href="#" slot="anchor">Anchor</a>
+        </slab-hover-card>`,
+    );
+
+    const host = page.locator('slab-hover-card');
+    const card = page.locator('[data-test="card"]');
+
+    await callMethod(host, 'show');
+
+    await expect(card).toBeVisible();
+    await expect(host).toHaveJSProperty('open', true);
+
+    await callMethod(host, 'hide');
+
+    await expect(card).toBeHidden();
+    await expect(host).toHaveJSProperty('open', false);
+  },
+);
+
+test(
+  'gives focus back to its anchor when hidden with focus in the card',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<slab-hover-card open>
+          <div><a href="#">Link</a></div>
+          <a href="#" slot="anchor">Anchor</a>
+        </slab-hover-card>`,
+    );
+
+    await page.getByRole('link', { name: 'Link' }).focus();
+    await callMethod(page.locator('slab-hover-card'), 'hide');
+
+    await expect(page.getByRole('link', { name: 'Anchor' })).toBeFocused();
+  },
+);
+
+test(
+  'does not open with `show()` when disabled',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<slab-hover-card disabled>
+          <div><a href="#">Link</a></div>
+          <a href="#" slot="anchor">Anchor</a>
+        </slab-hover-card>`,
+    );
+
+    const host = page.locator('slab-hover-card');
+
+    await callMethod(host, 'show');
+
+    await expect(page.locator('[data-test="card"]')).toBeHidden();
+    await expect(host).toHaveJSProperty('open', false);
+  },
+);
