@@ -82,6 +82,7 @@ function triggerOf(menu: Element): MenuItem | undefined {
  * @csspart menu - The Menu Items
  * @csspart popover - What the menu opens in
  *
+ * @fires {ToggleEvent} beforetoggle - Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed.
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
  * @readonly
@@ -525,8 +526,23 @@ export default class Menu extends LitElement {
 
   #onPopoverBeforeToggle = (event: ToggleEvent) => {
     // Chromium lets the popover's own "beforetoggle" out of the shadow root,
-    // where Firefox and WebKit don't. It's an implementation detail.
+    // where Firefox and WebKit don't. Stopped so there's only ever the host's,
+    // where a consumer can cancel an opening, as on a native popover.
     event.stopPropagation();
+
+    const isCancelled = !this.dispatchEvent(
+      new ToggleEvent('beforetoggle', {
+        cancelable: event.cancelable,
+        newState: event.newState,
+        oldState: event.oldState,
+      }),
+    );
+
+    if (isCancelled) {
+      event.preventDefault();
+
+      return;
+    }
 
     // Focus goes back to the anchor when the menu had it, before the popover
     // closes and takes focus with it. Not when the user has already moved it
@@ -607,6 +623,11 @@ export default class Menu extends LitElement {
     // Only an element can be a `source`. It makes the anchor the popover's
     // implicit anchor, and where focus goes back to when it closes.
     popover.showPopover({ source: this.#anchor });
+
+    // A "beforetoggle" listener can keep it closed.
+    if (!this.#isPopoverOpen) {
+      return;
+    }
 
     if (start === 'first') {
       this.#menuElementRef.value?.focus();

@@ -195,7 +195,7 @@ import type {} from 'slab-elements/react.js';`,
   {
     id: 'conventions',
     heading: 'The same everywhere',
-    text: "Elements that do the same thing do it the same way. `multiple` lets more than one be chosen, and `value` is the first of `values`. A number is a number where the native element's is, as on Meter and Progress, and a string where it isn't, as on Slider and Number, which add `valueAsNumber`. Anything with `open` dispatches a `ToggleEvent` named \"toggle\" that doesn't bubble, as a popover does. `readonly` is on the fields where a native input has it, and the form controls for a set of choices are Checkbox Group and Radio Group, since toggle buttons aren't form controls.",
+    text: 'Elements that do the same thing do it the same way. `multiple` lets more than one be chosen, and `value` is the first of `values`. A number is a number where the native element\'s is, as on Meter and Progress, and a string where it isn\'t, as on Slider and Number, which add `valueAsNumber`. Anything with `open` dispatches a `ToggleEvent` named "toggle" that doesn\'t bubble, as a popover does. Those that open a popup, such as Popover, Select, Combobox, Menu, Tooltip and the date pickers, dispatch "beforetoggle" first, and cancelling it keeps one from opening. `readonly` is on the fields where a native input has it, and the form controls for a set of choices are Checkbox Group and Radio Group, since toggle buttons aren\'t form controls.',
   },
 ];
 

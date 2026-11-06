@@ -55,6 +55,7 @@ declare global {
  *
  * @csspart tooltip - The tooltip
  *
+ * @fires {ToggleEvent} beforetoggle - Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed.
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  */
 @customElement('slab-tooltip')
@@ -148,6 +149,7 @@ export default class Tooltip extends LitElement {
         part="tooltip"
         .popover=${'manual'}
         role="tooltip"
+        @beforetoggle=${this.#onTooltipBeforeToggle}
         ${ref(this.#tooltipElementRef)}
       >
         <slot
@@ -278,6 +280,26 @@ export default class Tooltip extends LitElement {
     }
   };
 
+  // The popover's own, dispatched again from the host, where a consumer can
+  // cancel an opening, as on a native popover. Chromium lets the popover's
+  // out of the shadow root, where Firefox and WebKit don't, so it's stopped
+  // and there's only ever the host's.
+  #onTooltipBeforeToggle = (event: ToggleEvent) => {
+    event.stopPropagation();
+
+    const isCancelled = !this.dispatchEvent(
+      new ToggleEvent('beforetoggle', {
+        cancelable: event.cancelable,
+        newState: event.newState,
+        oldState: event.oldState,
+      }),
+    );
+
+    if (isCancelled) {
+      event.preventDefault();
+    }
+  };
+
   // An attribute rather than `ariaDescribedByElements`. Element reflection
   // can't reach into a shadow root either, so it buys nothing here. A Slab
   // anchor reflects it onto its own focused element itself. And Playwright's
@@ -348,6 +370,12 @@ export default class Tooltip extends LitElement {
 
       if (!tooltip.matches(':popover-open')) {
         tooltip.showPopover();
+      }
+
+      // A "beforetoggle" listener can keep it closed.
+      if (!tooltip.matches(':popover-open')) {
+        this.#internals.states.delete('open');
+        this.open = false;
       }
 
       return;

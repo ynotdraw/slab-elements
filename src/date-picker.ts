@@ -80,6 +80,7 @@ declare global {
  * @csspart popover - The popover the Calendar is in
  * @csspart validity-message - The validity message, which says why the value is invalid
  *
+ * @fires {ToggleEvent} beforetoggle - Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed.
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
@@ -333,9 +334,23 @@ export default class DatePicker extends DateField {
   // with it.
   #onPopoverBeforeToggle = (event: ToggleEvent) => {
     // Chromium lets the popover's own "beforetoggle" out of the shadow root,
-    // where Firefox and WebKit don't. It's an implementation detail either
-    // way.
+    // where Firefox and WebKit don't. Stopped so there's only ever the host's,
+    // where a consumer can cancel an opening, as on a native popover.
     event.stopPropagation();
+
+    const isCancelled = !this.dispatchEvent(
+      new ToggleEvent('beforetoggle', {
+        cancelable: event.cancelable,
+        newState: event.newState,
+        oldState: event.oldState,
+      }),
+    );
+
+    if (isCancelled) {
+      event.preventDefault();
+
+      return;
+    }
 
     const popover = this.#popoverElementRef.value;
     const focused = this.shadowRoot?.activeElement;
