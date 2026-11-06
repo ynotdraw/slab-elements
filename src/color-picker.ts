@@ -95,11 +95,11 @@ const controls: Record<keyof Color, Control> = {
  * @attr {string} [alpha-label] - Names the alpha slider, after `label`. "Alpha" in English when unset.
  * @attr {string} [area-label] - Names the area, after `label`. "Saturation and brightness" in English when unset.
  * @attr {string} [brightness-label] - Read before the area's brightness. "Brightness" in English when unset.
- * @attr {boolean} [disabled=false]
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {string} [hex-label] - Names the hex field, after `label`. "Hex" in English when unset.
- * @attr {boolean} [hide-label=false]
+ * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {string} [hue-label] - Names the hue slider, after `label`. "Hue" in English when unset.
- * @attr {string} [name='']
+ * @attr {string} [name=''] - The name its value is submitted under, as a native control's `name`.
  * @attr {string} [saturation-label] - Read before the area's saturation. "Saturation" in English when unset.
  * @attr {string} [swatches=''] - Space-separated colors to pick from. Ones that aren't colors are left out.
  * @attr {string} [swatches-label] - Names the swatches, after `label`. "Swatches" in English when unset.
@@ -114,7 +114,7 @@ const controls: Record<keyof Color, Control> = {
  * @csspart container - The label, the controls and the description
  * @csspart description - Text about the color picker, such as a hint
  * @csspart focus-visible - The thumb whose input has visible focus
- * @csspart hex
+ * @csspart hex - The text input for the color as a hex code
  * @csspart hue - The hue slider's track
  * @csspart hue-thumb - The hue slider's thumb
  * @csspart label - The label
@@ -122,27 +122,27 @@ const controls: Record<keyof Color, Control> = {
  * @csspart swatch - A swatch
  * @csspart swatches - The swatches
  *
- * @fires {Event} change
- * @fires {Event} input
+ * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
+ * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  *
  * @readonly
- * @prop {HTMLFormElement | null} form
+ * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
  * @readonly
- * @prop {ValidityState} validity
+ * @prop {ValidityState} validity - Its `ValidityState`, as a native control's.
  *
- * @method checkValidity
+ * @method checkValidity - Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.
  * @returns boolean
  *
- * @method formDisabledCallback
+ * @method formDisabledCallback - Called by the browser when an ancestor `<fieldset>` is disabled or enabled. Not for calling yourself.
  * @param {boolean} isDisabled
  *
- * @method formResetCallback
+ * @method formResetCallback - Called by the browser when its form resets. Not for calling yourself.
  *
- * @method formStateRestoreCallback
+ * @method formStateRestoreCallback - Called by the browser when it restores the value, such as after the back button. Not for calling yourself.
  * @param {string | File | FormData | null} state
  *
- * @method reportValidity
+ * @method reportValidity - Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.
  * @returns boolean
  */
 @customElement('slab-color-picker')

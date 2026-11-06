@@ -64,20 +64,20 @@ declare global {
  * supported, the popover falls back to the browser's centering.
  *
  * @attr {string} [label] - Makes the popover a dialog named by it. Leave it unset when the popover only holds a few words about its anchor.
- * @attr {boolean} [open=false]
+ * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
  * @attr {'bottom'|'left'|'right'|'top'} [placement='bottom'] - The side of its anchor it opens on, when there's room. It flips when there isn't.
  *
  * @slot {Element | string}
- * @slot {Element} [anchor]
+ * @slot {Element} [anchor] - What opens it, such as a button
  *
  * @csspart popover - The popover's content
  *
- * @fires {ToggleEvent} beforetoggle
- * @fires {ToggleEvent} toggle
+ * @fires {ToggleEvent} beforetoggle - Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed.
+ * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
- * @method hide
- * @method show
- * @method toggle
+ * @method hide - Closes it.
+ * @method show - Opens it.
+ * @method toggle - Opens it when it's closed, and closes it when it's open.
  */
 @customElement('slab-popover')
 export default class Popover extends LitElement {

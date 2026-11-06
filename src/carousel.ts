@@ -76,13 +76,13 @@ declare global {
  * @csspart rotation - The button that starts and stops rotation
  * @csspart slides - The scroll snap container of the slides
  *
- * @fires {Event} change
+ * @fires {Event} change - When the user moves to another slide. Setting `index` doesn't dispatch it.
  *
  * @prop {(index: number) => string} markerLabel - Names each slide's marker, which has no text, from the slide's index. "Slide" and its number in English when unset.
  * @prop {(index: number, total: number) => string} slideLabel - Names each slide without a name of its own, from its index and how many slides there are. "1 of 3" and so on in English when unset.
  *
  * @readonly
- * @prop {Element[]} slides
+ * @prop {Element[]} slides - Its slides, in order.
  */
 @customElement('slab-carousel')
 export default class Carousel extends LitElement {

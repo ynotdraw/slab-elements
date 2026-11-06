@@ -52,10 +52,10 @@ declare global {
  * @csspart item - Each Step's list item
  * @csspart list - The Steps
  *
- * @fires {Event} change
+ * @fires {Event} change - When the user goes to another Step. Setting `step`, `next()` and `previous()` don't dispatch it.
  *
  * @readonly
- * @prop {Step[]} steps
+ * @prop {Step[]} steps - Its Steps, in order.
  *
  * @method next - Goes to the next Step, or past the last one, where every Step is complete. It doesn't dispatch "change", which is only for the user's clicks.
  * @method previous - Goes to the previous Step, stopping at the first. It doesn't dispatch "change", which is only for the user's clicks.

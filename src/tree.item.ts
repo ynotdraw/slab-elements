@@ -31,7 +31,7 @@ declare global {
  * `:state(expanded)`, `:state(parent)` when it has children, and
  * `:state(selected)` itself.
  *
- * @attr {boolean} [disabled=false]
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {boolean} [expanded=false] - Whether its children are shown, when it has any.
  * @attr {string} [label] - Names the Tree Item in place of its text, and is what typeahead matches against.
  * @attr {boolean} [selected=false] - Like Option's, the attribute is the default state and the property is the current one. Style `:state(selected)` rather than `[selected]`.

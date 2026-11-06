@@ -70,16 +70,16 @@ interface Drag {
  * input has visible focus has a `focus-visible` part for a focus ring.
  *
  * @attr {string} label - Names the group. Each thumb is named by it and its own label.
- * @attr {boolean} [disabled=false]
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {string} [end-label] - Names the end thumb, after `label`. "Maximum" in English when unset.
  * @attr {number} [end-value] - Like a native input's `value`, the attribute is the default and the property is the current value. Between `start-value` and `max`, on a step. `max` when unset.
- * @attr {boolean} [hide-label=false]
- * @attr {number} [max=100]
- * @attr {number} [min=0]
+ * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
+ * @attr {number} [max=100] - The highest either end can be.
+ * @attr {number} [min=0] - The lowest either end can be.
  * @attr {string} [name=''] - Submitted twice, with the start value and then the end value.
  * @attr {string} [start-label] - Names the start thumb, after `label`. "Minimum" in English when unset.
  * @attr {number} [start-value] - Like a native input's `value`, the attribute is the default and the property is the current value. Between `min` and `end-value`, on a step. `min` when unset.
- * @attr {number} [step=1]
+ * @attr {number} [step=1] - How far apart the values either end can take are, as a native range input's `step`.
  *
  * @slot {Element | string} [description] - Text about the slider, such as a hint
  *
@@ -92,29 +92,29 @@ interface Drag {
  * @csspart start - The start thumb
  * @csspart track - The thumbs and the range between them
  *
- * @fires {Event} change
- * @fires {Event} input
+ * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
+ * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  *
  * @readonly
- * @prop {HTMLFormElement | null} form
+ * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
  * @prop {(value: number) => string | undefined} formatValue - What screenreaders read for each thumb's value, such as "$40" rather than "40". The value itself when unset.
  *
  * @readonly
- * @prop {ValidityState} validity
+ * @prop {ValidityState} validity - Its `ValidityState`, as a native control's.
  *
- * @method checkValidity
+ * @method checkValidity - Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.
  * @returns boolean
  *
- * @method formDisabledCallback
+ * @method formDisabledCallback - Called by the browser when an ancestor `<fieldset>` is disabled or enabled. Not for calling yourself.
  * @param {boolean} isDisabled
  *
- * @method formResetCallback
+ * @method formResetCallback - Called by the browser when its form resets. Not for calling yourself.
  *
- * @method formStateRestoreCallback
+ * @method formStateRestoreCallback - Called by the browser when it restores the value, such as after the back button. Not for calling yourself.
  * @param {string | File | FormData | null} state
  *
- * @method reportValidity
+ * @method reportValidity - Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.
  * @returns boolean
  */
 @customElement('slab-range-slider')

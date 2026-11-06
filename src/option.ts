@@ -28,7 +28,7 @@ declare global {
  * Its Listbox sets `:state(active)`. It sets `:state(disabled)`, which is also
  * set while its Listbox is disabled, and `:state(selected)` itself.
  *
- * @attr {boolean} [disabled=false]
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {string} [label] - Names the Option in place of its text, and is what typeahead matches against.
  * @attr {boolean} [selected=false] - Like a native option, the attribute is the default state and the property is the current one. Style `:state(selected)` rather than `[selected]`.
  * @attr {string} [value=''] - Its label, or its text when it has no label, when not set. The same as a native option.

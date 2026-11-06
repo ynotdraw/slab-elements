@@ -39,9 +39,9 @@ declare global {
  * design makes.
  *
  * @attr {boolean} [checked=false] - Whether a checkbox or radio Menu Item is checked. Ignored for any other.
- * @attr {boolean} [disabled=false]
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {string} [label] - Names the Menu Item in place of its text, and is what typeahead matches against.
- * @attr {'checkbox'|'item'|'radio'} [type='item']
+ * @attr {'checkbox'|'item'|'radio'} [type='item'] - "checkbox" for an item that's checked and unchecked, "radio" for one that's checked within its Menu Group, or "item".
  *
  * @slot {Element | string} - The label, plus anything else a design puts in a Menu Item
  *

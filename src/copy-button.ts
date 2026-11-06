@@ -38,18 +38,18 @@ declare global {
  * The label is text rather than a slot, as Disclosure's is: a button's name is
  * flattened to text regardless. An icon goes on through `::part(button)`.
  *
- * @attr {string} label
+ * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
  * @attr {string} [copied-label] - Announced once the text is copied. "Copied" in English when unset.
- * @attr {boolean} [disabled=false]
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {string} [failed-label] - Announced when the clipboard refuses. "Couldn't copy" in English when unset.
  * @attr {number} [feedback-duration=2000] - Milliseconds the host matches `:state(copied)` or `:state(failed)` for.
  * @attr {string} [from] - The `id` of an element to copy from, instead of `value`.
  * @attr {string} [value=''] - The text to copy.
  *
- * @csspart button
+ * @csspart button - The button
  *
- * @fires {Event} copied
- * @fires {Event} copy-error
+ * @fires {Event} copied - When the text is copied.
+ * @fires {Event} copy-error - When the text can't be copied, such as when the browser doesn't allow it.
  */
 @customElement('slab-copy-button')
 export default class CopyButton extends LitElement {

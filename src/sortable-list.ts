@@ -56,14 +56,14 @@ interface Grab {
  *
  * @csspart list - The items
  *
- * @fires {Event} change
+ * @fires {Event} change - When the user moves an item somewhere else in the list.
  *
  * @prop {Announcement} canceledLabel - What screenreaders are told when an item is put back, from its label and where it is, from 1. "Reorder canceled…" in English when unset.
  * @prop {Announcement} droppedLabel - What screenreaders are told when an item is dropped, from its label and where it is, from 1. "Pour dropped at position 2 of 3" and so on in English when unset.
  * @prop {Announcement} grabbedLabel - What screenreaders are told when an item is picked up with the keyboard, from its label and where it is, from 1. "Pour picked up at position 2 of 3" and so on in English when unset.
  *
  * @readonly
- * @prop {SortableListItem[]} items
+ * @prop {SortableListItem[]} items - Its items, in order.
  *
  * @prop {Announcement} movedLabel - What screenreaders are told when a picked up item is moved, from its label and where it is, from 1. "Pour moved to position 2 of 3" and so on in English when unset.
  */

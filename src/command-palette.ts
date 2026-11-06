@@ -76,31 +76,31 @@ declare global {
  * `:state(disabled)`.
  *
  * @attr {'any'|'closerequest'|'none'} [closedby] - Passed to the `<dialog>`. "any" closes it on a click outside it where the browser supports that. Browsers that don't ignore it.
- * @attr {boolean} [hide-label=false]
- * @attr {string} [label]
- * @attr {boolean} [open=false]
- * @attr {string} [placeholder]
+ * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
+ * @attr {string} [label] - Names it. It's the accessible name, and the visible label where there is one.
+ * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
+ * @attr {string} [placeholder] - Shown while it's empty, as a native input's `placeholder`. It's a hint, not a label.
  *
  * @slot {Option}
  * @slot {Element | string} [close] - What the close button says. "Close" when nothing is slotted.
  * @slot {Element | string} [empty] - Shown when no Option matches what's been typed, such as "No results"
- * @slot {Element | string} [label]
+ * @slot {Element | string} [label] - Its heading, in place of `label`
  *
  * @csspart close - Closes the palette with an empty returnValue
  * @csspart dialog - The native dialog. A modal one's backdrop is its ::backdrop
  * @csspart empty - A status region that shows the "empty" slot when no Option matches
- * @csspart input
+ * @csspart input - The input
  * @csspart label - The label
  * @csspart listbox - The Options, below the input
  *
- * @fires {Event} cancel
- * @fires {Event} close
+ * @fires {Event} cancel - When the user asks to close it, with Escape or, with `closedby="any"`, a click outside. Cancel it to keep it open, as a native dialog's.
+ * @fires {Event} close - When it closes, as a native dialog's does.
  *
  * @prop {Option | null} activeOption - The Option the user is on, which Enter chooses. It's pointed at rather than focused, so focus stays in the input.
  * @prop {(option: Option, query: string) => boolean} filter - Whether an Option matches what's been typed. A case-insensitive substring of its text by default.
  *
  * @readonly
- * @prop {Option[]} options
+ * @prop {Option[]} options - Its Options, in order.
  *
  * @readonly
  * @prop {string} query - What's been typed into the input.
@@ -108,10 +108,10 @@ declare global {
  * @prop {(count: number) => string} resultsLabel - What screenreaders are told once typing pauses, from how many Options are left. "No results", "1 result" and so on in English when unset. With none left, whatever is slotted into `empty` is told instead, if anything is.
  * @prop {string} returnValue - The `<dialog>`'s, so `close(returnValue)` and a `<form method="dialog">` set it the way they do natively.
  *
- * @method close
+ * @method close - Closes it, setting `returnValue` to the value given, as a native dialog's `close()` does.
  * @param {string} [returnValue]
  *
- * @method show
+ * @method show - Opens it.
  */
 @customElement('slab-command-palette')
 export default class CommandPalette extends Dialog {

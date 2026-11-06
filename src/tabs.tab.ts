@@ -27,7 +27,7 @@ declare global {
  * It sets its own `:state(disabled)` and `:state(selected)`.
  *
  * @attr {string} panel - The `name` of the Panel it shows.
- * @attr {boolean} [disabled=false]
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {boolean} [selected=false] - Like Option's, the attribute is the default state and the property is the current one. Style `:state(selected)` rather than `[selected]`.
  *
  * @slot {Element | string} - The label, plus anything else a design puts in a Tab

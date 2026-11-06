@@ -34,13 +34,13 @@ declare global {
  *
  * Style it through its parts and through `:state(indeterminate)`.
  *
- * @attr {string} label
- * @attr {boolean} [hide-label=false]
+ * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
+ * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {number} [max] - 1 when unset, as on a native `<progress>`.
  * @attr {number} [value] - How much of the task is done, from 0 to `max`. Indeterminate when unset, as on a native `<progress>`.
  *
  * @csspart label - The label
- * @csspart progress
+ * @csspart progress - The progress bar
  *
  * @prop {(value: number) => string | undefined} formatValue - What screenreaders read for the value, such as "3 of 10 files" rather than "30%". A percentage when unset.
  */

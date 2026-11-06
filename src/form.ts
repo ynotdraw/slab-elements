@@ -48,34 +48,34 @@ declare global {
  * landmark. The `<form>` is reachable as `form` and styled as any light-DOM
  * element is.
  *
- * @attr {string} [action]
- * @attr {'on'|'off'} [autocomplete]
- * @attr {string} [enctype]
+ * @attr {string} [action] - Where it submits to, as a native form's `action`.
+ * @attr {'on'|'off'} [autocomplete] - Whether the browser may fill its controls, as a native form's `autocomplete`.
+ * @attr {string} [enctype] - How it encodes what it submits, as a native form's `enctype`.
  * @attr {string} [label] - Names the form, which makes it a landmark.
- * @attr {'get'|'post'|'dialog'} [method]
- * @attr {string} [name]
- * @attr {boolean} [novalidate=false]
- * @attr {string} [target]
+ * @attr {'get'|'post'|'dialog'} [method] - How it submits, as a native form's `method`.
+ * @attr {string} [name] - Its name, as a native form's `name`.
+ * @attr {boolean} [novalidate=false] - Submits without checking validity, as a native form's `novalidate`.
+ * @attr {string} [target] - Where the response opens, as a native form's `target`.
  *
  * @slot {Element | string} - Moved into the form
  *
  * @readonly
- * @prop {HTMLFormControlsCollection} elements
+ * @prop {HTMLFormControlsCollection} elements - Its controls, as a native form's `elements`.
  *
  * @readonly
  * @prop {HTMLFormElement} form - The native form, in the light DOM
  *
- * @method checkValidity
+ * @method checkValidity - Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.
  * @returns boolean
  *
- * @method reportValidity
+ * @method reportValidity - Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.
  * @returns boolean
  *
- * @method requestSubmit
+ * @method requestSubmit - Submits it as a submit button would, checking validity and dispatching "submit", as a native form's `requestSubmit()`.
  * @param {HTMLElement | null} [submitter]
  *
- * @method reset
- * @method submit
+ * @method reset - Resets its controls, as a native form's `reset()`.
+ * @method submit - Submits it without checking validity or dispatching "submit", as a native form's `submit()`.
  */
 @customElement('slab-form')
 export default class Form extends LitElement {

@@ -77,7 +77,7 @@ function fit(point: number, size: number, viewport: number, isAfter: boolean) {
  * the states Menu Item sets.
  *
  * @attr {string} label - Names the menu.
- * @attr {boolean} [open=false]
+ * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
  *
  * @slot {MenuItem | MenuGroup}
  * @slot {Element} target - Where a right-click, a long-press, or Shift+F10 opens the menu
@@ -85,12 +85,12 @@ function fit(point: number, size: number, viewport: number, isAfter: boolean) {
  * @csspart menu - The Menu Items
  * @csspart popover - What the menu opens in
  *
- * @fires {ToggleEvent} toggle
+ * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
  * @readonly
- * @prop {MenuItem[]} items
+ * @prop {MenuItem[]} items - Its Menu Items, in order.
  *
- * @method hide
+ * @method hide - Closes it.
  *
  * @method show - Opens the menu at `x` and `y`, in the viewport's coordinates, or below whatever in the target has focus when they're left out.
  * @param {{ x: number; y: number }} [position]

@@ -47,20 +47,20 @@ declare global {
  * @attr {'horizontal'|'vertical'} [orientation='horizontal'] - Which arrow keys move between Tabs. Where they sit is still up to your styles.
  *
  * @slot {Panel}
- * @slot {Tab} [tab]
+ * @slot {Tab} [tab] - Its Tabs
  *
  * @csspart tablist - The Tabs
  *
- * @fires {Event} change
+ * @fires {Event} change - When the user selects another Tab. Selecting one from code doesn't dispatch it.
  *
  * @readonly
- * @prop {Panel[]} panels
+ * @prop {Panel[]} panels - Its Tab Panels, in order.
  *
  * @readonly
- * @prop {Tab | null} selectedTab
+ * @prop {Tab | null} selectedTab - The selected Tab, or `null`.
  *
  * @readonly
- * @prop {Tab[]} tabs
+ * @prop {Tab[]} tabs - Its Tabs, in order.
  */
 @customElement('slab-tabs')
 export default class Tabs extends LitElement {

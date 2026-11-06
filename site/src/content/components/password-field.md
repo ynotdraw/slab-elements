@@ -14,7 +14,7 @@ usage: |
 
 The button is a toggle button, so its name stays "Show password" (or your `toggle-label`) and `aria-pressed` says whether the password shows. A screenreader reads "Show password, toggle button, pressed" instead of a name that changes under the user. While it shows, the input is a text input, with spellcheck, autocorrect and autocapitalize off so the password doesn't go to a spellchecker.
 
-`revealed` works like `value`: the attribute sets the starting state and the property tracks the current one. Resetting the form hides the password again. Edge's own reveal button is hidden so there's only one. Set `autocomplete` to "current-password" on a sign-in form or "new-password" where a password is chosen, so password managers fill and save it.
+`revealed` works like `value`: the attribute sets the starting state and the property tracks the current one. Pressing the button dispatches "reveal-change", so read `revealed` there for which way it went. Resetting the form hides the password again. Edge's own reveal button is hidden so there's only one. Set `autocomplete` to "current-password" on a sign-in form or "new-password" where a password is chosen, so password managers fill and save it.
 
 ## Keyboard
 

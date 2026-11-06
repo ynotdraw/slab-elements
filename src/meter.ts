@@ -38,17 +38,17 @@ declare global {
  *
  * Style it through its parts and those states.
  *
- * @attr {string} label
- * @attr {boolean} [hide-label=false]
+ * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
+ * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {number} [high] - Where the high region starts. `max` when unset.
  * @attr {number} [low] - Where the low region ends. `min` when unset.
  * @attr {number} [max] - 1 when unset, as on a native `<meter>`.
  * @attr {number} [min] - 0 when unset, as on a native `<meter>`.
  * @attr {number} [optimum] - The best value, which decides which region is the optimum one. Halfway between `min` and `max` when unset.
- * @attr {number} [value=0]
+ * @attr {number} [value=0] - The measurement, between `min` and `max`.
  *
  * @csspart label - The label
- * @csspart meter
+ * @csspart meter - The meter
  *
  * @prop {(value: number) => string | undefined} formatValue - What screenreaders read for the value, such as "3 of 5 GB" rather than "3". The value itself when unset.
  */

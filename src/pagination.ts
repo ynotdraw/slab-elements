@@ -54,7 +54,7 @@ type Item = number | 'end-ellipsis' | 'start-ellipsis';
  * @csspart page - Each page's button
  * @csspart previous - The button to the previous page
  *
- * @fires {Event} change
+ * @fires {Event} change - When the user goes to another page. Setting `page` doesn't dispatch it.
  *
  * @prop {(page: number) => string} pageLabel - Names each page's button, which shows only the number, from that number. "Page" and the number in English when unset.
  */

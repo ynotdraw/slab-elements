@@ -48,10 +48,10 @@ declare global {
  *
  * @slot {Element | string} - The message. Slot it in after the alert is on the page, so it's announced.
  *
- * @csspart alert
- * @csspart dismiss-button
+ * @csspart alert - The alert, around its text
+ * @csspart dismiss-button - The button that dismisses it
  *
- * @fires {Event} dismiss
+ * @fires {Event} dismiss - When its dismiss button is pressed. Cancel it to keep the alert.
  */
 @customElement('slab-alert')
 export default class Alert extends LitElement {

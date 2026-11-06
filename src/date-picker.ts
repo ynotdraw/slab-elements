@@ -54,72 +54,72 @@ declare global {
  * `::part(button)` and `:host([open])`, the popover through `::part(popover)`, and the Calendar
  * through its own parts, which are exported with the same names.
  *
- * @attr {string} label
- * @attr {HTMLInputElement['autocomplete']} [autocomplete]
+ * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
+ * @attr {HTMLInputElement['autocomplete']} [autocomplete] - What the browser may fill it with, as a native input's `autocomplete` says.
  * @attr {string} [button-label] - The button's text and so its accessible name. "Choose date" in English when unset.
- * @attr {boolean} [disabled=false]
- * @attr {boolean} [hide-label=false]
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
+ * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {string} [max] - The latest date allowed, as "yyyy-mm-dd".
  * @attr {string} [min] - The earliest date allowed, as "yyyy-mm-dd". Also where `step` counts from.
- * @attr {string} [name='']
+ * @attr {string} [name=''] - The name its value is submitted under, as a native control's `name`.
  * @attr {boolean} [open=false] - Whether the calendar is open, however it got there or went away. Setting it opens or closes the calendar.
- * @attr {boolean} [readonly=false]
- * @attr {boolean} [required=false]
+ * @attr {boolean} [readonly=false] - Lets the user select the value but not change it, as `readonly` does a native input. The value is still submitted.
+ * @attr {boolean} [required=false] - Makes it invalid while it has no value, as `required` does a native control.
  * @attr {string} [step] - In days, or "any". Counted from `min` when there is one.
  * @attr {string} [value=''] - An ISO "yyyy-mm-dd" string. Like a native input, the attribute is the default value and the property is the current one, so the attribute doesn't change as the field is edited.
  * @attr {number} [week-start=0] - The day the Calendar's weeks start on, from 0 for Sunday to 6 for Saturday.
  *
- * @slot {Element | string} [description]
+ * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
  *
  * @csspart button - Opens and closes the calendar
- * @csspart calendar
+ * @csspart calendar - The Calendar in the popover
  * @csspart control - The input and the button
  * @csspart description - Text about the field, and its validity message when it has one
- * @csspart input
+ * @csspart input - The input
  * @csspart label - The label
  * @csspart popover - The popover the Calendar is in
- * @csspart validity-message
+ * @csspart validity-message - The validity message, which says why the value is invalid
  *
- * @fires {Event} change
- * @fires {Event} input
- * @fires {ToggleEvent} toggle
+ * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
+ * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
+ * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
  * @readonly
- * @prop {HTMLFormElement | null} form
+ * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
  * @readonly
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
  *
  * @readonly
- * @prop {ValidityState} validity
+ * @prop {ValidityState} validity - Its `ValidityState`, as a native control's.
  *
  * @prop {Date | null} valueAsDate - `value` as a `Date` at midnight UTC, or `null` when empty, as on a native input.
  *
  * @readonly
- * @prop {boolean} willValidate
+ * @prop {boolean} willValidate - Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.
  *
- * @method checkValidity
+ * @method checkValidity - Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.
  * @returns boolean
  *
- * @method formDisabledCallback
+ * @method formDisabledCallback - Called by the browser when an ancestor `<fieldset>` is disabled or enabled. Not for calling yourself.
  * @param {boolean} isDisabled
  *
- * @method formResetCallback
+ * @method formResetCallback - Called by the browser when its form resets. Not for calling yourself.
  *
- * @method formStateRestoreCallback
+ * @method formStateRestoreCallback - Called by the browser when it restores the value, such as after the back button. Not for calling yourself.
  * @param {string | File | FormData | null} state
  *
  * @method hidePicker - Closes the calendar.
  *
- * @method reportValidity
+ * @method reportValidity - Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.
  * @returns boolean
  *
  * @method resetValidityFeedback - Clears the validity feedback without changing `validity`.
  *
- * @method setCustomValidity
+ * @method setCustomValidity - Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.
  * @param {string} message
  *
- * @method setValidity
+ * @method setValidity - Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.
  * @param {ValidityStateFlags} [flags]
  * @param {string} [message]
  *

@@ -50,19 +50,19 @@ declare global {
  * states.
  *
  * @attr {string} label - Names the tree.
- * @attr {boolean} [multiple=false]
+ * @attr {boolean} [multiple=false] - Lets more than one be selected at a time.
  *
  * @slot {TreeItem}
  *
  * @csspart tree - The Tree Items
  *
- * @fires {Event} change
+ * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  *
  * @readonly
  * @prop {TreeItem[]} items - Every Tree Item, at every depth, in order.
  *
  * @readonly
- * @prop {TreeItem | null} selectedItem
+ * @prop {TreeItem | null} selectedItem - The first selected Tree Item, or `null`.
  *
  * @readonly
  * @prop {TreeItem[]} selectedItems - Every selected Tree Item, at every depth, in order.

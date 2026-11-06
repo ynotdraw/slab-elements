@@ -51,7 +51,7 @@ declare global {
  * @csspart toolbar - The controls
  *
  * @readonly
- * @prop {HTMLElement[]} items
+ * @prop {HTMLElement[]} items - What it moves focus between, in order.
  */
 @customElement('slab-toolbar')
 export default class Toolbar extends LitElement {

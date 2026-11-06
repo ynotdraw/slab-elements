@@ -73,7 +73,7 @@ function triggerOf(menu: Element): MenuItem | undefined {
  * the states Menu Item sets.
  *
  * @attr {string} label - Names the menu.
- * @attr {boolean} [open=false]
+ * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
  * @attr {'bottom'|'left'|'right'|'top'} [placement='bottom'] - The side of its anchor it opens on, when there's room. It flips when there isn't. A submenu ignores it and opens beside its Menu Item.
  *
  * @slot {MenuItem | MenuGroup | Menu}
@@ -82,13 +82,13 @@ function triggerOf(menu: Element): MenuItem | undefined {
  * @csspart menu - The Menu Items
  * @csspart popover - What the menu opens in
  *
- * @fires {ToggleEvent} toggle
+ * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
  * @readonly
- * @prop {MenuItem[]} items
+ * @prop {MenuItem[]} items - Its Menu Items, in order.
  *
- * @method hide
- * @method show
+ * @method hide - Closes it.
+ * @method show - Opens it.
  */
 @customElement('slab-menu')
 export default class Menu extends LitElement {

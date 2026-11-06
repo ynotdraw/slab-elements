@@ -88,7 +88,7 @@ interface Highlight {
  * @csspart today - Today
  * @csspart weekday - A day of the week, above the days
  *
- * @fires {Event} change
+ * @fires {Event} change - When the user selects a day, or both ends of a range. Setting `value` doesn't dispatch it.
  *
  * @prop {(range: string) => string} rangeSelectedLabel - With `range`, what screenreaders are told once its last day is picked, from the range, such as "Monday, January 5 – Friday, January 9, 2026" in the calendar's language. The range and "selected" in English when unset.
  * @prop {(date: string) => string} rangeStartedLabel - With `range`, what screenreaders are told once its first day is picked, from that day, in the calendar's language. That it's the range's start, and to pick its end, in English when unset.

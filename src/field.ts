@@ -42,14 +42,14 @@ declare global {
  * `hide-label` hides the label visually and leaves it where screenreaders and
  * a `<label for>` can still reach it.
  *
- * @attr {boolean} [disabled=false]
- * @attr {boolean} [error=false]
- * @attr {boolean} [hide-label=false]
- * @attr {boolean} [required=false]
+ * @attr {boolean} [disabled=false] - Matches `:state(disabled)`, for styles. Disable the control itself too.
+ * @attr {boolean} [error=false] - Sets the control's `aria-invalid`, so a screenreader says it's invalid and reads the description saying why. Also matches `:state(error)`.
+ * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
+ * @attr {boolean} [required=false] - Matches `:state(required)`, for styles such as an asterisk. Make the control itself required too.
  *
  * @slot {Element | string}
- * @slot {Element} [control]
- * @slot {Element | string} [description]
+ * @slot {Element} [control] - The control the label names, such as an `<input>`. It's given an `id` and is described by `description`.
+ * @slot {Element | string} [description] - Text that describes the control, through its `aria-describedby`.
  *
  * @csspart control - The control the label names
  * @csspart description - Text about the control, such as a hint or an error

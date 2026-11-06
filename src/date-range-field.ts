@@ -62,70 +62,70 @@ declare global {
  * around it.
  *
  * @attr {string} label - Names the group. Each input is named by it and its own label.
- * @attr {boolean} [disabled=false]
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {string} [end-label] - The end input's label, read after `label`. "End" in English when unset.
  * @attr {string} [end-value=''] - The last day of the range, as "yyyy-mm-dd". Like a native input's `value`, the attribute is the default and the property is the current value.
- * @attr {boolean} [hide-label=false]
+ * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {string} [max] - The latest date allowed for either, as "yyyy-mm-dd".
  * @attr {string} [min] - The earliest date allowed for either, as "yyyy-mm-dd".
  * @attr {string} [name=''] - Submitted twice, with the start value and then the end value.
- * @attr {boolean} [readonly=false]
+ * @attr {boolean} [readonly=false] - Lets the user select the value but not change it, as `readonly` does a native input. The value is still submitted.
  * @attr {boolean} [required=false] - Requires both dates.
  * @attr {string} [start-label] - The start input's label, read after `label`. "Start" in English when unset.
  * @attr {string} [start-value=''] - The first day of the range, as "yyyy-mm-dd". Like a native input's `value`, the attribute is the default and the property is the current value.
  *
- * @slot {Element | string} [description]
+ * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
  *
  * @csspart container - The label, the inputs and the description
  * @csspart description - Text about the field, and its validity message when it has one
- * @csspart end
+ * @csspart end - The fields for the end date
  * @csspart end-field - The end input and its label
  * @csspart end-label - The end input's label
  * @csspart field - The start input and its label
  * @csspart fields - Both inputs and their labels
- * @csspart input
+ * @csspart input - The input
  * @csspart input-label - The start input's label
  * @csspart label - The label
- * @csspart start
+ * @csspart start - The fields for the start date
  * @csspart start-field - The start input and its label
  * @csspart start-label - The start input's label
- * @csspart validity-message
+ * @csspart validity-message - The validity message, which says why the value is invalid
  *
- * @fires {Event} change
- * @fires {Event} input
+ * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
+ * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  *
  * @readonly
- * @prop {HTMLFormElement | null} form
+ * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
  * @readonly
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
  *
  * @readonly
- * @prop {ValidityState} validity
+ * @prop {ValidityState} validity - Its `ValidityState`, as a native control's.
  *
  * @readonly
- * @prop {boolean} willValidate
+ * @prop {boolean} willValidate - Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.
  *
- * @method checkValidity
+ * @method checkValidity - Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.
  * @returns boolean
  *
- * @method formDisabledCallback
+ * @method formDisabledCallback - Called by the browser when an ancestor `<fieldset>` is disabled or enabled. Not for calling yourself.
  * @param {boolean} isDisabled
  *
- * @method formResetCallback
+ * @method formResetCallback - Called by the browser when its form resets. Not for calling yourself.
  *
- * @method formStateRestoreCallback
+ * @method formStateRestoreCallback - Called by the browser when it restores the value, such as after the back button. Not for calling yourself.
  * @param {string | File | FormData | null} state
  *
- * @method reportValidity
+ * @method reportValidity - Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.
  * @returns boolean
  *
  * @method resetValidityFeedback - Clears the validity feedback without changing `validity`.
  *
- * @method setCustomValidity
+ * @method setCustomValidity - Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.
  * @param {string} message
  *
- * @method setValidity
+ * @method setValidity - Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.
  * @param {ValidityStateFlags} [flags]
  * @param {string} [message]
  */

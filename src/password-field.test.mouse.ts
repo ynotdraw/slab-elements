@@ -60,7 +60,14 @@ test(
 
     await expect(host).toDispatchEvents(
       () => button.click(),
-      [{ type: 'toggle', bubbles: true, cancelable: false, composed: true }],
+      [
+        {
+          type: 'reveal-change',
+          bubbles: true,
+          cancelable: false,
+          composed: true,
+        },
+      ],
     );
 
     await expect(input).toHaveAttribute('type', 'text');

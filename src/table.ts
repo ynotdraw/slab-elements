@@ -40,7 +40,7 @@ declare global {
  * @slot {TableBody | TableFoot | TableHead} - The Table Head, Body and Foot
  *
  * @readonly
- * @prop {TableColumnHeader[]} columnHeaders
+ * @prop {TableColumnHeader[]} columnHeaders - Its Column Headers, in order.
  */
 @customElement('slab-table')
 export default class Table extends LitElement {
