@@ -13,6 +13,7 @@ export const GET: APIRoute = async ({ site }) => {
   const paths = [
     '',
     'get-started/',
+    'upgrade/',
     'components/',
     ...components.map((component) => `components/${component.id}/`),
     'showcase/',
