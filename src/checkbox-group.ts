@@ -32,6 +32,10 @@ declare global {
  * Checkbox that is checked and enabled, in the order they were checked, and
  * its `value` is the first of them, as a Listbox's are.
  *
+ * It dispatches no "input" or "change" of its own. A Checkbox's bubble up
+ * through it, as a native checkbox's do through a `<fieldset>`, so a listener
+ * on the group hears every one and reads the group's `values`.
+ *
  * Style it through its parts and through `:state(disabled)`, `:state(error)`,
  * and `:state(required)`. How the Checkboxes are arranged is layout, so it's
  * left to the styles around them.
