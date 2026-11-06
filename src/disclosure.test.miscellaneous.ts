@@ -224,3 +224,25 @@ test(
     ).rejects.toThrow();
   },
 );
+
+test(
+  "matches `:state(open)` while it's open",
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () => html`<slab-disclosure label="Label" open>Content</slab-disclosure>`,
+    );
+
+    const host = page.locator('slab-disclosure');
+
+    await expect
+      .poll(() => host.evaluate((element) => element.matches(':state(open)')))
+      .toBe(true);
+
+    await setProperty(host, 'open', false);
+
+    await expect
+      .poll(() => host.evaluate((element) => element.matches(':state(open)')))
+      .toBe(false);
+  },
+);

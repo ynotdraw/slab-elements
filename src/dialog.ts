@@ -52,6 +52,8 @@ declare global {
  * @csspart dialog - The native dialog. A modal one's backdrop is its ::backdrop
  * @csspart label - The label
  *
+ * @cssstate open - While it's open.
+ *
  * @fires {Event} cancel - When the user asks to close it, with Escape or, with `closedby="any"`, a click outside. Cancel it to keep it open, as a native dialog's.
  * @fires {Event} close - When it closes, as a native dialog's does.
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
@@ -84,6 +86,13 @@ export default class Dialog extends LitElement {
   /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
+
+  // Command Palette sets its own states on it, and an element's internals can
+  // only be attached once.
+  /** @internal For Slab's own subclasses. Not public API. */
+  protected get internals(): ElementInternals {
+    return this.#internals;
+  }
 
   /**
    * The `<dialog>`'s, so `close(returnValue)` and a `<form method="dialog">`
@@ -216,6 +225,12 @@ export default class Dialog extends LitElement {
       dialog.close();
     }
 
+    if (this.open) {
+      this.#internals.states.add('open');
+    } else {
+      this.#internals.states.delete('open');
+    }
+
     // After the `<dialog>` has opened or closed, so a listener finds it as
     // "toggle" says.
     const toggle = this.#toggleEvents.update(this.open);
@@ -241,9 +256,13 @@ export default class Dialog extends LitElement {
     // closes a dialog it's a descendant of. "submit" doesn't compose, but it
     // does bubble to the host from the host's own children.
     this.addEventListener('submit', this.#onSubmit);
+
+    this.#internals = this.attachInternals();
   }
 
   #dialogElementRef = createRef<HTMLDialogElement>();
+
+  #internals: ElementInternals;
 
   // For a `returnValue` set before the `<dialog>` is rendered.
   #returnValue = '';

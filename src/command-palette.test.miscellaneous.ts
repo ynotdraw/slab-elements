@@ -283,3 +283,28 @@ test(
     await expect(page.getByTestId('close')).toHaveAccessibleName('Cancel');
   },
 );
+
+test(
+  "matches `:state(open)` while it's open",
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-command-palette label="Label" open>
+          <slab-option>One</slab-option>
+        </slab-command-palette>`,
+    );
+
+    const host = page.locator('slab-command-palette');
+
+    await expect
+      .poll(() => host.evaluate((element) => element.matches(':state(open)')))
+      .toBe(true);
+
+    await setProperty(host, 'open', false);
+
+    await expect
+      .poll(() => host.evaluate((element) => element.matches(':state(open)')))
+      .toBe(false);
+  },
+);

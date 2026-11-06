@@ -72,6 +72,8 @@ declare global {
  *
  * @csspart popover - The popover's content
  *
+ * @cssstate open - While it's open.
+ *
  * @fires {ToggleEvent} beforetoggle - Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed.
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
@@ -174,6 +176,12 @@ export default class Popover extends LitElement {
       // to the popover's word for it.
       this.open = this.#isPopoverOpen;
     }
+
+    if (this.open) {
+      this.#internals.states.add('open');
+    } else {
+      this.#internals.states.delete('open');
+    }
   }
 
   // Functional styles go in here rather than in `styles`, so a subclass that
@@ -184,7 +192,14 @@ export default class Popover extends LitElement {
     return super.finalizeStyles([styles, subclassStyles ?? []]);
   }
 
+  constructor() {
+    super();
+    this.#internals = this.attachInternals();
+  }
+
   #anchorSlotElementRef = createRef<HTMLSlotElement>();
+
+  #internals: ElementInternals;
 
   #isOpenOnAnchorPointerDown = false;
 

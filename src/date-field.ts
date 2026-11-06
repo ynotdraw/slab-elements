@@ -179,6 +179,13 @@ export default class DateField extends LitElement {
   @property({ reflect: true })
   readonly version: string = slab.version;
 
+  // Date Picker sets its own states on it, and an element's internals can
+  // only be attached once.
+  /** @internal For Slab's own subclasses. Not public API. */
+  protected get internals(): ElementInternals {
+    return this.#internals;
+  }
+
   get form(): HTMLFormElement | null {
     return this.#internals.form;
   }
