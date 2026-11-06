@@ -18,13 +18,11 @@ declare global {
 /**
  * A Table Body with no visual styles: a `[role=rowgroup]` around the body rows, holding the data.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {TableRow} - The body rows
  */
 @customElement('slab-table-body')
 export default class TableBody extends LitElement {
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

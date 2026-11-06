@@ -65,9 +65,6 @@ declare global {
  *
  * @attr {number} [duration=5000] - Milliseconds until it dismisses itself. 0 keeps it until it's dismissed.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - What's announced
  *
  * @csspart region - The region it's shown in
@@ -93,6 +90,7 @@ export default class Toast extends LitElement {
   @property({ reflect: true, type: Number, useDefault: true })
   duration = 5000;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

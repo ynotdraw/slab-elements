@@ -68,9 +68,6 @@ declare global {
  * @attr {string} [toggle-label] - The button's text and so its accessible name. "Show password" in English when unset.
  * @attr {string} [value=''] - Like a native input, the attribute is the default value and the property is the current one, so the attribute doesn't change as the field is typed into.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
  *
  * @csspart control - The input and the button, together
@@ -197,6 +194,7 @@ export default class PasswordField extends LitElement {
   @property()
   value = '';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

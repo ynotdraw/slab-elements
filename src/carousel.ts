@@ -64,9 +64,6 @@ declare global {
  * @attr {string} [start-label] - The rotation button's text while rotation is stopped. "Start slide rotation" when unset.
  * @attr {string} [stop-label] - The rotation button's text while the slides rotate. "Stop slide rotation" in English when unset.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element} - The slides
  *
  * @csspart carousel - The region
@@ -164,6 +161,7 @@ export default class Carousel extends LitElement {
   @property({ attribute: 'stop-label', reflect: true })
   stopLabel?: string;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

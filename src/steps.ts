@@ -47,9 +47,6 @@ declare global {
  * @attr {boolean} [navigable=false] - Makes each Step a button that goes to it.
  * @attr {number} [step=1] - The current Step, from 1. The Steps before it are complete.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Step} - The Steps, in order
  *
  * @csspart item - Each Step's list item
@@ -91,6 +88,7 @@ export default class Steps extends LitElement {
   @property({ reflect: true, type: Number, useDefault: true })
   step = 1;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

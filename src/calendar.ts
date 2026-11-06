@@ -71,10 +71,6 @@ interface Highlight {
  * @attr {string} [previous-label] - The previous month button's text and so its accessible name. "Previous month" when unset.
  * @attr {boolean} [range=false] - Selects a range of days rather than one.
  * @attr {string} [value=''] - The selected date, as "yyyy-mm-dd", or with `range` the selected range, as "yyyy-mm-dd/yyyy-mm-dd". Otherwise an empty string. Like a native input, the attribute is the default value and the property is the current one.
- *
- * @readonly
- * @attr {string} [version]
- *
  * @attr {number} [week-start=0] - The day weeks start on, from 0 for Sunday to 6 for Saturday.
  *
  * @csspart day - A day of the month
@@ -168,6 +164,7 @@ export default class Calendar extends LitElement {
   })
   weekStart = 0;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

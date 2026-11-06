@@ -18,13 +18,11 @@ declare global {
 /**
  * A Table Head with no visual styles: a `[role=rowgroup]` around the header rows, such as the row of Column Headers. It goes first in its Table, wherever it is in the markup, as a `<thead>` does.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {TableRow} - The header rows
  */
 @customElement('slab-table-head')
 export default class TableHead extends LitElement {
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

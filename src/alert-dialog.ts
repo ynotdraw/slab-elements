@@ -48,9 +48,6 @@ declare global {
  * @attr {string} [label] - Names it. It's the accessible name, and the visible label where there is one.
  * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - The action that does what the dialog asks, such as a Delete button in a form with method="dialog".
  * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
  * @slot {Element | string} [label] - Its heading, in place of `label`

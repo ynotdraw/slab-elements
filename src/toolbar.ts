@@ -46,9 +46,6 @@ declare global {
  * @attr {string} label - Names the toolbar.
  * @attr {'horizontal'|'vertical'} [orientation='horizontal'] - Which arrow keys move between the controls. Where they sit is still up to your styles.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element}
  *
  * @csspart toolbar - The controls
@@ -72,6 +69,7 @@ export default class Toolbar extends LitElement {
   @property({ reflect: true, useDefault: true })
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

@@ -36,9 +36,6 @@ declare global {
  * @attr {string} [label] - Names the Tree Item in place of its text, and is what typeahead matches against.
  * @attr {boolean} [selected=false] - Like Option's, the attribute is the default state and the property is the current one. Style `:state(selected)` rather than `[selected]`.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - The label, plus anything else a design puts in a Tree Item
  * @slot {TreeItem} [item] - Its children. A nested Tree Item puts itself here.
  *
@@ -76,6 +73,7 @@ export default class TreeItem extends LitElement {
   @property({ type: Boolean })
   selected = false;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

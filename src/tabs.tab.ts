@@ -30,9 +30,6 @@ declare global {
  * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {boolean} [selected=false] - Like Option's, the attribute is the default state and the property is the current one. Style `:state(selected)` rather than `[selected]`.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - The label, plus anything else a design puts in a Tab
  */
 @customElement('slab-tabs-tab')
@@ -54,6 +51,7 @@ export default class Tab extends LitElement {
   @property({ type: Boolean })
   selected = false;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

@@ -32,9 +32,6 @@ declare global {
  * @attr {string} [label] - Names it. It's the accessible name, and the visible label where there is one.
  * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string}
  * @slot {Element | string} [label] - Its heading, in place of `label`
  *

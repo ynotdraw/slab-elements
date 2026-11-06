@@ -49,9 +49,6 @@ declare global {
  * @attr {string} [placeholder] - Shown on the button while it's empty, and in the input.
  * @attr {string} [value=''] - Like a native input, the attribute is the default value and the property is the current one, so the attribute doesn't change as edits are committed.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
  *
  * @csspart description - Text about the field
@@ -124,6 +121,7 @@ export default class Editable extends LitElement {
   @property()
   value = '';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

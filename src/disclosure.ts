@@ -49,9 +49,6 @@ declare global {
  * @attr {string} [name=''] - Groups it with every other Disclosure of the same name, so opening one closes the rest, as a native `<details>`'s `name` does.
  * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string}
  *
  * @csspart content - The content revealed when open
@@ -82,6 +79,7 @@ export default class Disclosure extends LitElement {
   @property({ reflect: true, type: Boolean })
   open = false;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

@@ -27,9 +27,6 @@ declare global {
  *
  * @attr {boolean} [row-header=false] - Makes the Cell its row's header, like a `<th scope="row">`.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - The Cell's content
  */
 @customElement('slab-table-cell')
@@ -40,6 +37,7 @@ export default class TableCell extends LitElement {
   @property({ attribute: 'row-header', reflect: true, type: Boolean })
   rowHeader = false;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

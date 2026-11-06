@@ -51,9 +51,6 @@ declare global {
  * @attr {number|'any'} [step] - A number, or "any" to allow any value. Left unset, the input's own default of 1 applies.
  * @attr {string} [value=''] - Like a native input, the attribute is the default value and the property is the current one. The property is always the value the input settled on, so it's never outside the range or off a step.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} [description] - Text about the slider, such as a hint
  *
  * @csspart description - Text about the slider, such as a hint
@@ -175,6 +172,7 @@ export default class Slider extends LitElement {
     this.requestUpdate('value', old);
   }
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

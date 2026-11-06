@@ -42,9 +42,6 @@ declare global {
  * @attr {'ascending'|'descending'|'none'} [sort='none'] - How the column is sorted. Sets `aria-sort`.
  * @attr {boolean} [sortable=false] - Makes the Column Header a button that sorts the column.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - The column's name
  * @slot {Element | string} [sort-indicator] - Shown after the name in a sortable Column Header, such as an arrow, and hidden from screenreaders
  *
@@ -81,6 +78,7 @@ export default class TableColumnHeader extends LitElement {
     sort,
   ) => this.#strings.value.tableSorted(column, sort);
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

@@ -54,9 +54,6 @@ declare global {
  * @attr {boolean} [multiple=false] - Lets more than one button be pressed at a time.
  * @attr {'horizontal'|'vertical'} [orientation='horizontal'] - Which arrow keys move between the buttons. Where they sit is still up to your styles.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {ToggleGroupButton}
  *
  * @csspart group - The buttons
@@ -98,6 +95,7 @@ export default class ToggleGroup extends LitElement {
   @property({ reflect: true, useDefault: true })
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

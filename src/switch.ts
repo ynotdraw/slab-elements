@@ -44,9 +44,6 @@ declare global {
  * @attr {boolean} [required=false] - Makes it invalid while it has no value, as `required` does a native control.
  * @attr {string} [value='on'] - What it submits while it's on, as a native checkbox's `value`.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
  *
  * @csspart description - Text about the switch, and its validity message when it has one
@@ -129,6 +126,7 @@ export default class Switch extends LitElement {
   @property({ reflect: true, useDefault: true })
   value = 'on';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

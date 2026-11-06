@@ -34,9 +34,6 @@ declare global {
  *
  * @attr {string} [label] - Names the navigation. "Breadcrumb" in English when unset.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element} - The links, from the first page to the current one
  *
  * @csspart item - Each link's list item
@@ -55,6 +52,7 @@ export default class Breadcrumb extends LitElement {
   @property({ reflect: true })
   label?: string;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

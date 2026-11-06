@@ -40,9 +40,6 @@ declare global {
  * @attr {string} [label] - Names the button when what's in it doesn't, such as when it holds only an icon.
  * @attr {boolean} [pressed=false] - Like a native checkbox's `checked`, the attribute is the default state and the property is the current one. Style `:state(pressed)` rather than `[pressed]`.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - The label, plus anything else a design puts in a button
  *
  * @csspart button - The button
@@ -75,6 +72,7 @@ export default class ToggleButton extends LitElement {
   @property({ type: Boolean })
   pressed = false;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

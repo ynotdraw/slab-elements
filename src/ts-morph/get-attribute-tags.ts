@@ -6,7 +6,7 @@ export default (
 ) => {
   const tags: OptionalKind<JSDocTagStructure>[] = [];
 
-  if (!declaration.attributes) {
+  if (!('attributes' in declaration) || !declaration.attributes) {
     return tags;
   }
 
@@ -66,7 +66,7 @@ export default (
       },
       trailingTrivia(writer) {
         const currentAttributeHasReadOnly =
-          'readonly' in attribute && attribute.readonly;
+          'readonly' in attribute && attribute.readonly === true;
 
         // Private attributes are excluded from JSDoc comments. So we're only
         // interested in whether the next attribute that's public is read-only.
@@ -79,7 +79,7 @@ export default (
         const nextPublicAttributeHasReadOnly =
           nextPublicAttribute &&
           'readonly' in nextPublicAttribute &&
-          nextPublicAttribute.readonly;
+          nextPublicAttribute.readonly === true;
 
         // If the current attribute is read-only and the next attribute isn't, then
         // need we need a new line because read-only attributes are multiline.

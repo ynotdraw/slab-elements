@@ -9,13 +9,10 @@ import { type Package } from 'custom-elements-manifest' with { type: 'json' };
  * so tools reading the manifest from `node_modules` can find each module.
  * Styles modules are left out because `exports` doesn't expose them.
  *
- * Two things that `./custom-elements.json` keeps for the docs site and the
- * generated comments are left out too, because editors and framework tooling
- * offer whatever the published copy lists:
- *
- * - "private-*" events, which Slab's elements dispatch to each other.
- * - The `version` attribute, which is read-only. Setting it does nothing, so
- *   it shouldn't be suggested. The `version` property stays, for debugging.
+ * "private-*" events, which Slab's elements dispatch to each other, are left
+ * out too. `./custom-elements.json` keeps them for the docs site and the
+ * generated comments, but editors and framework tooling offer whatever the
+ * published copy lists.
  *
  * Must be the last plugin so the copy has every other plugin's changes.
  */
@@ -38,12 +35,6 @@ export default () => {
           if ('events' in declaration && declaration.events) {
             declaration.events = declaration.events.filter(
               (event) => !event.name.startsWith('private-'),
-            );
-          }
-
-          if ('attributes' in declaration && declaration.attributes) {
-            declaration.attributes = declaration.attributes.filter(
-              (attribute) => attribute.name !== 'version',
             );
           }
         }

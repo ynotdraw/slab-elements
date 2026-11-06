@@ -50,9 +50,6 @@ declare global {
  * @attr {number} [open-delay=300] - How many milliseconds the pointer rests on the anchor before it opens.
  * @attr {'bottom'|'left'|'right'|'top'} [placement='bottom'] - The side of its anchor it opens on, when there's room. It flips when there isn't.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element} - The tooltip's content, which describes the anchor
  * @slot {Element} anchor - The element the tooltip is for. It should be one that can be focused.
  *
@@ -94,6 +91,7 @@ export default class Tooltip extends LitElement {
   @property({ reflect: true, useDefault: true })
   placement: 'bottom' | 'left' | 'right' | 'top' = 'bottom';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

@@ -31,9 +31,6 @@ declare global {
  * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {string} [value=''] - What its Radio Group submits while it's checked.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - The label, plus anything else a design puts in a Radio
  *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
@@ -58,6 +55,7 @@ export default class Radio extends LitElement {
   @property({ reflect: true, useDefault: true })
   value = '';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

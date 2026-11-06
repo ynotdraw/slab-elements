@@ -67,9 +67,6 @@ declare global {
  * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
  * @attr {'bottom'|'left'|'right'|'top'} [placement='bottom'] - The side of its anchor it opens on, when there's room. It flips when there isn't.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string}
  * @slot {Element} [anchor] - What opens it, such as a button
  *
@@ -101,6 +98,7 @@ export default class Popover extends LitElement {
   @property({ reflect: true, useDefault: true })
   placement: 'bottom' | 'left' | 'right' | 'top' = 'bottom';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

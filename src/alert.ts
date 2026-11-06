@@ -46,9 +46,6 @@ declare global {
  * @attr {string} [dismiss-label] - The dismiss button's text and so its accessible name. "Dismiss" in English when unset.
  * @attr {boolean} [dismissible=false] - Adds a button that dismisses the alert
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - The message. Slot it in after the alert is on the page, so it's announced.
  *
  * @csspart alert - The alert, around its text
@@ -71,6 +68,7 @@ export default class Alert extends LitElement {
   @property({ attribute: 'dismiss-label', reflect: true })
   dismissLabel?: string;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

@@ -81,9 +81,6 @@ declare global {
  * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
  * @attr {string} [placeholder] - Shown while it's empty, as a native input's `placeholder`. It's a hint, not a label.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Option}
  * @slot {Element | string} [close] - What the close button says. "Close" when nothing is slotted.
  * @slot {Element | string} [empty] - Shown when no Option matches what's been typed, such as "No results"

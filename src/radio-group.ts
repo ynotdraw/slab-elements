@@ -45,9 +45,6 @@ declare global {
  * @attr {boolean} [required=false] - Makes it invalid while it has no value, as `required` does a native control.
  * @attr {string} [value=''] - The value of the checked and enabled Radio. Not reflected, to match a native control.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Radio}
  * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
  *
@@ -145,6 +142,7 @@ export default class RadioGroup extends LitElement {
     }
   }
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

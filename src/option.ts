@@ -33,9 +33,6 @@ declare global {
  * @attr {boolean} [selected=false] - Like a native option, the attribute is the default state and the property is the current one. Style `:state(selected)` rather than `[selected]`.
  * @attr {string} [value=''] - Its label, or its text when it has no label, when not set. The same as a native option.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - The label, plus anything else a design puts in an Option
  *
  * @readonly
@@ -75,6 +72,7 @@ export default class Option extends LitElement {
     this.#value = value ?? undefined;
   }
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

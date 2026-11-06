@@ -81,9 +81,6 @@ interface Drag {
  * @attr {number} [start-value] - Like a native input's `value`, the attribute is the default and the property is the current value. Between `min` and `end-value`, on a step. `min` when unset.
  * @attr {number} [step=1] - How far apart the values either end can take are, as a native range input's `step`.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} [description] - Text about the slider, such as a hint
  *
  * @csspart container - The label, the track and the description
@@ -219,6 +216,7 @@ export default class RangeSlider extends LitElement {
   @property({ reflect: true, type: Number, useDefault: true })
   step = 1;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

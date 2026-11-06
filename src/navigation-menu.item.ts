@@ -50,9 +50,6 @@ const focusableSelector =
  * @attr {string} label - The button's text and so its accessible name.
  * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element} - The links, each in an `<li>` of its own
  *
  * @csspart content - The content shown when open
@@ -86,6 +83,7 @@ export default class NavigationMenuItem extends LitElement {
   @property({ reflect: true, type: Boolean })
   open = false;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

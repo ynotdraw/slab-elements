@@ -47,9 +47,6 @@ declare global {
  * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {boolean} [required=false] - Matches `:state(required)`, for styles such as an asterisk. Make the control itself required too.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string}
  * @slot {Element} [control] - The control the label names, such as an `<input>`. It's given an `id` and is described by `description`.
  * @slot {Element | string} [description] - Text that describes the control, through its `aria-describedby`.
@@ -72,6 +69,7 @@ export default class Field extends LitElement {
   @property({ reflect: true, type: Boolean })
   required = false;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

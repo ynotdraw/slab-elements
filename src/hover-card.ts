@@ -61,9 +61,6 @@ declare global {
  * @attr {number} [open-delay=700] - How many milliseconds the pointer rests on the anchor before it opens.
  * @attr {'bottom'|'left'|'right'|'top'} [placement='bottom'] - The side of its anchor it opens on, when there's room. It flips when there isn't.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element} - The card's content, which can hold links, buttons and anything else that can be focused
  * @slot {Element} anchor - The element the card is for, usually a link. It should be one that can be focused.
  *
@@ -111,6 +108,7 @@ export default class HoverCard extends LitElement {
   @property({ reflect: true, useDefault: true })
   placement: 'bottom' | 'left' | 'right' | 'top' = 'bottom';
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

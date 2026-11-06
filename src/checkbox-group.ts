@@ -43,9 +43,6 @@ declare global {
  * @attr {boolean} [required=false] - Makes it invalid while it has no value, as `required` does a native control.
  * @attr {string} [value=''] - The value of the first checked and enabled Checkbox, in the order they were checked. Setting it checks the Checkbox with that value, and only that one. Not reflected, to match a native control.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Checkbox}
  * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
  *
@@ -124,6 +121,7 @@ export default class CheckboxGroup extends LitElement {
     this.values = value === '' ? [] : [value];
   }
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 

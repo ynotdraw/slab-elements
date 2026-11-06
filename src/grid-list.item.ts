@@ -56,9 +56,6 @@ declare global {
  * @attr {string} [label] - Names the row in place of its content, and is what typeahead matches against.
  * @attr {boolean} [selected=false] - Like Option's, the attribute is the default state and the property is the current one. Style `:state(selected)` rather than `[selected]`.
  *
- * @readonly
- * @attr {string} [version]
- *
  * @slot {Element | string} - The row's content, and any controls in it
  *
  * @csspart cell - Holds the content
@@ -99,6 +96,7 @@ export default class GridListItem extends LitElement {
   @property({ type: Boolean })
   selected = false;
 
+  /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
 
