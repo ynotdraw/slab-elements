@@ -401,6 +401,77 @@ test(
 );
 
 test(
+  'opens and closes at once with `show()` and `hide()`',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<slab-tooltip close-delay="60000" open-delay="60000">
+          <span>Content</span>
+          <button slot="anchor">Anchor</button>
+        </slab-tooltip>`,
+    );
+
+    const host = page.locator('slab-tooltip');
+
+    await callMethod(host, 'show');
+
+    await expect(page.getByRole('tooltip')).toBeVisible();
+    await expect(host).toHaveJSProperty('open', true);
+
+    await callMethod(host, 'hide');
+
+    await expect(page.getByRole('tooltip')).toBeHidden();
+    await expect(host).toHaveJSProperty('open', false);
+  },
+);
+
+test(
+  'does not open with `show()` when disabled',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<slab-tooltip disabled>
+          <span>Content</span>
+          <button slot="anchor">Anchor</button>
+        </slab-tooltip>`,
+    );
+
+    const host = page.locator('slab-tooltip');
+
+    await callMethod(host, 'show');
+
+    await expect(page.getByRole('tooltip')).toBeHidden();
+    await expect(host).toHaveJSProperty('open', false);
+  },
+);
+
+test(
+  'cancels a pending open with `hide()`',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await page.clock.install({ time: 0 });
+
+    await render(
+      () =>
+        html`<slab-tooltip open-delay="300">
+          <span>Content</span>
+          <button slot="anchor">Anchor</button>
+        </slab-tooltip>`,
+    );
+
+    const host = page.locator('slab-tooltip');
+
+    await page.getByRole('button').hover();
+    await callMethod(host, 'hide');
+    await page.clock.runFor(1000);
+
+    await expect(host).toHaveJSProperty('open', false);
+  },
+);
+
+test(
   'dispatches "beforetoggle", and stays closed when it\'s cancelled',
   { tag: '@miscellaneous' },
   async ({ render, page }) => {

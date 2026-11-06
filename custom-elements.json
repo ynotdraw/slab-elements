@@ -3333,6 +3333,16 @@
             },
             {
               "kind": "method",
+              "name": "hide",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Closes the listbox."
+            },
+            {
+              "kind": "method",
               "name": "reportValidity",
               "return": {
                 "type": {
@@ -3394,6 +3404,16 @@
                 }
               ],
               "description": "Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`."
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Opens the listbox, unless there's nothing in it to choose: while it's\ndisabled, or when no Option matches what's typed."
             },
             {
               "kind": "method",
@@ -10464,6 +10484,26 @@
               "description": "The side of its anchor it opens on, when there's room. It flips when there\nisn't.",
               "attribute": "placement",
               "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Closes it at once, without waiting for `close-delay`. Focus in the card\ngoes back to the anchor, as it does on Escape."
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Opens it at once, without waiting for `open-delay`. It doesn't open while\nit's disabled."
             },
             {
               "kind": "method",
@@ -24738,6 +24778,26 @@
               "description": "The side of its anchor it opens on, when there's room. It flips when there\nisn't.",
               "attribute": "placement",
               "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Closes it at once, without waiting for `close-delay`."
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Opens it at once, without waiting for `open-delay`. It doesn't open while\nit's disabled."
             },
             {
               "kind": "method",

@@ -70,6 +70,9 @@ declare global {
  *
  * @fires {ToggleEvent} beforetoggle - Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed.
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
+ *
+ * @method hide - Closes it at once, without waiting for `close-delay`. Focus in the card goes back to the anchor, as it does on Escape.
+ * @method show - Opens it at once, without waiting for `open-delay`. It doesn't open while it's disabled.
  */
 @customElement('slab-hover-card')
 export default class HoverCard extends LitElement {
@@ -140,6 +143,14 @@ export default class HoverCard extends LitElement {
     this.#sync();
   }
 
+  /**
+   * Closes it at once, without waiting for `close-delay`. Focus in the card
+   * goes back to the anchor, as it does on Escape.
+   */
+  hide(): void {
+    this.#close();
+  }
+
   override render() {
     return html`<slot
         name="anchor"
@@ -187,6 +198,18 @@ export default class HoverCard extends LitElement {
           -->
         </slot>
       </div>`;
+  }
+
+  /**
+   * Opens it at once, without waiting for `open-delay`. It doesn't open while
+   * it's disabled.
+   */
+  show(): void {
+    clearTimeout(this.#timeoutId);
+
+    if (!this.disabled) {
+      this.open = true;
+    }
   }
 
   override updated(changes: PropertyValues<this>) {

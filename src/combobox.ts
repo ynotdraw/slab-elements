@@ -177,6 +177,8 @@ declare global {
  * @method formStateRestoreCallback - Called by the browser when it restores the value, such as after the back button. Not for calling yourself.
  * @param {string | File | FormData | null} state
  *
+ * @method hide - Closes the listbox.
+ *
  * @method reportValidity - Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.
  * @returns boolean
  *
@@ -188,6 +190,8 @@ declare global {
  * @method setValidity - Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.
  * @param {ValidityStateFlags} [flags]
  * @param {string} [message]
+ *
+ * @method show - Opens the listbox, unless there's nothing in it to choose: while it's disabled, or when no Option matches what's typed.
  */
 @customElement('slab-combobox')
 export default class Combobox extends LitElement {
@@ -452,6 +456,13 @@ export default class Combobox extends LitElement {
     this.requestUpdate();
   }
 
+  /**
+   * Closes the listbox.
+   */
+  hide(): void {
+    this.open = false;
+  }
+
   override render() {
     // ARIA goes on attributes rather than on ElementInternals. Screenreaders
     // read both. But Playwright's role queries and ARIA snapshots, and Axe,
@@ -586,6 +597,14 @@ export default class Combobox extends LitElement {
     this.validityMessage = message;
 
     this.#internals.setValidity(flags, ' ', this.#anchor);
+  }
+
+  /**
+   * Opens the listbox, unless there's nothing in it to choose: while it's
+   * disabled, or when no Option matches what's typed.
+   */
+  show(): void {
+    this.open = true;
   }
 
   override updated(changes: PropertyValues<this>) {
