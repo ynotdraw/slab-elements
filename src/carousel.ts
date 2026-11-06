@@ -76,6 +76,10 @@ declare global {
  * @csspart rotation - The button that starts and stops rotation
  * @csspart slides - The scroll snap container of the slides
  *
+ * @cssstate first - While its first slide shows.
+ * @cssstate last - While its last slide shows.
+ * @cssstate rotating - While it's rotating through its slides on its own.
+ *
  * @fires {Event} change - When the user moves to another slide. Setting `index` doesn't dispatch it.
  *
  * @prop {(index: number) => string} markerLabel - Names each slide's marker, which has no text, from the slide's index. "Slide" and its number in English when unset.

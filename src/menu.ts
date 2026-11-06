@@ -82,6 +82,9 @@ function triggerOf(menu: Element): MenuItem | undefined {
  * @csspart menu - The Menu Items
  * @csspart popover - What the menu opens in
  *
+ * @cssstate open - While it's open.
+ * @cssstate submenu - While it's a submenu, opened from an item of another Menu.
+ *
  * @fires {ToggleEvent} beforetoggle - Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed.
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *

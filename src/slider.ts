@@ -57,6 +57,8 @@ declare global {
  * @csspart input - The input
  * @csspart label - The label
  *
+ * @cssstate disabled - While it's disabled.
+ *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  *

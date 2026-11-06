@@ -95,6 +95,11 @@ declare global {
  * @csspart start-label - The start input's label
  * @csspart validity-message - The validity message, which says why the value is invalid
  *
+ * @cssstate disabled - While it's disabled.
+ * @cssstate error - While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.
+ * @cssstate readonly - While it's read-only.
+ * @cssstate required - While it's required, for styles such as an asterisk.
+ *
  * @fires {ToggleEvent} beforetoggle - Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed.
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.

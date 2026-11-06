@@ -2,7 +2,7 @@ import { type Package } from 'custom-elements-manifest' with { type: 'json' };
 
 type Descriptions = Record<string, string>;
 
-type Kind = 'cssParts' | 'events' | 'members' | 'slots';
+type Kind = 'cssParts' | 'cssStates' | 'events' | 'members' | 'slots';
 
 // What many elements share, such as `label`, `disabled` and "change", is
 // described once here rather than in every element. Members are keyed by
@@ -12,6 +12,21 @@ const shared: Record<Kind, Descriptions> = {
     'validity-message':
       'The validity message, which says why the value is invalid',
     input: 'The input',
+  },
+  cssStates: {
+    active:
+      "While it's the active one, which the keyboard moves through while focus stays on its container.",
+    checked: "While it's checked.",
+    disabled: "While it's disabled.",
+    dragging: 'While the user drags its thumb.',
+    empty: 'While it has no value.',
+    error:
+      "While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.",
+    open: "While it's open.",
+    pressed: "While it's pressed.",
+    readonly: "While it's read-only.",
+    required: "While it's required, for styles such as an asterisk.",
+    selected: "While it's selected.",
   },
   events: {
     beforetoggle:
@@ -113,6 +128,11 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     },
   },
   'slab-carousel': {
+    cssStates: {
+      first: 'While its first slide shows.',
+      last: 'While its last slide shows.',
+      rotating: "While it's rotating through its slides on its own.",
+    },
     events: {
       change:
         "When the user moves to another slide. Setting `index` doesn't dispatch it.",
@@ -120,6 +140,9 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     members: { slides: 'Its slides, in order.' },
   },
   'slab-checkbox': {
+    cssStates: {
+      indeterminate: "While it's indeterminate, neither checked nor unchecked.",
+    },
     members: {
       indeterminate:
         "Shows it as neither checked nor unchecked, as a native checkbox's `indeterminate` does. Checking or unchecking it clears it.",
@@ -127,14 +150,25 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
   },
   'slab-color-picker': {
     cssParts: { hex: 'The text input for the color as a hex code' },
+    cssStates: {
+      dragging: 'While the user drags a thumb.',
+    },
   },
   'slab-combobox': {
+    cssStates: {
+      empty:
+        'While no option matches what the user typed, for a "no results" message of your own.',
+    },
     members: {
       options: 'Its Options, in order.',
       selectedOption: 'The first selected Option, or `null`.',
     },
   },
   'slab-command-palette': {
+    cssStates: {
+      empty:
+        'While no command matches what the user typed, for a "no results" message of your own.',
+    },
     members: { options: 'Its Options, in order.' },
   },
   'slab-context-menu': {
@@ -142,6 +176,10 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
   },
   'slab-copy-button': {
     cssParts: { button: 'The button' },
+    cssStates: {
+      copied: 'For `feedback-duration` after the text is copied.',
+      failed: 'For `feedback-duration` after the clipboard refuses.',
+    },
     events: {
       copied: 'When the text is copied.',
       'copy-error':
@@ -181,10 +219,20 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
       name: "Groups it with every other Disclosure of the same name, so opening one closes the rest, as a native `<details>`'s `name` does.",
     },
   },
+  'slab-editable': {
+    cssStates: {
+      editing: "While it's being edited.",
+    },
+  },
   'slab-feed': {
     members: { items: 'Its Feed Items, in order.' },
   },
   'slab-field': {
+    cssStates: {
+      disabled: 'While `disabled` is set.',
+      error: 'While `error` is set.',
+      required: 'While `required` is set, for styles such as an asterisk.',
+    },
     members: {
       disabled:
         'Matches `:state(disabled)`, for styles. Disable the control itself too.',
@@ -201,6 +249,9 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     },
   },
   'slab-file-drop': {
+    cssStates: {
+      'drag-over': 'While the user drags files over it.',
+    },
     members: {
       files: "The files chosen or dropped, as a native file input's `files`.",
     },
@@ -231,6 +282,11 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
       selectedItems: 'Every selected item, in order.',
     },
   },
+  'slab-grid-list-item': {
+    cssStates: {
+      selectable: 'While its Grid List is selectable.',
+    },
+  },
   'slab-hover-card': {
     cssParts: { card: 'The card' },
     slots: { anchor: 'What the card is about, such as a link' },
@@ -239,6 +295,9 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     members: { options: 'Its Options, in order.' },
   },
   'slab-menu': {
+    cssStates: {
+      submenu: "While it's a submenu, opened from an item of another Menu.",
+    },
     members: { items: 'Its Menu Items, in order.' },
   },
   'slab-menu-item': {
@@ -251,6 +310,13 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
   },
   'slab-meter': {
     cssParts: { meter: 'The meter' },
+    cssStates: {
+      'even-less-good':
+        'While its value is in the region furthest from the optimum one.',
+      optimum:
+        'While its value is in the optimum region, as a native `<meter>` works it out.',
+      suboptimum: 'While its value is in a region next to the optimum one.',
+    },
     members: { value: 'The measurement, between `min` and `max`.' },
   },
   'slab-navigation-menu': {
@@ -268,18 +334,28 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     },
   },
   'slab-pagination': {
+    cssStates: {
+      first: "While it's on the first page.",
+      last: "While it's on the last page.",
+    },
     events: {
       change:
         "When the user goes to another page. Setting `page` doesn't dispatch it.",
     },
   },
   'slab-password-field': {
+    cssStates: {
+      revealed: 'While the password shows as text.',
+    },
     events: {
       'reveal-change':
         'When the user shows or hides the password. Read `revealed` for which.',
     },
   },
   'slab-pin-input': {
+    cssStates: {
+      complete: 'While every box has a character.',
+    },
     events: { complete: 'When the user fills the last box.' },
   },
   'slab-popover': {
@@ -287,18 +363,35 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
   },
   'slab-progress': {
     cssParts: { progress: 'The progress bar' },
+    cssStates: {
+      indeterminate:
+        "While it has no `value`, so how far along the task is isn't known.",
+    },
   },
   'slab-radio-group-radio': {
     members: { value: "What its Radio Group submits while it's checked." },
   },
   'slab-range-slider': {
+    cssStates: {
+      dragging: 'While the user drags a thumb.',
+    },
     members: {
       max: 'The highest either end can be.',
       min: 'The lowest either end can be.',
       step: "How far apart the values either end can take are, as a native range input's `step`.",
     },
   },
+  'slab-rating': {
+    cssStates: {
+      previewing:
+        'While the pointer rests on a rating other than its value, showing what it would change to.',
+    },
+  },
   'slab-select': {
+    cssStates: {
+      'placeholder-shown':
+        "While nothing is selected and its placeholder shows, as `:placeholder-shown` matches a native input's.",
+    },
     members: { options: 'Its Options, in order.' },
   },
   'slab-sortable-list': {
@@ -307,7 +400,16 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     },
     members: { items: 'Its items, in order.' },
   },
+  'slab-sortable-list-item': {
+    cssStates: {
+      grabbed: "While it's picked up or dragged.",
+    },
+  },
   'slab-splitter': {
+    cssStates: {
+      collapsed: 'While its primary pane is collapsed to `min`.',
+      dragging: 'While the user drags its separator.',
+    },
     events: {
       change:
         "When the user finishes moving the divider. Setting `value` doesn't dispatch it.",
@@ -324,6 +426,14 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     },
     members: { steps: 'Its Steps, in order.' },
   },
+  'slab-steps-step': {
+    cssStates: {
+      complete: 'While its `status` is "complete".',
+      current: 'While its `status` is "current".',
+      navigable: 'While its Steps is `navigable`, so it can be moved to.',
+      upcoming: 'While its `status` is "upcoming".',
+    },
+  },
   'slab-switch': {
     members: {
       value: "What it submits while it's on, as a native checkbox's `value`.",
@@ -333,6 +443,11 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     members: { columnHeaders: 'Its Column Headers, in order.' },
   },
   'slab-table-column-header': {
+    cssStates: {
+      ascending: 'While the table is sorted by it, ascending.',
+      descending: 'While the table is sorted by it, descending.',
+      sortable: "While it's `sortable`.",
+    },
     events: {
       sort: 'When the user presses the button to sort by its column. Set `sort` in your handler.',
     },
@@ -349,6 +464,12 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     },
     slots: { tab: 'Its Tabs' },
   },
+  'slab-tags-input': {
+    cssStates: {
+      empty: 'While it has no tags.',
+      full: 'While it has `max` tags.',
+    },
+  },
   'slab-textarea': {
     cssParts: { textarea: 'The textarea' },
     members: {
@@ -358,6 +479,9 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
   },
   'slab-toast': {
     cssParts: { region: "The region it's shown in" },
+    cssStates: {
+      open: "While it's shown.",
+    },
     events: {
       dismiss:
         "When it's dismissed, by Escape, its timer or `dismiss()`. Cancel it to keep it shown.",
@@ -389,6 +513,12 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
   },
   'slab-tree': {
     members: { selectedItem: 'The first selected Tree Item, or `null`.' },
+  },
+  'slab-tree-item': {
+    cssStates: {
+      expanded: "While it's expanded, showing its children.",
+      parent: 'While it has child items.',
+    },
   },
 };
 
@@ -462,6 +592,7 @@ export default () => {
             ['events', declaration.events ?? []],
             ['slots', declaration.slots ?? []],
             ['cssParts', declaration.cssParts ?? []],
+            ['cssStates', declaration.cssStates ?? []],
           ];
 
           for (const [kind, list] of entries) {

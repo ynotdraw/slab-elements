@@ -2,6 +2,7 @@
 // JavaScript is unruly and error prone. So we write them in TypeScript,
 // then compile and import them as JavaScript.
 import addCssParts from './dist/cem-analyzer-plugins/add-css-parts.js';
+import addCssStates from './dist/cem-analyzer-plugins/add-css-states.js';
 import addCustomProperties from './dist/cem-analyzer-plugins/add-custom-properties.js';
 import addDescriptions from './dist/cem-analyzer-plugins/add-descriptions.js';
 import addEvents from './dist/cem-analyzer-plugins/add-events.js';
@@ -32,6 +33,7 @@ export default {
     removeBlockComments(),
     removePrivateMembers(),
     addCssParts(),
+    addCssStates(),
     addCustomProperties(),
     addEvents(),
     addRequiredToAttributes(),

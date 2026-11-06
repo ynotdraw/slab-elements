@@ -53,6 +53,10 @@ declare global {
  * @csspart radios - The Radios
  * @csspart validity-message - The validity message, which says why the value is invalid
  *
+ * @cssstate disabled - While it's disabled.
+ * @cssstate error - While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.
+ * @cssstate required - While it's required, for styles such as an asterisk.
+ *
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *

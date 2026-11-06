@@ -77,6 +77,12 @@ declare global {
  * @csspart toggle-button - The button that shows and hides the password
  * @csspart validity-message - The validity message, which says why the value is invalid
  *
+ * @cssstate disabled - While it's disabled.
+ * @cssstate error - While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.
+ * @cssstate readonly - While it's read-only.
+ * @cssstate required - While it's required, for styles such as an asterisk.
+ * @cssstate revealed - While the password shows as text.
+ *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} reveal-change - When the user shows or hides the password. Read `revealed` for which.
