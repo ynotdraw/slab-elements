@@ -20,6 +20,7 @@ type Declaration = {
   cssStates?: { description?: string; name: string }[];
   events?: { description?: string; name: string; type?: Type }[];
   members?: {
+    deprecated?: boolean | string;
     description?: string;
     kind: 'field' | 'method';
     name: string;
@@ -119,18 +120,22 @@ const lifecycle = new Set([
   'willUpdate',
 ]);
 
+// A deprecated entry's `deprecated` is what to use instead, or empty when its
+// `@deprecated` says nothing more. It's left out when it isn't deprecated.
 export type Api = {
   attributes: {
     default?: string;
+    deprecated?: string;
     description?: string;
     name: string;
     required: boolean;
     type?: string;
   }[];
   events: { description?: string; name: string; type?: string }[];
-  methods: { description?: string; signature: string }[];
+  methods: { deprecated?: string; description?: string; signature: string }[];
   parts: { description?: string; name: string }[];
   properties: {
+    deprecated?: string;
     description?: string;
     name: string;
     readonly: boolean;
@@ -151,9 +156,23 @@ export function api(tag: string): Api {
   const isPublic = (member: NonNullable<Declaration['members']>[number]) =>
     !member.static && !member.privacy && !member.name.startsWith('#');
 
+  // The analyzer gives a bare `@deprecated` as "true".
+  const deprecationOf = (name?: string) => {
+    const deprecated = declaration.members?.find(
+      (member) => member.name === name,
+    )?.deprecated;
+
+    if (deprecated === undefined || deprecated === false) {
+      return;
+    }
+
+    return deprecated === true || deprecated === 'true' ? '' : deprecated;
+  };
+
   return {
     attributes: attributes.map((attribute) => ({
       default: attribute.default,
+      deprecated: deprecationOf(attribute.fieldName),
       description: attribute.description,
       name: attribute.name,
       required: Boolean(attribute.required),
@@ -185,6 +204,7 @@ export function api(tag: string): Api {
           .join(', ');
 
         return {
+          deprecated: deprecationOf(method.name),
           description: method.description,
           signature: `${method.name}(${parameters}): ${method.return?.type?.text ?? 'void'}`,
         };
@@ -201,6 +221,7 @@ export function api(tag: string): Api {
           !attributeFields.has(member.name),
       )
       .map((field) => ({
+        deprecated: deprecationOf(field.name),
         description: field.description,
         name: field.name,
         readonly: Boolean(field.readonly),

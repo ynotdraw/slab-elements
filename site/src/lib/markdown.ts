@@ -35,6 +35,14 @@ function table(head: string[], rows: string[][]) {
 
 const code = (text?: string) => (text ? `\`${text}\`` : '');
 
+// "(deprecated)" after the name, and what to use instead before the
+// description.
+const deprecatedName = (entry: { deprecated?: string }) =>
+  entry.deprecated === undefined ? '' : ' (deprecated)';
+
+const describe = (entry: { deprecated?: string; description?: string }) =>
+  [entry.deprecated, entry.description].filter(Boolean).join(' ');
+
 function apiMarkdown(
   tag: string,
   { attributes, events, methods, parts, properties, slots, states }: Api,
@@ -45,10 +53,10 @@ function apiMarkdown(
       table(
         ['Name', 'Type', 'Default', 'Description'],
         attributes.map((attribute) => [
-          `${code(attribute.name)}${attribute.required ? ' (required)' : ''}`,
+          `${code(attribute.name)}${attribute.required ? ' (required)' : ''}${deprecatedName(attribute)}`,
           code(attribute.type),
           code(attribute.default),
-          attribute.description ?? '',
+          describe(attribute),
         ]),
       ),
     ],
@@ -57,9 +65,9 @@ function apiMarkdown(
       table(
         ['Name', 'Type', 'Description'],
         properties.map((property) => [
-          `${code(property.name)}${property.readonly ? ' (read-only)' : ''}`,
+          `${code(property.name)}${property.readonly ? ' (read-only)' : ''}${deprecatedName(property)}`,
           code(property.type),
-          property.description ?? '',
+          describe(property),
         ]),
       ),
     ],
@@ -68,8 +76,8 @@ function apiMarkdown(
       table(
         ['Signature', 'Description'],
         methods.map((method) => [
-          code(method.signature),
-          method.description ?? '',
+          `${code(method.signature)}${deprecatedName(method)}`,
+          describe(method),
         ]),
       ),
     ],
