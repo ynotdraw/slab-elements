@@ -53,37 +53,37 @@ declare global {
  * `:state(disabled)`, `:state(error)`, `:state(readonly)` and
  * `:state(required)`.
  *
- * @attr {string} label
+ * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
  * @attr {HTMLInputElement['autocomplete']} [autocomplete] - Set on the first input. "one-time-code" for a code sent by text or email.
- * @attr {boolean} [disabled=false]
- * @attr {boolean} [hide-label=false]
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
+ * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {number} [length=6] - How many characters, and so how many inputs.
  * @attr {boolean} [mask=false] - Hides each character as it's typed, as a password input does.
- * @attr {string} [name='']
+ * @attr {string} [name=''] - The name its value is submitted under, as a native control's `name`.
  * @attr {string} [placeholder] - Shown in each empty input.
- * @attr {boolean} [readonly=false]
- * @attr {boolean} [required=false]
+ * @attr {boolean} [readonly=false] - Lets the user select the value but not change it, as `readonly` does a native input. The value is still submitted.
+ * @attr {boolean} [required=false] - Makes it invalid while it has no value, as `required` does a native control.
  * @attr {'numeric'|'alphanumeric'} [type='numeric'] - "numeric" accepts digits and brings up a number pad. "alphanumeric" accepts letters and digits.
  * @attr {string} [value=''] - Like a native input, the attribute is the default value and the property is the current one, so the attribute doesn't change as the field is typed into.
  *
  * @readonly
  * @attr {string} [version]
  *
- * @slot {Element | string} [description]
+ * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
  *
  * @csspart description - Text about the field, and its validity message when it has one
  * @csspart filled - An input with a character in it
  * @csspart input - Each input
  * @csspart inputs - The inputs' container
  * @csspart label - The label
- * @csspart validity-message
+ * @csspart validity-message - The validity message, which says why the value is invalid
  *
- * @fires {Event} change
- * @fires {Event} complete
- * @fires {Event} input
+ * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
+ * @fires {Event} complete - When the user fills the last box.
+ * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  *
  * @readonly
- * @prop {HTMLFormElement | null} form
+ * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
  * @prop {(position: number, length: number) => string} inputLabel - Names each input from its position, starting at 1, and `length`. "Character 1 of 6" and so on in English when unset.
  *
@@ -91,31 +91,31 @@ declare global {
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
  *
  * @readonly
- * @prop {ValidityState} validity
+ * @prop {ValidityState} validity - Its `ValidityState`, as a native control's.
  *
  * @readonly
- * @prop {boolean} willValidate
+ * @prop {boolean} willValidate - Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.
  *
- * @method checkValidity
+ * @method checkValidity - Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.
  * @returns boolean
  *
- * @method formDisabledCallback
+ * @method formDisabledCallback - Called by the browser when an ancestor `<fieldset>` is disabled or enabled. Not for calling yourself.
  * @param {boolean} isDisabled
  *
- * @method formResetCallback
+ * @method formResetCallback - Called by the browser when its form resets. Not for calling yourself.
  *
- * @method formStateRestoreCallback
+ * @method formStateRestoreCallback - Called by the browser when it restores the value, such as after the back button. Not for calling yourself.
  * @param {string | File | FormData | null} state
  *
- * @method reportValidity
+ * @method reportValidity - Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.
  * @returns boolean
  *
  * @method resetValidityFeedback - Clears the validity feedback without changing `validity`.
  *
- * @method setCustomValidity
+ * @method setCustomValidity - Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.
  * @param {string} message
  *
- * @method setValidity
+ * @method setValidity - Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.
  * @param {ValidityStateFlags} [flags]
  * @param {string} [message]
  */

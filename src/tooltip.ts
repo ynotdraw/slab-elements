@@ -44,10 +44,10 @@ declare global {
  *
  * Style it through its `tooltip` part and `:state(open)`.
  *
- * @attr {number} [close-delay=200]
+ * @attr {number} [close-delay=200] - How many milliseconds it waits after the pointer and focus leave before it closes.
  * @attr {boolean} [disabled=false] - The tooltip doesn't open and doesn't describe its anchor.
- * @attr {boolean} [open=false]
- * @attr {number} [open-delay=300]
+ * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
+ * @attr {number} [open-delay=300] - How many milliseconds the pointer rests on the anchor before it opens.
  * @attr {'bottom'|'left'|'right'|'top'} [placement='bottom'] - The side of its anchor it opens on, when there's room. It flips when there isn't.
  *
  * @readonly
@@ -56,9 +56,9 @@ declare global {
  * @slot {Element} - The tooltip's content, which describes the anchor
  * @slot {Element} anchor - The element the tooltip is for. It should be one that can be focused.
  *
- * @csspart tooltip
+ * @csspart tooltip - The tooltip
  *
- * @fires {ToggleEvent} toggle
+ * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  */
 @customElement('slab-tooltip')
 export default class Tooltip extends LitElement {

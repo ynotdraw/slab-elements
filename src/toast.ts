@@ -70,16 +70,16 @@ declare global {
  *
  * @slot {Element | string} - What's announced
  *
- * @csspart region
+ * @csspart region - The region it's shown in
  *
- * @fires {Event} dismiss
+ * @fires {Event} dismiss - When it's dismissed, by Escape, its timer or `dismiss()`. Cancel it to keep it shown.
  *
  * @readonly
- * @prop {boolean} open
+ * @prop {boolean} open - Whether it's shown.
  *
- * @method dismiss
+ * @method dismiss - Hides it.
  *
- * @method show
+ * @method show - Shows it.
  * @returns Promise<void>
  */
 @customElement('slab-toast')

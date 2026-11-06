@@ -62,7 +62,7 @@ declare global {
  * @csspart group - The buttons
  *
  * @readonly
- * @prop {ToggleGroupButton[]} buttons
+ * @prop {ToggleGroupButton[]} buttons - Its Toggle Group Buttons, in order.
  *
  * @readonly
  * @prop {ToggleGroupButton[]} pressedButtons - Pressed and enabled buttons, in the order they appear.

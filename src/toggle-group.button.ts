@@ -29,18 +29,18 @@ declare global {
  * Its group presses and releases it, and it sets its own `:state(pressed)`
  * and `:state(disabled)`.
  *
- * @attr {boolean} [disabled=false]
+ * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {string} [label] - Names the button when what's in it doesn't, such as when it holds only an icon.
  * @attr {boolean} [pressed=false] - Like a native checkbox's `checked`, the attribute is the default state and the property is the current one. Style `:state(pressed)` rather than `[pressed]`.
- * @attr {string} [value='']
+ * @attr {string} [value=''] - What its Toggle Group's `value` and `values` hold while it's pressed.
  *
  * @readonly
  * @attr {string} [version]
  *
  * @slot {Element | string} - The label, plus anything else a design puts in a button
  *
- * @fires {Event} change
- * @fires {Event} input
+ * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
+ * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  */
 @customElement('slab-toggle-group-button')
 export default class ToggleGroupButton extends LitElement {

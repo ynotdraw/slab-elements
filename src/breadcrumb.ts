@@ -39,13 +39,13 @@ declare global {
  *
  * @slot {Element} - The links, from the first page to the current one
  *
- * @csspart item
+ * @csspart item - Each link's list item
  * @csspart list - The links
  * @csspart nav - The navigation
- * @csspart separator
+ * @csspart separator - What sits between two links, before every one but the first
  *
  * @readonly
- * @prop {Element[]} items
+ * @prop {Element[]} items - The slotted links, in order.
  */
 @customElement('slab-breadcrumb')
 export default class Breadcrumb extends LitElement {

@@ -33,8 +33,8 @@ declare global {
  * which hear it as the group's name from `aria-label` instead. `hide-label`
  * hides it visually too.
  *
- * @attr {string} label
- * @attr {boolean} [hide-label=false]
+ * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
+ * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  *
  * @readonly
  * @attr {string} [version]
