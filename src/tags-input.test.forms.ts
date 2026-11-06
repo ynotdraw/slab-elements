@@ -637,3 +637,39 @@ test(
     expect(await getValidationMessage()).toBe('');
   },
 );
+
+test(
+  'has form data and is valid when read-only',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-tags-input
+            label="Label"
+            name="empty"
+            readonly
+            required
+          ></slab-tags-input>
+          <slab-tags-input
+            label="Label"
+            name="colors"
+            readonly
+            value="red,green"
+          ></slab-tags-input>
+        </form>
+      `,
+    );
+
+    const first = page.locator('slab-tags-input').first();
+
+    await expect(first).toHaveJSProperty('validity.valid', true);
+    await expect(first).toHaveJSProperty('willValidate', false);
+
+    expect(
+      await page.locator('form').evaluate((form: HTMLFormElement) => {
+        return new FormData(form).getAll('colors');
+      }),
+    ).toStrictEqual(['red', 'green']);
+  },
+);

@@ -58,3 +58,26 @@ test(
     await expect(page.getByRole('textbox')).toBeFocused();
   },
 );
+
+test(
+  'shows its tags as text when read-only',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-tags-input
+          label="Label"
+          readonly
+          value="red"
+        ></slab-tags-input>`,
+    );
+
+    const host = page.locator('slab-tags-input');
+
+    await expect(page.getByRole('button')).toHaveCount(0);
+
+    await page.getByTestId('tag').click();
+
+    await expect(host).toHaveJSProperty('values', ['red']);
+  },
+);

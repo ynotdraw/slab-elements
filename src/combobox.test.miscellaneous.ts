@@ -646,3 +646,28 @@ test(
     );
   },
 );
+
+test(
+  'sets `:state(readonly)` when read-only',
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label" readonly>
+          <slab-option>One</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    const isReadonly = () => {
+      return host.evaluate((element) => element.matches(':state(readonly)'));
+    };
+
+    expect(await isReadonly()).toBe(true);
+
+    await setProperty(host, 'readonly', false);
+
+    expect(await isReadonly()).toBe(false);
+  },
+);

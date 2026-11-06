@@ -1094,3 +1094,83 @@ test(
     await expect(page.getByRole('option', { name: 'Option 0' })).toBeHidden();
   },
 );
+
+test(
+  'neither opens nor changes its value from the keyboard when read-only',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label" readonly value="apple">
+          <slab-option value="apple">Apple</slab-option>
+          <slab-option value="banana">Banana</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+    const combobox = page.getByRole('combobox');
+
+    await expect(host).not.toDispatchEvents(async () => {
+      await combobox.pressSequentially('b');
+      await combobox.press('ArrowDown');
+      await combobox.press('Alt+ArrowDown');
+      await combobox.press('Escape');
+      await combobox.press('Escape');
+    }, [{ type: 'input' }, { type: 'change' }, { type: 'toggle' }]);
+
+    await expect(page.getByRole('listbox')).toBeHidden();
+    await expect(combobox).toHaveValue('Apple');
+    await expect(host).toHaveJSProperty('value', 'apple');
+  },
+);
+
+test(
+  'keeps its tags on Backspace when read-only and `multiple`',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label" multiple readonly>
+          <slab-option selected value="apple">Apple</slab-option>
+          <slab-option selected value="banana">Banana</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+    const combobox = page.getByRole('combobox');
+
+    await combobox.press('Backspace');
+    await combobox.press('ArrowLeft');
+
+    await expect(host).toHaveJSProperty('values', ['apple', 'banana']);
+    await expect(combobox).toBeFocused();
+  },
+);
+
+test(
+  'submits its form on Enter when read-only',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<form>
+          <slab-combobox label="Label" name="fruit" readonly value="apple">
+            <slab-option value="apple">Apple</slab-option>
+          </slab-combobox>
+        </form>`,
+    );
+
+    const isSubmitted = page.locator('form').evaluate((form) => {
+      return new Promise<boolean>((resolve) => {
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+          resolve(true);
+        });
+      });
+    });
+
+    await page.getByRole('combobox').press('Enter');
+
+    expect(await isSubmitted).toBe(true);
+  },
+);

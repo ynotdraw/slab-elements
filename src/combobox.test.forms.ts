@@ -907,3 +907,28 @@ test(
     );
   },
 );
+
+test(
+  'has form data and is valid when read-only',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-combobox label="Label" name="empty" readonly required>
+            <slab-option value="apple">Apple</slab-option>
+          </slab-combobox>
+          <slab-combobox label="Label" name="fruit" readonly value="apple">
+            <slab-option value="apple">Apple</slab-option>
+          </slab-combobox>
+        </form>
+      `,
+    );
+
+    const first = page.locator('slab-combobox').first();
+
+    await expect(first).toHaveJSProperty('validity.valid', true);
+    await expect(first).toHaveJSProperty('willValidate', false);
+    await expect(page.locator('form')).toHaveFormData('fruit', 'apple');
+  },
+);

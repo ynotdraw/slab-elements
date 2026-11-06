@@ -406,3 +406,28 @@ test(
     await expect(page).toBeAccessible('slab-combobox');
   },
 );
+
+test(
+  'readonly=${true}',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label" multiple readonly>
+          <slab-option selected value="apple">Apple</slab-option>
+        </slab-combobox>`,
+    );
+
+    await expect(page.getByRole('combobox')).toHaveAttribute(
+      'aria-readonly',
+      'true',
+    );
+
+    await expect(page.locator('slab-combobox')).toMatchAriaSnapshot(`
+      - text: Label Apple
+      - combobox "Label"
+    `);
+
+    await expect(page).toBeAccessible('slab-combobox');
+  },
+);

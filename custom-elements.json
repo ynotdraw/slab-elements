@@ -2953,6 +2953,17 @@
             },
             {
               "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows the value without letting the user change it. The listbox doesn't\nopen and the tags can't be removed. It's still focusable and submitted,\nand never invalid, as a native read-only input isn't.",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "placement",
               "type": {
                 "text": "'bottom' | 'top'"
@@ -3348,6 +3359,15 @@
               },
               "fieldName": "placeholder",
               "description": "Shown while it's empty, as a native input's `placeholder`. It's a hint, not a label."
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows the value without letting the user change it. The listbox doesn't\nopen and the tags can't be removed. It's still focusable and submitted,\nand never invalid, as a native read-only input isn't.",
+              "fieldName": "readonly"
             },
             {
               "name": "placement",
@@ -20392,6 +20412,17 @@
             },
             {
               "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows the tags without letting the user add or remove any. It's still\nfocusable and submitted, and never invalid, as a native read-only input\nisn't.",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "removeLabel",
               "type": {
                 "text": "(text: string) => string"
@@ -20712,6 +20743,15 @@
               },
               "fieldName": "placeholder",
               "description": "Shown while it's empty, as a native input's `placeholder`. It's a hint, not a label."
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows the tags without letting the user add or remove any. It's still\nfocusable and submitted, and never invalid, as a native read-only input\nisn't.",
+              "fieldName": "readonly"
             },
             {
               "name": "required",
