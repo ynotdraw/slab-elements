@@ -67,7 +67,7 @@ import 'slab-elements/tabs.panel.js';`,
   {
     id: 'frameworks',
     heading: 'In your framework',
-    text: "There's no wrapper package. The tag is the component, in React, Vue, Svelte, Rails, or plain HTML. React listens for events through a ref, Svelte needs nothing, and Vue needs to know which tags are custom elements. The [home page](#usage) shows the same Disclosure in each.",
+    text: "There's no wrapper package. The tag is the component, in React, Vue, Svelte, Rails, or plain HTML. React 19 and Svelte listen for an event through `on` and its exact name, such as `onchange` or `oncopy-error`, and Vue needs to know which tags are custom elements. The [home page](#usage) shows the same Disclosure in each.",
     code: {
       code: `import vue from '@vitejs/plugin-vue';
 
@@ -178,7 +178,7 @@ import type {} from 'slab-elements/react.js';`,
       label: 'slab.d.ts',
       lang: 'ts',
     },
-    coda: '`SlabElementProps` in `slab-elements/jsx.js` lists every tag and its properties, for any other framework.',
+    coda: 'Events are typed too: a handler such as `oncopy-error` in React and Svelte, or `@copy-error` in Vue, gets the event with the element as its `currentTarget`. For any other framework, `slab-elements/jsx.js` has `SlabElementProps`, every tag and its properties, and `SlabElementEvents`, every tag and its events.',
   },
   {
     id: 'browsers',
