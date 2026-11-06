@@ -189,7 +189,7 @@ import type {} from 'slab-elements/react.js';`,
   {
     id: 'api',
     heading: 'What you can count on',
-    text: "Everything a component's page lists is public: its tag, attributes, properties, methods, events, slots, parts, states and custom properties. So are `registerStrings()` and the framework types. From 1.0, changing any of them waits for a major version. Before 1.0, a minor version is where a breaking change goes, and a patch never has one.",
+    text: "Everything a component's page lists is public: its tag, attributes, properties, methods, events, slots, parts, states and custom properties. So are `registerStrings()` and the framework types. From 1.0, changing any of them waits for a major version. A minor version adds to them, and a patch fixes them without changing what they are.",
     coda: "Everything else is Slab's own and can change in any release: a member or event whose name starts with `private`, anything marked `@internal`, `slab-elements/library/*`, and whatever is in a shadow root other than its parts. Coming from 0.x? [Upgrade to 1.0](upgrade/) lists what changed.",
   },
   {
