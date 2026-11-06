@@ -63,4 +63,16 @@ export default css`
     cursor: not-allowed;
     opacity: 0.5;
   }
+
+  [part~='validity-message'] {
+    color: var(--ember-deep);
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-block-start: 0.375rem;
+
+    &::before {
+      content: '■ ' / '';
+    }
+  }
 `;

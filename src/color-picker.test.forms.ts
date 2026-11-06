@@ -293,3 +293,151 @@ test(
     ).toBe(true);
   },
 );
+
+test(
+  'is invalid with a custom validity message, shown once reported',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`<slab-color-picker label="Label"></slab-color-picker>`,
+    );
+
+    const host = page.locator('slab-color-picker');
+    const message = page.getByTestId('validity-message');
+
+    const isError = () => {
+      return host.evaluate((element) => element.matches(':state(error)'));
+    };
+
+    await callMethod(host, 'setCustomValidity', 'Message');
+
+    await expect(host).toHaveJSProperty('validity.customError', true);
+    await expect(host).toHaveJSProperty('validationMessage', 'Message');
+    await expect(host).toHaveJSProperty('willValidate', true);
+
+    // Checking shows nothing. Reporting does.
+    expect(await callMethod(host, 'checkValidity')).toBe(false);
+    await expect(message).toHaveCount(0);
+
+    expect(await callMethod(host, 'reportValidity')).toBe(false);
+    await expect(message).toHaveText('Message');
+    expect(await isError()).toBe(true);
+
+    await callMethod(host, 'setCustomValidity', '');
+
+    await expect(host).toHaveJSProperty('validity.valid', true);
+    await expect(host).toHaveJSProperty('validationMessage', '');
+    await expect(message).toHaveCount(0);
+    expect(await isError()).toBe(false);
+  },
+);
+
+test(
+  'takes a validity of its own',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`<slab-color-picker label="Label"></slab-color-picker>`,
+    );
+
+    const host = page.locator('slab-color-picker');
+
+    await host.evaluate<void, void, ColorPicker>((element) => {
+      element.setValidity({ rangeUnderflow: true }, 'Message');
+    });
+
+    await expect(host).toHaveJSProperty('validity.rangeUnderflow', true);
+    await expect(host).toHaveJSProperty('validationMessage', 'Message');
+
+    await callMethod(host, 'setValidity');
+
+    await expect(host).toHaveJSProperty('validity.valid', true);
+  },
+);
+
+test(
+  'shows its validity message and takes focus when its form is submitted',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-color-picker label="Label"></slab-color-picker>
+          <button>Submit</button>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-color-picker');
+
+    let isSubmitted = false;
+
+    await page.exposeFunction('onSubmit', () => {
+      isSubmitted = true;
+    });
+
+    await page.locator('form').evaluate((form) => {
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        // @ts-expect-error Exposed above.
+        window.onSubmit();
+      });
+    });
+
+    await callMethod(host, 'setCustomValidity', 'Message');
+    await page.getByRole('button', { name: 'Submit' }).click();
+
+    await expect(page.getByTestId('validity-message')).toHaveText('Message');
+    await expect(page.getByRole('slider').first()).toBeFocused();
+    expect(isSubmitted).toBe(false);
+  },
+);
+
+test(
+  'shows its validity message when focus leaves',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`<slab-color-picker label="Label"></slab-color-picker>`,
+    );
+
+    const host = page.locator('slab-color-picker');
+
+    await callMethod(host, 'setCustomValidity', 'Message');
+    await page.getByRole('slider').first().focus();
+
+    await expect(page.getByTestId('validity-message')).toHaveCount(0);
+
+    await page.getByRole('slider').first().blur();
+
+    await expect(page.getByTestId('validity-message')).toHaveText('Message');
+  },
+);
+
+test(
+  'hides its validity message when its form resets',
+  { tag: '@forms' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-color-picker label="Label"></slab-color-picker>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-color-picker');
+
+    await callMethod(host, 'setCustomValidity', 'Message');
+    await callMethod(host, 'reportValidity');
+
+    await expect(page.getByTestId('validity-message')).toHaveText('Message');
+
+    await page.locator('form').evaluate((form: HTMLFormElement) => {
+      form.reset();
+    });
+
+    await expect(page.getByTestId('validity-message')).toHaveCount(0);
+    await expect(host).toHaveJSProperty('validity.valid', false);
+  },
+);
