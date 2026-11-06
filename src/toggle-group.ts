@@ -58,6 +58,8 @@ declare global {
  *
  * @csspart group - The buttons
  *
+ * @cssstate disabled - While it's disabled.
+ *
  * @readonly
  * @prop {ToggleGroupButton[]} buttons - Its Toggle Group Buttons, in order.
  *
@@ -181,6 +183,14 @@ export default class ToggleGroup extends LitElement {
   }
 
   override updated(changes: PropertyValues<this>) {
+    if (changes.has('disabled')) {
+      if (this.disabled) {
+        this.#internals.states.add('disabled');
+      } else {
+        this.#internals.states.delete('disabled');
+      }
+    }
+
     // Only pushed down when the group is disabled, or when it has actually
     // changed. Otherwise the first update, where there's no previous value,
     // would enable every button that disabled itself.
@@ -209,13 +219,15 @@ export default class ToggleGroup extends LitElement {
 
   constructor() {
     super();
-
+    this.#internals = this.attachInternals();
     this.addEventListener('private-connected', this.#onConnected);
     this.addEventListener('private-disabled-change', this.#onDisabledChange);
     this.addEventListener('private-pressed-change', this.#onPressedChange);
   }
 
   // Wrapping at each end, as Toolbar does.
+  #internals: ElementInternals;
+
   #rovingTabindex = new RovingTabindex<ToggleGroupButton>({
     hasHomeAndEnd: true,
     isNavigable: ({ disabled }) => !disabled,

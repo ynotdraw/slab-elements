@@ -408,3 +408,34 @@ test(
     ).rejects.toThrow();
   },
 );
+
+test(
+  "matches `:state(disabled)` while it's disabled",
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-copy-button
+          label="Copy"
+          value="Value"
+          disabled
+        ></slab-copy-button>`,
+    );
+
+    const host = page.locator('slab-copy-button');
+
+    await expect
+      .poll(() =>
+        host.evaluate((element) => element.matches(':state(disabled)')),
+      )
+      .toBe(true);
+
+    await setProperty(host, 'disabled', false);
+
+    await expect
+      .poll(() =>
+        host.evaluate((element) => element.matches(':state(disabled)')),
+      )
+      .toBe(false);
+  },
+);

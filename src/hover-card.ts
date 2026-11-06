@@ -66,6 +66,7 @@ declare global {
  *
  * @csspart card - The card
  *
+ * @cssstate disabled - While it's disabled.
  * @cssstate open - While it's open.
  *
  * @fires {ToggleEvent} beforetoggle - Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed.
@@ -213,6 +214,14 @@ export default class HoverCard extends LitElement {
   }
 
   override updated(changes: PropertyValues<this>) {
+    if (changes.has('disabled')) {
+      if (this.disabled) {
+        this.#internals.states.add('disabled');
+      } else {
+        this.#internals.states.delete('disabled');
+      }
+    }
+
     if (changes.has('disabled') && this.disabled) {
       clearTimeout(this.#timeoutId);
       this.open = false;

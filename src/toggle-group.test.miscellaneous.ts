@@ -389,3 +389,32 @@ test(
     ).rejects.toThrow();
   },
 );
+
+test(
+  "matches `:state(disabled)` while it's disabled",
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-toggle-group label="Label" disabled>
+          <slab-toggle-group-button value="one">One</slab-toggle-group-button>
+        </slab-toggle-group>`,
+    );
+
+    const host = page.locator('slab-toggle-group');
+
+    await expect
+      .poll(() =>
+        host.evaluate((element) => element.matches(':state(disabled)')),
+      )
+      .toBe(true);
+
+    await setProperty(host, 'disabled', false);
+
+    await expect
+      .poll(() =>
+        host.evaluate((element) => element.matches(':state(disabled)')),
+      )
+      .toBe(false);
+  },
+);
