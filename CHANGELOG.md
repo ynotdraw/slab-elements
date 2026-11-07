@@ -1,5 +1,78 @@
 # slab-elements
 
+## 1.0.0
+
+### Major Changes
+
+- [#134](https://github.com/ynotdraw/slab-elements/pull/134) [`1c98e73`](https://github.com/ynotdraw/slab-elements/commit/1c98e7333a8d773c7fad0361eecd728b6af1f75d) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Slab 1.0.0. The API is stable: from here, nothing is removed without a deprecation first, and a deprecated API lasts until the next major version. Every change since 0.1 that can break something, and what to change for each, is in [Upgrade to 1.0](https://slab-elements.dev/upgrade/).
+
+  This 1.0 release is dedicated to my childhood friend, [Doug Miller](https://github.com/dmiller9911). We were friends for 30 years. He got me into web development and open source software. He lost his battle with melanoma last year. Today is his birthday. So I dedicate this to him. Rest in peace, buddy. I love and miss you.
+
+  If you'd like to remember Doug too, please consider a donation to the [Melanoma Research Alliance](https://give.curemelanoma.org/give/296895/#!/donation/checkout), which funds melanoma research.
+
+### Minor Changes
+
+- [#104](https://github.com/ynotdraw/slab-elements/pull/104) [`e431c54`](https://github.com/ynotdraw/slab-elements/commit/e431c5411111cd408b7d7d7672a5e9e07a38ca77) Thanks [@ynotdraw](https://github.com/ynotdraw)! - **Breaking:** Checkbox Group's list of checked values moves from `value` to `values`, the way Listbox, Select, Combobox, Tags Input and Toggle Group have it. `value` is now a string, the first of them, and setting it checks only that Checkbox.
+
+- [#103](https://github.com/ynotdraw/slab-elements/pull/103) [`717240e`](https://github.com/ynotdraw/slab-elements/commit/717240efe395fc7545a6768b5913624c6b78ac27) Thanks [@ynotdraw](https://github.com/ynotdraw)! - **Breaking:** Grid List's `selection-mode` is replaced by `selectable` and `multiple`, the same `multiple` as Listbox, Select, Combobox and Tree. `selection-mode="single"` is now `selectable`, and `selection-mode="multiple"` is now `multiple`, which makes rows selectable without `selectable`.
+
+- [#114](https://github.com/ynotdraw/slab-elements/pull/114) [`20ee752`](https://github.com/ynotdraw/slab-elements/commit/20ee752d35f3852497bb6648448888c3b614be4e) Thanks [@ynotdraw](https://github.com/ynotdraw)! - **Breaking:** Password Field's show-and-hide button dispatches "reveal-change" instead of "toggle". "toggle" is the `ToggleEvent` that elements with `open` dispatch, and Password Field's wasn't one. Read `revealed` in the handler for whether the password shows.
+
+- [#116](https://github.com/ynotdraw/slab-elements/pull/116) [`916e758`](https://github.com/ynotdraw/slab-elements/commit/916e75876596e6c5b41d416f85a03e08498bb52f) Thanks [@ynotdraw](https://github.com/ynotdraw)! - **Breaking:** Toast's "dismiss" can be canceled to keep the toast shown, as Alert's can. So it's now dispatched before the toast hides rather than after, and `open` is still `true` in a "dismiss" listener.
+
+- [#102](https://github.com/ynotdraw/slab-elements/pull/102) [`bcc1f8a`](https://github.com/ynotdraw/slab-elements/commit/bcc1f8ae20ae7e4bf02990da892cbe20259a5ff8) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Every element with `open` now dispatches "toggle" when it opens and closes, as a `ToggleEvent` with `oldState` and `newState`:
+
+  - Menu, Context Menu, Select and Combobox dispatch it for the first time.
+  - **Breaking:** Tooltip and Hover Card's "toggle" is now a `ToggleEvent` that, like a popover's, doesn't bubble and isn't composed. Listen on the element itself rather than on an ancestor.
+
+### Patch Changes
+
+- [#115](https://github.com/ynotdraw/slab-elements/pull/115) [`0dbff43`](https://github.com/ynotdraw/slab-elements/commit/0dbff433f2dbbc495b039d29e9ebe09ed652cbc3) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Every attribute, property, method, event, slot and part in `custom-elements.json` now has a description, so editors show one on hover and each component's page fills in its API tables. Most were the ones many elements share, such as `label`, `disabled`, "change" and the validity methods.
+
+- [#129](https://github.com/ynotdraw/slab-elements/pull/129) [`01b51ff`](https://github.com/ynotdraw/slab-elements/commit/01b51ffdf52ed0938081b919a051c2717e9a37b2) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Combobox, Select, Menu, Context Menu, Tooltip, Hover Card, Date Picker and Date Range Picker dispatch "beforetoggle" before they open or close, as Popover does. Cancelling it while one is opening keeps it closed, and `open` stays `false`.
+
+- [#125](https://github.com/ynotdraw/slab-elements/pull/125) [`35b4591`](https://github.com/ynotdraw/slab-elements/commit/35b45919cfc60438d303a5750a6a4425bfefd580) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Combobox and Tags Input have `readonly`, as the other fields that take typing do. The value can't be changed, but it's still focusable and submitted and never invalid. A Combobox's listbox doesn't open, and the tags of both are text rather than buttons that remove them.
+
+- [#124](https://github.com/ynotdraw/slab-elements/pull/124) [`bb929f1`](https://github.com/ynotdraw/slab-elements/commit/bb929f105ae3f69b684ecefe4ffca4237057a87b) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Every element's custom states are now in the elements manifest as `cssStates`, in each component's JSDoc as `@cssstate`, and on its docs page, each with what it means. A design selects them with `:state()`, so they're public API like parts.
+
+- [#126](https://github.com/ynotdraw/slab-elements/pull/126) [`e928091`](https://github.com/ynotdraw/slab-elements/commit/e92809132b4c1d5ac47164439c93553f00d00012) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Slider, Range Slider, Color Picker and Editable have the validity API the other form controls do: `setCustomValidity()`, `setValidity()`, `validationMessage`, `willValidate` and `resetValidityFeedback()`, with a `validity-message` part and `:state(error)`. Their values are never invalid on their own, so this is for rules of your own. Their `description` part is now a `<div>` around the description slot and the validity message, as on Text Field, rather than the slot itself.
+
+- [#118](https://github.com/ynotdraw/slab-elements/pull/118) [`8a3a4b5`](https://github.com/ynotdraw/slab-elements/commit/8a3a4b5f15a7e43704da40c43381f4ae20dcba1d) Thanks [@ynotdraw](https://github.com/ynotdraw)! - The published package no longer asks for Node 20 and pnpm 12. Those were for working on Slab itself, and a project that installs it with npm, Yarn or an older pnpm no longer gets an engines warning or, with `engine-strict`, an error.
+
+- [#133](https://github.com/ynotdraw/slab-elements/pull/133) [`a0bb4fe`](https://github.com/ynotdraw/slab-elements/commit/a0bb4fee0ba697b7a114b0313e1063d2a52abe12) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Dialog, Drawer, Alert Dialog and Command Palette have `requestClose(returnValue)`, as a native `<dialog>` does. It dispatches a cancelable "cancel" and closes only when that isn't canceled.
+
+- [#123](https://github.com/ynotdraw/slab-elements/pull/123) [`955b0e4`](https://github.com/ynotdraw/slab-elements/commit/955b0e434e94fa4bcc75468ab2f1337eaebb2846) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Dialog, Drawer, Alert Dialog, Command Palette and Toast dispatch "toggle" when they open and close, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, so every element with `open` now does.
+
+- [#137](https://github.com/ynotdraw/slab-elements/pull/137) [`e92e2fa`](https://github.com/ynotdraw/slab-elements/commit/e92e2fae671e958ff57eac306ddc62cf22b397e3) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Editable dispatches "input" just before "change" when a committed edit changes its value, as a native `<select>` does, so it fires both events like every other field. It still doesn't dispatch "input" while typing, because `value` only changes when an edit is committed.
+
+- [#109](https://github.com/ynotdraw/slab-elements/pull/109) [`753de05`](https://github.com/ynotdraw/slab-elements/commit/753de05de0dd71801c388a71376c8113ad00ef1f) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Types for using Slab's elements in React, Svelte 5 and Vue templates. Import your framework's once, such as `import type {} from 'slab-elements/react.js'`, and every tag's properties are checked. `SlabElementProps` in `slab-elements/jsx.js` lists them for any other framework.
+
+- [#110](https://github.com/ynotdraw/slab-elements/pull/110) [`4572e7c`](https://github.com/ynotdraw/slab-elements/commit/4572e7c0652f9f535923fc7595ab907469f9b3b7) Thanks [@ynotdraw](https://github.com/ynotdraw)! - The protected hooks that Slab's own subclasses override, such as Dialog's `renderContent()` and Date Field's `renderControl()`, are left out of the published types and `custom-elements.json`. They were never documented and aren't public API, so they can change without a major version. Subclass an element to set `styles`, as the docs show.
+
+- [#138](https://github.com/ynotdraw/slab-elements/pull/138) [`0a83385`](https://github.com/ynotdraw/slab-elements/commit/0a83385bec390a8427eac3d15e9cf2ed153a4468) Thanks [@ynotdraw](https://github.com/ynotdraw)! - `custom-elements.json` and the React, Vue and Svelte types list the "invalid" event on each of the 25 form controls that validate, as a native control has it. It was dispatched all along, but no element listed it.
+
+- [#108](https://github.com/ynotdraw/slab-elements/pull/108) [`0b0df16`](https://github.com/ynotdraw/slab-elements/commit/0b0df167b11dee902b5239ffdc2ee084d0c6156a) Thanks [@ynotdraw](https://github.com/ynotdraw)! - The published `custom-elements.json` no longer lists the "private-*" events Slab's elements dispatch to each other, or the read-only `version` attribute, so editors and framework tooling stop suggesting them.
+
+- [#117](https://github.com/ynotdraw/slab-elements/pull/117) [`972f596`](https://github.com/ynotdraw/slab-elements/commit/972f5964c84195023f9f72908122538590453d38) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Rating has `readonly`, for showing a rating that can't be changed. It's still focusable and submitted with its form, and it doesn't preview a value under the pointer.
+
+- [#107](https://github.com/ynotdraw/slab-elements/pull/107) [`29d1cc6`](https://github.com/ynotdraw/slab-elements/commit/29d1cc6742fc9efff262eb85ae5dfd9d93be550b) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Importing an element on a server, as Next.js, Astro and SvelteKit do while rendering a page, no longer throws "window is not defined". The elements still render in the browser.
+
+- [#128](https://github.com/ynotdraw/slab-elements/pull/128) [`ca98c77`](https://github.com/ynotdraw/slab-elements/commit/ca98c77e5c034929d0f75c3b89363a901099538c) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Combobox, Tooltip and Hover Card have `show()` and `hide()`, as the other elements with `open` do. Tooltip's and Hover Card's skip `open-delay` and `close-delay`, and Hover Card's `hide()` gives focus in the card back to its anchor, as Escape does.
+
+- [#105](https://github.com/ynotdraw/slab-elements/pull/105) [`9377a4e`](https://github.com/ynotdraw/slab-elements/commit/9377a4ef807b7172fac081ea66ac512db7b8f2b6) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Slider has `valueAsNumber`, like Number and a native range input, for its `value` as a number. `value` stays a string, as a native input's is.
+
+- [#136](https://github.com/ynotdraw/slab-elements/pull/136) [`4c748bd`](https://github.com/ynotdraw/slab-elements/commit/4c748bdda7d3c3a2d9f4fd5bb8f66f1fbc643ab0) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Copy Button, Hover Card, Steps Step, Toggle Button, Toggle Group and Tooltip match `:state(disabled)` while they're disabled, as every other element with `disabled` does.
+
+- [#135](https://github.com/ynotdraw/slab-elements/pull/135) [`77ec98a`](https://github.com/ynotdraw/slab-elements/commit/77ec98a49b10c26c64b15d1023a51bcf47dd8b52) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Dialog, Drawer, Alert Dialog, Command Palette, Date Picker, Date Range Picker, Disclosure, Popover and Navigation Menu Item match `:state(open)` while they're open, as every other element with `open` does.
+
+- [#106](https://github.com/ynotdraw/slab-elements/pull/106) [`6906566`](https://github.com/ynotdraw/slab-elements/commit/690656649b62ad55a26b82b9aedd2e6387f20505) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Toggle Group has `disabled`, which disables every button in it, as Checkbox Group and Radio Group's do.
+
+- [#127](https://github.com/ynotdraw/slab-elements/pull/127) [`966d6e1`](https://github.com/ynotdraw/slab-elements/commit/966d6e126765a716f440f9a3f4a317c4ca0a4d50) Thanks [@ynotdraw](https://github.com/ynotdraw)! - The framework types now type each element's events. In React 19 and Svelte, a handler such as `oncopy-error` or `onchange` gets the event, typed as the element dispatches it, with the element as its `currentTarget`, and Vue checks `@copy-error` the same way. `slab-elements/jsx.js` adds `SlabElementEvents`, every tag's events, and `SlabEventHandler`, for any other framework.
+
+- [#119](https://github.com/ynotdraw/slab-elements/pull/119) [`0c5924c`](https://github.com/ynotdraw/slab-elements/commit/0c5924c3ce0f0edb8a1585a00c9097c14be4bb6b) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Every element's `version` property and attribute are marked internal, so they're out of the published types, `custom-elements.json` and the framework types. They're still there at runtime, for seeing which Slab registered an element, but they aren't public API.
+
+- [#101](https://github.com/ynotdraw/slab-elements/pull/101) [`f68d832`](https://github.com/ynotdraw/slab-elements/commit/f68d83235a4c52a390698f57ac56cd75b023c4a9) Thanks [@ynotdraw](https://github.com/ynotdraw)! - Elements no longer pull Slab's whole `package.json` into your bundle to read the version. That was about 9 KB before compression, shared by every element you imported.
+
 ## 0.3.1
 
 ### Patch Changes
