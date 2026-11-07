@@ -13,9 +13,7 @@ upgrade.
 | Latest minor of the latest major   | Yes                                 |
 | Latest minor of the previous major | For six months after the next major |
 | Older minors, and older majors     | No                                  |
-| `0.x`, once 1.0 is out             | No                                  |
-
-Until 1.0, only the latest `0.x` release gets fixes.
+| `0.x`                              | No                                  |
 
 ## Reporting a vulnerability
 
