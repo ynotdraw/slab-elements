@@ -73,6 +73,7 @@ declare global {
  *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - When an edit that changes its value is committed, just before "change", as a native `<select>` dispatches it. Not as it's typed, since `value` only changes on commit.
+ * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown.
  *
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.

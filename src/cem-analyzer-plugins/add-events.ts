@@ -2,10 +2,11 @@ import { type Module } from 'custom-elements-manifest' with { type: 'json' };
 import {
   isCallExpression,
   isClassDeclaration,
-  isExpressionWithTypeArguments,
   isIdentifier,
+  isMethodDeclaration,
   isNewExpression,
   isPropertyAccessExpression,
+  isPropertyDeclaration,
   isStringLiteral,
   SyntaxKind,
   type Node,
@@ -15,7 +16,7 @@ import getParentClassName from './get-parent-class-name.js';
 /**
  * Adds dispatched events to the manifest.
  *
- * 1. Add "invalid" events to the manifest if a class implements `FormControl`.
+ * 1. Add "invalid" events to the manifest if a class has `checkValidity()`.
  * 2. Add events found in `this.dispatchEvent` calls.
  *
  * Events dispatched from within class methods are picked up without the help of
@@ -33,37 +34,44 @@ export default () => {
   return {
     name: 'add-events',
     analyzePhase({ moduleDoc, node }: { moduleDoc: Module; node: Node }) {
-      if (isClassDeclaration(node) && node.heritageClauses) {
-        const isImplementsFormControl =
-          isClassDeclaration(node) &&
-          node.heritageClauses.some((clause) => {
-            return clause.types.some((type) => {
-              return (
-                isExpressionWithTypeArguments(type) &&
-                isIdentifier(type.expression) &&
-                type.expression.text === 'FormControl'
-              );
+      // A form control that validates is form-associated and has
+      // `checkValidity()`, and the browser dispatches "invalid" on it, as on a
+      // native control, whenever that, `reportValidity()` or its form's
+      // submission finds it invalid. Button is form-associated too, but never
+      // validates, and Form has `checkValidity()` but isn't a control, so it
+      // takes both.
+      if (
+        isClassDeclaration(node) &&
+        node.members.some((member) => {
+          return (
+            isPropertyDeclaration(member) &&
+            isIdentifier(member.name) &&
+            member.name.text === 'formAssociated'
+          );
+        }) &&
+        node.members.some((member) => {
+          return (
+            isMethodDeclaration(member) &&
+            isIdentifier(member.name) &&
+            member.name.text === 'checkValidity'
+          );
+        }) &&
+        moduleDoc.declarations
+      ) {
+        for (const declaration of moduleDoc.declarations) {
+          // Every form control dispatches "change", so it has events already.
+          if (
+            'events' in declaration &&
+            declaration.events &&
+            getParentClassName(node) === declaration.name &&
+            declaration.events.every(({ name }) => name !== 'invalid')
+          ) {
+            declaration.events.push({
+              name: 'invalid',
+              type: {
+                text: 'Event',
+              },
             });
-          });
-
-        // Checking if a component implements `FormControl` is the best proxy
-        // for whether it dispatches "invalid" events. Because simply checking
-        // for a static `formAssociated` property would wrongly include components
-        // like Button.
-        if (isImplementsFormControl && moduleDoc.declarations) {
-          for (const declaration of moduleDoc.declarations) {
-            if (
-              'events' in declaration &&
-              declaration.events &&
-              getParentClassName(node) === declaration.name
-            ) {
-              declaration.events.push({
-                name: 'invalid',
-                type: {
-                  text: 'Event',
-                },
-              });
-            }
           }
         }
       }

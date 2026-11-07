@@ -1716,6 +1716,15 @@
               ]
             }
           ],
+          "events": [
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+            }
+          ],
           "attributes": [
             {
               "name": "label",
@@ -2204,6 +2213,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -2791,6 +2807,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -3490,6 +3513,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             },
             {
               "name": "beforetoggle",
@@ -5017,6 +5047,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -5780,6 +5817,17 @@
                 "text": "ToggleEvent"
               },
               "description": "When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -6465,6 +6513,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -7305,6 +7360,17 @@
                 "text": "ToggleEvent"
               },
               "description": "When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "inheritedFrom": {
+                "name": "DateRangeField",
+                "module": "src/date-range-field.ts"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -8772,6 +8838,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -9636,6 +9709,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -11173,6 +11253,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -13049,6 +13136,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -14268,6 +14362,13 @@
                 "text": "Event"
               },
               "description": "When the user shows or hides the password. Read `revealed` for which."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -14865,6 +14966,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -15912,6 +16020,15 @@
               ]
             }
           ],
+          "events": [
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+            }
+          ],
           "attributes": [
             {
               "name": "label",
@@ -16426,6 +16543,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -16953,6 +17077,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -17549,6 +17680,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -18158,6 +18296,13 @@
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
             },
             {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+            },
+            {
               "name": "beforetoggle",
               "type": {
                 "text": "ToggleEvent"
@@ -18683,6 +18828,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -20220,6 +20372,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -21937,6 +22096,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -22537,6 +22703,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -23152,6 +23325,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
@@ -23724,6 +23904,13 @@
                 "text": "Event"
               },
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
             }
           ],
           "attributes": [
