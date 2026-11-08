@@ -137,19 +137,34 @@ export const announcements: Announcement[] = [
         'Every event is typed in React, Vue, Svelte and plain TypeScript, down to its `detail`.',
         'Each custom state is in `custom-elements.json` with a description, so `:state()` selectors are documented beside parts and attributes.',
         '`readonly`, the validity API, `show()` and `hide()`, and a cancelable "beforetoggle" are on every element they make sense for.',
-        'Every element with `open` dispatches "toggle" as a `ToggleEvent`.',
+        'Every element with `open` dispatches "toggle" as a `ToggleEvent` and matches `:state(open)`.',
         'Nothing goes away without a deprecation first, and a deprecated API lasts until the next major version.',
       ],
       additions: [
+        {
+          title: 'Framework types',
+          href: 'get-started/#typescript',
+          text: "Import `slab-elements/react.js`, `svelte.js` or `vue.js` once, and every tag's properties are checked in your templates.",
+        },
         {
           title: 'Typed events',
           href: 'get-started/#typescript',
           text: 'The JSX, Vue and Svelte types include an `on` prop for each event, and `SlabElementEvents` maps each element to its events for `addEventListener`.',
         },
         {
+          title: 'Imports on a server',
+          href: 'get-started/#frameworks',
+          text: 'Importing an element while Next.js, Astro or SvelteKit renders a page on the server no longer throws "window is not defined".',
+        },
+        {
+          title: 'Smaller bundles',
+          href: 'get-started/#import',
+          text: "Elements no longer bundle Slab's whole `package.json` to read their version, which was about 9 KB before compression.",
+        },
+        {
           title: 'Custom states',
           href: 'components/',
-          text: "Each component's page lists its `:state()`s in a table beside its parts, and so does `custom-elements.json`.",
+          text: "Each component's page lists its `:state()`s in a table beside its parts, and so does `custom-elements.json`. Every element with `open` matches `:state(open)`, and every one with `disabled` matches `:state(disabled)`.",
         },
         {
           title: 'Read-only fields',
@@ -175,6 +190,16 @@ export const announcements: Announcement[] = [
           title: 'Toggle events everywhere',
           href: 'components/dialog/',
           text: 'Dialog, Alert Dialog, Drawer and Toast dispatch "toggle" too, so every element with `open` has it.',
+        },
+        {
+          title: 'Closing like a dialog',
+          href: 'components/dialog/',
+          text: 'Dialog, Drawer, Alert Dialog and Command Palette have `requestClose()`, as a native `<dialog>` does: it dispatches a cancelable "cancel" first.',
+        },
+        {
+          title: 'Native events',
+          href: 'components/editable/',
+          text: 'Editable dispatches "input" before "change", like every other field, and the 25 form controls that validate list their "invalid" event in the types and the manifest.',
         },
         {
           title: 'Deprecations',
