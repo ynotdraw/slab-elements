@@ -1,5 +1,5 @@
 ---
-'slab-elements': minor
+'slab-elements': major
 ---
 
 Every element with `open` now dispatches "toggle" when it opens and closes, as a `ToggleEvent` with `oldState` and `newState`:
