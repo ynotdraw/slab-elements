@@ -201,6 +201,19 @@ const description = "Every release of Slab, newest first, with what's changed in
     max-inline-size: 70ch;
     padding-inline-start: 1.25rem;
 
+    :global(p),
+    :global(ul) {
+      margin: 0;
+    }
+
+    :global(li > ul) {
+      padding-inline-start: 1.25rem;
+    }
+
+    :global(:is(p, ul) + :is(p, ul)) {
+      margin-block-start: 0.5rem;
+    }
+
     :global(.pr) {
       color: var(--muted);
       font-family: var(--font-mono);
