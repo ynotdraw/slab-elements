@@ -732,13 +732,31 @@ const parse = (text: string) => ({
   pr: /^\[#(\d+)\]\(([^)]+)\)/.exec(text),
 });
 
+// A paragraph of a change, or a list when each of its lines is an item.
+const block = (text: string) =>
+  /^\s*- /.test(text)
+    ? `<ul>${text
+        .split(/^\s*- /m)
+        .slice(1)
+        .map((item) => `<li>${linked(item)}</li>`)
+        .join('')}</ul>`
+    : `<p>${linked(text)}</p>`;
+
 const change = (text: string) => {
   const { body, pr } = parse(text);
+  const link = pr ? ` <a class="pr" href="${pr[2]}">#${pr[1]}</a>` : '';
 
-  // Links in the change itself, after it's escaped.
-  const html = linked(body);
+  const blocks = body.split(/\n\s*\n/);
 
-  return pr ? `${html} <a class="pr" href="${pr[2]}">#${pr[1]}</a>` : html;
+  if (blocks.length === 1) {
+    return `${linked(body)}${link}`;
+  }
+
+  // A change of more than one paragraph, such as 1.0's dedication, keeps
+  // them, with the pull request at the end of the first.
+  const [first = '', ...rest] = blocks;
+
+  return [`<p>${linked(first)}${link}</p>`, ...rest.map(block)].join('');
 };
 
 const changeMarkdown = (text: string) => {
