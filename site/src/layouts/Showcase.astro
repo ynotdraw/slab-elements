@@ -57,8 +57,11 @@ const lines = css.trim().split('\n').length;
       <p>
         {lines} lines of CSS, with no subclass and no design tokens from Slab.
         The markup is plain <code>&lt;slab-*&gt;</code> tags, the same ones on
-        every component’s page, and the only script opens the dialog, shows the
-        toast and puts a sorted table’s rows in order.
+        every component’s page.
+        {
+          showcase.script ??
+            'The only script opens the dialog, shows the toast and puts a sorted table’s rows in order.'
+        }
       </p>
       <p class="elements">
         {

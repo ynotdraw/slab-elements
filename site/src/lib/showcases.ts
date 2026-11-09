@@ -6,6 +6,9 @@
 export type Showcase = {
   // The tags the page uses, as its facts list them.
   elements: string[];
+  // What the page's script does, when it does more than open the dialog and
+  // show the toast.
+  script?: string;
   slug: 'cyberpunk' | 'finance' | 'rpg' | 'studio';
   summary: string;
   title: string;
@@ -74,20 +77,27 @@ export const showcases: Showcase[] = [
   },
   {
     elements: [
-      'slab-progress',
-      'slab-tabs',
+      'slab-menu',
       'slab-listbox',
+      'slab-progress',
+      'slab-meter',
+      'slab-steps',
+      'slab-hover-card',
+      'slab-alert-dialog',
+      'slab-dialog',
+      'slab-tabs',
       'slab-select',
       'slab-slider',
       'slab-radio-group',
       'slab-switch',
       'slab-checkbox',
-      'slab-dialog',
       'slab-toast',
     ],
+    script:
+      'The page’s script is the game: it takes turns, works out damage, and moves focus to the command Menu when it’s your move.',
     slug: 'rpg',
     summary:
-      'An original retro RPG’s pause menu: gradient-blue windows, bevelled frames, a pointing cursor and HP bars.',
+      'A playable, turn-based battle from an original retro RPG: gradient-blue windows, a Menu of commands, HP bars and a boss at the end.',
     title: 'Retro RPG',
   },
 ];

@@ -3,22 +3,65 @@ import Showcase from '../../layouts/Showcase.astro';
 import '../../showcase/rpg.css';
 import css from '../../showcase/rpg.css?raw';
 
-// An original party, for an original game.
+// An original party, for an original game. The battle script reads each
+// member's numbers from here, through the data attributes below, and keeps
+// them up to date as the fight goes on.
 const party = [
-  { name: 'Rook', job: 'Swordhand', level: 24, hp: [1840, 2210], mp: [96, 140], color: '#c0583a' },
-  { name: 'Seri', job: 'Mender', level: 22, hp: [1120, 1480], mp: [310, 330], color: '#3f8f6b' },
-  { name: 'Tamsin', job: 'Arcanist', level: 23, hp: [420, 1390], mp: [58, 402], color: '#6a55c4' },
+  { id: 'rook', name: 'Rook', job: 'Swordhand', level: 24, hp: 2210, mp: 140, color: '#c0583a' },
+  { id: 'seri', name: 'Seri', job: 'Mender', level: 22, hp: 1480, mp: 330, color: '#3f8f6b' },
+  { id: 'tamsin', name: 'Tamsin', job: 'Arcanist', level: 23, hp: 1390, mp: 402, color: '#6a55c4' },
+];
+
+// Each member's skills, as the battle script knows them by `value`.
+const skills = {
+  rook: [
+    { value: 'heavy-swing', name: 'Heavy Swing', mp: 8 },
+    { value: 'cleave', name: 'Cleave', mp: 16 },
+  ],
+  seri: [
+    { value: 'mend', name: 'Mend', mp: 20 },
+    { value: 'mend-all', name: 'Mend All', mp: 45 },
+    { value: 'revive', name: 'Revive', mp: 40 },
+  ],
+  tamsin: [
+    { value: 'cinder', name: 'Cinder', mp: 18 },
+    { value: 'rime', name: 'Rime', mp: 18 },
+    { value: 'spark', name: 'Spark', mp: 18 },
+    { value: 'starfall', name: 'Starfall', mp: 64 },
+  ],
+};
+
+const items = [
+  { value: 'tonic', name: 'Tonic', count: 12, about: 'Restores 500 HP to one ally.' },
+  { value: 'hi-tonic', name: 'Hi-Tonic', count: 4, about: 'Restores 1500 HP to one ally.' },
+  { value: 'ether', name: 'Ether Drop', count: 6, about: 'Restores 100 MP to one ally.' },
+  { value: 'feather', name: 'Phoenix Quill', count: 2, about: 'Revives a fallen ally with half their HP.' },
 ];
 ---
 
 <Showcase css={css} slug="rpg">
-  <div class="rpg">
+  <div class="rpg" data-rpg>
     <div class="rpg-screen">
+      <header class="rpg-window rpg-top">
+        <p class="rpg-place">Saltmarsh Crossing</p>
+        <slab-steps class="rpg-waves" label="Battle progress" step="1">
+          <slab-steps-step>Wave 1</slab-steps-step>
+          <slab-steps-step>Wave 2</slab-steps-step>
+          <slab-steps-step>Wave 3</slab-steps-step>
+          <slab-steps-step>Boss</slab-steps-step>
+        </slab-steps>
+        <button class="rpg-button" data-rpg-pause type="button">Menu</button>
+      </header>
+
+      <section aria-label="Enemies" class="rpg-field">
+        <ul class="rpg-foes" data-rpg-foes></ul>
+      </section>
+
       <section aria-label="Party" class="rpg-window rpg-party">
         <ul>
           {
             party.map((member) => (
-              <li class="rpg-member">
+              <li class="rpg-member" data-rpg-member={member.id}>
                 <span aria-hidden="true" class="rpg-portrait" style={`--tint: ${member.color}`}>
                   {member.name[0]}
                 </span>
@@ -28,16 +71,18 @@ const party = [
                   </p>
                   <p class="rpg-level">LV {member.level}</p>
                   <slab-progress
-                    class={member.hp[0] / member.hp[1] < 0.35 ? 'rpg-hp rpg-low' : 'rpg-hp'}
-                    label={`HP ${member.hp[0]} / ${member.hp[1]}`}
-                    max={member.hp[1]}
-                    value={member.hp[0]}
+                    class="rpg-hp"
+                    data-rpg-hp
+                    label={`HP ${member.hp} / ${member.hp}`}
+                    max={member.hp}
+                    value={member.hp}
                   />
                   <slab-progress
                     class="rpg-mp"
-                    label={`MP ${member.mp[0]} / ${member.mp[1]}`}
-                    max={member.mp[1]}
-                    value={member.mp[0]}
+                    data-rpg-mp
+                    label={`MP ${member.mp} / ${member.mp}`}
+                    max={member.mp}
+                    value={member.mp}
                   />
                 </div>
               </li>
@@ -46,77 +91,130 @@ const party = [
         </ul>
       </section>
 
-      <section aria-label="Menu" class="rpg-window rpg-menu">
-        <slab-tabs label="Menu" orientation="vertical">
-          <slab-tabs-tab panel="items">Item</slab-tabs-tab>
-          <slab-tabs-tab panel="equip">Equip</slab-tabs-tab>
-          <slab-tabs-tab panel="config">Config</slab-tabs-tab>
-          <slab-tabs-tab disabled panel="save">Save</slab-tabs-tab>
+      <section aria-label="Commands" class="rpg-window rpg-commands">
+        <ol aria-label="Turn order" class="rpg-order" data-rpg-order></ol>
+        <p class="rpg-turn" data-rpg-turn>The battle begins…</p>
 
-          <slab-tabs-panel name="items">
-            <slab-listbox label="Items" value="tonic">
-              <slab-option value="tonic">Tonic <span>×12</span></slab-option>
-              <slab-option value="hi-tonic">Hi-Tonic <span>×4</span></slab-option>
-              <slab-option value="ether">Ether Drop <span>×6</span></slab-option>
-              <slab-option value="feather">Phoenix Quill <span>×2</span></slab-option>
-              <slab-option disabled value="key">Rusted Key <span>×1</span></slab-option>
-            </slab-listbox>
-            <button class="rpg-button" data-show="rpg-toast" type="button">Use on Tamsin</button>
-          </slab-tabs-panel>
+        {
+          party.map((member) => (
+            <slab-menu class="rpg-command" data-rpg-commands={member.id} hidden label={`${member.name}’s commands`}>
+              <button aria-disabled="true" class="rpg-button" slot="anchor" type="button">
+                Command
+              </button>
+              <slab-menu-item data-rpg-action="attack">Attack</slab-menu-item>
+              <slab-menu label="Skills">
+                <slab-menu-item slot="anchor">Skill</slab-menu-item>
+                {skills[member.id as keyof typeof skills].map((skill) => (
+                  <slab-menu-item data-mp={skill.mp} data-rpg-action={skill.value}>
+                    {skill.name} <span class="rpg-cost">{skill.mp} MP</span>
+                  </slab-menu-item>
+                ))}
+              </slab-menu>
+              <slab-menu label="Items">
+                <slab-menu-item slot="anchor">Item</slab-menu-item>
+                {items.map((item) => (
+                  <slab-menu-item data-rpg-action={item.value} data-rpg-item={item.value}>
+                    {item.name} <span class="rpg-cost" data-rpg-count>{item.count}</span>
+                  </slab-menu-item>
+                ))}
+              </slab-menu>
+              <slab-menu-item data-rpg-action="defend">Defend</slab-menu-item>
+            </slab-menu>
+          ))
+        }
 
-          <slab-tabs-panel name="equip">
-            <div class="rpg-stack">
-              <slab-select label="Weapon">
-                <slab-option selected value="ashblade">Ashblade · ATK 48</slab-option>
-                <slab-option value="tidecutter">Tidecutter · ATK 44</slab-option>
-                <slab-option value="saw">Lumber saw · ATK 12</slab-option>
-              </slab-select>
-              <slab-select label="Armor">
-                <slab-option selected value="mail">Wyrmscale mail · DEF 31</slab-option>
-                <slab-option value="coat">Traveler’s coat · DEF 14</slab-option>
-              </slab-select>
-              <slab-select label="Charm" placeholder="Empty">
-                <slab-option value="ember">Ember charm · fire ward</slab-option>
-                <slab-option value="lucky">Lucky button · +5 LUCK</slab-option>
-              </slab-select>
-            </div>
-          </slab-tabs-panel>
+        <slab-listbox class="rpg-targets" data-rpg-targets hidden label="Choose a target">
+          <span slot="description">Enter to confirm, Escape to go back.</span>
+          <slab-option value="">No one</slab-option>
+        </slab-listbox>
 
-          <slab-tabs-panel name="config">
-            <div class="rpg-stack">
-              <slab-slider label="Battle speed" max="6" min="1" value="4"></slab-slider>
-              <slab-radio-group label="Window color" value="azure">
-                <slab-radio-group-radio checked label="Azure" value="azure">Azure</slab-radio-group-radio>
-                <slab-radio-group-radio label="Crimson" value="crimson">Crimson</slab-radio-group-radio>
-                <slab-radio-group-radio label="Verdant" value="verdant">Verdant</slab-radio-group-radio>
-              </slab-radio-group>
-              <slab-switch checked label="Remember cursor"></slab-switch>
-              <slab-checkbox label="Skip cutscenes I’ve seen"></slab-checkbox>
-            </div>
-          </slab-tabs-panel>
-
-          <slab-tabs-panel name="save">Save points only.</slab-tabs-panel>
-        </slab-tabs>
+        <button class="rpg-button" data-rpg-restart hidden type="button">Play again</button>
       </section>
 
-      <section aria-label="Journey" class="rpg-window rpg-info">
-        <dl>
-          <div><dt>Time</dt><dd>41:07</dd></div>
-          <div><dt>Coin</dt><dd>18,240 ¢</dd></div>
-        </dl>
-        <p class="rpg-place">Saltmarsh Crossing</p>
-        <button class="rpg-button" data-open="rpg-quit" type="button">Quit</button>
+      <section aria-label="Battle log" class="rpg-window rpg-log">
+        <ol aria-live="polite" data-rpg-log role="log"></ol>
       </section>
     </div>
 
-    <slab-dialog closedby="any" id="rpg-quit" label="Return to the title screen?">
-      <p>Anything since your last save at the Lantern Inn will be lost.</p>
+    <slab-dialog closedby="any" data-rpg-menu id="rpg-menu" label="Menu">
+      <slab-tabs label="Menu" orientation="vertical">
+        <slab-tabs-tab panel="items">Item</slab-tabs-tab>
+        <slab-tabs-tab panel="equip">Equip</slab-tabs-tab>
+        <slab-tabs-tab panel="config">Config</slab-tabs-tab>
+        <slab-tabs-tab disabled panel="save">Save</slab-tabs-tab>
+
+        <slab-tabs-panel name="items">
+          <slab-listbox data-rpg-bag label="Bag" value="tonic">
+            {
+              items.map((item) => (
+                <slab-option data-about={item.about} value={item.value}>
+                  {item.name} <span data-rpg-count={item.value}>×{item.count}</span>
+                </slab-option>
+              ))
+            }
+            <slab-option data-about="It doesn’t fit any lock you’ve found yet." disabled value="key">
+              Rusted Key <span>×1</span>
+            </slab-option>
+          </slab-listbox>
+          <p class="rpg-about" data-rpg-about>Restores 500 HP to one ally.</p>
+          <p class="rpg-hint">Use items in battle from the Item command.</p>
+        </slab-tabs-panel>
+
+        <slab-tabs-panel name="equip">
+          <div class="rpg-stack">
+            <p class="rpg-hint">Rook’s gear · <span data-rpg-gear>ATK 88 · DEF 31</span></p>
+            <slab-select data-rpg-equip="weapon" label="Weapon">
+              <slab-option selected value="48">Ashblade · ATK 48</slab-option>
+              <slab-option value="44">Tidecutter · ATK 44</slab-option>
+              <slab-option value="12">Lumber saw · ATK 12</slab-option>
+            </slab-select>
+            <slab-select data-rpg-equip="armor" label="Armor">
+              <slab-option selected value="31">Wyrmscale mail · DEF 31</slab-option>
+              <slab-option value="14">Traveler’s coat · DEF 14</slab-option>
+            </slab-select>
+            <slab-select data-rpg-equip="charm" label="Charm" placeholder="Empty">
+              <slab-option value="ember">Ember charm · fire ward</slab-option>
+              <slab-option value="lucky">Lucky button · +5 LUCK</slab-option>
+            </slab-select>
+          </div>
+        </slab-tabs-panel>
+
+        <slab-tabs-panel name="config">
+          <div class="rpg-stack">
+            <slab-slider data-rpg-speed label="Battle speed" max="6" min="1" value="4"></slab-slider>
+            <slab-radio-group data-rpg-color label="Window color" value="azure">
+              <slab-radio-group-radio checked label="Azure" value="azure">Azure</slab-radio-group-radio>
+              <slab-radio-group-radio label="Crimson" value="crimson">Crimson</slab-radio-group-radio>
+              <slab-radio-group-radio label="Verdant" value="verdant">Verdant</slab-radio-group-radio>
+            </slab-radio-group>
+            <slab-switch checked data-rpg-numbers label="Show damage numbers"></slab-switch>
+            <slab-checkbox data-rpg-easy label="Gentle foes (they hit softer)"></slab-checkbox>
+          </div>
+        </slab-tabs-panel>
+
+        <slab-tabs-panel name="save">Save points only.</slab-tabs-panel>
+      </slab-tabs>
+
+      <dl class="rpg-journey">
+        <div><dt>Coin</dt><dd data-rpg-coin>18,240 ¢</dd></div>
+      </dl>
+
       <form class="rpg-actions" method="dialog">
-        <button class="rpg-button" value="no">No</button>
-        <button class="rpg-button" value="yes">Yes</button>
+        <button class="rpg-button" value="resume">Resume</button>
       </form>
     </slab-dialog>
 
-    <slab-toast id="rpg-toast">Tamsin recovered 500 HP.</slab-toast>
+    <slab-alert-dialog cancel-label="Close" data-rpg-result label="Victory!">
+      <span data-rpg-result-text slot="description"></span>
+      <form class="rpg-actions" method="dialog">
+        <button class="rpg-button" value="again">Play again</button>
+      </form>
+    </slab-alert-dialog>
+
+    <slab-toast data-rpg-toast></slab-toast>
   </div>
 </Showcase>
+
+<script>
+  import '../../scripts/rpg-battle.ts';
+</script>
