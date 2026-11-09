@@ -15,6 +15,7 @@
 // than found there.
 import HoverCard from '../../../src/hover-card.ts';
 import Meter from '../../../src/meter.ts';
+import { foeArt } from './rpg-art.ts';
 
 type Element_ = 'bolt' | 'fire' | 'ice';
 type Side = 'foe' | 'party';
@@ -321,14 +322,6 @@ const partyStats: Record<
   tamsin: { atk: 22, def: 16, mag: 64, spd: 16 },
 };
 
-// Original art: each foe is a few shapes, drawn in the page's palette.
-const art: Record<string, string> = {
-  lantern: `<svg viewBox="0 0 64 64" aria-hidden="true"><defs><radialGradient id="rpg-glow"><stop offset="0" stop-color="#fff7c2"/><stop offset=".55" stop-color="#ffb84d"/><stop offset="1" stop-color="#ff6a3d" stop-opacity="0"/></radialGradient></defs><circle cx="32" cy="34" r="26" fill="url(#rpg-glow)"/><path d="M32 8c10 12 16 20 16 29a16 16 0 0 1-32 0c0-9 6-17 16-29z" fill="#ffd76a" stroke="#7a3b12" stroke-width="2"/><circle cx="26" cy="38" r="3" fill="#2a1406"/><circle cx="38" cy="38" r="3" fill="#2a1406"/><path d="M27 46q5 3 10 0" stroke="#2a1406" stroke-width="2" fill="none"/></svg>`,
-  reedmaw: `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 52c0-18 10-34 24-34s24 16 24 34z" fill="#4c8a3f" stroke="#14300f" stroke-width="2"/><path d="M14 22l-3-14 7 12M24 18l-1-14 5 13M40 18l1-14 4 14M50 22l4-13-1 15" stroke="#7fbf5a" stroke-width="3" fill="none"/><path d="M16 40h32l-4 10H20z" fill="#2a0c0c"/><path d="M18 40l3 5 3-5 3 5 3-5 3 5 3-5 3 5 3-5 3 5 2-5" fill="#fff" stroke="#fff"/><circle cx="24" cy="31" r="3" fill="#ffe36a"/><circle cx="40" cy="31" r="3" fill="#ffe36a"/></svg>`,
-  crab: `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M6 24a8 8 0 0 1 12-6l-4 6 6 2a8 8 0 0 1-14-2zM58 24a8 8 0 0 0-12-6l4 6-6 2a8 8 0 0 0 14-2z" fill="#e0603e" stroke="#4a1208" stroke-width="2"/><path d="M14 28l8 8M50 28l-8 8" stroke="#4a1208" stroke-width="3"/><ellipse cx="32" cy="42" rx="20" ry="13" fill="#d4512f" stroke="#4a1208" stroke-width="2"/><path d="M16 50l-6 6M22 54l-4 6M48 50l6 6M42 54l4 6" stroke="#4a1208" stroke-width="3"/><circle cx="26" cy="30" r="3" fill="#111" stroke="#fff"/><circle cx="38" cy="30" r="3" fill="#111" stroke="#fff"/></svg>`,
-  tidewarden: `<svg viewBox="0 0 96 96" aria-hidden="true"><path d="M8 88c4-30 18-58 40-62 22 4 36 32 40 62z" fill="#1f6f8b" stroke="#06222c" stroke-width="3"/><path d="M8 88c10-8 20-8 30 0 10-8 20-8 30 0 10-8 16-8 20 0" fill="none" stroke="#bff3ff" stroke-width="3"/><path d="M30 26l6-16 6 12 6-16 6 16 6-12 6 16z" fill="#ffd76a" stroke="#6b4a06" stroke-width="2"/><circle cx="38" cy="46" r="5" fill="#bff3ff"/><circle cx="58" cy="46" r="5" fill="#bff3ff"/><circle cx="38" cy="46" r="2" fill="#06222c"/><circle cx="58" cy="46" r="2" fill="#06222c"/><path d="M34 62q14 8 28 0" stroke="#06222c" stroke-width="3" fill="none"/></svg>`,
-};
-
 class Stopped extends Error {}
 
 const random = (min: number, max: number) => min + Math.random() * (max - min);
@@ -602,7 +595,7 @@ async function start(root: HTMLElement) {
       sprite.type = 'button';
       sprite.ariaLabel = name;
       sprite.dataset.rpgFoe = String(position);
-      sprite.innerHTML = art[kind]!;
+      sprite.innerHTML = foeArt[kind]!;
 
       const weakness = [
         type.weak.length > 0
@@ -1365,7 +1358,9 @@ async function start(root: HTMLElement) {
   $('[data-rpg-color]').addEventListener(
     'change',
     (event: Event) => {
-      root.dataset.color = (event.currentTarget as Tagged).value;
+      // The Radio that was checked, since the "change" is its own and its
+      // Radio Group's `value` catches up a moment later.
+      root.dataset.color = (event.target as Tagged).value;
     },
     { signal },
   );

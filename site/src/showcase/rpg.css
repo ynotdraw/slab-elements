@@ -148,15 +148,16 @@
 /* A portrait, drawn as the member's initial on their color. */
 .rpg-portrait {
   aspect-ratio: 1;
-  background:
-    linear-gradient(160deg, rgb(255 255 255 / 25%), transparent 50%),
-    var(--tint);
   border: 2px solid var(--rpg-frame);
   border-radius: 0.375rem;
-  display: grid;
-  font-size: 1.75rem;
-  font-weight: 600;
-  place-items: center;
+  box-shadow: 0 0 0 2px var(--rpg-edge);
+  display: block;
+  overflow: hidden;
+
+  svg {
+    display: block;
+    inline-size: 100%;
+  }
 }
 
 .rpg-stats {
@@ -184,28 +185,68 @@
 /* The field: the foes, standing on the marsh. */
 .rpg-field {
   background:
+    /* Mist, drifting over the waterline. */
     linear-gradient(
       180deg,
-      transparent 55%,
-      rgb(40 90 60 / 45%) 55%,
-      rgb(10 30 25 / 70%)
+      transparent 52%,
+      rgb(170 200 255 / 22%) 62%,
+      transparent 72%
     ),
-    radial-gradient(ellipse at 50% 0%, rgb(120 150 255 / 25%), transparent 70%);
+    /* Ripples on the water. */
+    repeating-linear-gradient(
+        180deg,
+        transparent 0 0.5rem,
+        rgb(140 220 255 / 9%) 0.5rem 0.5625rem
+      )
+      0 100% / 100% 36% no-repeat,
+    /* The water, and the far bank's treeline above it. */
+    linear-gradient(180deg, #0c2a3a, #030a14) 0 100% / 100% 36% no-repeat,
+    radial-gradient(ellipse 9rem 3.5rem at 12% 64%, #050b1c 99%, transparent),
+    radial-gradient(ellipse 12rem 4.5rem at 38% 64%, #060d20 99%, transparent),
+    radial-gradient(ellipse 10rem 4rem at 68% 64%, #050b1c 99%, transparent),
+    radial-gradient(ellipse 11rem 5rem at 94% 64%, #060d20 99%, transparent),
+    /* Stars, then the night sky. */
+    radial-gradient(1px 1px at 8% 14%, #fff 99%, transparent),
+    radial-gradient(1px 1px at 22% 30%, #cfe0ff 99%, transparent),
+    radial-gradient(1.5px 1.5px at 35% 10%, #fff 99%, transparent),
+    radial-gradient(1px 1px at 52% 24%, #cfe0ff 99%, transparent),
+    radial-gradient(1.5px 1.5px at 64% 8%, #fff 99%, transparent),
+    radial-gradient(1px 1px at 90% 34%, #fff 99%, transparent),
+    linear-gradient(180deg, #050718, #1a1f5c 55%, #3a2f7a 64%);
+  border: 3px solid var(--rpg-frame);
   border-radius: 0.5rem;
+  box-shadow: 0 0 0 2px var(--rpg-edge);
   grid-area: field;
-  min-block-size: 13rem;
+  min-block-size: 17rem;
+  overflow: hidden;
   padding: 1rem;
+  position: relative;
+}
+
+.rpg-moon {
+  background: radial-gradient(circle at 35% 35%, #fffbe6, #d9d2ff 60%, #9a8fe0);
+  block-size: 3.25rem;
+  border-radius: 50%;
+  box-shadow:
+    0 0 2rem 0.5rem rgb(190 180 255 / 35%),
+    inset -0.5rem -0.375rem 0 rgb(60 40 140 / 25%);
+  inline-size: 3.25rem;
+  inset-block-start: 1rem;
+  inset-inline-end: 12%;
+  position: absolute;
 }
 
 .rpg-foes {
   align-items: end;
+  isolation: isolate;
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   gap: 1rem 2.5rem;
   justify-content: center;
   list-style: none;
   margin: 0;
-  min-block-size: 11rem;
+  min-block-size: 15rem;
   padding: 0;
 }
 
@@ -213,7 +254,7 @@
   animation: rpg-appear 400ms steps(5);
   display: grid;
   gap: 0.25rem;
-  inline-size: 8.5rem;
+  inline-size: 10rem;
   justify-items: center;
   position: relative;
   text-align: center;
@@ -237,13 +278,30 @@
   border-radius: 0.5rem;
   cursor: pointer;
   display: block;
-  inline-size: 6rem;
+  inline-size: 9rem;
+  max-inline-size: 100%;
   padding: 0.25rem;
+  position: relative;
+
+  /* The shadow a foe casts on the water. */
+  &::after {
+    background: radial-gradient(
+      ellipse closest-side,
+      rgb(0 0 0 / 55%),
+      transparent
+    );
+    block-size: 1rem;
+    content: '';
+    inset: auto 10% -0.375rem;
+    position: absolute;
+    z-index: -1;
+  }
 
   svg {
     display: block;
-    filter: drop-shadow(0 4px 0 rgb(0 0 0 / 45%));
+    filter: drop-shadow(0 0 0.5rem rgb(120 160 255 / 25%));
     inline-size: 100%;
+    overflow: visible;
   }
 }
 
@@ -252,11 +310,18 @@
 }
 
 .rpg-foe[data-kind='tidewarden'] .rpg-sprite {
-  inline-size: 10rem;
+  inline-size: 12rem;
+}
+
+.rpg-foe[data-kind='tidewarden'] svg {
+  animation: rpg-float 3s ease-in-out infinite;
 }
 
 .rpg-foe-name {
   font-size: 0.875rem;
+  text-shadow:
+    var(--rpg-shadow),
+    0 0 0.5rem #000;
 }
 
 /* A foe's HP: a Meter, green while it's healthy and red when it's nearly done. */
@@ -591,11 +656,13 @@
 .rpg[data-color='crimson'] {
   --rpg-top: #c0413a;
   --rpg-bottom: #3a0a12;
+  --rpg-dim: #f5c4b9;
 }
 
 .rpg[data-color='verdant'] {
   --rpg-top: #2f9a62;
   --rpg-bottom: #06301e;
+  --rpg-dim: #c4ecd2;
 }
 
 .rpg-stack {
@@ -604,7 +671,11 @@
 }
 
 .rpg-button {
-  background: linear-gradient(180deg, #4a6fe0, #1a2a86);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--rpg-top), #fff 10%),
+    color-mix(in srgb, var(--rpg-bottom), var(--rpg-top) 35%)
+  );
   border: 2px solid var(--rpg-frame);
   border-radius: 0.375rem;
   box-shadow: 0 0 0 2px var(--rpg-edge);
@@ -615,7 +686,11 @@
   text-shadow: var(--rpg-shadow);
 
   &:hover {
-    background: linear-gradient(180deg, #6185f0, #2a3ca0);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--rpg-top), #fff 28%),
+      color-mix(in srgb, var(--rpg-bottom), var(--rpg-top) 55%)
+    );
   }
 }
 

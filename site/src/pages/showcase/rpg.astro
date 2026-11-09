@@ -2,6 +2,7 @@
 import Showcase from '../../layouts/Showcase.astro';
 import '../../showcase/rpg.css';
 import css from '../../showcase/rpg.css?raw';
+import { portraits } from '../../scripts/rpg-art.ts';
 
 // An original party, for an original game. The battle script reads each
 // member's numbers from here, through the data attributes below, and keeps
@@ -54,6 +55,7 @@ const items = [
       </header>
 
       <section aria-label="Enemies" class="rpg-field">
+        <span aria-hidden="true" class="rpg-moon"></span>
         <ul class="rpg-foes" data-rpg-foes></ul>
       </section>
 
@@ -62,9 +64,7 @@ const items = [
           {
             party.map((member) => (
               <li class="rpg-member" data-rpg-member={member.id}>
-                <span aria-hidden="true" class="rpg-portrait" style={`--tint: ${member.color}`}>
-                  {member.name[0]}
-                </span>
+                <span class="rpg-portrait" set:html={portraits[member.id]} />
                 <div class="rpg-stats">
                   <p class="rpg-name">
                     {member.name} <span>{member.job}</span>
