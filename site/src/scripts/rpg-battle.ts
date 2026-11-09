@@ -15,7 +15,6 @@
 // than found there.
 import HoverCard from '../../../src/hover-card.ts';
 import Meter from '../../../src/meter.ts';
-import { foeArt } from './rpg-art.ts';
 
 type Element_ = 'bolt' | 'fire' | 'ice';
 type Side = 'foe' | 'party';
@@ -322,6 +321,14 @@ const partyStats: Record<
   tamsin: { atk: 22, def: 16, mag: 64, spd: 16 },
 };
 
+// Each foe's sprite in `public/rpg`, as its width and height in pixels.
+const spriteSizes: Record<string, [number, number]> = {
+  crab: [53, 46],
+  lantern: [27, 46],
+  reedmaw: [46, 46],
+  tidewarden: [67, 74],
+};
+
 class Stopped extends Error {}
 
 const random = (min: number, max: number) => min + Math.random() * (max - min);
@@ -595,7 +602,17 @@ async function start(root: HTMLElement) {
       sprite.type = 'button';
       sprite.ariaLabel = name;
       sprite.dataset.rpgFoe = String(position);
-      sprite.innerHTML = foeArt[kind]!;
+
+      // The sprite is pixel art, drawn small and shown at three times its
+      // size. It's decoration: the button's label names the foe.
+      const image = document.createElement('img');
+      const [width, height] = spriteSizes[kind]!;
+
+      image.alt = '';
+      image.src = `${import.meta.env.BASE_URL}rpg/${kind}.png`;
+      image.width = width * 3;
+      image.height = height * 3;
+      sprite.append(image);
 
       const weakness = [
         type.weak.length > 0

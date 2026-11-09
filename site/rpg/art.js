@@ -1,19 +1,20 @@
-// The Retro RPG showcase's art: original creatures and portraits, each a small
-// inline SVG. They're decoration, hidden from screenreaders, which get each
-// one's name from the element around it.
+// The Retro RPG showcase's art, as drawn: original creatures and portraits,
+// each a small SVG. The page doesn't show these. `sprites.js` turns each into
+// the 16-bit pixel sprite it does show, in `public/rpg`, so redraw here and
+// run the site's `rpg:sprites` script.
 
-const svg = (viewBox: string, body: string) =>
+const svg = (viewBox, body) =>
   `<svg aria-hidden="true" viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg">${body}</svg>`;
 
-export const foeArt: Record<string, string> = {
+export const foeArt = {
   // A caged marsh flame with a grin, trailing smoke where its body should be.
   lantern: svg(
-    '0 0 96 112',
+    '16 0 64 112',
     `<defs>
       <radialGradient id="rpg-l-glow"><stop offset="0" stop-color="#ffe9a3" stop-opacity=".95"/><stop offset=".45" stop-color="#ff9a3d" stop-opacity=".5"/><stop offset="1" stop-color="#ff5a2a" stop-opacity="0"/></radialGradient>
       <linearGradient id="rpg-l-flame" x1="0" x2="0" y1="1" y2="0"><stop offset="0" stop-color="#ff6a2a"/><stop offset=".55" stop-color="#ffc64d"/><stop offset="1" stop-color="#fff6cf"/></linearGradient>
       <linearGradient id="rpg-l-iron" x1="0" x2="1"><stop offset="0" stop-color="#5a6488"/><stop offset=".5" stop-color="#232842"/><stop offset="1" stop-color="#0d1022"/></linearGradient>
-      <linearGradient id="rpg-l-tail" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3b4470"/><stop offset="1" stop-color="#3b4470" stop-opacity="0"/></linearGradient>
+      <linearGradient id="rpg-l-tail" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#5a66a8"/><stop offset="1" stop-color="#2a3260" stop-opacity=".55"/></linearGradient>
     </defs>
     <circle cx="48" cy="50" r="46" fill="url(#rpg-l-glow)"/>
     <path d="M34 78c-2 12 6 16 2 30 8-6 8-12 12-12s4 8 12 12c-4-14 4-18 2-30z" fill="url(#rpg-l-tail)"/>
@@ -22,8 +23,8 @@ export const foeArt: Record<string, string> = {
     <rect x="28" y="22" width="40" height="52" rx="6" fill="#1a1230" stroke="#05060f" stroke-width="2"/>
     <path d="M48 27c11 12 15 20 15 28a15 15 0 0 1-30 0c0-8 4-16 15-28z" fill="url(#rpg-l-flame)"/>
     <path d="M48 40c5 6 7 10 7 15a7 7 0 0 1-14 0c0-5 2-9 7-15z" fill="#fff6cf" opacity=".7"/>
-    <path d="M38 52l7 3-7 3zM58 52l-7 3 7 3z" fill="#2a0d05"/>
-    <path d="M39 63l3 3 3-3 3 3 3-3 3 3 3-3" fill="none" stroke="#2a0d05" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M36 49l10 5-10 5zM60 49l-10 5 10 5z" fill="#2a0d05"/>
+    <path d="M39 63l3 3 3-3 3 3 3-3 3 3 3-3" fill="none" stroke="#2a0d05" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M38 22v52M58 22v52" stroke="url(#rpg-l-iron)" stroke-width="3"/>
     <path d="M38 22v52M58 22v52" stroke="#05060f" stroke-opacity=".5"/>
     <path d="M26 72h44l-5 9H31z" fill="url(#rpg-l-iron)" stroke="#05060f" stroke-width="2" stroke-linejoin="round"/>
@@ -109,9 +110,9 @@ export const foeArt: Record<string, string> = {
   ),
 };
 
-const bust = (body: string) => svg('0 0 64 64', body);
+const bust = (body) => svg('0 0 64 64', body);
 
-export const portraits: Record<string, string> = {
+export const portraits = {
   // Rook: a scarred swordhand with a red headband.
   rook: bust(
     `<defs><linearGradient id="rpg-p-rook" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f08a5c"/><stop offset="1" stop-color="#5a1410"/></linearGradient></defs>
@@ -123,8 +124,8 @@ export const portraits: Record<string, string> = {
     <path d="M14 26c-2-12 6-20 18-20 10 0 18 6 18 18l-6-6-4 4-6-6-6 6-6-4z" fill="#7a2416" stroke="#0b0d18" stroke-width="2" stroke-linejoin="round"/>
     <path d="M17 24h30v4H17z" fill="#e23b2e" stroke="#0b0d18"/>
     <path d="M47 26l8 4-7 2z" fill="#e23b2e" stroke="#0b0d18"/>
-    <path d="M23 32h6M35 32h6" stroke="#0b0d18" stroke-width="2.5" stroke-linecap="round"/>
-    <path d="M22 29l8 1M42 29l-8 1" stroke="#4a160c" stroke-width="2" stroke-linecap="round"/>
+    <path d="M22 30h8v5h-8zM34 30h8v5h-8z" fill="#fff"/><path d="M25 30h4v5h-4zM35 30h4v5h-4z" fill="#0b0d18"/>
+    
     <path d="M38 34l4 8" stroke="#a04a3a" stroke-width="1.5" stroke-linecap="round"/>
     <path d="M27 40h10" stroke="#0b0d18" stroke-width="2" stroke-linecap="round"/>`,
   ),

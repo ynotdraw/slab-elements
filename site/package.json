@@ -11,7 +11,9 @@
     "og": "astro build && pnpm og:generate && astro build",
     "og:comment": "The cards are read from the built pages, so the site's built first, then again so they're copied into it.",
     "og:generate": "node og/generate.js",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "rpg:sprites": "node rpg/sprites.js",
+    "rpg:sprites:comment": "Draws the Retro RPG showcase's pixel sprites into `public/rpg` from the drawings in `rpg/art.js`. Run it when a drawing changes."
   },
   "devDependencies": {
     "astro": "^7.3.5",

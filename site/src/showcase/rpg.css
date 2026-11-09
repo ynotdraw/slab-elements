@@ -146,18 +146,20 @@
 }
 
 /* A portrait, drawn as the member's initial on their color. */
+/* Pixel art, drawn small and scaled up with its pixels left hard. */
+.rpg-portrait,
+.rpg-sprite img {
+  image-rendering: pixelated;
+}
+
 .rpg-portrait {
   aspect-ratio: 1;
+  block-size: auto;
   border: 2px solid var(--rpg-frame);
   border-radius: 0.375rem;
   box-shadow: 0 0 0 2px var(--rpg-edge);
   display: block;
-  overflow: hidden;
-
-  svg {
-    display: block;
-    inline-size: 100%;
-  }
+  inline-size: 100%;
 }
 
 .rpg-stats {
@@ -254,7 +256,7 @@
   animation: rpg-appear 400ms steps(5);
   display: grid;
   gap: 0.25rem;
-  inline-size: 10rem;
+  inline-size: 10.5rem;
   justify-items: center;
   position: relative;
   text-align: center;
@@ -264,7 +266,7 @@
 }
 
 .rpg-foe[data-kind='tidewarden'] {
-  inline-size: 13rem;
+  inline-size: 14rem;
 }
 
 .rpg-foe[data-ko] {
@@ -278,7 +280,6 @@
   border-radius: 0.5rem;
   cursor: pointer;
   display: block;
-  inline-size: 9rem;
   max-inline-size: 100%;
   padding: 0.25rem;
   position: relative;
@@ -297,24 +298,32 @@
     z-index: -1;
   }
 
-  svg {
+  img {
+    block-size: auto;
     display: block;
-    filter: drop-shadow(0 0 0.5rem rgb(120 160 255 / 25%));
-    inline-size: 100%;
-    overflow: visible;
+    max-inline-size: 100%;
   }
 }
 
-.rpg-foe[data-kind='lantern'] svg {
-  animation: rpg-float 1.6s ease-in-out infinite;
+/* A Bog Lantern's light, which the sprite itself is too crisp to hold. */
+.rpg-foe[data-kind='lantern'] .rpg-sprite::before {
+  background: radial-gradient(
+    circle closest-side,
+    rgb(255 190 90 / 55%),
+    transparent
+  );
+  content: '';
+  inset: -15% -45% 5%;
+  position: absolute;
+  z-index: -1;
 }
 
-.rpg-foe[data-kind='tidewarden'] .rpg-sprite {
-  inline-size: 12rem;
+.rpg-foe[data-kind='lantern'] img {
+  animation: rpg-float 1.6s steps(3) infinite;
 }
 
-.rpg-foe[data-kind='tidewarden'] svg {
-  animation: rpg-float 3s ease-in-out infinite;
+.rpg-foe[data-kind='tidewarden'] img {
+  animation: rpg-float 3s steps(3) infinite;
 }
 
 .rpg-foe-name {
@@ -1084,9 +1093,10 @@
   }
 }
 
+/* In whole steps, as a sprite would move. */
 @keyframes rpg-float {
   50% {
-    translate: 0 -0.375rem;
+    translate: 0 -6px;
   }
 }
 
@@ -1118,7 +1128,7 @@
   .rpg slab-alert-dialog::part(dialog),
   .rpg slab-toast:state(open)::part(region),
   .rpg-foe,
-  .rpg-foe svg,
+  .rpg-foe img,
   .rpg-sprite,
   .rpg-hit,
   .rpg-pop {
