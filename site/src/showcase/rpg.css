@@ -1,8 +1,9 @@
 /*
   Retro RPG. Gradient-blue windows in light bevelled frames, white text with
-  a hard drop shadow, and a bobbing cursor beside whatever's chosen. Every
-  rule reaches Slab's headless elements from outside, through ::part() and
-  :state(), and everything sits under .rpg so it stays on this page.
+  a hard drop shadow, and a bobbing cursor beside whatever's chosen, for a
+  turn-based battle. Every rule reaches Slab's headless elements from outside,
+  through ::part() and :state(), and everything sits under .rpg so it stays on
+  this page.
 */
 .rpg {
   --rpg-top: #3a5fd0;
@@ -43,6 +44,7 @@
 .rpg-window,
 .rpg slab-select::part(popover),
 .rpg slab-dialog::part(dialog),
+.rpg slab-alert-dialog::part(dialog),
 .rpg slab-toast:state(open)::part(region) {
   background: var(--rpg-window);
   border: 3px solid var(--rpg-frame);
@@ -55,23 +57,46 @@
   color: var(--rpg-text);
 }
 
-/* The screen: the party on the left, the menu on the right. */
+/* The screen: the foes up top, the party, its commands and the log below. */
 .rpg-screen {
   display: grid;
   gap: 1rem;
   grid-template-areas:
+    'top'
+    'field'
+    'commands'
     'party'
-    'menu'
-    'info';
+    'log';
 }
 
 @media (width >= 56rem) {
   .rpg-screen {
     grid-template-areas:
-      'party menu'
-      'party info';
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      'top top'
+      'field field'
+      'party commands'
+      'party log';
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr;
   }
+}
+
+.rpg [hidden] {
+  display: none !important;
+}
+
+.rpg-top {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  grid-area: top;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+}
+
+.rpg-place {
+  color: var(--rpg-gold);
 }
 
 .rpg-party {
@@ -89,23 +114,52 @@
 
 .rpg-member {
   align-items: center;
+  border-radius: 0.375rem;
   display: grid;
   gap: 1rem;
   grid-template-columns: 4rem minmax(0, 1fr);
+  margin: -0.375rem;
+  padding: 0.375rem;
+  position: relative;
+  transition: background-color 150ms;
+}
+
+/* Whose turn it is: a lit row, and the cursor beside the portrait. */
+.rpg-member[data-active] {
+  background-color: rgb(255 215 106 / 14%);
+  box-shadow: inset 0 0 0 1px rgb(255 215 106 / 55%);
+
+  .rpg-name {
+    color: var(--rpg-gold);
+  }
+}
+
+.rpg-member[data-ko] {
+  .rpg-portrait {
+    filter: grayscale(1) brightness(0.5);
+  }
+
+  .rpg-name::after {
+    color: var(--rpg-low);
+    content: ' KO';
+  }
 }
 
 /* A portrait, drawn as the member's initial on their color. */
+/* Pixel art, drawn small and scaled up with its pixels left hard. */
+.rpg-portrait,
+.rpg-sprite img {
+  image-rendering: pixelated;
+}
+
 .rpg-portrait {
   aspect-ratio: 1;
-  background:
-    linear-gradient(160deg, rgb(255 255 255 / 25%), transparent 50%),
-    var(--tint);
+  block-size: auto;
   border: 2px solid var(--rpg-frame);
   border-radius: 0.375rem;
-  display: grid;
-  font-size: 1.75rem;
-  font-weight: 600;
-  place-items: center;
+  box-shadow: 0 0 0 2px var(--rpg-edge);
+  display: block;
+  inline-size: 100%;
 }
 
 .rpg-stats {
@@ -130,28 +184,414 @@
   color: var(--rpg-gold);
 }
 
-.rpg-menu {
-  grid-area: menu;
+/* The field: the foes, standing on the marsh. */
+.rpg-field {
+  background:
+    /* Mist, drifting over the waterline. */
+    linear-gradient(
+      180deg,
+      transparent 52%,
+      rgb(170 200 255 / 22%) 62%,
+      transparent 72%
+    ),
+    /* Ripples on the water. */
+    repeating-linear-gradient(
+        180deg,
+        transparent 0 0.5rem,
+        rgb(140 220 255 / 9%) 0.5rem 0.5625rem
+      )
+      0 100% / 100% 36% no-repeat,
+    /* The water, and the far bank's treeline above it. */
+    linear-gradient(180deg, #0c2a3a, #030a14) 0 100% / 100% 36% no-repeat,
+    radial-gradient(ellipse 9rem 3.5rem at 12% 64%, #050b1c 99%, transparent),
+    radial-gradient(ellipse 12rem 4.5rem at 38% 64%, #060d20 99%, transparent),
+    radial-gradient(ellipse 10rem 4rem at 68% 64%, #050b1c 99%, transparent),
+    radial-gradient(ellipse 11rem 5rem at 94% 64%, #060d20 99%, transparent),
+    /* Stars, then the night sky. */
+    radial-gradient(1px 1px at 8% 14%, #fff 99%, transparent),
+    radial-gradient(1px 1px at 22% 30%, #cfe0ff 99%, transparent),
+    radial-gradient(1.5px 1.5px at 35% 10%, #fff 99%, transparent),
+    radial-gradient(1px 1px at 52% 24%, #cfe0ff 99%, transparent),
+    radial-gradient(1.5px 1.5px at 64% 8%, #fff 99%, transparent),
+    radial-gradient(1px 1px at 90% 34%, #fff 99%, transparent),
+    linear-gradient(180deg, #050718, #1a1f5c 55%, #3a2f7a 64%);
+  border: 3px solid var(--rpg-frame);
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0 2px var(--rpg-edge);
+  grid-area: field;
+  min-block-size: 17rem;
+  overflow: hidden;
+  padding: 1rem;
+  position: relative;
+}
+
+.rpg-moon {
+  background: radial-gradient(circle at 35% 35%, #fffbe6, #d9d2ff 60%, #9a8fe0);
+  block-size: 3.25rem;
+  border-radius: 50%;
+  box-shadow:
+    0 0 2rem 0.5rem rgb(190 180 255 / 35%),
+    inset -0.5rem -0.375rem 0 rgb(60 40 140 / 25%);
+  inline-size: 3.25rem;
+  inset-block-start: 1rem;
+  inset-inline-end: 12%;
+  position: absolute;
+}
+
+.rpg-foes {
+  align-items: end;
+  isolation: isolate;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2.5rem;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  min-block-size: 15rem;
+  padding: 0;
+}
+
+.rpg-foe {
+  animation: rpg-appear 400ms steps(5);
+  display: grid;
+  gap: 0.25rem;
+  inline-size: 10.5rem;
+  justify-items: center;
+  position: relative;
+  text-align: center;
+  transition:
+    opacity 400ms,
+    filter 400ms;
+}
+
+.rpg-foe[data-kind='tidewarden'] {
+  inline-size: 14rem;
+}
+
+.rpg-foe[data-ko] {
+  filter: grayscale(1) brightness(0.4);
+  opacity: 0.35;
+}
+
+.rpg-sprite {
+  background: none;
+  border: 0;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: block;
+  max-inline-size: 100%;
+  padding: 0.25rem;
+  position: relative;
+
+  /* The shadow a foe casts on the water. */
+  &::after {
+    background: radial-gradient(
+      ellipse closest-side,
+      rgb(0 0 0 / 55%),
+      transparent
+    );
+    block-size: 1rem;
+    content: '';
+    inset: auto 10% -0.375rem;
+    position: absolute;
+    z-index: -1;
+  }
+
+  img {
+    block-size: auto;
+    display: block;
+    max-inline-size: 100%;
+  }
+}
+
+/* A Bog Lantern's light, which the sprite itself is too crisp to hold. */
+.rpg-foe[data-kind='lantern'] .rpg-sprite::before {
+  background: radial-gradient(
+    circle closest-side,
+    rgb(255 190 90 / 55%),
+    transparent
+  );
+  content: '';
+  inset: -15% -45% 5%;
+  position: absolute;
+  z-index: -1;
+}
+
+.rpg-foe[data-kind='lantern'] img {
+  animation: rpg-float 1.6s steps(3) infinite;
+}
+
+.rpg-foe[data-kind='tidewarden'] img {
+  animation: rpg-float 3s steps(3) infinite;
+}
+
+.rpg-foe-name {
+  font-size: 0.875rem;
+  text-shadow:
+    var(--rpg-shadow),
+    0 0 0.5rem #000;
+}
+
+/* A foe's HP: a Meter, green while it's healthy and red when it's nearly done. */
+.rpg slab-meter {
+  display: block;
+  inline-size: 100%;
+}
+
+.rpg slab-meter::part(meter) {
+  appearance: none;
+  background: #050828;
+  block-size: 0.5rem;
+  border: 1px solid #000;
+  border-radius: 0.25rem;
+  inline-size: 100%;
+}
+
+.rpg slab-meter::part(meter)::-webkit-meter-bar {
+  background: #050828;
+  block-size: 0.5rem;
+  border: 0;
+  border-radius: 0.25rem;
+}
+
+.rpg slab-meter::part(meter)::-webkit-meter-optimum-value,
+.rpg slab-meter::part(meter)::-webkit-meter-suboptimum-value,
+.rpg slab-meter::part(meter)::-webkit-meter-even-less-good-value {
+  background: var(--rpg-bar, var(--rpg-hp));
+  border-radius: 0.25rem;
+}
+
+.rpg slab-meter::part(meter)::-moz-meter-bar {
+  background: var(--rpg-bar, var(--rpg-hp));
+}
+
+.rpg slab-meter:state(suboptimum) {
+  --rpg-bar: var(--rpg-gold);
+}
+
+.rpg slab-meter:state(even-less-good) {
+  --rpg-bar: var(--rpg-low);
+}
+
+/* Hover Card: what's known of a foe. */
+.rpg slab-hover-card::part(card) {
+  background: var(--rpg-window);
+  border: 3px solid var(--rpg-frame);
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0 2px var(--rpg-edge);
+  color: var(--rpg-text);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8125rem;
+  inline-size: 15rem;
+  margin-block: 0.5rem;
+  padding: 0.75rem 1rem;
+  text-align: start;
+  text-shadow: var(--rpg-shadow);
+}
+
+.rpg-card {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.rpg-card-name {
+  color: var(--rpg-gold);
+  font-weight: 600;
+}
+
+.rpg-card-flavor {
+  color: var(--rpg-dim);
+}
+
+/* The command window: whose turn, the turn order, and the Menu. */
+.rpg-commands {
+  align-content: start;
+  display: grid;
+  gap: 0.75rem;
+  grid-area: commands;
   padding: 1rem 1.25rem;
 }
 
-.rpg-info {
-  align-items: center;
-  display: grid;
-  gap: 0.75rem 1.5rem;
-  grid-area: info;
-  grid-template-columns: 1fr auto;
-  padding: 1rem 1.25rem;
+.rpg-order {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.75rem;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  min-block-size: 1.5rem;
+  padding: 0;
 
-  dl {
-    display: grid;
-    gap: 0.25rem;
-    margin: 0;
+  li {
+    background: rgb(5 8 40 / 55%);
+    border: 1px solid rgb(233 237 255 / 35%);
+    border-radius: 0.25rem;
+    padding: 0 0.375rem;
   }
 
-  dl div {
+  li[data-side='foe'] {
+    color: #ffc2b8;
+  }
+
+  li[aria-current] {
+    border-color: var(--rpg-gold);
+    color: var(--rpg-gold);
+  }
+}
+
+.rpg-turn {
+  font-size: 1.0625rem;
+}
+
+/* Menu: the battle's commands, in a window of their own. */
+.rpg slab-menu::part(popover) {
+  background: var(--rpg-window);
+  border: 3px solid var(--rpg-frame);
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0 2px var(--rpg-edge);
+  color: var(--rpg-text);
+  font-family: var(--font-mono), monospace;
+  margin: 0.375rem;
+  min-inline-size: 11rem;
+  padding: 0.5rem 0.75rem;
+  text-shadow: var(--rpg-shadow);
+}
+
+.rpg slab-menu::part(menu) {
+  display: grid;
+  outline: none;
+}
+
+.rpg slab-menu-item {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: 1rem;
+  padding: 0.125rem 0;
+}
+
+.rpg slab-menu-item:state(active) {
+  color: var(--rpg-gold);
+}
+
+.rpg slab-menu-item:state(disabled) {
+  color: #7c86b8;
+  cursor: not-allowed;
+}
+
+.rpg slab-menu-item[slot='anchor']::after {
+  content: '▸' / '';
+  margin-inline-start: auto;
+}
+
+.rpg-cost {
+  color: var(--rpg-dim);
+  font-size: 0.8125rem;
+  margin-inline-start: auto;
+}
+
+.rpg-command [slot='anchor'][aria-disabled='true'] {
+  cursor: default;
+  opacity: 0.55;
+}
+
+/* The targets: a Listbox under the command, with the cursor. */
+.rpg-targets::part(listbox) {
+  background: rgb(5 8 40 / 55%);
+  border: 2px solid var(--rpg-gold);
+  border-radius: 0.375rem;
+  display: grid;
+  outline: none;
+  padding: 0.375rem 0.75rem;
+}
+
+.rpg-targets::part(description) {
+  color: var(--rpg-dim);
+  font-size: 0.75rem;
+  margin-block-start: 0.375rem;
+}
+
+/* The log: the last few lines, newest at the bottom. */
+.rpg-log {
+  block-size: 9rem;
+  grid-area: log;
+  overflow-y: auto;
+  padding: 0.75rem 1.25rem;
+
+  ol {
+    display: grid;
+    font-size: 0.8125rem;
+    gap: 0.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li:last-child {
+    color: var(--rpg-gold);
+  }
+}
+
+/* Numbers that float up off whoever was hit or healed. */
+.rpg-pop {
+  animation: rpg-pop 1s ease-out forwards;
+  color: #fff;
+  font-size: 1.375rem;
+  font-weight: 700;
+  inset-block-start: 10%;
+  inset-inline: 0;
+  pointer-events: none;
+  position: absolute;
+  text-align: center;
+  text-shadow:
+    2px 2px 0 #000,
+    -1px -1px 0 #000;
+  z-index: 1;
+}
+
+.rpg-pop--crit {
+  color: var(--rpg-gold);
+  font-size: 1.75rem;
+}
+
+.rpg-pop--heal {
+  color: var(--rpg-hp);
+}
+
+.rpg-pop--mp {
+  color: var(--rpg-mp);
+}
+
+.rpg-hit {
+  animation: rpg-shake 300ms steps(6);
+}
+
+.rpg-foe.rpg-acting .rpg-sprite {
+  animation: rpg-lunge 400ms steps(4);
+}
+
+/* The pause menu's extras. */
+.rpg-about {
+  min-block-size: 3rem;
+}
+
+.rpg-hint {
+  color: var(--rpg-dim);
+  font-size: 0.8125rem;
+}
+
+.rpg-journey {
+  border-block-start: 2px solid rgb(233 237 255 / 35%);
+  display: flex;
+  justify-content: space-between;
+  margin: 1.25rem 0 0;
+  padding-block-start: 0.75rem;
+
+  div {
     display: flex;
     gap: 1.5rem;
+    inline-size: 100%;
     justify-content: space-between;
   }
 
@@ -164,14 +604,74 @@
   }
 }
 
-.rpg-place {
-  color: var(--rpg-gold);
-  grid-column: 1;
+/* Steps: the waves, a row of pips, cleared ones in gold. */
+.rpg-waves::part(list) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.rpg-info .rpg-button {
-  grid-column: 2;
-  grid-row: 1 / span 2;
+.rpg slab-steps-step::part(step) {
+  align-items: center;
+  display: flex;
+  font-size: 0.8125rem;
+  gap: 0.375rem;
+}
+
+.rpg slab-steps-step::part(indicator) {
+  background: rgb(5 8 40 / 55%);
+  border: 2px solid rgb(233 237 255 / 45%);
+  border-radius: 50%;
+  block-size: 1.25rem;
+  display: grid;
+  font-size: 0.6875rem;
+  inline-size: 1.25rem;
+  place-items: center;
+}
+
+.rpg slab-steps-step:state(upcoming) {
+  color: var(--rpg-dim);
+}
+
+.rpg slab-steps-step:state(current)::part(indicator) {
+  border-color: var(--rpg-gold);
+  color: var(--rpg-gold);
+}
+
+.rpg slab-steps-step:state(current)::part(label) {
+  color: var(--rpg-gold);
+}
+
+.rpg slab-steps-step:state(complete)::part(indicator) {
+  background: var(--rpg-gold);
+  border-color: var(--rpg-gold);
+  color: #000;
+  text-shadow: none;
+}
+
+.rpg slab-steps-step::part(status) {
+  clip-path: inset(50%);
+  position: absolute;
+  white-space: nowrap;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+}
+
+/* Window color, from Config. */
+.rpg[data-color='crimson'] {
+  --rpg-top: #c0413a;
+  --rpg-bottom: #3a0a12;
+  --rpg-dim: #f5c4b9;
+}
+
+.rpg[data-color='verdant'] {
+  --rpg-top: #2f9a62;
+  --rpg-bottom: #06301e;
+  --rpg-dim: #c4ecd2;
 }
 
 .rpg-stack {
@@ -180,7 +680,11 @@
 }
 
 .rpg-button {
-  background: linear-gradient(180deg, #4a6fe0, #1a2a86);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--rpg-top), #fff 10%),
+    color-mix(in srgb, var(--rpg-bottom), var(--rpg-top) 35%)
+  );
   border: 2px solid var(--rpg-frame);
   border-radius: 0.375rem;
   box-shadow: 0 0 0 2px var(--rpg-edge);
@@ -191,7 +695,11 @@
   text-shadow: var(--rpg-shadow);
 
   &:hover {
-    background: linear-gradient(180deg, #6185f0, #2a3ca0);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--rpg-top), #fff 28%),
+      color-mix(in srgb, var(--rpg-bottom), var(--rpg-top) 55%)
+    );
   }
 }
 
@@ -204,7 +712,8 @@
 
 /* The cursor, beside a hovered or chosen command, nudging toward it. */
 .rpg slab-tabs-tab::before,
-.rpg slab-option::before {
+.rpg slab-option::before,
+.rpg slab-menu-item::before {
   color: var(--rpg-text);
   content: '▶' / '';
   display: inline-block;
@@ -213,7 +722,8 @@
 }
 
 .rpg slab-tabs-tab:is(:hover, :state(selected))::before,
-.rpg slab-option:is(:hover, :state(active))::before {
+.rpg slab-option:is(:hover, :state(active))::before,
+.rpg slab-menu-item:state(active)::before {
   animation: rpg-bob 600ms steps(2) infinite;
   opacity: 1;
 }
@@ -493,7 +1003,8 @@
 }
 
 /* Dialog: a message window, centered, over a darkened screen. */
-.rpg slab-dialog::part(dialog) {
+.rpg slab-dialog::part(dialog),
+.rpg slab-alert-dialog::part(dialog) {
   animation: rpg-open 160ms steps(4);
   font-family: var(--font-mono), monospace;
   inline-size: min(28rem, 100% - 2rem);
@@ -502,14 +1013,45 @@
   text-shadow: var(--rpg-shadow);
 }
 
-.rpg slab-dialog::part(dialog)::backdrop {
+.rpg slab-dialog::part(dialog)::backdrop,
+.rpg slab-alert-dialog::part(dialog)::backdrop {
   background-color: rgb(0 0 0 / 65%);
 }
 
-.rpg slab-dialog::part(label) {
+.rpg slab-dialog::part(label),
+.rpg slab-alert-dialog::part(label) {
   color: var(--rpg-gold);
   font-size: 1.0625rem;
   margin-block-end: 0.75rem;
+}
+
+/* The pause menu holds the Tabs, so it's wider and reads left to right. */
+.rpg slab-dialog::part(dialog) {
+  inline-size: min(40rem, 100% - 2rem);
+  text-align: start;
+}
+
+.rpg slab-alert-dialog::part(dialog) {
+  font-size: 1rem;
+}
+
+.rpg slab-alert-dialog::part(label) {
+  font-size: 1.5rem;
+}
+
+.rpg slab-alert-dialog::part(cancel) {
+  background: none;
+  border: 2px solid rgb(233 237 255 / 45%);
+  border-radius: 0.375rem;
+  color: var(--rpg-text);
+  cursor: pointer;
+  font: inherit;
+  padding: 0.5rem 1.25rem;
+}
+
+.rpg slab-alert-dialog .rpg-actions {
+  display: inline-flex;
+  margin-inline-end: 1rem;
 }
 
 /* Toast: the message window across the top of the screen. */
@@ -523,6 +1065,46 @@
   position: fixed;
   text-shadow: var(--rpg-shadow);
   translate: -50% 0;
+}
+
+@keyframes rpg-pop {
+  to {
+    opacity: 0;
+    translate: 0 -2.5rem;
+  }
+}
+
+@keyframes rpg-shake {
+  25% {
+    translate: -4px 0;
+  }
+  50% {
+    translate: 4px 0;
+  }
+  75% {
+    translate: -2px 0;
+  }
+}
+
+@keyframes rpg-lunge {
+  50% {
+    translate: 0 0.75rem;
+    scale: 1.08;
+  }
+}
+
+/* In whole steps, as a sprite would move. */
+@keyframes rpg-float {
+  50% {
+    translate: 0 -6px;
+  }
+}
+
+@keyframes rpg-appear {
+  from {
+    opacity: 0;
+    scale: 0.6;
+  }
 }
 
 @keyframes rpg-bob {
@@ -541,8 +1123,15 @@
 @media (prefers-reduced-motion: reduce) {
   .rpg slab-tabs-tab::before,
   .rpg slab-option::before,
+  .rpg slab-menu-item::before,
   .rpg slab-dialog::part(dialog),
-  .rpg slab-toast:state(open)::part(region) {
+  .rpg slab-alert-dialog::part(dialog),
+  .rpg slab-toast:state(open)::part(region),
+  .rpg-foe,
+  .rpg-foe img,
+  .rpg-sprite,
+  .rpg-hit,
+  .rpg-pop {
     animation: none !important;
   }
 }
