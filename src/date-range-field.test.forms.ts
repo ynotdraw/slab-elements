@@ -843,9 +843,13 @@ test(
       }
     });
 
-    await page.keyboard.press('Tab');
-    await page.keyboard.type('0928202609302026');
-    await page.keyboard.press('Tab');
+    // The end first. Each input is bound by the other's value, and a year
+    // typed a digit at a time is briefly a year long before the start.
+    const start = page.locator('[data-test="start"]');
+
+    await page.locator('[data-test="end"]').pressSequentially('09302026');
+    await start.pressSequentially('09282026');
+    await start.blur();
 
     const { after, seen } = await page.evaluate(async () => {
       const { read, seen } = window as unknown as {

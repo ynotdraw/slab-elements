@@ -719,9 +719,10 @@ test(
       }
     });
 
-    await page.keyboard.press('Tab');
-    await page.keyboard.type('5');
-    await page.keyboard.press('Tab');
+    const input = page.getByRole('spinbutton');
+
+    await input.pressSequentially('5');
+    await input.blur();
 
     const { after, seen } = await page.evaluate(async () => {
       const { read, seen } = window as unknown as {

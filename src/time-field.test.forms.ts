@@ -773,9 +773,10 @@ test(
       }
     });
 
-    await page.keyboard.press('Tab');
-    await page.keyboard.type('0930P');
-    await page.keyboard.press('Tab');
+    const input = page.locator('[data-test="input"]');
+
+    await input.pressSequentially('0930P');
+    await input.blur();
 
     const { after, seen } = await page.evaluate(async () => {
       const { read, seen } = window as unknown as {

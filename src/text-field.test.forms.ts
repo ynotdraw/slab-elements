@@ -679,9 +679,10 @@ test(
       }
     });
 
-    await page.keyboard.press('Tab');
-    await page.keyboard.type('a');
-    await page.keyboard.press('Tab');
+    const input = page.getByRole('textbox');
+
+    await input.pressSequentially('a');
+    await input.blur();
 
     const { after, seen } = await page.evaluate(async () => {
       const { read, seen } = window as unknown as {
