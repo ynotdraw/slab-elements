@@ -932,3 +932,45 @@ test(
     await expect(page.locator('form')).toHaveFormData('fruit', 'apple');
   },
 );
+
+test(
+  'is current as soon as its value is set from code',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-combobox label="Label" name="name" required>
+            <slab-option value="one">One</slab-option>
+            <slab-option value="two">Two</slab-option>
+          </slab-combobox>
+        </form>
+      `,
+    );
+
+    // What's read straight after the property is set, beside what's there
+    // once it has updated. A native control's are the same.
+    const { after, before } = await page
+      .locator('slab-combobox')
+      .evaluate(async (element) => {
+        const host = element as HTMLElement & { validity: ValidityState };
+
+        const read = () => {
+          return JSON.stringify({
+            data: [...new FormData(host.closest('form') ?? undefined)],
+            valid: host.validity.valid,
+          });
+        };
+
+        (element as unknown as Record<string, unknown>).value = 'two';
+
+        const before = read();
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        return { after: read(), before };
+      });
+
+    expect(before).toBe(after);
+  },
+);

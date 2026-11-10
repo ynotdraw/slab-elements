@@ -677,7 +677,14 @@ test(
       await callMethod(host, 'reportValidity');
 
       await expect(host).toHaveJSProperty('validity.customError', false);
-      await expect(validityMessage).toBeHidden();
+
+      // Still required, so the browser's own message takes its place.
+      await expect(host).toHaveJSProperty('validity.valueMissing', true);
+      await expect(validityMessage).toBeVisible();
+
+      await expect(validityMessage).not.toHaveText('message', {
+        useInnerText: true,
+      });
     });
   },
 );
@@ -1058,5 +1065,91 @@ test(
     // "input" a key.
     expect(seen.findLast(({ type }) => type === 'input')?.during).toBe(after);
     expect(seen.findLast(({ type }) => type === 'change')?.during).toBe(after);
+  },
+);
+
+test(
+  'is current as soon as its values are set from code',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-checkbox-group label="Label" name="name" required>
+            <slab-checkbox label="One" value="one"></slab-checkbox>
+            <slab-checkbox label="Two" value="two"></slab-checkbox>
+          </slab-checkbox-group>
+        </form>
+      `,
+    );
+
+    // What's read straight after the property is set, beside what's there
+    // once it has updated. A native control's are the same.
+    const { after, before } = await page
+      .locator('slab-checkbox-group')
+      .evaluate(async (element) => {
+        const host = element as HTMLElement & { validity: ValidityState };
+
+        const read = () => {
+          return JSON.stringify({
+            data: [...new FormData(host.closest('form') ?? undefined)],
+            valid: host.validity.valid,
+          });
+        };
+
+        (element as unknown as Record<string, unknown>).values = ['two'];
+
+        const before = read();
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        return { after: read(), before };
+      });
+
+    expect(before).toBe(after);
+  },
+);
+
+test(
+  'is current as soon as a Checkbox is checked is set from code',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-checkbox-group label="Label" name="name" required>
+            <slab-checkbox label="One" value="one"></slab-checkbox>
+            <slab-checkbox label="Two" value="two"></slab-checkbox>
+          </slab-checkbox-group>
+        </form>
+      `,
+    );
+
+    // What's read straight after the property is set, beside what's there
+    // once it has updated. A native control's are the same.
+    const { after, before } = await page
+      .locator('slab-checkbox >> nth=1')
+      .evaluate(async (element) => {
+        const host = element.closest('slab-checkbox-group') as HTMLElement & {
+          validity: ValidityState;
+        };
+
+        const read = () => {
+          return JSON.stringify({
+            data: [...new FormData(host.closest('form') ?? undefined)],
+            valid: host.validity.valid,
+          });
+        };
+
+        (element as unknown as Record<string, unknown>).checked = true;
+
+        const before = read();
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        return { after: read(), before };
+      });
+
+    expect(before).toBe(after);
   },
 );

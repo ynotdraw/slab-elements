@@ -8,7 +8,6 @@ import {
 import { property, state } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
 import slab from './library/version.js';
-import beforeEvents from './library/before-events.js';
 import customElement from './library/custom-element.js';
 import assertSlot from './library/assert-slot.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
@@ -278,6 +277,21 @@ export default class RadioGroup extends LitElement {
     return isValid;
   }
 
+  // So its form data and validity are current as soon as a property is set,
+  // as a native control's are, rather than an update later.
+  override requestUpdate(
+    ...parameters: Parameters<LitElement['requestUpdate']>
+  ) {
+    super.requestUpdate(...parameters);
+
+    // Its private fields aren't set until it's constructed, nor its
+    // template rendered until its first update.
+    if (this.hasUpdated) {
+      this.#updateFormValue();
+      this.#updateValidity();
+    }
+  }
+
   /**
    * Clears the validity feedback without changing `validity`.
    */
@@ -289,7 +303,8 @@ export default class RadioGroup extends LitElement {
     this.validityMessage = message;
 
     if (message === '') {
-      this.#internals.setValidity({ customError: false }, '', this.#anchor);
+      this.#hasCustomValidity = false;
+      this.#updateValidity();
 
       return;
     }
@@ -361,11 +376,6 @@ export default class RadioGroup extends LitElement {
   constructor() {
     super();
     this.#internals = this.attachInternals();
-
-    // So `value` and the form's data are current inside a Radio's "input" or
-    // "change", as a native group's are, rather than waiting for the Radio
-    // to say it changed once it has updated.
-    beforeEvents(this, this.#onCheckedChange);
 
     this.addEventListener('private-checked-change', this.#onCheckedChange);
     this.addEventListener('private-connected', this.#onConnected);

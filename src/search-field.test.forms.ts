@@ -754,3 +754,46 @@ test(
     expect(seen.findLast(({ type }) => type === 'change')?.during).toBe(after);
   },
 );
+
+test(
+  'is current as soon as its value is set from code',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-search-field
+            label="Label"
+            name="name"
+            required
+          ></slab-search-field>
+        </form>
+      `,
+    );
+
+    // What's read straight after the property is set, beside what's there
+    // once it has updated. A native control's are the same.
+    const { after, before } = await page
+      .locator('slab-search-field')
+      .evaluate(async (element) => {
+        const host = element as HTMLElement & { validity: ValidityState };
+
+        const read = () => {
+          return JSON.stringify({
+            data: [...new FormData(host.closest('form') ?? undefined)],
+            valid: host.validity.valid,
+          });
+        };
+
+        (element as unknown as Record<string, unknown>).value = 'value';
+
+        const before = read();
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        return { after: read(), before };
+      });
+
+    expect(before).toBe(after);
+  },
+);

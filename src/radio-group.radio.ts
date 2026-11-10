@@ -100,6 +100,31 @@ export default class Radio extends LitElement {
     </slot>`;
   }
 
+  // Radio Group derives its value from its Radios. It's told here as well as
+  // after the update, so a change made from code is in its value and form
+  // data straight away, as a native radio's would be.
+  override requestUpdate(
+    ...parameters: Parameters<LitElement['requestUpdate']>
+  ) {
+    super.requestUpdate(...parameters);
+
+    const [name] = parameters;
+
+    if (!this.hasUpdated) {
+      return;
+    }
+
+    if (name === 'checked') {
+      this.dispatchEvent(
+        new Event('private-checked-change', { bubbles: true }),
+      );
+    }
+
+    if (name === 'value') {
+      this.dispatchEvent(new Event('private-value-change', { bubbles: true }));
+    }
+  }
+
   override updated(changes: PropertyValues<this>) {
     if (changes.has('checked') || changes.has('disabled')) {
       const isChecked = this.checked && !this.disabled;
@@ -119,7 +144,8 @@ export default class Radio extends LitElement {
       );
     }
 
-    if (changes.has('checked')) {
+    // Later changes are announced as they're set, in `requestUpdate()`.
+    if (changes.has('checked') && changes.get('checked') === undefined) {
       this.dispatchEvent(
         new Event('private-checked-change', { bubbles: true }),
       );
@@ -129,7 +155,7 @@ export default class Radio extends LitElement {
       this.setAttribute('aria-label', this.label);
     }
 
-    if (changes.has('value')) {
+    if (changes.has('value') && changes.get('value') === undefined) {
       this.dispatchEvent(new Event('private-value-change', { bubbles: true }));
     }
   }
