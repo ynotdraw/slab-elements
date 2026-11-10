@@ -688,3 +688,68 @@ test(
     expect(await getValidationMessage()).toBe('');
   },
 );
+
+test(
+  'is current inside its "input" and "change" listeners',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-search-field
+            label="Label"
+            name="name"
+            required
+          ></slab-search-field>
+        </form>
+      `,
+    );
+
+    // What a listener reads while each event is dispatched, beside what's
+    // there once everything has settled. A native control's are the same.
+    await page.locator('slab-search-field').evaluate((element) => {
+      const read = () => {
+        return JSON.stringify({
+          data: [...new FormData(element.closest('form') ?? undefined)],
+          valid:
+            'validity' in element && (element.validity as ValidityState).valid,
+          value: 'value' in element && element.value,
+        });
+      };
+
+      const seen: { during: string; type: string }[] = [];
+
+      Object.assign(window, { read, seen });
+
+      for (const type of ['input', 'change']) {
+        element.addEventListener(type, () => {
+          seen.push({ during: read(), type });
+        });
+      }
+    });
+
+    await page.keyboard.press('Tab');
+    await page.keyboard.type('a');
+    await page.keyboard.press('Tab');
+
+    const { after, seen } = await page.evaluate(async () => {
+      const { read, seen } = window as unknown as {
+        read: () => string;
+        seen: { during: string; type: string }[];
+      };
+
+      // Long enough for any update the events left pending.
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      return { after: read(), seen };
+    });
+
+    expect(seen.map(({ type }) => type)).toContain('input');
+    expect(seen.map(({ type }) => type)).toContain('change');
+
+    // The last "input" and the last "change", since typing dispatches an
+    // "input" a key.
+    expect(seen.findLast(({ type }) => type === 'input')?.during).toBe(after);
+    expect(seen.findLast(({ type }) => type === 'change')?.during).toBe(after);
+  },
+);

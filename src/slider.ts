@@ -10,6 +10,7 @@ import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { when } from 'lit/directives/when.js';
 import slab from './library/version.js';
+import beforeEvents from './library/before-events.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
 import required from './library/required.js';
@@ -397,6 +398,10 @@ export default class Slider extends LitElement {
   constructor() {
     super();
     this.#internals = this.attachInternals();
+
+    // So the form's data is current inside an "input" or "change" listener,
+    // as a native control's is, rather than an update on.
+    beforeEvents(this, () => this.#updateFormValue());
   }
 
   @state()

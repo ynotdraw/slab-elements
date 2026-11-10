@@ -10,6 +10,7 @@ import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { when } from 'lit/directives/when.js';
 import slab from './library/version.js';
+import beforeEvents from './library/before-events.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
 import StringsController from './library/strings.js';
@@ -441,6 +442,13 @@ export default class SearchField extends LitElement {
   constructor() {
     super();
     this.#internals = this.attachInternals();
+
+    // So the form's data and its validity are current inside an "input" or
+    // "change" listener, as a native control's are, rather than an update on.
+    beforeEvents(this, () => {
+      this.#updateFormValue();
+      this.#updateValidity();
+    });
 
     // On the host because the host is what's form-associated, which is also
     // why a consumer could remove this listener. Nothing better is available.
