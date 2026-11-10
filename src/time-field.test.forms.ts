@@ -775,7 +775,9 @@ test(
 
     const input = page.locator('[data-test="input"]');
 
-    await input.pressSequentially('0930P');
+    // Filled rather than typed, because Playwright's WebKit renders a time
+    // input without segments to type in.
+    await input.fill('21:30');
     await input.blur();
 
     const { after, seen } = await page.evaluate(async () => {

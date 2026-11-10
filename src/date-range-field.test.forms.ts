@@ -843,12 +843,12 @@ test(
       }
     });
 
-    // The end first. Each input is bound by the other's value, and a year
-    // typed a digit at a time is briefly a year long before the start.
+    // Filled rather than typed, because Playwright's WebKit renders a date
+    // input without segments to type in.
     const start = page.locator('[data-test="start"]');
 
-    await page.locator('[data-test="end"]').pressSequentially('09302026');
-    await start.pressSequentially('09282026');
+    await page.locator('[data-test="end"]').fill('2026-09-30');
+    await start.fill('2026-09-28');
     await start.blur();
 
     const { after, seen } = await page.evaluate(async () => {
