@@ -77,6 +77,25 @@ customElements.define(
 );
 ```
 
+## Accessibility
+
+Every change is tested in the latest Chromium, Firefox and WebKit. Axe checks
+every component for known violations, ARIA snapshot tests pin down each one's
+roles, names and states, and keyboard tests cover what each component does with
+the keyboard, including in right-to-left layouts. In October 2026, every component's semantics, keyboard
+support and announcements were audited, and everything found was fixed.
+
+What hasn't been done yet is testing by hand with a screen reader, such as
+VoiceOver, NVDA, JAWS or TalkBack, or with voice control or switch access.
+Automated tools catch only some problems. And since Slab is headless, contrast,
+focus rings and target sizes are up to your styles.
+
+If a component doesn't work with your assistive technology, please
+[open an issue](https://github.com/ynotdraw/slab-elements/issues/new?template=accessibility.yml)
+with what you used and what you heard. Pull requests are welcome too.
+[Accessibility](https://slab-elements.dev/accessibility/) on the docs site has
+more.
+
 ## AI disclosure
 
 Slab is built with AI assistance. Much of the code, tests, and docs were
