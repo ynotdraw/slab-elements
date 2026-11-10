@@ -389,11 +389,6 @@ export default class Checkbox extends LitElement {
       this.#updateValidity();
     }
 
-    // Later changes are announced as they're set, in `requestUpdate()`.
-    if (changes.has('value') && changes.get('value') === undefined) {
-      this.dispatchEvent(new Event('private-value-change', { bubbles: true }));
-    }
-
     this.#setState('error', this.#isShowValidationFeedback);
   }
 

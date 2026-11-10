@@ -154,10 +154,6 @@ export default class Radio extends LitElement {
     if (changes.has('label') && this.label) {
       this.setAttribute('aria-label', this.label);
     }
-
-    if (changes.has('value') && changes.get('value') === undefined) {
-      this.dispatchEvent(new Event('private-value-change', { bubbles: true }));
-    }
   }
 
   // Functional styles go in here rather than in `styles`, so a subclass that
