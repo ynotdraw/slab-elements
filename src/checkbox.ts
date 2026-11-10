@@ -291,6 +291,24 @@ export default class Checkbox extends LitElement {
     return isValid;
   }
 
+  // So its form data and validity are current as soon as a property is set,
+  // as a native control's are, rather than an update later.
+  override requestUpdate(
+    ...parameters: Parameters<LitElement['requestUpdate']>
+  ) {
+    super.requestUpdate(...parameters);
+
+    const [name] = parameters;
+
+    // Its private fields aren't set until it's constructed, nor its
+    // template rendered until its first update.
+    if (this.hasUpdated) {
+      this.#updateFormValue();
+      this.#updateValidity();
+      this.#announceToGroup(name);
+    }
+  }
+
   /**
    * Clears the validity feedback without changing `validity`.
    */
@@ -302,11 +320,8 @@ export default class Checkbox extends LitElement {
     this.validityMessage = message;
 
     if (message === '') {
-      this.#internals.setValidity(
-        { customError: false },
-        '',
-        this.#inputElementRef.value,
-      );
+      this.#hasCustomValidity = false;
+      this.#updateValidity();
 
       return;
     }
@@ -343,10 +358,13 @@ export default class Checkbox extends LitElement {
       this.#updateFormValue();
       this.#updateValidity();
 
-      // Checkbox Group derives its own value from its Checkboxes.
-      this.dispatchEvent(
-        new Event('private-checked-change', { bubbles: true }),
-      );
+      // Checkbox Group derives its own value from its Checkboxes. Later
+      // changes are announced as they're set, in `requestUpdate()`.
+      if (changes.get('checked') === undefined) {
+        this.dispatchEvent(
+          new Event('private-checked-change', { bubbles: true }),
+        );
+      }
     }
 
     if (changes.has('disabled') || changes.has('isFormDisabled')) {
@@ -369,10 +387,6 @@ export default class Checkbox extends LitElement {
     if (changes.has('required')) {
       this.#setState('required', this.required);
       this.#updateValidity();
-    }
-
-    if (changes.has('value')) {
-      this.dispatchEvent(new Event('private-value-change', { bubbles: true }));
     }
 
     this.#setState('error', this.#isShowValidationFeedback);
@@ -444,6 +458,21 @@ export default class Checkbox extends LitElement {
   #inputElementRef = createRef<HTMLInputElement>();
 
   #internals: ElementInternals;
+
+  // Checkbox Group derives its value from its Checkboxes. It's told here as
+  // well as after the update, so a change made from code is in its value and
+  // form data straight away, as a native control's would be.
+  #announceToGroup(name?: PropertyKey) {
+    if (name === 'checked') {
+      this.dispatchEvent(
+        new Event('private-checked-change', { bubbles: true }),
+      );
+    }
+
+    if (name === 'value') {
+      this.dispatchEvent(new Event('private-value-change', { bubbles: true }));
+    }
+  }
 
   get #isDisabled() {
     return this.disabled || this.isFormDisabled;

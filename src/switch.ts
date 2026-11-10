@@ -259,6 +259,21 @@ export default class Switch extends LitElement {
     return isValid;
   }
 
+  // So its form data and validity are current as soon as a property is set,
+  // as a native control's are, rather than an update later.
+  override requestUpdate(
+    ...parameters: Parameters<LitElement['requestUpdate']>
+  ) {
+    super.requestUpdate(...parameters);
+
+    // Its private fields aren't set until it's constructed, nor its
+    // template rendered until its first update.
+    if (this.hasUpdated) {
+      this.#updateFormValue();
+      this.#updateValidity();
+    }
+  }
+
   /**
    * Clears the validity feedback without changing `validity`.
    */
@@ -270,11 +285,8 @@ export default class Switch extends LitElement {
     this.validityMessage = message;
 
     if (message === '') {
-      this.#internals.setValidity(
-        { customError: false },
-        '',
-        this.#inputElementRef.value,
-      );
+      this.#hasCustomValidity = false;
+      this.#updateValidity();
 
       return;
     }
@@ -314,7 +326,7 @@ export default class Switch extends LitElement {
       this.#updateValidity();
     }
 
-    this.#internals.setFormValue(this.checked ? this.value : null);
+    this.#updateFormValue();
     this.#setState('error', this.#isShowValidationFeedback);
   }
 
@@ -438,6 +450,10 @@ export default class Switch extends LitElement {
     } else {
       this.#internals.states.delete(state);
     }
+  }
+
+  #updateFormValue() {
+    this.#internals.setFormValue(this.checked ? this.value : null);
   }
 
   #updateValidity() {

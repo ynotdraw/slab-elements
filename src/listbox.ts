@@ -377,7 +377,8 @@ export default class Listbox extends LitElement {
     this.validityMessage = message;
 
     if (message === '') {
-      this.#internals.setValidity({ customError: false }, '', this.#anchor);
+      this.#hasCustomValidity = false;
+      this.#updateValidity();
 
       return;
     }

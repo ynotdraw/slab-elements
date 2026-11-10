@@ -347,6 +347,21 @@ export default class PinInput extends LitElement {
     return isValid;
   }
 
+  // So its form data and validity are current as soon as a property is set,
+  // as a native control's are, rather than an update later.
+  override requestUpdate(
+    ...parameters: Parameters<LitElement['requestUpdate']>
+  ) {
+    super.requestUpdate(...parameters);
+
+    // Its private fields aren't set until it's constructed, nor its
+    // template rendered until its first update.
+    if (this.hasUpdated) {
+      this.#updateFormValue();
+      this.#updateValidity();
+    }
+  }
+
   /**
    * Clears the validity feedback without changing `validity`.
    */

@@ -389,7 +389,14 @@ test(
       await callMethod(host, 'reportValidity');
 
       await expect(host).toHaveJSProperty('validity.customError', false);
-      await expect(validityMessage).toBeHidden();
+
+      // Still required, so the browser's own message takes its place.
+      await expect(host).toHaveJSProperty('validity.valueMissing', true);
+      await expect(validityMessage).toBeVisible();
+
+      await expect(validityMessage).not.toHaveText('message', {
+        useInnerText: true,
+      });
     });
   },
 );
@@ -655,5 +662,104 @@ test(
     );
 
     await expect(page.locator('form')).toHaveFormData('other', '3');
+  },
+);
+
+test(
+  'is current inside its "input" and "change" listeners',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-rating label="Label" name="name" required></slab-rating>
+        </form>
+      `,
+    );
+
+    // What a listener reads while each event is dispatched, beside what's
+    // there once everything has settled. A native control's are the same.
+    await page.locator('slab-rating').evaluate((element) => {
+      const read = () => {
+        return JSON.stringify({
+          data: [...new FormData(element.closest('form') ?? undefined)],
+          valid:
+            'validity' in element && (element.validity as ValidityState).valid,
+          value: 'value' in element && element.value,
+        });
+      };
+
+      const seen: { during: string; type: string }[] = [];
+
+      Object.assign(window, { read, seen });
+
+      for (const type of ['input', 'change']) {
+        element.addEventListener(type, () => {
+          seen.push({ during: read(), type });
+        });
+      }
+    });
+
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('ArrowRight');
+
+    const { after, seen } = await page.evaluate(async () => {
+      const { read, seen } = window as unknown as {
+        read: () => string;
+        seen: { during: string; type: string }[];
+      };
+
+      // Long enough for any update the events left pending.
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      return { after: read(), seen };
+    });
+
+    expect(seen.map(({ type }) => type)).toContain('input');
+    expect(seen.map(({ type }) => type)).toContain('change');
+
+    // The last "input" and the last "change", since typing dispatches an
+    // "input" a key.
+    expect(seen.findLast(({ type }) => type === 'input')?.during).toBe(after);
+    expect(seen.findLast(({ type }) => type === 'change')?.during).toBe(after);
+  },
+);
+
+test(
+  'is current as soon as its value is set from code',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-rating label="Label" name="name" required></slab-rating>
+        </form>
+      `,
+    );
+
+    // What's read straight after the property is set, beside what's there
+    // once it has updated. A native control's are the same.
+    const { after, before } = await page
+      .locator('slab-rating')
+      .evaluate(async (element) => {
+        const host = element as HTMLElement & { validity: ValidityState };
+
+        const read = () => {
+          return JSON.stringify({
+            data: [...new FormData(host.closest('form') ?? undefined)],
+            valid: host.validity.valid,
+          });
+        };
+
+        (element as unknown as Record<string, unknown>).value = '3';
+
+        const before = read();
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        return { after: read(), before };
+      });
+
+    expect(before).toBe(after);
   },
 );

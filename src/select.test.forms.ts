@@ -653,7 +653,14 @@ test(
       await callMethod(host, 'reportValidity');
 
       await expect(host).toHaveJSProperty('validity.customError', false);
-      await expect(validityMessage).toBeHidden();
+
+      // Still required, so the browser's own message takes its place.
+      await expect(host).toHaveJSProperty('validity.valueMissing', true);
+      await expect(validityMessage).toBeVisible();
+
+      await expect(validityMessage).not.toHaveText('message', {
+        useInnerText: true,
+      });
     });
   },
 );

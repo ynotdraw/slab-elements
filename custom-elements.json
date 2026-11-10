@@ -15625,12 +15625,6 @@
               "description": "When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it."
             },
             {
-              "name": "private-disabled-change",
-              "type": {
-                "text": "Event"
-              }
-            },
-            {
               "name": "private-checked-change",
               "type": {
                 "text": "Event"
@@ -15638,6 +15632,12 @@
             },
             {
               "name": "private-value-change",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "private-disabled-change",
               "type": {
                 "text": "Event"
               }

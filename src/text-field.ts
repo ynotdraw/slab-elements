@@ -297,6 +297,22 @@ export default class TextField extends LitElement {
     return isValid;
   }
 
+  // So its form data and validity are current as soon as a property is set,
+  // as a native control's are, rather than an update later.
+  override requestUpdate(
+    ...parameters: Parameters<LitElement['requestUpdate']>
+  ) {
+    super.requestUpdate(...parameters);
+
+    // Its private fields aren't set until it's constructed, nor its
+    // template rendered until its first update.
+    if (this.hasUpdated) {
+      this.#writeValue();
+      this.#updateFormValue();
+      this.#updateValidity();
+    }
+  }
+
   /**
    * Clears the validity feedback without changing `validity`.
    */
@@ -349,14 +365,7 @@ export default class TextField extends LitElement {
   override updated(changes: PropertyValues) {
     const input = this.#inputElementRef.value;
 
-    // Set here rather than in the template, and only when it differs. Writing
-    // the value back on every keystroke would clear the input's record of
-    // having been edited by the user, which is what `minlength` and
-    // `maxlength` key off: `tooShort` and `tooLong` apply to a value a person
-    // typed, not one a script set.
-    if (input && input.value !== this.value) {
-      input.value = this.value;
-    }
+    this.#writeValue();
 
     // Set here rather than in the template because the template binding is
     // checked against lit-analyzer's list of autocomplete tokens, which is
@@ -552,5 +561,18 @@ export default class TextField extends LitElement {
       input.validationMessage || ' ',
       input,
     );
+  }
+
+  #writeValue() {
+    const input = this.#inputElementRef.value;
+
+    // Set here rather than in the template, and only when it differs. Writing
+    // the value back on every keystroke would clear the input's record of
+    // having been edited by the user, which is what `minlength` and
+    // `maxlength` key off: `tooShort` and `tooLong` apply to a value a person
+    // typed, not one a script set.
+    if (input && input.value !== this.value) {
+      input.value = this.value;
+    }
   }
 }

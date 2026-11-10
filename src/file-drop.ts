@@ -385,6 +385,18 @@ export default class FileDrop extends LitElement {
     super();
     this.#internals = this.attachInternals();
 
+    // So the form's data and its validity are current inside an "input" or
+    // "change" listener, as a native control's are, rather than an update on.
+    // Its files aren't a property, so there's no setter to do it from. These
+    // capture, so they run ahead of any listener of the consumer's.
+    this.addEventListener('input', this.#onInputOrChangeCapture, {
+      capture: true,
+    });
+
+    this.addEventListener('change', this.#onInputOrChangeCapture, {
+      capture: true,
+    });
+
     // On the host rather than the input, so the whole host is the drop target
     // and whatever a consumer slots or styles into it counts too.
     this.addEventListener('dragenter', this.#onDragEnterOrOver);
@@ -542,6 +554,11 @@ export default class FileDrop extends LitElement {
     // As though the files had been picked.
     this.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
     this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+  };
+
+  #onInputOrChangeCapture = () => {
+    this.#updateFormValue();
+    this.#updateValidity();
   };
 
   // against the start of the type, and anything else against the whole type.

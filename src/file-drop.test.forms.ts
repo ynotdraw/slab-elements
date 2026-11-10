@@ -618,3 +618,69 @@ test(
     expect(await getValidationMessage()).toBe('');
   },
 );
+
+test(
+  'is current inside its "input" and "change" listeners',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-file-drop label="Label" name="name" required></slab-file-drop>
+        </form>
+      `,
+    );
+
+    // What a listener reads while each event is dispatched, beside what's
+    // there once everything has settled. A native control's are the same.
+    await page.locator('slab-file-drop').evaluate((element) => {
+      const read = () => {
+        return JSON.stringify({
+          data: [...new FormData(element.closest('form') ?? undefined)].map(
+            ([name, value]) => [
+              name,
+              value instanceof File ? value.name : value,
+            ],
+          ),
+          valid:
+            'validity' in element && (element.validity as ValidityState).valid,
+          value:
+            'files' in element &&
+            [...(element.files as Iterable<File>)].map(({ name }) => name),
+        });
+      };
+
+      const seen: { during: string; type: string }[] = [];
+
+      Object.assign(window, { read, seen });
+
+      for (const type of ['input', 'change']) {
+        element.addEventListener(type, () => {
+          seen.push({ during: read(), type });
+        });
+      }
+    });
+
+    await page.locator('[data-test="input"]').setInputFiles(file('one.txt'));
+
+    const { after, seen } = await page.evaluate(async () => {
+      const { read, seen } = window as unknown as {
+        read: () => string;
+        seen: { during: string; type: string }[];
+      };
+
+      // Long enough for any update the events left pending.
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      return { after: read(), seen };
+    });
+
+    expect(seen.map(({ type }) => type)).toContain('input');
+    expect(seen.map(({ type }) => type)).toContain('change');
+
+    // The last "input" and the last "change", since typing dispatches an
+    // "input" a key.
+    expect(seen.findLast(({ type }) => type === 'input')?.during).toBe(after);
+    expect(seen.findLast(({ type }) => type === 'change')?.during).toBe(after);
+  },
+);

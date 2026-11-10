@@ -408,6 +408,23 @@ export default class DateRangeField extends LitElement {
     return isValid;
   }
 
+  // So its form data and validity are current as soon as a property is set,
+  // as a native control's are, rather than an update later.
+  override requestUpdate(
+    ...parameters: Parameters<LitElement['requestUpdate']>
+  ) {
+    super.requestUpdate(...parameters);
+
+    // Its private fields aren't set until it's constructed, nor its
+    // template rendered until its first update.
+    if (this.hasUpdated) {
+      this.#writeBounds();
+      this.#writeValue();
+      this.#updateFormValue();
+      this.#updateValidity();
+    }
+  }
+
   /**
    * Clears the validity feedback without changing `validity`.
    */
@@ -446,31 +463,7 @@ export default class DateRangeField extends LitElement {
   // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
   // only knows public keys.
   override updated(changes: PropertyValues) {
-    const start = this.#startElementRef.value;
-    const end = this.#endElementRef.value;
-
-    // Set here rather than in the template, and only when they differ.
-    // Writing a value back on every change would clear the input's record of
-    // having been edited by the user, the same as it would on Date Field.
-    //
-    // An input sanitizes what it's given: anything that isn't a valid
-    // "yyyy-mm-dd" becomes an empty string. The host takes that back rather
-    // than holding, and submitting, a value the input threw away.
-    if (start && start.value !== this.startValue) {
-      start.value = this.startValue;
-
-      if (start.value !== this.startValue) {
-        this.startValue = start.value;
-      }
-    }
-
-    if (end && end.value !== this.endValue) {
-      end.value = this.endValue;
-
-      if (end.value !== this.endValue) {
-        this.endValue = end.value;
-      }
-    }
+    this.#writeValue();
 
     if (changes.has('disabled') || changes.has('isFormDisabled')) {
       this.#setState('disabled', this.#isDisabled);
@@ -710,5 +703,51 @@ export default class DateRangeField extends LitElement {
       start.validationMessage || end.validationMessage || ' ',
       this.#invalidInput,
     );
+  }
+
+  // Each input's bound is the other's value, and the template sets it on the
+  // next update. Set here as well, so each input's validity, and so the
+  // field's, is current as soon as the other value changes.
+  #writeBounds() {
+    const start = this.#startElementRef.value;
+    const end = this.#endElementRef.value;
+    const startMax = this.#earliest(this.max, this.endValue) ?? '';
+    const endMin = this.#latest(this.min, this.startValue) ?? '';
+
+    if (start && start.max !== startMax) {
+      start.max = startMax;
+    }
+
+    if (end && end.min !== endMin) {
+      end.min = endMin;
+    }
+  }
+
+  #writeValue() {
+    const start = this.#startElementRef.value;
+    const end = this.#endElementRef.value;
+
+    // Set here rather than in the template, and only when they differ.
+    // Writing a value back on every change would clear the input's record of
+    // having been edited by the user, the same as it would on Date Field.
+    //
+    // An input sanitizes what it's given: anything that isn't a valid
+    // "yyyy-mm-dd" becomes an empty string. The host takes that back rather
+    // than holding, and submitting, a value the input threw away.
+    if (start && start.value !== this.startValue) {
+      start.value = this.startValue;
+
+      if (start.value !== this.startValue) {
+        this.startValue = start.value;
+      }
+    }
+
+    if (end && end.value !== this.endValue) {
+      end.value = this.endValue;
+
+      if (end.value !== this.endValue) {
+        this.endValue = end.value;
+      }
+    }
   }
 }
