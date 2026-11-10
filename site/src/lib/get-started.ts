@@ -214,20 +214,33 @@ const escape = (text: string) =>
 
 const link = /\[([^\]]+)\]\(([^)]*)\)/g;
 
-/** Text as HTML, with `code` spans and links, which `base` is put in front of. */
+// A link to another site, which is left as it is rather than made a path.
+const external = /^https?:\/\//;
+
+/**
+ * Text as HTML, with `code` spans and links. `base` is put in front of each
+ * link but one to another site.
+ */
 export function html(text: string, base: string): string {
   return escape(text)
     .replaceAll(
       link,
       (_, label: string, path: string) =>
-        `<a href="${base}${path}">${label}</a>`,
+        `<a href="${external.test(path) ? '' : base}${path}">${label}</a>`,
     )
     .replaceAll(/`([^`]+)`/g, '<code>$1</code>');
 }
 
-/** Text as Markdown, with each link pointed at the page's Markdown twin. */
+/**
+ * Text as Markdown, with each link pointed at the page's Markdown twin, but
+ * one to another site.
+ */
 export function markdown(text: string): string {
-  return text.replaceAll(link, (_, label: string, path: string) => {
+  return text.replaceAll(link, (match, label: string, path: string) => {
+    if (external.test(path)) {
+      return match;
+    }
+
     const [page = '', hash = ''] = path.split('#');
     const twin = page === '' ? 'index.md' : `${page.replace(/\/$/, '')}.md`;
 

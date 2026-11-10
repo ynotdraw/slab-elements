@@ -1,0 +1,59 @@
+name: Accessibility problem
+description: A component doesn't work, or is hard to use, with a screen reader or other assistive technology.
+title: '[Accessibility]: '
+labels: ['accessibility']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. What you heard, or couldn't do, is the most useful part, even if you're not sure what's wrong.
+  - type: input
+    id: component
+    attributes:
+      label: Component
+      description: Which element, and which page or example you tried it on, if any.
+      placeholder: slab-combobox on https://slab-elements.dev/components/combobox/
+    validations:
+      required: true
+  - type: input
+    id: assistive-technology
+    attributes:
+      label: Assistive technology and version
+      placeholder: VoiceOver on macOS 26.1, NVDA 2026.2, TalkBack, Voice Control…
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser, operating system and their versions
+      placeholder: Safari 26.1 on macOS 26.1
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Slab version
+      placeholder: 1.0.0
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps
+      description: The keys you pressed or gestures you used, in order.
+      placeholder: |
+        1. Tab to the combobox.
+        2. Press Down Arrow twice.
+    validations:
+      required: true
+  - type: textarea
+    id: heard
+    attributes:
+      label: What happened
+      description: What was announced, as close to word for word as you can, or what you couldn't do.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
