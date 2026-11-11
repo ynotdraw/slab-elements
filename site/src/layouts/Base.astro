@@ -192,9 +192,15 @@ const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.
       };
 
       // The page cross-fades between themes where it can, and snaps where it
-      // can't or motion's reduced.
+      // can't or motion's reduced. The toggle is lifted out of the cross-fade
+      // only for this transition, so a navigation's doesn't fly it between
+      // where it was on the last page and where it is on the next.
       if (document.startViewTransition && !reduceMotion.matches) {
-        document.startViewTransition(apply);
+        root.dataset.themeChange = '';
+
+        document.startViewTransition(apply).finished.finally(() => {
+          delete root.dataset.themeChange;
+        });
       } else {
         apply();
       }
@@ -313,9 +319,6 @@ const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.
     cursor: pointer;
     display: inline-grid;
     padding: 0.375rem;
-
-    /* Out of the page's cross-fade, so its own icons can turn. */
-    view-transition-name: theme-toggle;
     transition:
       background-color 150ms ease-out,
       color 150ms ease-out,
@@ -335,6 +338,15 @@ const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.
       outline: 3px solid var(--ember);
       outline-offset: 2px;
     }
+  }
+
+  /*
+    Out of the page's cross-fade while the theme changes, so its own icons can
+    turn. Only then: named during a navigation, it would slide from its box on
+    the last page, often scrolled out of view, to its box on the next.
+  */
+  :global(:root[data-theme-change]) .theme {
+    view-transition-name: theme-toggle;
   }
 
   .theme svg {
