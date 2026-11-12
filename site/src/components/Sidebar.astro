@@ -68,8 +68,9 @@ const { label, sections } = Astro.props;
 
   @media (width >= 56rem) {
     .sidebar {
-      inset-block-start: 1.5rem;
-      max-block-size: calc(100dvh - 3rem);
+      /* Under the sticky header. */
+      inset-block-start: calc(var(--header-block-size) + 1.5rem);
+      max-block-size: calc(100dvh - var(--header-block-size) - 3rem);
       overflow-y: auto;
       position: sticky;
     }

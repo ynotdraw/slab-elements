@@ -343,7 +343,9 @@ const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.
 
     /* Clear of the page, shadow and all, until it's focused. */
     translate: 0 -200%;
-    z-index: 1;
+
+    /* Over the header, which sticks to the top. */
+    z-index: 3;
 
     &:focus-visible {
       translate: none;
@@ -354,6 +356,18 @@ const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.
     outline: none;
   }
 
+  /*
+    The header sticks to the top, on a phone and a desktop alike, so its
+    links, the theme toggle and the menu are always a tap away. Anything that
+    sticks under it, and any heading a link scrolls to, clears it by its
+    height: its padding, the name's line and its rule.
+  */
+  :global(:root) {
+    --header-block-size: calc(0.875rem * 2 + 2.25rem + 3px);
+
+    scroll-padding-block-start: calc(var(--header-block-size) + 1rem);
+  }
+
   .header {
     align-items: center;
     background-color: var(--paper);
@@ -361,7 +375,18 @@ const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem 1.5rem;
+    inset-block-start: 0;
     padding: 0.875rem var(--gutter);
+    position: sticky;
+
+    /* Over the page's own stacking, under the skip link. */
+    z-index: 2;
+  }
+
+  @media print {
+    .header {
+      position: static;
+    }
   }
 
   .brand {
@@ -556,6 +581,18 @@ const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.
 
       .theme {
         margin-inline-start: auto;
+      }
+    }
+
+    /*
+      Without a script, the links take a second row, too tall a header to
+      keep in view on a phone, so it scrolls away with the page.
+    */
+    :global(:root:not([data-menu])) {
+      scroll-padding-block-start: 0;
+
+      .header {
+        position: static;
       }
     }
 
