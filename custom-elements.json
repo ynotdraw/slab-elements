@@ -356,7 +356,21 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Opens it."
+              "description": "Opens it. It's always modal, so this is the same as `showModal()`."
+            },
+            {
+              "kind": "method",
+              "name": "showModal",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              },
+              "description": "Opens it as a modal, as a native dialog's `showModal()` does."
             }
           ],
           "attributes": [
@@ -4001,7 +4015,21 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Opens it."
+              "description": "Opens it. It's always modal, so this is the same as `showModal()`."
+            },
+            {
+              "kind": "method",
+              "name": "showModal",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              },
+              "description": "Opens it as a modal, as a native dialog's `showModal()` does."
             }
           ],
           "attributes": [
@@ -7776,7 +7804,17 @@
                   "text": "void"
                 }
               },
-              "description": "Opens it."
+              "description": "Opens it non-modally, as a native dialog's `show()` does. The rest of the page stays interactive."
+            },
+            {
+              "kind": "method",
+              "name": "showModal",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Opens it as a modal, as a native dialog's `showModal()` does. Setting `open` does the same."
             },
             {
               "kind": "method",
@@ -8279,7 +8317,21 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Opens it."
+              "description": "Opens it non-modally, as a native dialog's `show()` does."
+            },
+            {
+              "kind": "method",
+              "name": "showModal",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              },
+              "description": "Opens it. It's always non-modal, so this is the same as `show()`."
             }
           ],
           "superclass": {

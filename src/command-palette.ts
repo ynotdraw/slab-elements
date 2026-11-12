@@ -118,7 +118,8 @@ declare global {
  * @method requestClose - Asks it to close, as a native dialog's `requestClose()` does: "cancel" first, then a close that sets `returnValue` to the value given, unless "cancel" is canceled.
  * @param {string} [returnValue]
  *
- * @method show - Opens it.
+ * @method show - Opens it. It's always modal, so this is the same as `showModal()`.
+ * @method showModal - Opens it as a modal, as a native dialog's `showModal()` does.
  */
 @customElement('slab-command-palette')
 export default class CommandPalette extends Dialog {
@@ -262,6 +263,12 @@ export default class CommandPalette extends Dialog {
             </slot>`,
         )}
       </div>`;
+  }
+
+  // Modal even from `show()`. It's opened to do one thing, and the page waits.
+  /** @internal For Slab's own subclasses. Not public API. */
+  protected override showDialog(dialog: HTMLDialogElement): void {
+    dialog.showModal();
   }
 
   override updated() {

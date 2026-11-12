@@ -114,6 +114,13 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
         'When its dismiss button is pressed. Cancel it to keep the alert.',
     },
   },
+  'slab-alert-dialog': {
+    members: {
+      show: "Opens it. It's always modal, so this is the same as `showModal()`.",
+      showModal:
+        "Opens it as a modal, as a native dialog's `showModal()` does.",
+    },
+  },
   'slab-breadcrumb': {
     cssParts: {
       item: "Each link's list item",
@@ -169,7 +176,12 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
       empty:
         'While no command matches what the user typed, for a "no results" message of your own.',
     },
-    members: { options: 'Its Options, in order.' },
+    members: {
+      options: 'Its Options, in order.',
+      show: "Opens it. It's always modal, so this is the same as `showModal()`.",
+      showModal:
+        "Opens it as a modal, as a native dialog's `showModal()` does.",
+    },
   },
   'slab-context-menu': {
     members: { items: 'Its Menu Items, in order.' },
@@ -213,12 +225,22 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
         "Closes it, setting `returnValue` to the value given, as a native dialog's `close()` does.",
       requestClose:
         'Asks it to close, as a native dialog\'s `requestClose()` does: "cancel" first, then a close that sets `returnValue` to the value given, unless "cancel" is canceled.',
+      show: "Opens it non-modally, as a native dialog's `show()` does. The rest of the page stays interactive.",
+      showModal:
+        "Opens it as a modal, as a native dialog's `showModal()` does. Setting `open` does the same.",
     },
     slots: { label: 'Its heading, in place of `label`' },
   },
   'slab-disclosure': {
     members: {
       name: "Groups it with every other Disclosure of the same name, so opening one closes the rest, as a native `<details>`'s `name` does.",
+    },
+  },
+  'slab-drawer': {
+    members: {
+      show: "Opens it non-modally, as a native dialog's `show()` does.",
+      showModal:
+        "Opens it. It's always non-modal, so this is the same as `show()`.",
     },
   },
   'slab-editable': {

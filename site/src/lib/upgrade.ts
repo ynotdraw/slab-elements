@@ -113,6 +113,20 @@ field.addEventListener('reveal-change', () => {
     },
   },
   {
+    id: 'dialog-show',
+    heading: "Dialog's `show()`",
+    text: "Dialog's `show()` now opens it non-modally, as a `<dialog>`'s does, and the new `showModal()` opens it as a modal. Setting `open` still opens it as a modal. Code that calls `show()` for a modal should call `showModal()` instead. Alert Dialog and Command Palette are always modal, and Drawer is always non-modal, so neither method changes them.",
+    code: {
+      code: `// Before
+dialog.show();
+
+// After
+dialog.showModal();`,
+      label: 'app.js',
+      lang: 'js',
+    },
+  },
+  {
     id: 'subclasses',
     heading: 'Subclasses',
     text: "The protected hooks Slab's own styled subclasses override, such as Dialog's `renderContent()` and Date Field's `renderControl()`, and every element's `version`, are marked `@internal`. They're out of the published types, so a subclass that overrides a hook with `override` no longer type checks. They were never public API and can change in any release. Subclassing an element to set `styles` is public and keeps working.",

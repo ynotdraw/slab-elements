@@ -71,7 +71,8 @@ declare global {
  * @method requestClose - Asks it to close, as a native dialog's `requestClose()` does: "cancel" first, then a close that sets `returnValue` to the value given, unless "cancel" is canceled.
  * @param {string} [returnValue]
  *
- * @method show - Opens it.
+ * @method show - Opens it. It's always modal, so this is the same as `showModal()`.
+ * @method showModal - Opens it as a modal, as a native dialog's `showModal()` does.
  */
 @customElement('slab-alert-dialog')
 export default class AlertDialog extends Dialog {
@@ -149,7 +150,10 @@ export default class AlertDialog extends Dialog {
   protected override showDialog(dialog: HTMLDialogElement): void {
     dialog.setAttribute('role', 'alertdialog');
     dialog.setAttribute('aria-describedby', 'description');
-    super.showDialog(dialog);
+
+    // Modal even from `show()`. An alert dialog asks for a decision before
+    // anything else on the page can be used.
+    dialog.showModal();
   }
 
   // Before Dialog's `updated()` passes `closedby` to the `<dialog>`. Set in
