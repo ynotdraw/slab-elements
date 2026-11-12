@@ -12516,10 +12516,19 @@
               "name": "toggle",
               "return": {
                 "type": {
-                  "text": "void"
+                  "text": "boolean"
                 }
               },
-              "description": "Opens it when it's closed, and closes it when it's open."
+              "parameters": [
+                {
+                  "name": "force",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Opens it when it's closed, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it and `false` only closes it. Returns whether it's open."
             },
             {
               "kind": "method",
@@ -15285,10 +15294,19 @@
               "name": "toggle",
               "return": {
                 "type": {
-                  "text": "void"
+                  "text": "boolean"
                 }
               },
-              "description": "Opens it when it's closed, and closes it when it's open."
+              "parameters": [
+                {
+                  "name": "force",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Opens it when it's closed, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it and `false` only closes it. Returns whether it's open."
             },
             {
               "kind": "method",

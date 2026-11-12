@@ -119,6 +119,37 @@ test(
 );
 
 test(
+  "only opens or only closes when `toggle()` is forced, and returns whether it's open",
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-popover>
+          <button slot="anchor">Anchor</button>
+          Content
+        </slab-popover>`,
+    );
+
+    const results = await page
+      .locator('slab-popover')
+      .evaluate<[boolean, boolean][], void, Popover>((element) => {
+        return [true, true, false, false, undefined].map((force) => [
+          element.toggle(force),
+          element.open,
+        ]);
+      });
+
+    expect(results).toStrictEqual([
+      [true, true],
+      [true, true],
+      [false, false],
+      [false, false],
+      [true, true],
+    ]);
+  },
+);
+
+test(
   'dispatches its popover\'s "beforetoggle" and "toggle"',
   { tag: '@miscellaneous' },
   async ({ callMethod, render, page }) => {

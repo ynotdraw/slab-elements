@@ -90,7 +90,8 @@ const shared: Record<Kind, Descriptions> = {
     setValidity:
       'Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.',
     show: 'Opens it.',
-    toggle: "Opens it when it's closed, and closes it when it's open.",
+    toggle:
+      "Opens it when it's closed, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it and `false` only closes it. Returns whether it's open.",
     validity: "Its `ValidityState`, as a native control's.",
     willValidate:
       "Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.",

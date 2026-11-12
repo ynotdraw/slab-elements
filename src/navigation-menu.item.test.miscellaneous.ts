@@ -198,3 +198,33 @@ test(
     ).rejects.toThrow();
   },
 );
+
+test(
+  "only opens or only closes when `toggle()` is forced, and returns whether it's open",
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-navigation-menu-item label="Services">
+          <a href="#">Pouring</a>
+        </slab-navigation-menu-item>`,
+    );
+
+    const results = await page
+      .locator('slab-navigation-menu-item')
+      .evaluate<[boolean, boolean][], void, NavigationMenuItem>((element) => {
+        return [true, true, false, false, undefined].map((force) => [
+          element.toggle(force),
+          element.open,
+        ]);
+      });
+
+    expect(results).toStrictEqual([
+      [true, true],
+      [true, true],
+      [false, false],
+      [false, false],
+      [true, true],
+    ]);
+  },
+);

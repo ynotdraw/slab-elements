@@ -33,7 +33,7 @@ const meta: Meta = {
     placement: 'bottom',
     'show()': '',
     'slot="anchor"': '<button slot="anchor">Anchor</button>',
-    'toggle()': '',
+    'toggle(force)': '',
     version: '',
   },
   argTypes: {
@@ -94,9 +94,11 @@ const meta: Meta = {
       },
       type: { name: 'function', required: true },
     },
-    'toggle()': {
+    'toggle(force)': {
       control: false,
-      table: { type: { summary: 'method', detail: '(): void' } },
+      table: {
+        type: { summary: 'method', detail: '(force?: boolean): boolean' },
+      },
     },
     version: {
       control: false,
