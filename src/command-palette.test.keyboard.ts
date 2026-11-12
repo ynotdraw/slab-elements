@@ -269,7 +269,7 @@ test(
 
     await expect(host).toHaveJSProperty('returnValue', 'two');
 
-    await callMethod(host, 'show');
+    await callMethod(host, 'showModal');
 
     await expect(page.getByRole('combobox')).toBeFocused();
     await expect(page.getByRole('combobox')).toHaveValue('');

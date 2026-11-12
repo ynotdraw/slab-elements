@@ -114,8 +114,8 @@ field.addEventListener('reveal-change', () => {
   },
   {
     id: 'dialog-show',
-    heading: "Dialog's `show()`",
-    text: "Dialog's `show()` now opens it non-modally, as a `<dialog>`'s does, and the new `showModal()` opens it as a modal. Setting `open` still opens it as a modal. Code that calls `show()` for a modal should call `showModal()` instead. Alert Dialog and Command Palette are always modal, and Drawer is always non-modal, so neither method changes them.",
+    heading: '`show()` on Dialog, Alert Dialog and Command Palette',
+    text: "`show()` now opens them non-modally, as a `<dialog>`'s does, and the new `showModal()` opens them as a modal. Setting `open` still opens them as a modal. Code that calls `show()` for a modal should call `showModal()` instead. Drawer's `open` and `show()` still open it non-modally, and its `showModal()` opens it as a modal, with a backdrop.",
     code: {
       code: `// Before
 dialog.show();

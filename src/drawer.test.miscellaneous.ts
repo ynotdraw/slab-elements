@@ -26,12 +26,24 @@ test(
 );
 
 test(
-  'opens non-modally when `showModal()` is called',
+  'opens as a modal when `showModal()` is called',
   { tag: '@miscellaneous' },
   async ({ callMethod, render, page }) => {
     await render(() => html`<slab-drawer label="Label">Content</slab-drawer>`);
 
-    await callMethod(page.locator('slab-drawer'), 'showModal');
+    const host = page.locator('slab-drawer');
+
+    await callMethod(host, 'showModal');
+
+    await expect(page.locator('[data-test="dialog"]:modal')).toBeVisible();
+
+    await callMethod(host, 'close');
+    await expect(page.getByTestId('dialog')).toBeHidden();
+
+    // Back to its default once it has closed.
+    await host.evaluate((element: HTMLElement) => {
+      element.setAttribute('open', '');
+    });
 
     await expect(page.getByTestId('dialog')).toBeVisible();
     await expect(page.locator('[data-test="dialog"]:modal')).toHaveCount(0);

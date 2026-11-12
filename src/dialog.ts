@@ -97,6 +97,11 @@ export default class Dialog extends LitElement {
   @property({ reflect: true })
   readonly version: string = slab.version;
 
+  // Whether setting `open`, rather than `show()` or `showModal()`, opens it as
+  // a modal. Drawer overrides it to open non-modally.
+  /** @internal For Slab's own subclasses. Not public API. */
+  protected readonly isModalByDefault: boolean = true;
+
   // Command Palette sets its own states on it, and an element's internals can
   // only be attached once.
   /** @internal For Slab's own subclasses. Not public API. */
@@ -220,12 +225,11 @@ export default class Dialog extends LitElement {
     this.#open({ isModal: false });
   }
 
-  // How the `<dialog>` is opened: modally unless `show()` opened it. Drawer
-  // overrides it to always open non-modally, and Alert Dialog and Command
-  // Palette to always open modally.
+  // How the `<dialog>` is opened: as `show()` or `showModal()` asked, or else
+  // as `isModalByDefault` says. Alert Dialog overrides it to set its role.
   /** @internal For Slab's own subclasses. Not public API. */
   protected showDialog(dialog: HTMLDialogElement): void {
-    if (this.#isModal) {
+    if (this.#isModal ?? this.isModalByDefault) {
       dialog.showModal();
     } else {
       dialog.show();
@@ -300,9 +304,9 @@ export default class Dialog extends LitElement {
 
   #internals: ElementInternals;
 
-  // Whether the next open is modal. Setting `open` opens it modally, so it's
-  // only false between `show()` and the dialog closing.
-  #isModal = true;
+  // Whether `show()` or `showModal()` opened it, until it closes. Unset when
+  // `open` opened it.
+  #isModal: boolean | undefined;
 
   // For a `returnValue` set before the `<dialog>` is rendered.
   #returnValue = '';
@@ -359,7 +363,7 @@ export default class Dialog extends LitElement {
   }
 
   #onDialogClose() {
-    this.#isModal = true;
+    this.#isModal = undefined;
     this.open = false;
     this.dispatchEvent(new Event('close'));
   }

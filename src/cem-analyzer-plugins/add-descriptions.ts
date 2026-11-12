@@ -114,13 +114,6 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
         'When its dismiss button is pressed. Cancel it to keep the alert.',
     },
   },
-  'slab-alert-dialog': {
-    members: {
-      show: "Opens it. It's always modal, so this is the same as `showModal()`.",
-      showModal:
-        "Opens it as a modal, as a native dialog's `showModal()` does.",
-    },
-  },
   'slab-breadcrumb': {
     cssParts: {
       item: "Each link's list item",
@@ -176,12 +169,7 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
       empty:
         'While no command matches what the user typed, for a "no results" message of your own.',
     },
-    members: {
-      options: 'Its Options, in order.',
-      show: "Opens it. It's always modal, so this is the same as `showModal()`.",
-      showModal:
-        "Opens it as a modal, as a native dialog's `showModal()` does.",
-    },
+    members: { options: 'Its Options, in order.' },
   },
   'slab-context-menu': {
     members: { items: 'Its Menu Items, in order.' },
@@ -240,7 +228,7 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     members: {
       show: "Opens it non-modally, as a native dialog's `show()` does.",
       showModal:
-        "Opens it. It's always non-modal, so this is the same as `show()`.",
+        "Opens it as a modal, as a native dialog's `showModal()` does, with a backdrop and the rest of the page inert.",
     },
   },
   'slab-editable': {

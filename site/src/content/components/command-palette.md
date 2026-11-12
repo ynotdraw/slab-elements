@@ -41,7 +41,7 @@ const palette = document.querySelector('slab-command-palette');
 document.addEventListener('keydown', (event) => {
   if (event.key === 'k' && (event.metaKey || event.ctrlKey)) {
     event.preventDefault();
-    palette.show();
+    palette.showModal();
   }
 });
 

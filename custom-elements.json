@@ -356,7 +356,7 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Opens it. It's always modal, so this is the same as `showModal()`."
+              "description": "Opens it non-modally, as a native dialog's `show()` does. The rest of the page stays interactive."
             },
             {
               "kind": "method",
@@ -370,7 +370,7 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Opens it as a modal, as a native dialog's `showModal()` does."
+              "description": "Opens it as a modal, as a native dialog's `showModal()` does. Setting `open` does the same."
             }
           ],
           "attributes": [
@@ -4015,7 +4015,7 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Opens it. It's always modal, so this is the same as `showModal()`."
+              "description": "Opens it non-modally, as a native dialog's `show()` does. The rest of the page stays interactive."
             },
             {
               "kind": "method",
@@ -4029,7 +4029,7 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Opens it as a modal, as a native dialog's `showModal()` does."
+              "description": "Opens it as a modal, as a native dialog's `showModal()` does. Setting `open` does the same."
             }
           ],
           "attributes": [
@@ -8331,7 +8331,7 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Opens it. It's always non-modal, so this is the same as `show()`."
+              "description": "Opens it as a modal, as a native dialog's `showModal()` does, with a backdrop and the rest of the page inert."
             }
           ],
           "superclass": {

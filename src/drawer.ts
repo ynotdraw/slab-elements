@@ -10,9 +10,11 @@ declare global {
 }
 
 /**
- * A non-modal dialog with no visual styles. It's Dialog, opened with `show()`
- * instead of `showModal()`, so the page behind it stays interactive: there's no
- * focus trap, no `::backdrop`, and nothing is made inert.
+ * A dialog with no visual styles for a side panel. It's Dialog, except that
+ * setting `open` opens it non-modally, as `show()` does, so the page behind it
+ * stays interactive: there's no focus trap, no `::backdrop`, and nothing is
+ * made inert. `showModal()` opens it as a modal, with a backdrop, the way it
+ * opens a `<dialog>`.
  *
  * Everything else is Dialog's: `open`, `returnValue`, `close(returnValue)`, a
  * slotted `<form method="dialog">`, the label, focus moving into it when it
@@ -53,15 +55,14 @@ declare global {
  * @param {string} [returnValue]
  *
  * @method show - Opens it non-modally, as a native dialog's `show()` does.
- * @method showModal - Opens it. It's always non-modal, so this is the same as `show()`.
+ * @method showModal - Opens it as a modal, as a native dialog's `showModal()` does, with a backdrop and the rest of the page inert.
  */
 @customElement('slab-drawer')
 export default class Drawer extends Dialog {
-  // `show()` rather than `showModal()`. The rest of the page stays interactive.
+  // Setting `open` opens it non-modally, so the rest of the page stays
+  // interactive. `showModal()` still opens it as a modal.
   /** @internal For Slab's own subclasses. Not public API. */
-  protected override showDialog(dialog: HTMLDialogElement): void {
-    dialog.show();
-  }
+  protected override readonly isModalByDefault: boolean = false;
 
   protected static override finalizeStyles(
     subclassStyles?: CSSResultGroup,

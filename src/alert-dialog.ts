@@ -19,7 +19,7 @@ declare global {
 }
 
 /**
- * A modal dialog with no visual styles that asks for a decision before
+ * A dialog with no visual styles that asks for a decision before
  * anything else can happen: "Delete this file?". It's Dialog, with a
  * `[role=alertdialog]` on its `<dialog>`, so screenreaders announce it as
  * urgent, and the description is read along with the label as it opens.
@@ -71,8 +71,8 @@ declare global {
  * @method requestClose - Asks it to close, as a native dialog's `requestClose()` does: "cancel" first, then a close that sets `returnValue` to the value given, unless "cancel" is canceled.
  * @param {string} [returnValue]
  *
- * @method show - Opens it. It's always modal, so this is the same as `showModal()`.
- * @method showModal - Opens it as a modal, as a native dialog's `showModal()` does.
+ * @method show - Opens it non-modally, as a native dialog's `show()` does. The rest of the page stays interactive.
+ * @method showModal - Opens it as a modal, as a native dialog's `showModal()` does. Setting `open` does the same.
  */
 @customElement('slab-alert-dialog')
 export default class AlertDialog extends Dialog {
@@ -150,10 +150,7 @@ export default class AlertDialog extends Dialog {
   protected override showDialog(dialog: HTMLDialogElement): void {
     dialog.setAttribute('role', 'alertdialog');
     dialog.setAttribute('aria-describedby', 'description');
-
-    // Modal even from `show()`. An alert dialog asks for a decision before
-    // anything else on the page can be used.
-    dialog.showModal();
+    super.showDialog(dialog);
   }
 
   // Before Dialog's `updated()` passes `closedby` to the `<dialog>`. Set in

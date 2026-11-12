@@ -29,7 +29,7 @@ test(
 );
 
 test(
-  'opens as a modal when `show()` is called',
+  'opens non-modally when `show()` is called',
   { tag: '@miscellaneous' },
   async ({ callMethod, render, page }) => {
     await render(
@@ -37,6 +37,26 @@ test(
     );
 
     await callMethod(page.locator('slab-alert-dialog'), 'show');
+
+    await expect(page.getByTestId('dialog')).toBeVisible();
+    await expect(page.locator('[data-test="dialog"]:modal')).toHaveCount(0);
+
+    await expect(page.getByTestId('dialog')).toHaveAttribute(
+      'role',
+      'alertdialog',
+    );
+  },
+);
+
+test(
+  'opens as a modal when `showModal()` is called',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`<slab-alert-dialog label="Label"></slab-alert-dialog>`,
+    );
+
+    await callMethod(page.locator('slab-alert-dialog'), 'showModal');
 
     await expect(page.locator('[data-test="dialog"]:modal')).toBeVisible();
   },

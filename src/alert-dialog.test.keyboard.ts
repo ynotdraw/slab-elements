@@ -16,7 +16,7 @@ test(
           </slab-alert-dialog>`,
     );
 
-    await callMethod(page.locator('slab-alert-dialog'), 'show');
+    await callMethod(page.locator('slab-alert-dialog'), 'showModal');
 
     await expect(page.getByTestId('cancel')).toBeFocused();
   },
@@ -40,7 +40,7 @@ test(
         element.setAttribute('autofocus', '');
       });
 
-    await callMethod(page.locator('slab-alert-dialog'), 'show');
+    await callMethod(page.locator('slab-alert-dialog'), 'showModal');
 
     await expect(page.getByRole('textbox')).toBeFocused();
   },

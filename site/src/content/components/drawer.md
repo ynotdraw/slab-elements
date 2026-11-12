@@ -1,9 +1,9 @@
 ---
 title: Drawer
 group: Overlays
-element: '<dialog> (non-modal)'
+element: '<dialog>'
 tags: [slab-drawer]
-summary: 'A non-modal dialog for a side panel. The page behind it stays usable.'
+summary: 'A dialog for a side panel. Non-modal by default, so the page behind it stays usable, or modal through `showModal()`.'
 example: |
   <button class="styled-button" type="button" data-open="drawer-example">Site details</button>
 
@@ -25,9 +25,16 @@ usage: |
   </slab-drawer>
 ---
 
+## Modal or not
+
+Setting `open`, or calling `show()`, opens it non-modally, and the page behind
+it stays usable. Calling `showModal()` opens it as a modal, the way it opens a
+`<dialog>`: there's a backdrop, focus stays inside, and the rest of the page is
+inert until it closes.
+
 ## Keyboard
 
-| Key    | What it does                                                                  |
-| ------ | ----------------------------------------------------------------------------- |
-| Escape | Closes the drawer, unless `closedby` is "none".                               |
-| Tab    | Moves focus on through the drawer and out to the page. There's no focus trap. |
+| Key    | What it does                                                                                       |
+| ------ | -------------------------------------------------------------------------------------------------- |
+| Escape | Closes the drawer, unless `closedby` is "none".                                                    |
+| Tab    | Moves focus on through the drawer and out to the page. When it's modal, focus stays in the drawer. |

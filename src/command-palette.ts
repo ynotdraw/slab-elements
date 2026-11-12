@@ -30,10 +30,11 @@ declare global {
 
 /**
  * A command palette with no visual styles: a Combobox's input and listbox in a
- * modal Dialog, to find a command by typing its name and run it.
+ * Dialog, to find a command by typing its name and run it.
  *
- * It's Dialog, so everything a Dialog does it does too: `open`, `show()`,
- * `close(returnValue)`, `closedby`, the label, a focus trap, Escape closing it,
+ * It's Dialog, so everything a Dialog does it does too: `open` and
+ * `showModal()` opening it as a modal, `show()` opening it non-modally,
+ * `close(returnValue)`, `closedby`, the label, a modal's focus trap, Escape closing it,
  * and "cancel" and "close" from the host. Focus goes back to where it was when
  * it closes, which the `<dialog>` does itself. Opening it from a shortcut such
  * as Ctrl+K is left to you, since which keys are free is the page's to know.
@@ -118,8 +119,8 @@ declare global {
  * @method requestClose - Asks it to close, as a native dialog's `requestClose()` does: "cancel" first, then a close that sets `returnValue` to the value given, unless "cancel" is canceled.
  * @param {string} [returnValue]
  *
- * @method show - Opens it. It's always modal, so this is the same as `showModal()`.
- * @method showModal - Opens it as a modal, as a native dialog's `showModal()` does.
+ * @method show - Opens it non-modally, as a native dialog's `show()` does. The rest of the page stays interactive.
+ * @method showModal - Opens it as a modal, as a native dialog's `showModal()` does. Setting `open` does the same.
  */
 @customElement('slab-command-palette')
 export default class CommandPalette extends Dialog {
@@ -263,12 +264,6 @@ export default class CommandPalette extends Dialog {
             </slot>`,
         )}
       </div>`;
-  }
-
-  // Modal even from `show()`. It's opened to do one thing, and the page waits.
-  /** @internal For Slab's own subclasses. Not public API. */
-  protected override showDialog(dialog: HTMLDialogElement): void {
-    dialog.showModal();
   }
 
   override updated() {
