@@ -5427,7 +5427,7 @@
                   "text": "void"
                 }
               },
-              "description": "Opens the calendar and focuses its tabbable day. Unlike the native\ninput's, it needs no user gesture.",
+              "description": "Opens the calendar and focuses its tabbable day. As a native input's, it\nthrows without a user gesture, or while it's disabled or read-only.",
               "inheritedFrom": {
                 "name": "DateField",
                 "module": "src/date-field.ts"
@@ -6982,7 +6982,7 @@
                   "text": "void"
                 }
               },
-              "description": "Opens the calendar and focuses its tabbable day."
+              "description": "Opens the calendar and focuses its tabbable day. As a native input's, it\nthrows without a user gesture, or while it's disabled or read-only."
             },
             {
               "kind": "method",

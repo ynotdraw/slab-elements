@@ -128,6 +128,23 @@ field.addEventListener('reveal-change', () => {
     coda: '`dialog.show()` for a modal becomes `dialog.showModal()`.',
   },
   {
+    id: 'show-picker',
+    heading: "Date Picker's and Date Range Picker's `showPicker()`",
+    text: '`showPicker()` now throws as a native input\'s does: a "NotAllowedError" when it isn\'t called from a user gesture, such as a click or a key press, and an "InvalidStateError" while it\'s disabled or read-only. It used to open the calendar from anywhere, and do nothing while disabled. Call it from an event handler, or set `open` to open the calendar from code.',
+    code: {
+      code: `// Before
+picker.showPicker();
+
+// After, from code
+picker.open = true;
+
+// After, from a click
+button.addEventListener('click', () => picker.showPicker());`,
+      label: 'app.js',
+      lang: 'js',
+    },
+  },
+  {
     id: 'subclasses',
     heading: 'Subclasses',
     text: "The protected hooks Slab's own styled subclasses override, such as Dialog's `renderContent()` and Date Field's `renderControl()`, and every element's `version`, are marked `@internal`. They're out of the published types, so a subclass that overrides a hook with `override` no longer type checks. They were never public API and can change in any release. Subclassing an element to set `styles` is public and keeps working.",
