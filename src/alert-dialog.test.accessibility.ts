@@ -7,6 +7,7 @@ test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
       html`<slab-alert-dialog
         description="It can't be recovered."
         label="Delete this file?"
+        modal
         open
       >
         <form method="dialog">
@@ -24,6 +25,7 @@ test('open=${true}', { tag: '@accessibility' }, async ({ render, page }) => {
       html`<slab-alert-dialog
         description="It can't be recovered."
         label="Delete this file?"
+        modal
         open
       >
         <form method="dialog">
@@ -67,7 +69,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-alert-dialog label="Delete this file?" open>
+        html`<slab-alert-dialog label="Delete this file?" modal open>
           <p slot="description">It can't be recovered.</p>
 
           <form method="dialog">
@@ -85,7 +87,7 @@ test(
 test('slot="label"', { tag: '@accessibility' }, async ({ render, page }) => {
   await render(
     () =>
-      html`<slab-alert-dialog description="It can't be recovered." open>
+      html`<slab-alert-dialog description="It can't be recovered." modal open>
         <h2 slot="label">Delete this file?</h2>
       </slab-alert-dialog>`,
   );
@@ -101,7 +103,7 @@ test('slot="label"', { tag: '@accessibility' }, async ({ render, page }) => {
 test('cancel-label', { tag: '@accessibility' }, async ({ render, page }) => {
   await render(
     () =>
-      html`<slab-alert-dialog cancel-label="Keep it" label="Label" open>
+      html`<slab-alert-dialog cancel-label="Keep it" label="Label" modal open>
       </slab-alert-dialog>`,
   );
 

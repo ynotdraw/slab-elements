@@ -5,7 +5,7 @@ element: '<dialog>'
 tags: [slab-dialog]
 summary: 'A dialog built on the native `<dialog>`, modal or not. A modal one keeps focus inside, closes on Escape, and makes the rest of the page inert — the platform does the heavy lifting.'
 example: |
-  <button class="styled-button styled-button--danger" type="button" data-open="dialog-example">
+  <button class="styled-button styled-button--danger" type="button" data-show-modal="dialog-example">
     Strip forms
   </button>
 
@@ -31,13 +31,13 @@ usage: |
   </slab-dialog>
 ---
 
-Open it by setting `open`. When it closes, `returnValue` tells you which
+Open it with `showModal()`. When it closes, `returnValue` tells you which
 button did it — same as a `<dialog>`.
 
 ## Modal or not
 
-Setting `open`, or calling `showModal()`, opens it as a modal. Calling `show()`
-opens it non-modally, the way `show()` opens a `<dialog>`: there's no backdrop,
+Calling `showModal()` opens it as a modal. Calling `show()`, or setting `open`,
+opens it non-modally, the way they open a `<dialog>`: there's no backdrop,
 focus can leave it, and the rest of the page stays usable while it's open.
 
 ```js
@@ -45,6 +45,15 @@ const dialog = document.querySelector('slab-dialog');
 
 dialog.showModal(); // The rest of the page goes inert.
 dialog.show(); // The rest of the page stays usable.
+```
+
+A `<dialog>` can't be opened as a modal without script, so Slab adds `modal`.
+With it, setting `open` opens it as `showModal()` does, which is what a
+framework that binds `open` needs. `show()` and `showModal()` still open it as
+they say.
+
+```html
+<slab-dialog label="Delete this file?" modal open>…</slab-dialog>
 ```
 
 As with a `<dialog>`, Escape only closes a non-modal one with `closedby`. Set

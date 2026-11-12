@@ -33,6 +33,7 @@ const meta: Meta = {
     closedby: '',
     'close(returnValue)': '',
     'hide-label': false,
+    modal: false,
     open: false,
     returnValue: '',
     'show()': '',
@@ -88,6 +89,15 @@ const meta: Meta = {
         },
       },
     },
+    modal: {
+      table: {
+        defaultValue: { summary: 'false' },
+        type: {
+          summary: 'boolean',
+          detail: '// Setting open opens it as a modal, as showModal() does.',
+        },
+      },
+    },
     open: {
       table: {
         defaultValue: { summary: 'false' },
@@ -112,7 +122,7 @@ const meta: Meta = {
       table: {
         type: {
           summary: 'method',
-          detail: '(): void // Opens it non-modally.',
+          detail: '(): void // Opens it non-modally, as setting open does.',
         },
       },
     },
@@ -121,7 +131,7 @@ const meta: Meta = {
       table: {
         type: {
           summary: 'method',
-          detail: '(): void // Opens it as a modal, as setting open does.',
+          detail: '(): void // Opens it as a modal.',
         },
       },
     },
@@ -158,7 +168,11 @@ const meta: Meta = {
     return html`<button
         @click=${(event: Event) => {
           if (event.target instanceof HTMLElement) {
-            event.target.nextElementSibling?.setAttribute('open', '');
+            const dialog = event.target.nextElementSibling;
+
+            if (dialog instanceof DialogComponent) {
+              dialog.showModal();
+            }
           }
         }}
       >
@@ -169,6 +183,7 @@ const meta: Meta = {
         closedby=${arguments_.closedby || nothing}
         label=${arguments_.label || nothing}
         ?hide-label=${arguments_['hide-label']}
+        ?modal=${arguments_.modal}
         ?open=${arguments_.open}
       >
         ${unsafeHTML(arguments_['slot="default"'])}

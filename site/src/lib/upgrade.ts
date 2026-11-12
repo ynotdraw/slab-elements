@@ -114,16 +114,51 @@ field.addEventListener('reveal-change', () => {
   },
   {
     id: 'dialog-show',
-    heading: "Dialog's `show()`",
-    text: "Dialog's `show()` now opens it non-modally, as a `<dialog>`'s does, and the new `showModal()` opens it as a modal. Setting `open` still opens it as a modal. Code that calls `show()` for a modal should call `showModal()` instead. Alert Dialog and Command Palette are always modal, and Drawer is always non-modal, so neither method changes them.",
+    heading: 'Opening Dialog, Alert Dialog and Command Palette',
+    text: "These now open the way a `<dialog>` does. `showModal()`, which is new, opens them as a modal. `show()` and setting `open` now open them non-modally: there's no backdrop, the rest of the page stays usable, and Escape only closes them with `closedby`. Where you set `open` for a modal, add `modal`, which makes `open` open it as a modal. That's also how a framework that binds `open` gets one. Where you called `show()` for a modal, call `showModal()`. Drawer opens non-modally as before, and takes `modal` and `showModal()` too.",
+    code: {
+      code: `<!-- Before -->
+<slab-dialog label="Delete this file?" open>…</slab-dialog>
+
+<!-- After -->
+<slab-dialog label="Delete this file?" modal open>…</slab-dialog>`,
+      label: 'index.html',
+      lang: 'html',
+    },
+    coda: '`dialog.show()` for a modal becomes `dialog.showModal()`.',
+  },
+  {
+    id: 'show-picker',
+    heading: "Date Picker's and Date Range Picker's `showPicker()`",
+    text: '`showPicker()` now throws as a native input\'s does: a "NotAllowedError" when it isn\'t called from a user gesture, such as a click or a key press, and an "InvalidStateError" while it\'s disabled or read-only. It used to open the calendar from anywhere, and do nothing while disabled. Call it from an event handler, or set `open` to open the calendar from code.',
     code: {
       code: `// Before
-dialog.show();
+picker.showPicker();
 
-// After
-dialog.showModal();`,
+// After, from code
+picker.open = true;
+
+// After, from a click
+button.addEventListener('click', () => picker.showPicker());`,
       label: 'app.js',
       lang: 'js',
+    },
+  },
+  {
+    id: 'indeterminate',
+    heading: "Checkbox's `indeterminate`",
+    text: "`indeterminate` is now a property only, with no attribute, as on a native checkbox, and a form's reset leaves it as it is, as it does natively. Set the property from script, or bind it as a property in a framework, such as `.indeterminate` in Lit.",
+    code: {
+      code: `<!-- Before -->
+<slab-checkbox label="Select all" indeterminate></slab-checkbox>
+
+<!-- After -->
+<slab-checkbox label="Select all"></slab-checkbox>
+<script type="module">
+  document.querySelector('slab-checkbox').indeterminate = true;
+</script>`,
+      label: 'index.html',
+      lang: 'html',
     },
   },
   {

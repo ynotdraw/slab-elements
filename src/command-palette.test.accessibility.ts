@@ -4,7 +4,7 @@ import { expect, test } from './playwright/test.js';
 test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
   await render(
     () =>
-      html`<slab-command-palette label="Label" placeholder="Search" open>
+      html`<slab-command-palette label="Label" placeholder="Search" modal open>
         <slab-option>One</slab-option>
         <slab-option disabled>Two</slab-option>
         <span slot="empty">No results</span>
@@ -21,7 +21,7 @@ test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
 test('open', { tag: '@accessibility' }, async ({ render, page }) => {
   await render(
     () =>
-      html`<slab-command-palette label="Label" open>
+      html`<slab-command-palette label="Label" modal open>
         <slab-option>One</slab-option>
         <slab-option disabled>Two</slab-option>
       </slab-command-palette>`,
@@ -54,7 +54,7 @@ test('closed', { tag: '@accessibility' }, async ({ render, page }) => {
 test('slot="label"', { tag: '@accessibility' }, async ({ render, page }) => {
   await render(
     () =>
-      html`<slab-command-palette open>
+      html`<slab-command-palette modal open>
         <h2 slot="label">Commands</h2>
         <slab-option>One</slab-option>
       </slab-command-palette>`,
@@ -71,7 +71,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
           <slab-option>Two</slab-option>
         </slab-command-palette>`,
@@ -95,7 +95,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
           <span slot="empty">No results</span>
         </slab-command-palette>`,

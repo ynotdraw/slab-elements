@@ -10,7 +10,7 @@ test(
       () =>
         html`<button>Outside</button>
 
-          <slab-command-palette label="Label" open>
+          <slab-command-palette label="Label" modal open>
             <slab-option>One</slab-option>
             <slab-option>Two</slab-option>
           </slab-command-palette>`,
@@ -31,7 +31,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>Apple</slab-option>
           <slab-option>Banana</slab-option>
           <slab-option>Grape</slab-option>
@@ -82,7 +82,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
           <slab-option disabled>Two</slab-option>
           <slab-option>Three</slab-option>
@@ -162,7 +162,7 @@ test(
     await render(
       () =>
         html`<form>
-          <slab-command-palette label="Label" open>
+          <slab-command-palette label="Label" modal open>
             <slab-option>One</slab-option>
           </slab-command-palette>
         </form>`,
@@ -188,7 +188,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
         </slab-command-palette>`,
     );
@@ -227,7 +227,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
         </slab-command-palette>`,
     );
@@ -255,7 +255,7 @@ test(
   async ({ callMethod, render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option value="one">One</slab-option>
           <slab-option value="two">Two</slab-option>
         </slab-command-palette>`,
@@ -269,7 +269,7 @@ test(
 
     await expect(host).toHaveJSProperty('returnValue', 'two');
 
-    await callMethod(host, 'show');
+    await callMethod(host, 'showModal');
 
     await expect(page.getByRole('combobox')).toBeFocused();
     await expect(page.getByRole('combobox')).toHaveValue('');
@@ -286,7 +286,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
         </slab-command-palette>`,
     );
@@ -310,7 +310,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>Apple</slab-option>
           <slab-option>Banana</slab-option>
           <slab-option>Grape</slab-option>
@@ -362,7 +362,7 @@ test(
 
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>Apple</slab-option>
           <span slot="empty">Nothing found</span>
         </slab-command-palette>`,
@@ -408,7 +408,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>Apple</slab-option>
         </slab-command-palette>`,
     );

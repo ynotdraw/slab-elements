@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
+import type DateRangePicker from './date-range-picker.js';
 
 test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
   await render(
@@ -148,9 +149,9 @@ test(
 );
 
 test(
-  'does not open its calendar while disabled or readonly',
+  'throws from `showPicker()` while disabled or readonly, as a native input does',
   { tag: '@miscellaneous' },
-  async ({ callMethod, render, page, setProperty }) => {
+  async ({ render, page, setProperty }) => {
     await render(
       () =>
         html`<slab-date-range-picker
@@ -161,15 +162,58 @@ test(
 
     const host = page.locator('slab-date-range-picker');
 
+    const errorName = () =>
+      host.evaluate<string | undefined, void, DateRangePicker>((element) => {
+        try {
+          element.showPicker();
+        } catch (error) {
+          return error instanceof DOMException ? error.name : undefined;
+        }
+
+        return;
+      });
+
     await expect(page.locator('[data-test="button"]')).toBeDisabled();
-    await callMethod(host, 'showPicker');
+    expect(await errorName()).toBe('InvalidStateError');
     await expect(page.locator('[data-test="popover"]')).toBeHidden();
 
     await setProperty(host, 'disabled', false);
     await setProperty(host, 'readonly', true);
 
     await expect(page.locator('[data-test="button"]')).toBeDisabled();
-    await callMethod(host, 'showPicker');
+    expect(await errorName()).toBe('InvalidStateError');
+    await expect(page.locator('[data-test="popover"]')).toBeHidden();
+  },
+);
+
+test(
+  'throws from `showPicker()` without a user gesture, as a native input does',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-date-range-picker label="Label"></slab-date-range-picker>`,
+    );
+
+    // Playwright's \`evaluate()\` counts as a user gesture in some browsers, so
+    // the page is told there's been none.
+    const errorName = await page
+      .locator('slab-date-range-picker')
+      .evaluate<string | undefined, void, DateRangePicker>((element) => {
+        Object.defineProperty(navigator, 'userActivation', {
+          value: { hasBeenActive: false, isActive: false },
+        });
+
+        try {
+          element.showPicker();
+        } catch (error) {
+          return error instanceof DOMException ? error.name : undefined;
+        }
+
+        return;
+      });
+
+    expect(errorName).toBe('NotAllowedError');
     await expect(page.locator('[data-test="popover"]')).toBeHidden();
   },
 );

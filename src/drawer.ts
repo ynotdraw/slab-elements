@@ -10,9 +10,11 @@ declare global {
 }
 
 /**
- * A non-modal dialog with no visual styles. It's Dialog, opened with `show()`
- * instead of `showModal()`, so the page behind it stays interactive: there's no
- * focus trap, no `::backdrop`, and nothing is made inert.
+ * A dialog with no visual styles for a side panel. It's Dialog, so setting
+ * `open` or calling `show()` opens it non-modally and the page behind it stays
+ * interactive: there's no focus trap, no `::backdrop`, and nothing is made
+ * inert. `showModal()` opens it as a modal, with a backdrop, the way it opens a
+ * `<dialog>`.
  *
  * Everything else is Dialog's: `open`, `returnValue`, `close(returnValue)`, a
  * slotted `<form method="dialog">`, the label, focus moving into it when it
@@ -30,7 +32,8 @@ declare global {
  * @attr {'any'|'closerequest'|'none'} [closedby] - Passed to the `<dialog>`. "any" closes it on a click outside it where the browser supports that. Browsers that don't ignore it.
  * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {string} [label] - Names it. It's the accessible name, and the visible label where there is one.
- * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
+ * @attr {boolean} [modal=false] - Opens it as a modal when `open` is set, as `showModal()` does, for a modal opened declaratively. Not on a native `<dialog>`, where `open` always opens a non-modal one. `show()` and `showModal()` open it as they say whatever it is, and a change while it's open waits for it to open again.
+ * @attr {boolean} [open=false] - Whether it's open. Setting it opens it non-modally, as `open` does on a `<dialog>`, unless `modal` is set.
  *
  * @slot {Element | string}
  * @slot {Element | string} [label] - Its heading, in place of `label`
@@ -53,16 +56,10 @@ declare global {
  * @param {string} [returnValue]
  *
  * @method show - Opens it non-modally, as a native dialog's `show()` does.
- * @method showModal - Opens it. It's always non-modal, so this is the same as `show()`.
+ * @method showModal - Opens it as a modal, as a native dialog's `showModal()` does, with a backdrop and the rest of the page inert.
  */
 @customElement('slab-drawer')
 export default class Drawer extends Dialog {
-  // `show()` rather than `showModal()`. The rest of the page stays interactive.
-  /** @internal For Slab's own subclasses. Not public API. */
-  protected override showDialog(dialog: HTMLDialogElement): void {
-    dialog.show();
-  }
-
   protected static override finalizeStyles(
     subclassStyles?: CSSResultGroup,
   ): CSSResultOrNative[] {

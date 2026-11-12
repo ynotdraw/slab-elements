@@ -14,6 +14,7 @@ import afterReflection from './library/after-reflection.js';
 import customElement from './library/custom-element.js';
 import StringsController, { langOf } from './library/strings.js';
 import styles from './date-picker.styles.js';
+import assertCanShowPicker from './library/assert-can-show-picker.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -131,7 +132,7 @@ declare global {
  * @param {ValidityStateFlags} [flags]
  * @param {string} [message]
  *
- * @method showPicker - Opens the calendar and focuses its tabbable day. Unlike the native input's, it needs no user gesture.
+ * @method showPicker - Opens the calendar and focuses its tabbable day. As a native input's, it throws without a user gesture, or while it's disabled or read-only.
  */
 @customElement('slab-date-picker')
 export default class DatePicker extends DateField {
@@ -229,19 +230,12 @@ export default class DatePicker extends DateField {
   }
 
   /**
-   * Opens the calendar and focuses its tabbable day. Unlike the native
-   * input's, it needs no user gesture.
+   * Opens the calendar and focuses its tabbable day. As a native input's, it
+   * throws without a user gesture, or while it's disabled or read-only.
    */
   override showPicker(): void {
-    const popover = this.#popoverElementRef.value;
-
-    if (
-      popover &&
-      !this.#isButtonDisabled &&
-      !popover.matches(':popover-open')
-    ) {
-      popover.showPopover({ source: this.#buttonElementRef.value });
-    }
+    assertCanShowPicker({ isMutable: !this.#isButtonDisabled });
+    this.#showPicker();
   }
 
   override updated(changes: PropertyValues) {
@@ -269,7 +263,7 @@ export default class DatePicker extends DateField {
     // before then is acted on here.
     if (changes.has('open')) {
       if (this.open) {
-        this.showPicker();
+        this.#showPicker();
       } else {
         this.hidePicker();
       }
@@ -286,7 +280,6 @@ export default class DatePicker extends DateField {
     }
   }
 
-  // Functional styles go in here rather than in `styles`, so a subclass that
   // sets its own `styles` keeps them.
   protected static override finalizeStyles(
     subclassStyles?: CSSResultGroup,
@@ -294,13 +287,14 @@ export default class DatePicker extends DateField {
     return super.finalizeStyles([styles, subclassStyles ?? []]);
   }
 
-  // Date Field's own is private, and the button is disabled along with the
   // input.
   @state()
   private isDisabledByForm = false;
 
+  // Date Field's own is private, and the button is disabled along with the
   #buttonElementRef = createRef<HTMLButtonElement>();
 
+  // Functional styles go in here rather than in `styles`, so a subclass that
   #calendarElementRef = createRef<Calendar>();
 
   #popoverElementRef = createRef<HTMLDivElement>();
@@ -331,19 +325,14 @@ export default class DatePicker extends DateField {
     this.hidePicker();
   };
 
-  // Alt+ArrowDown is what opens the picker of a native date input and of a
   // combobox, so it opens this one, and not the browser's.
   #onControlKeydown = (event: KeyboardEvent) => {
     if (event.altKey && event.key === 'ArrowDown') {
       event.preventDefault();
-      this.showPicker();
+      this.#showPicker();
     }
   };
 
-  // The platform gives focus back to the button when the popover closes with
-  // focus inside it. But "inside" means inside the popover's own tree, and the
-  // focused day is in the Calendar's shadow root, so it never counts. This
-  // does what the platform would, before the popover closes and takes focus
   // with it.
   #onPopoverBeforeToggle = (event: ToggleEvent) => {
     // Chromium lets the popover's own "beforetoggle" out of the shadow root,
@@ -373,6 +362,7 @@ export default class DatePicker extends DateField {
     }
   };
 
+  // does what the platform would, before the popover closes and takes focus
   #onPopoverToggle = async (event: ToggleEvent) => {
     // A popover's "toggle" doesn't leave the shadow root in every browser, so
     // it's dispatched again from the host.
@@ -396,4 +386,24 @@ export default class DatePicker extends DateField {
       this.#calendarElementRef.value?.focus();
     }
   };
+
+  // Without `showPicker()`'s checks, for `open` and the keyboard. Alt+ArrowDown
+  // is a user gesture, but `open` needn't be set from one.
+  #showPicker(): void {
+    const popover = this.#popoverElementRef.value;
+
+    if (
+      popover &&
+      !this.#isButtonDisabled &&
+      !popover.matches(':popover-open')
+    ) {
+      popover.showPopover({ source: this.#buttonElementRef.value });
+    }
+  }
+
+  // Alt+ArrowDown is what opens the picker of a native date input and of a
+
+  // The platform gives focus back to the button when the popover closes with
+  // focus inside it. But "inside" means inside the popover's own tree, and the
+  // focused day is in the Calendar's shadow root, so it never counts. This
 }

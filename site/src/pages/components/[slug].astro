@@ -34,7 +34,7 @@ const styledTag = tag!.replace('slab-', 'slab-styled-');
 const asItShips = example
   .replaceAll('slab-styled-', 'slab-')
   .replaceAll(
-    /\b(id|data-open|data-show|data-announce)="([^"]+)"/g,
+    /\b(id|data-open|data-show|data-show-modal|data-announce)="([^"]+)"/g,
     '$1="$2-as-it-ships"',
   );
 const files = styledFiles(tags);

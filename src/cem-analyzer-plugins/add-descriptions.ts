@@ -90,7 +90,8 @@ const shared: Record<Kind, Descriptions> = {
     setValidity:
       'Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.',
     show: 'Opens it.',
-    toggle: "Opens it when it's closed, and closes it when it's open.",
+    toggle:
+      "Opens it when it's closed, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it and `false` only closes it. Returns whether it's open.",
     validity: "Its `ValidityState`, as a native control's.",
     willValidate:
       "Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.",
@@ -112,13 +113,6 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     events: {
       dismiss:
         'When its dismiss button is pressed. Cancel it to keep the alert.',
-    },
-  },
-  'slab-alert-dialog': {
-    members: {
-      show: "Opens it. It's always modal, so this is the same as `showModal()`.",
-      showModal:
-        "Opens it as a modal, as a native dialog's `showModal()` does.",
     },
   },
   'slab-breadcrumb': {
@@ -176,12 +170,7 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
       empty:
         'While no command matches what the user typed, for a "no results" message of your own.',
     },
-    members: {
-      options: 'Its Options, in order.',
-      show: "Opens it. It's always modal, so this is the same as `showModal()`.",
-      showModal:
-        "Opens it as a modal, as a native dialog's `showModal()` does.",
-    },
+    members: { options: 'Its Options, in order.' },
   },
   'slab-context-menu': {
     members: { items: 'Its Menu Items, in order.' },
@@ -223,11 +212,14 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     members: {
       close:
         "Closes it, setting `returnValue` to the value given, as a native dialog's `close()` does.",
+      modal:
+        'Makes setting `open` open it as a modal, as `showModal()` does. A native `<dialog>` has no such attribute: its `open` is always non-modal.',
+      open: "Whether it's open. Setting it opens it non-modally, as `open` does on a `<dialog>`, unless `modal` is set.",
       requestClose:
         'Asks it to close, as a native dialog\'s `requestClose()` does: "cancel" first, then a close that sets `returnValue` to the value given, unless "cancel" is canceled.',
-      show: "Opens it non-modally, as a native dialog's `show()` does. The rest of the page stays interactive.",
+      show: "Opens it non-modally, as a native dialog's `show()` does, whether or not `modal` is set. The rest of the page stays interactive.",
       showModal:
-        "Opens it as a modal, as a native dialog's `showModal()` does. Setting `open` does the same.",
+        "Opens it as a modal, as a native dialog's `showModal()` does, whether or not `modal` is set.",
     },
     slots: { label: 'Its heading, in place of `label`' },
   },
@@ -240,7 +232,7 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     members: {
       show: "Opens it non-modally, as a native dialog's `show()` does.",
       showModal:
-        "Opens it. It's always non-modal, so this is the same as `show()`.",
+        "Opens it as a modal, as a native dialog's `showModal()` does, with a backdrop and the rest of the page inert.",
     },
   },
   'slab-editable': {

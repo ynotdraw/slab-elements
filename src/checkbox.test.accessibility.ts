@@ -65,7 +65,11 @@ test('hide-label', { tag: '@accessibility' }, async ({ render, page }) => {
 
 test('indeterminate', { tag: '@accessibility' }, async ({ render, page }) => {
   await render(
-    () => html`<slab-checkbox label="Label" indeterminate></slab-checkbox>`,
+    () =>
+      html`<slab-checkbox
+        label="Label"
+        .indeterminate=${true}
+      ></slab-checkbox>`,
   );
 
   await expect(page.locator('slab-checkbox')).toMatchAriaSnapshot(`

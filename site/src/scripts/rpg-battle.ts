@@ -1199,7 +1199,7 @@ async function start(root: HTMLElement) {
     resultText.textContent = won
       ? `The Tidewarden sinks beneath the marsh, and Saltmarsh Crossing is safe. You earned ${earned} coin.`
       : 'The party has fallen. The marsh keeps its secrets, for now.';
-    result.open = true;
+    result.showModal();
   };
 
   const newGame = () => {
@@ -1280,7 +1280,7 @@ async function start(root: HTMLElement) {
       }
 
       if (target.closest('[data-rpg-pause]')) {
-        pauseMenu.open = true;
+        pauseMenu.showModal();
 
         return;
       }

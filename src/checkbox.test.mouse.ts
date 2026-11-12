@@ -130,7 +130,11 @@ test(
   { tag: '@mouse' },
   async ({ render, page }) => {
     await render(
-      () => html`<slab-checkbox label="Label" indeterminate></slab-checkbox>`,
+      () =>
+        html`<slab-checkbox
+          label="Label"
+          .indeterminate=${true}
+        ></slab-checkbox>`,
     );
 
     const host = page.locator('slab-checkbox');
@@ -150,7 +154,7 @@ test(
         html`<slab-checkbox
           label="Label"
           checked
-          indeterminate
+          .indeterminate=${true}
         ></slab-checkbox>`,
     );
 

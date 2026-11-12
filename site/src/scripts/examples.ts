@@ -36,6 +36,15 @@ const loaders = new Map([
 // module. Each page brings its own elements, and those already registered
 // are defined as soon as they're on it.
 document.addEventListener('astro:page-load', () => {
+  // `indeterminate` is a property only, as on a native checkbox, so markup
+  // can't set it. The examples' Checkboxes ask for it with
+  // `data-indeterminate`.
+  for (const checkbox of document.querySelectorAll<
+    HTMLElement & { indeterminate: boolean }
+  >('[data-indeterminate]')) {
+    checkbox.indeterminate = true;
+  }
+
   const tags = new Set(
     [...document.querySelectorAll(':not(:defined)')].map(
       (element) => element.localName,
@@ -51,7 +60,7 @@ document.addEventListener('click', (event) => {
   const button =
     event.target instanceof Element
       ? event.target.closest<HTMLElement>(
-          '[data-open], [data-show], [data-announce]',
+          '[data-open], [data-show], [data-show-modal], [data-announce]',
         )
       : null;
 
@@ -59,10 +68,17 @@ document.addEventListener('click', (event) => {
     return;
   }
 
-  const { announce, message, open, show } = button.dataset;
+  const { announce, message, open, show, showModal } = button.dataset;
 
   if (open) {
     document.getElementById(open)?.setAttribute('open', '');
+  }
+
+  if (showModal) {
+    const dialog = document.getElementById(showModal) as
+      (HTMLElement & { showModal(): void }) | null;
+
+    dialog?.showModal();
   }
 
   if (show) {

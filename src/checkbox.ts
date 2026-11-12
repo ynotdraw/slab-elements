@@ -42,7 +42,6 @@ declare global {
  * @attr {boolean} [checked=false] - Like a native checkbox, the attribute is the default state and the property is the current one, so the attribute doesn't change as the checkbox is checked. Style `:state(checked)` rather than `[checked]`.
  * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
- * @attr {boolean} [indeterminate=false] - Shows it as neither checked nor unchecked, as a native checkbox's `indeterminate` does. Checking or unchecking it clears it.
  * @attr {string} [name=''] - The name its value is submitted under, as a native control's `name`.
  * @attr {boolean} [required=false] - Makes it invalid while it has no value, as `required` does a native control.
  * @attr {string} [value=''] - An empty value is submitted as nothing, and counts for nothing in a Checkbox Group's `value`.
@@ -67,6 +66,8 @@ declare global {
  *
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
+ *
+ * @prop {boolean} indeterminate - Shows it as neither checked nor unchecked, as a native checkbox's `indeterminate` does. Checking or unchecking it clears it.
  *
  * @readonly
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
@@ -127,7 +128,8 @@ export default class Checkbox extends LitElement {
   @property({ attribute: 'hide-label', reflect: true, type: Boolean })
   hideLabel = false;
 
-  @property({ type: Boolean })
+  // A property only, with no attribute, as on a native checkbox.
+  @property({ attribute: false })
   indeterminate = false;
 
   @property({ reflect: true, useDefault: true })
@@ -215,8 +217,8 @@ export default class Checkbox extends LitElement {
   }
 
   formResetCallback(): void {
+    // `indeterminate` is left as it is, as a native checkbox's is.
     this.checked = this.hasAttribute('checked');
-    this.indeterminate = this.hasAttribute('indeterminate');
   }
 
   formStateRestoreCallback(state: string | File | FormData | null): void {

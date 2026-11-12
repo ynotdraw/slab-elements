@@ -17,7 +17,7 @@ test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
 });
 
 test(
-  'is closed by default and opens modally when `show()` is called',
+  'is closed by default and opens modally when `showModal()` is called',
   { tag: '@miscellaneous' },
   async ({ callMethod, render, page }) => {
     await render(
@@ -31,10 +31,28 @@ test(
 
     await expect(page.getByTestId('dialog')).toBeHidden();
 
-    await callMethod(host, 'show');
+    await callMethod(host, 'showModal');
 
     await expect(page.locator('[data-test="dialog"]:modal')).toBeVisible();
     await expect(host).toHaveAttribute('open');
+  },
+);
+
+test(
+  'opens non-modally when `show()` is called',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<slab-command-palette label="Label">
+          <slab-option>One</slab-option>
+        </slab-command-palette>`,
+    );
+
+    await callMethod(page.locator('slab-command-palette'), 'show');
+
+    await expect(page.getByTestId('dialog')).toBeVisible();
+    await expect(page.locator('[data-test="dialog"]:modal')).toHaveCount(0);
   },
 );
 
@@ -44,7 +62,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
         </slab-command-palette>`,
     );
@@ -85,7 +103,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
           <slab-option>Two</slab-option>
         </slab-command-palette>`,
@@ -107,7 +125,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option value="new-file">New file</slab-option>
           <slab-option value="settings">Settings</slab-option>
         </slab-command-palette>`,
@@ -144,7 +162,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
           <slab-option>Two</slab-option>
           <slab-option>Three</slab-option>
@@ -174,7 +192,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
         </slab-command-palette>`,
     );
@@ -202,7 +220,11 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open></slab-command-palette>`,
+        html`<slab-command-palette
+          label="Label"
+          modal
+          open
+        ></slab-command-palette>`,
     );
 
     const host = page.locator('slab-command-palette');
@@ -274,7 +296,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
           <span slot="close">Cancel</span>
         </slab-command-palette>`,
@@ -290,7 +312,7 @@ test(
   async ({ render, page, setProperty }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
         </slab-command-palette>`,
     );

@@ -3,9 +3,9 @@ title: Command Palette
 group: Overlays
 element: '<dialog> + <input role=combobox>'
 tags: [slab-command-palette]
-summary: "A modal search for commands: type to filter a list of Options, then Enter runs the best match. It's a Combobox in a Dialog."
+summary: "A search for commands, opened as a modal with `showModal()`: type to filter a list of Options, then Enter runs the best match. It's a Combobox in a Dialog."
 example: |
-  <button class="styled-button" type="button" data-open="command-palette-example">
+  <button class="styled-button" type="button" data-show-modal="command-palette-example">
     Search commands
   </button>
 
@@ -33,7 +33,7 @@ usage: |
   </slab-command-palette>
 ---
 
-It's [Dialog](../dialog/) with a [Combobox](../combobox/)'s input and listbox inside, and its Options are the same ones Combobox uses. Open it by setting `open` or calling `show()`. Choosing an Option closes it with that Option's `value` as `returnValue`, so a "close" handler knows what to run. Its Close button, Escape, or a click outside with `closedby="any"` closes it with an empty `returnValue`. The Close button is there because not every browser supports `closedby` (iOS Safari doesn't), so on a phone it's the only way out short of choosing something. Slot your own text or icon into `close` to change what it says.
+It's [Dialog](../dialog/) with a [Combobox](../combobox/)'s input and listbox inside, and its Options are the same ones Combobox uses. Open it as a modal with `showModal()`, or non-modally by setting `open` or calling `show()`. Choosing an Option closes it with that Option's `value` as `returnValue`, so a "close" handler knows what to run. Its Close button, Escape, or a click outside with `closedby="any"` closes it with an empty `returnValue`. The Close button is there because not every browser supports `closedby` (iOS Safari doesn't), so on a phone it's the only way out short of choosing something. Slot your own text or icon into `close` to change what it says.
 
 ```js
 const palette = document.querySelector('slab-command-palette');
@@ -41,7 +41,7 @@ const palette = document.querySelector('slab-command-palette');
 document.addEventListener('keydown', (event) => {
   if (event.key === 'k' && (event.metaKey || event.ctrlKey)) {
     event.preventDefault();
-    palette.show();
+    palette.showModal();
   }
 });
 

@@ -31,7 +31,7 @@ test(
           <slab-checkbox
             label="Label"
             checked
-            indeterminate
+            .indeterminate=${true}
             required
           ></slab-checkbox>
         </form>
@@ -43,10 +43,11 @@ test(
     const checkbox = page.getByRole('checkbox');
 
     await setProperty(host, 'checked', false);
-    await setProperty(host, 'indeterminate', false);
     await callMethod(form, 'reset');
 
     await expect(host).toHaveJSProperty('checked', true);
+
+    // Left as it is, as a native checkbox's is.
     await expect(host).toHaveJSProperty('indeterminate', true);
     await expect(host).toHaveJSProperty('validity.valid', true);
     await expect(host).toHaveJSProperty('validity.valueMissing', false);
@@ -89,7 +90,7 @@ test(
             name="name"
             value="value"
             checked
-            indeterminate
+            .indeterminate=${true}
           ></slab-checkbox>
         </form>
       `,
@@ -134,7 +135,7 @@ test(
             label="Label"
             name="name"
             value="value"
-            indeterminate
+            .indeterminate=${true}
           ></slab-checkbox>
         </form>
       `,
@@ -912,5 +913,21 @@ test(
       });
 
     expect(before).toBe(after);
+  },
+);
+
+test(
+  'has no `indeterminate` attribute, as a native checkbox has none',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(() => html`<slab-checkbox label="Label"></slab-checkbox>`);
+
+    const host = page.locator('slab-checkbox');
+
+    await host.evaluate((element) => {
+      element.setAttribute('indeterminate', '');
+    });
+
+    await expect(host).toHaveJSProperty('indeterminate', false);
   },
 );

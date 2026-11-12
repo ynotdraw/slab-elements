@@ -66,7 +66,10 @@ const focusableSelector =
  *
  * @method hide - Closes it.
  * @method show - Opens it.
- * @method toggle - Opens it when it's closed, and closes it when it's open.
+ *
+ * @method toggle - Opens it when it's closed, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it and `false` only closes it. Returns whether it's open.
+ * @param {boolean} [force]
+ * @returns boolean
  */
 @customElement('slab-navigation-menu-item')
 export default class NavigationMenuItem extends LitElement {
@@ -168,8 +171,16 @@ export default class NavigationMenuItem extends LitElement {
     this.open = true;
   }
 
-  toggle(): void {
-    this.open = !this.open;
+  // As a native popover's `togglePopover(force)`: `true` only opens it,
+  // `false` only closes it, and it returns whether it's open.
+  toggle(force?: boolean): boolean {
+    if (force ?? !this.open) {
+      this.show();
+    } else {
+      this.hide();
+    }
+
+    return this.open;
   }
 
   override updated(changes: PropertyValues<this>) {

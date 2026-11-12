@@ -1,11 +1,11 @@
 ---
 title: Alert Dialog
 group: Overlays
-element: '<dialog role=alertdialog> (modal)'
+element: '<dialog role=alertdialog>'
 tags: [slab-alert-dialog]
 summary: "A modal dialog that asks before something can't be undone. Focus starts on Cancel, and a click outside doesn't close it."
 example: |
-  <button class="styled-button styled-button--danger" type="button" data-open="alert-dialog-example">
+  <button class="styled-button styled-button--danger" type="button" data-show-modal="alert-dialog-example">
     Cancel the pour
   </button>
 

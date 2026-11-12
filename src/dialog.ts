@@ -22,12 +22,15 @@ declare global {
  * A dialog with no visual styles, around a native `<dialog>`, opened modally or
  * not the way one is.
  *
- * `showModal()`, or setting `open`, opens it as a modal: it traps focus, closes
- * on Escape, has a `::backdrop`, and makes the rest of the page inert.
- * `show()` opens it non-modally, as a `<dialog>`'s `show()` does: the rest of
- * the page stays interactive, there's no backdrop, and, as natively, Escape
- * only closes it with `closedby`. Calling either while it's open leaves it as
- * it is. Match a modal one with `::part(dialog):modal`.
+ * `showModal()` opens it as a modal: it traps focus, closes on Escape, has a
+ * `::backdrop`, and makes the rest of the page inert. `show()`, or setting
+ * `open`, opens it non-modally, as they open a `<dialog>`: the rest of the page
+ * stays interactive, there's no backdrop, and, as natively, Escape only closes
+ * it with `closedby`. Calling either method while it's open leaves it as it
+ * is. Match a modal one with `::part(dialog):modal`.
+ *
+ * `modal` is Slab's, for a modal opened declaratively, as a framework binding
+ * `open` does: with it, setting `open` opens it as `showModal()` does.
  *
  * `open` reflects, and it stays true to the dialog: when the dialog closes
  * itself, on Escape or through a `<form method="dialog">`, `open` goes false
@@ -50,7 +53,8 @@ declare global {
  * @attr {'any'|'closerequest'|'none'} [closedby] - Passed to the `<dialog>`. "any" closes it on a click outside it where the browser supports that. Browsers that don't ignore it.
  * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {string} [label] - Names it. It's the accessible name, and the visible label where there is one.
- * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
+ * @attr {boolean} [modal=false] - Opens it as a modal when `open` is set, as `showModal()` does, for a modal opened declaratively. Not on a native `<dialog>`, where `open` always opens a non-modal one. `show()` and `showModal()` open it as they say whatever it is, and a change while it's open waits for it to open again.
+ * @attr {boolean} [open=false] - Whether it's open. Setting it opens it non-modally, as `open` does on a `<dialog>`, unless `modal` is set.
  *
  * @slot {Element | string}
  * @slot {Element | string} [label] - Its heading, in place of `label`
@@ -72,8 +76,8 @@ declare global {
  * @method requestClose - Asks it to close, as a native dialog's `requestClose()` does: "cancel" first, then a close that sets `returnValue` to the value given, unless "cancel" is canceled.
  * @param {string} [returnValue]
  *
- * @method show - Opens it non-modally, as a native dialog's `show()` does. The rest of the page stays interactive.
- * @method showModal - Opens it as a modal, as a native dialog's `showModal()` does. Setting `open` does the same.
+ * @method show - Opens it non-modally, as a native dialog's `show()` does, whether or not `modal` is set. The rest of the page stays interactive.
+ * @method showModal - Opens it as a modal, as a native dialog's `showModal()` does, whether or not `modal` is set.
  */
 @customElement('slab-dialog')
 export default class Dialog extends LitElement {
@@ -89,6 +93,15 @@ export default class Dialog extends LitElement {
 
   @property({ reflect: true })
   label?: string;
+
+  /**
+   * Opens it as a modal when `open` is set, as `showModal()` does, for a modal
+   * opened declaratively. Not on a native `<dialog>`, where `open` always opens
+   * a non-modal one. `show()` and `showModal()` open it as they say whatever
+   * it is, and a change while it's open waits for it to open again.
+   */
+  @property({ reflect: true, type: Boolean })
+  modal = false;
 
   @property({ reflect: true, type: Boolean })
   open = false;
@@ -220,12 +233,12 @@ export default class Dialog extends LitElement {
     this.#open({ isModal: false });
   }
 
-  // How the `<dialog>` is opened: modally unless `show()` opened it. Drawer
-  // overrides it to always open non-modally, and Alert Dialog and Command
-  // Palette to always open modally.
+  // How the `<dialog>` is opened: as `show()` or `showModal()` asked, or, when
+  // `open` was set, as a modal only with `modal`. Alert Dialog overrides it to
+  // set its role.
   /** @internal For Slab's own subclasses. Not public API. */
   protected showDialog(dialog: HTMLDialogElement): void {
-    if (this.#isModal) {
+    if (this.#isModal ?? this.modal) {
       dialog.showModal();
     } else {
       dialog.show();
@@ -300,9 +313,9 @@ export default class Dialog extends LitElement {
 
   #internals: ElementInternals;
 
-  // Whether the next open is modal. Setting `open` opens it modally, so it's
-  // only false between `show()` and the dialog closing.
-  #isModal = true;
+  // Whether `show()` or `showModal()` opened it, until it closes. Unset when
+  // `open` opened it, which goes by `modal`.
+  #isModal: boolean | undefined;
 
   // For a `returnValue` set before the `<dialog>` is rendered.
   #returnValue = '';
@@ -359,7 +372,7 @@ export default class Dialog extends LitElement {
   }
 
   #onDialogClose() {
-    this.#isModal = true;
+    this.#isModal = undefined;
     this.open = false;
     this.dispatchEvent(new Event('close'));
   }

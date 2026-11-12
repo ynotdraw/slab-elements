@@ -7,7 +7,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-alert-dialog label="Label" open>
+        html`<slab-alert-dialog label="Label" modal open>
           <form method="dialog">
             <button value="delete">Delete</button>
           </form>
@@ -36,7 +36,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-alert-dialog label="Label" open>
+        html`<slab-alert-dialog label="Label" modal open>
           <form method="dialog">
             <button value="delete">Delete</button>
           </form>
@@ -57,7 +57,8 @@ test(
   { tag: '@mouse' },
   async ({ render, page }) => {
     await render(
-      () => html`<slab-alert-dialog label="Label" open></slab-alert-dialog>`,
+      () =>
+        html`<slab-alert-dialog label="Label" modal open></slab-alert-dialog>`,
     );
 
     await page.mouse.click(1, 1);
@@ -77,7 +78,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-alert-dialog closedby="any" label="Label" open>
+        html`<slab-alert-dialog closedby="any" label="Label" modal open>
         </slab-alert-dialog>`,
     );
 
