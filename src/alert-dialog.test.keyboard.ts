@@ -52,7 +52,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-alert-dialog label="Label" open>
+        html`<slab-alert-dialog label="Label" modal open>
           <form method="dialog">
             <button value="delete">Delete</button>
           </form>
@@ -73,7 +73,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-alert-dialog label="Label" open>
+        html`<slab-alert-dialog label="Label" modal open>
           <form method="dialog">
             <button value="delete">Delete</button>
           </form>
@@ -98,7 +98,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-alert-dialog label="Label" open>
+        html`<slab-alert-dialog label="Label" modal open>
           <form method="dialog">
             <button value="delete">Delete</button>
           </form>
@@ -117,7 +117,8 @@ test(
 
 test('closes on Escape', { tag: '@keyboard' }, async ({ render, page }) => {
   await render(
-    () => html`<slab-alert-dialog label="Label" open></slab-alert-dialog>`,
+    () =>
+      html`<slab-alert-dialog label="Label" modal open></slab-alert-dialog>`,
   );
 
   const host = page.locator('slab-alert-dialog');
@@ -138,7 +139,8 @@ test(
   { tag: '@keyboard' },
   async ({ render, page }) => {
     await render(
-      () => html`<slab-alert-dialog label="Label" open></slab-alert-dialog>`,
+      () =>
+        html`<slab-alert-dialog label="Label" modal open></slab-alert-dialog>`,
     );
 
     const host = page.locator('slab-alert-dialog');

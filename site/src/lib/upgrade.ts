@@ -114,17 +114,18 @@ field.addEventListener('reveal-change', () => {
   },
   {
     id: 'dialog-show',
-    heading: '`show()` on Dialog, Alert Dialog and Command Palette',
-    text: "`show()` now opens them non-modally, as a `<dialog>`'s does, and the new `showModal()` opens them as a modal. Setting `open` still opens them as a modal. Code that calls `show()` for a modal should call `showModal()` instead. Drawer's `open` and `show()` still open it non-modally, and its `showModal()` opens it as a modal, with a backdrop.",
+    heading: 'Opening Dialog, Alert Dialog and Command Palette',
+    text: "These now open the way a `<dialog>` does. `showModal()`, which is new, opens them as a modal. `show()` and setting `open` now open them non-modally: there's no backdrop, the rest of the page stays usable, and Escape only closes them with `closedby`. Where you set `open` for a modal, add `modal`, which makes `open` open it as a modal. That's also how a framework that binds `open` gets one. Where you called `show()` for a modal, call `showModal()`. Drawer opens non-modally as before, and takes `modal` and `showModal()` too.",
     code: {
-      code: `// Before
-dialog.show();
+      code: `<!-- Before -->
+<slab-dialog label="Delete this file?" open>…</slab-dialog>
 
-// After
-dialog.showModal();`,
-      label: 'app.js',
-      lang: 'js',
+<!-- After -->
+<slab-dialog label="Delete this file?" modal open>…</slab-dialog>`,
+      label: 'index.html',
+      lang: 'html',
     },
+    coda: '`dialog.show()` for a modal becomes `dialog.showModal()`.',
   },
   {
     id: 'subclasses',

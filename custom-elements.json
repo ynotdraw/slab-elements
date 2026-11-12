@@ -272,6 +272,21 @@
             },
             {
               "kind": "field",
+              "name": "modal",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Opens it as a modal when `open` is set, as `showModal()` does, for a modal\nopened declaratively. Not on a native `<dialog>`, where `open` always opens\na non-modal one. `show()` and `showModal()` open it as they say whatever\nit is, and a change while it's open waits for it to open again.",
+              "attribute": "modal",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "open",
               "type": {
                 "text": "boolean"
@@ -283,7 +298,7 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Whether it's open. Set it to open or close it."
+              "description": "Whether it's open. Setting it opens it non-modally, as `open` does on a `<dialog>`, unless `modal` is set."
             },
             {
               "kind": "field",
@@ -356,7 +371,7 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Opens it non-modally, as a native dialog's `show()` does. The rest of the page stays interactive."
+              "description": "Opens it non-modally, as a native dialog's `show()` does, whether or not `modal` is set. The rest of the page stays interactive."
             },
             {
               "kind": "method",
@@ -370,7 +385,7 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Opens it as a modal, as a native dialog's `showModal()` does. Setting `open` does the same."
+              "description": "Opens it as a modal, as a native dialog's `showModal()` does, whether or not `modal` is set."
             }
           ],
           "attributes": [
@@ -428,6 +443,19 @@
               "description": "Names it. It's the accessible name, and the visible label where there is one."
             },
             {
+              "name": "modal",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Opens it as a modal when `open` is set, as `showModal()` does, for a modal\nopened declaratively. Not on a native `<dialog>`, where `open` always opens\na non-modal one. `show()` and `showModal()` open it as they say whatever\nit is, and a change while it's open waits for it to open again.",
+              "fieldName": "modal",
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
               "name": "open",
               "type": {
                 "text": "boolean"
@@ -438,7 +466,7 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Whether it's open. Set it to open or close it."
+              "description": "Whether it's open. Setting it opens it non-modally, as `open` does on a `<dialog>`, unless `modal` is set."
             }
           ],
           "superclass": {
@@ -3931,6 +3959,21 @@
             },
             {
               "kind": "field",
+              "name": "modal",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Opens it as a modal when `open` is set, as `showModal()` does, for a modal\nopened declaratively. Not on a native `<dialog>`, where `open` always opens\na non-modal one. `show()` and `showModal()` open it as they say whatever\nit is, and a change while it's open waits for it to open again.",
+              "attribute": "modal",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "open",
               "type": {
                 "text": "boolean"
@@ -3942,7 +3985,7 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Whether it's open. Set it to open or close it."
+              "description": "Whether it's open. Setting it opens it non-modally, as `open` does on a `<dialog>`, unless `modal` is set."
             },
             {
               "kind": "field",
@@ -4015,7 +4058,7 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Opens it non-modally, as a native dialog's `show()` does. The rest of the page stays interactive."
+              "description": "Opens it non-modally, as a native dialog's `show()` does, whether or not `modal` is set. The rest of the page stays interactive."
             },
             {
               "kind": "method",
@@ -4029,7 +4072,7 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Opens it as a modal, as a native dialog's `showModal()` does. Setting `open` does the same."
+              "description": "Opens it as a modal, as a native dialog's `showModal()` does, whether or not `modal` is set."
             }
           ],
           "attributes": [
@@ -4079,6 +4122,19 @@
               "description": "Names it. It's the accessible name, and the visible label where there is one."
             },
             {
+              "name": "modal",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Opens it as a modal when `open` is set, as `showModal()` does, for a modal\nopened declaratively. Not on a native `<dialog>`, where `open` always opens\na non-modal one. `show()` and `showModal()` open it as they say whatever\nit is, and a change while it's open waits for it to open again.",
+              "fieldName": "modal",
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
               "name": "open",
               "type": {
                 "text": "boolean"
@@ -4089,7 +4145,7 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Whether it's open. Set it to open or close it."
+              "description": "Whether it's open. Setting it opens it non-modally, as `open` does on a `<dialog>`, unless `modal` is set."
             }
           ],
           "cssStates": [
@@ -7740,6 +7796,17 @@
             },
             {
               "kind": "field",
+              "name": "modal",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Opens it as a modal when `open` is set, as `showModal()` does, for a modal\nopened declaratively. Not on a native `<dialog>`, where `open` always opens\na non-modal one. `show()` and `showModal()` open it as they say whatever\nit is, and a change while it's open waits for it to open again.",
+              "attribute": "modal",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "open",
               "type": {
                 "text": "boolean"
@@ -7747,7 +7814,7 @@
               "default": "false",
               "attribute": "open",
               "reflects": true,
-              "description": "Whether it's open. Set it to open or close it."
+              "description": "Whether it's open. Setting it opens it non-modally, as `open` does on a `<dialog>`, unless `modal` is set."
             },
             {
               "kind": "field",
@@ -7804,7 +7871,7 @@
                   "text": "void"
                 }
               },
-              "description": "Opens it non-modally, as a native dialog's `show()` does. The rest of the page stays interactive."
+              "description": "Opens it non-modally, as a native dialog's `show()` does, whether or not `modal` is set. The rest of the page stays interactive."
             },
             {
               "kind": "method",
@@ -7814,7 +7881,7 @@
                   "text": "void"
                 }
               },
-              "description": "Opens it as a modal, as a native dialog's `showModal()` does. Setting `open` does the same."
+              "description": "Opens it as a modal, as a native dialog's `showModal()` does, whether or not `modal` is set."
             },
             {
               "kind": "method",
@@ -7887,13 +7954,22 @@
               "description": "Names it. It's the accessible name, and the visible label where there is one."
             },
             {
+              "name": "modal",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Opens it as a modal when `open` is set, as `showModal()` does, for a modal\nopened declaratively. Not on a native `<dialog>`, where `open` always opens\na non-modal one. `show()` and `showModal()` open it as they say whatever\nit is, and a change while it's open waits for it to open again.",
+              "fieldName": "modal"
+            },
+            {
               "name": "open",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
               "fieldName": "open",
-              "description": "Whether it's open. Set it to open or close it."
+              "description": "Whether it's open. Setting it opens it non-modally, as `open` does on a `<dialog>`, unless `modal` is set."
             }
           ],
           "cssStates": [
@@ -8233,6 +8309,21 @@
             },
             {
               "kind": "field",
+              "name": "modal",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Opens it as a modal when `open` is set, as `showModal()` does, for a modal\nopened declaratively. Not on a native `<dialog>`, where `open` always opens\na non-modal one. `show()` and `showModal()` open it as they say whatever\nit is, and a change while it's open waits for it to open again.",
+              "attribute": "modal",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "open",
               "type": {
                 "text": "boolean"
@@ -8244,7 +8335,7 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Whether it's open. Set it to open or close it."
+              "description": "Whether it's open. Setting it opens it non-modally, as `open` does on a `<dialog>`, unless `modal` is set."
             },
             {
               "kind": "field",
@@ -8420,6 +8511,19 @@
               "description": "Names it. It's the accessible name, and the visible label where there is one."
             },
             {
+              "name": "modal",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Opens it as a modal when `open` is set, as `showModal()` does, for a modal\nopened declaratively. Not on a native `<dialog>`, where `open` always opens\na non-modal one. `show()` and `showModal()` open it as they say whatever\nit is, and a change while it's open waits for it to open again.",
+              "fieldName": "modal",
+              "inheritedFrom": {
+                "name": "Dialog",
+                "module": "src/dialog.ts"
+              }
+            },
+            {
               "name": "open",
               "type": {
                 "text": "boolean"
@@ -8430,7 +8534,7 @@
                 "name": "Dialog",
                 "module": "src/dialog.ts"
               },
-              "description": "Whether it's open. Set it to open or close it."
+              "description": "Whether it's open. Setting it opens it non-modally, as `open` does on a `<dialog>`, unless `modal` is set."
             }
           ],
           "events": [

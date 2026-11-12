@@ -62,7 +62,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
         </slab-command-palette>`,
     );
@@ -103,7 +103,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
           <slab-option>Two</slab-option>
         </slab-command-palette>`,
@@ -125,7 +125,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option value="new-file">New file</slab-option>
           <slab-option value="settings">Settings</slab-option>
         </slab-command-palette>`,
@@ -162,7 +162,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
           <slab-option>Two</slab-option>
           <slab-option>Three</slab-option>
@@ -192,7 +192,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
         </slab-command-palette>`,
     );
@@ -220,7 +220,11 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open></slab-command-palette>`,
+        html`<slab-command-palette
+          label="Label"
+          modal
+          open
+        ></slab-command-palette>`,
     );
 
     const host = page.locator('slab-command-palette');
@@ -292,7 +296,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
           <span slot="close">Cancel</span>
         </slab-command-palette>`,
@@ -308,7 +312,7 @@ test(
   async ({ render, page, setProperty }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
         </slab-command-palette>`,
     );

@@ -46,7 +46,8 @@ declare global {
  * @attr {string} [description] - What the dialog is asking, read with the label when it opens. Plain text. Slot into "description" for more.
  * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {string} [label] - Names it. It's the accessible name, and the visible label where there is one.
- * @attr {boolean} [open=false] - Whether it's open. Set it to open or close it.
+ * @attr {boolean} [modal=false] - Opens it as a modal when `open` is set, as `showModal()` does, for a modal opened declaratively. Not on a native `<dialog>`, where `open` always opens a non-modal one. `show()` and `showModal()` open it as they say whatever it is, and a change while it's open waits for it to open again.
+ * @attr {boolean} [open=false] - Whether it's open. Setting it opens it non-modally, as `open` does on a `<dialog>`, unless `modal` is set.
  *
  * @slot {Element | string} - The action that does what the dialog asks, such as a Delete button in a form with method="dialog".
  * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
@@ -71,8 +72,8 @@ declare global {
  * @method requestClose - Asks it to close, as a native dialog's `requestClose()` does: "cancel" first, then a close that sets `returnValue` to the value given, unless "cancel" is canceled.
  * @param {string} [returnValue]
  *
- * @method show - Opens it non-modally, as a native dialog's `show()` does. The rest of the page stays interactive.
- * @method showModal - Opens it as a modal, as a native dialog's `showModal()` does. Setting `open` does the same.
+ * @method show - Opens it non-modally, as a native dialog's `show()` does, whether or not `modal` is set. The rest of the page stays interactive.
+ * @method showModal - Opens it as a modal, as a native dialog's `showModal()` does, whether or not `modal` is set.
  */
 @customElement('slab-alert-dialog')
 export default class AlertDialog extends Dialog {

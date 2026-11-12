@@ -7,7 +7,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option value="one">One</slab-option>
           <slab-option value="two"><span>Two</span></slab-option>
         </slab-command-palette>`,
@@ -32,7 +32,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
         </slab-command-palette>`,
     );
@@ -53,7 +53,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
           <slab-option disabled>Two</slab-option>
         </slab-command-palette>`,
@@ -80,7 +80,7 @@ test(
             }
           </style>
 
-          <slab-command-palette label="Label" open>
+          <slab-command-palette label="Label" modal open>
             <slab-option>One</slab-option>
           </slab-command-palette>`,
     );
@@ -99,7 +99,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-command-palette label="Label" open>
+        html`<slab-command-palette label="Label" modal open>
           <slab-option>One</slab-option>
         </slab-command-palette>`,
     );

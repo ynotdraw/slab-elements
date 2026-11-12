@@ -212,11 +212,14 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     members: {
       close:
         "Closes it, setting `returnValue` to the value given, as a native dialog's `close()` does.",
+      modal:
+        'Makes setting `open` open it as a modal, as `showModal()` does. A native `<dialog>` has no such attribute: its `open` is always non-modal.',
+      open: "Whether it's open. Setting it opens it non-modally, as `open` does on a `<dialog>`, unless `modal` is set.",
       requestClose:
         'Asks it to close, as a native dialog\'s `requestClose()` does: "cancel" first, then a close that sets `returnValue` to the value given, unless "cancel" is canceled.',
-      show: "Opens it non-modally, as a native dialog's `show()` does. The rest of the page stays interactive.",
+      show: "Opens it non-modally, as a native dialog's `show()` does, whether or not `modal` is set. The rest of the page stays interactive.",
       showModal:
-        "Opens it as a modal, as a native dialog's `showModal()` does. Setting `open` does the same.",
+        "Opens it as a modal, as a native dialog's `showModal()` does, whether or not `modal` is set.",
     },
     slots: { label: 'Its heading, in place of `label`' },
   },

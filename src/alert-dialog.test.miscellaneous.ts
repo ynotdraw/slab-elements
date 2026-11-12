@@ -12,11 +12,12 @@ test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
 });
 
 test(
-  'opens as a modal when `open` is set',
+  'opens as a modal when `open` is set with `modal`',
   { tag: '@miscellaneous' },
   async ({ render, page }) => {
     await render(
-      () => html`<slab-alert-dialog label="Label" open></slab-alert-dialog>`,
+      () =>
+        html`<slab-alert-dialog label="Label" modal open></slab-alert-dialog>`,
     );
 
     await expect(page.locator('[data-test="dialog"]:modal')).toBeVisible();
@@ -68,7 +69,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-alert-dialog closedby="any" label="Label" open>
+        html`<slab-alert-dialog closedby="any" label="Label" modal open>
         </slab-alert-dialog>`,
     );
 
@@ -90,7 +91,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-alert-dialog closedby="none" label="Label" open>
+        html`<slab-alert-dialog closedby="none" label="Label" modal open>
         </slab-alert-dialog>`,
     );
 
@@ -106,7 +107,8 @@ test(
   { tag: '@miscellaneous' },
   async ({ render, setProperty, page }) => {
     await render(
-      () => html`<slab-alert-dialog label="Label" open></slab-alert-dialog>`,
+      () =>
+        html`<slab-alert-dialog label="Label" modal open></slab-alert-dialog>`,
     );
 
     await expect(page.getByTestId('cancel')).toHaveText('Cancel');
@@ -127,7 +129,7 @@ test(
   async ({ render, page, setProperty }) => {
     await render(
       () =>
-        html`<slab-alert-dialog label="Label" open>
+        html`<slab-alert-dialog label="Label" modal open>
           <button>Delete</button>
         </slab-alert-dialog>`,
     );

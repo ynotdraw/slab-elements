@@ -26,6 +26,18 @@ test(
 );
 
 test(
+  'opens as a modal when `open` is set with `modal`',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-drawer label="Label" modal open>Content</slab-drawer>`,
+    );
+
+    await expect(page.locator('[data-test="dialog"]:modal')).toBeVisible();
+  },
+);
+
+test(
   'opens as a modal when `showModal()` is called',
   { tag: '@miscellaneous' },
   async ({ callMethod, render, page }) => {

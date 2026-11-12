@@ -51,7 +51,7 @@ document.addEventListener('click', (event) => {
   const button =
     event.target instanceof Element
       ? event.target.closest<HTMLElement>(
-          '[data-open], [data-show], [data-announce]',
+          '[data-open], [data-show], [data-show-modal], [data-announce]',
         )
       : null;
 
@@ -59,10 +59,17 @@ document.addEventListener('click', (event) => {
     return;
   }
 
-  const { announce, message, open, show } = button.dataset;
+  const { announce, message, open, show, showModal } = button.dataset;
 
   if (open) {
     document.getElementById(open)?.setAttribute('open', '');
+  }
+
+  if (showModal) {
+    const dialog = document.getElementById(showModal) as
+      (HTMLElement & { showModal(): void }) | null;
+
+    dialog?.showModal();
   }
 
   if (show) {

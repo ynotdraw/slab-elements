@@ -5,7 +5,7 @@ import type Dialog from './dialog.js';
 test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
   await render(
     () =>
-      html`<slab-dialog label="Label" open>
+      html`<slab-dialog label="Label" modal open>
         Content
 
         <form method="dialog">
@@ -99,7 +99,7 @@ test('slot="label"', { tag: '@accessibility' }, async ({ render, page }) => {
 
 test('label', { tag: '@accessibility' }, async ({ render, page }) => {
   await render(
-    () => html`<slab-dialog label="Label" open>Content</slab-dialog>`,
+    () => html`<slab-dialog label="Label" modal open>Content</slab-dialog>`,
   );
 
   // Plain text names the dialog without being a heading.

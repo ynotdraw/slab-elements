@@ -11,15 +11,55 @@ test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
 });
 
 test(
-  'opens as a modal when `open` is set',
+  'opens non-modally when `open` is set, as a native dialog does',
   { tag: '@miscellaneous' },
   async ({ render, page }) => {
     await render(
       () => html`<slab-dialog label="Label" open>Content</slab-dialog>`,
     );
 
-    // `:modal` rather than `[open]`. It only matches a dialog opened with
-    // `showModal()`, which is what makes the rest of the page inert.
+    await expect(page.getByTestId('dialog')).toBeVisible();
+
+    // `:modal` only matches a dialog opened with `showModal()`, which is what
+    // makes the rest of the page inert.
+    await expect(page.locator('[data-test="dialog"]:modal')).toHaveCount(0);
+  },
+);
+
+test(
+  'opens as a modal when `open` is set with `modal`',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-dialog label="Label" modal open>Content</slab-dialog>`,
+    );
+
+    await expect(page.locator('[data-test="dialog"]:modal')).toBeVisible();
+  },
+);
+
+test(
+  'opens as `show()` and `showModal()` say, whether or not it has `modal`',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`<slab-dialog label="Label" modal>Content</slab-dialog>`,
+    );
+
+    const host = page.locator('slab-dialog');
+
+    await callMethod(host, 'show');
+    await expect(page.getByTestId('dialog')).toBeVisible();
+    await expect(page.locator('[data-test="dialog"]:modal')).toHaveCount(0);
+
+    await callMethod(host, 'close');
+    await expect(page.getByTestId('dialog')).toBeHidden();
+
+    await host.evaluate((element) => {
+      element.removeAttribute('modal');
+    });
+
+    await callMethod(host, 'showModal');
     await expect(page.locator('[data-test="dialog"]:modal')).toBeVisible();
   },
 );
@@ -99,10 +139,12 @@ test(
 );
 
 test(
-  'opens as a modal when `open` is set after `show()` opened it and it closed',
+  'opens as `modal` says when `open` is set after a method opened it and it closed',
   { tag: '@miscellaneous' },
   async ({ callMethod, setProperty, render, page }) => {
-    await render(() => html`<slab-dialog label="Label">Content</slab-dialog>`);
+    await render(
+      () => html`<slab-dialog label="Label" modal>Content</slab-dialog>`,
+    );
 
     const host = page.locator('slab-dialog');
 
@@ -145,7 +187,7 @@ test(
   { tag: '@miscellaneous' },
   async ({ render, page }) => {
     await render(
-      () => html`<slab-dialog label="Label" open>Content</slab-dialog>`,
+      () => html`<slab-dialog label="Label" modal open>Content</slab-dialog>`,
     );
 
     const host = page.locator('slab-dialog');
@@ -225,7 +267,8 @@ test(
   { tag: '@miscellaneous' },
   async ({ render, page }) => {
     await render(
-      () => html`<slab-dialog label="Label" hide-label open></slab-dialog>`,
+      () =>
+        html`<slab-dialog label="Label" hide-label modal open></slab-dialog>`,
     );
 
     // Hidden visually rather than removed, so it still names the dialog.
@@ -242,7 +285,7 @@ test(
   'dispatches "toggle" when it opens and closes',
   { tag: '@miscellaneous' },
   async ({ render, page, setProperty }) => {
-    await render(() => html`<slab-dialog label="Label"></slab-dialog>`);
+    await render(() => html`<slab-dialog label="Label" modal></slab-dialog>`);
 
     const host = page.locator('slab-dialog');
 
@@ -287,7 +330,7 @@ test(
   { tag: '@miscellaneous' },
   async ({ render, page }) => {
     await render(
-      () => html`<slab-dialog label="Label" open>Content</slab-dialog>`,
+      () => html`<slab-dialog label="Label" modal open>Content</slab-dialog>`,
     );
 
     const host = page.locator('slab-dialog');
@@ -312,7 +355,7 @@ test(
   { tag: '@miscellaneous' },
   async ({ render, page }) => {
     await render(
-      () => html`<slab-dialog label="Label" open>Content</slab-dialog>`,
+      () => html`<slab-dialog label="Label" modal open>Content</slab-dialog>`,
     );
 
     const host = page.locator('slab-dialog');
@@ -354,7 +397,7 @@ test(
   { tag: '@miscellaneous' },
   async ({ render, page, setProperty }) => {
     await render(
-      () => html`<slab-dialog label="Label" open>Content</slab-dialog>`,
+      () => html`<slab-dialog label="Label" modal open>Content</slab-dialog>`,
     );
 
     const host = page.locator('slab-dialog');

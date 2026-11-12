@@ -4,7 +4,7 @@ import { expect, test } from './playwright/test.js';
 test('closes on Escape', { tag: '@keyboard' }, async ({ render, page }) => {
   await render(
     () =>
-      html`<slab-dialog label="Label" open>
+      html`<slab-dialog label="Label" modal open>
         <button>Button</button>
       </slab-dialog>`,
   );
@@ -29,7 +29,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-dialog label="Label" open>
+        html`<slab-dialog label="Label" modal open>
           <button>Button</button>
         </slab-dialog>`,
     );
@@ -57,7 +57,7 @@ test(
       () =>
         html`<button>Outside</button>
 
-          <slab-dialog label="Label" open>
+          <slab-dialog label="Label" modal open>
             <button>Inside</button>
           </slab-dialog>`,
     );
@@ -97,7 +97,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-dialog label="Label" open>
+        html`<slab-dialog label="Label" modal open>
           <p>One</p>
           <button>Two</button>
         </slab-dialog>`,
@@ -115,7 +115,7 @@ test(
       () =>
         html`<button>Outside</button>
 
-          <slab-dialog label="Label" open>
+          <slab-dialog label="Label" modal open>
             <p>Content</p>
           </slab-dialog>`,
     );
@@ -131,7 +131,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-dialog label="Label" open>
+        html`<slab-dialog label="Label" modal open>
           <form method="dialog">
             <button value="confirm">Confirm</button>
           </form>

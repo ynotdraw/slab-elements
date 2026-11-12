@@ -30,7 +30,7 @@ usage: |
 Setting `open`, or calling `show()`, opens it non-modally, and the page behind
 it stays usable. Calling `showModal()` opens it as a modal, the way it opens a
 `<dialog>`: there's a backdrop, focus stays inside, and the rest of the page is
-inert until it closes.
+inert until it closes. With `modal`, setting `open` opens it as a modal too.
 
 ## Keyboard
 

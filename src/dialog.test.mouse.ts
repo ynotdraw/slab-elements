@@ -8,7 +8,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-dialog label="Label" open>
+        html`<slab-dialog label="Label" modal open>
           <form method="dialog">
             <button value="cancel">Cancel</button>
             <button value="confirm">Confirm</button>
@@ -33,7 +33,7 @@ test(
   { tag: '@mouse' },
   async ({ render, page }) => {
     await render(
-      () => html`<slab-dialog label="Label" open>Content</slab-dialog>`,
+      () => html`<slab-dialog label="Label" modal open>Content</slab-dialog>`,
     );
 
     await page.mouse.click(1, 1);
@@ -49,7 +49,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-dialog closedby="any" label="Label" open>
+        html`<slab-dialog closedby="any" label="Label" modal open>
           Content
         </slab-dialog>`,
     );
@@ -75,7 +75,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-dialog label="Label" open>
+        html`<slab-dialog label="Label" modal open>
           <form action="javascript:void(0)">
             <button value="confirm">Confirm</button>
           </form>
@@ -104,7 +104,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-dialog label="Label" open>
+        html`<slab-dialog label="Label" modal open>
           <form action="javascript:void(0)">
             <input type="submit" value="Confirm" />
           </form>
@@ -133,7 +133,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-dialog label="Label" open>
+        html`<slab-dialog label="Label" modal open>
           <form method="dialog">
             <button>Close</button>
           </form>
@@ -159,7 +159,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-dialog label="Label" open>
+        html`<slab-dialog label="Label" modal open>
           <form method="dialog">
             <button>Close</button>
           </form>
@@ -184,7 +184,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-dialog label="Label" open>
+        html`<slab-dialog label="Label" modal open>
           <form action="javascript:void(0)">
             <button>One</button>
           </form>
@@ -208,7 +208,7 @@ test(
   async ({ render, page }) => {
     await render(
       () =>
-        html`<slab-dialog label="Label" open>
+        html`<slab-dialog label="Label" modal open>
           <dialog open>
             <form method="dialog">
               <button>Close</button>

@@ -36,12 +36,14 @@ const meta: Meta = {
     'close(returnValue)': '',
     filter: '',
     'hide-label': true,
+    modal: false,
     open: false,
     options: '',
     placeholder: 'Type a command',
     query: '',
     returnValue: '',
     'show()': '',
+    'showModal()': '',
     'slot="default"': '',
     'slot="empty"': 'No commands match',
     version: '',
@@ -112,6 +114,15 @@ const meta: Meta = {
         },
       },
     },
+    modal: {
+      table: {
+        defaultValue: { summary: 'false' },
+        type: {
+          summary: 'boolean',
+          detail: '// Setting open opens it as a modal, as showModal() does.',
+        },
+      },
+    },
     open: {
       table: {
         defaultValue: { summary: 'false' },
@@ -149,7 +160,18 @@ const meta: Meta = {
     },
     'show()': {
       control: false,
-      table: { type: { summary: 'method', detail: '(): void' } },
+      table: {
+        type: {
+          summary: 'method',
+          detail: '(): void // Opens it non-modally, as setting open does.',
+        },
+      },
+    },
+    'showModal()': {
+      control: false,
+      table: {
+        type: { summary: 'method', detail: '(): void // Opens it as a modal.' },
+      },
     },
     'slot="default"': {
       control: false,
@@ -190,7 +212,11 @@ const meta: Meta = {
     return html`<button
         @click=${(event: Event) => {
           if (event.target instanceof HTMLElement) {
-            event.target.nextElementSibling?.setAttribute('open', '');
+            const dialog = event.target.nextElementSibling;
+
+            if (dialog instanceof CommandPaletteComponent) {
+              dialog.showModal();
+            }
           }
         }}
       >
@@ -202,6 +228,7 @@ const meta: Meta = {
         label=${arguments_.label || nothing}
         placeholder=${arguments_.placeholder || nothing}
         ?hide-label=${arguments_['hide-label']}
+        ?modal=${arguments_.modal}
         ?open=${arguments_.open}
       >
         <slab-option value="new-file">New file</slab-option>

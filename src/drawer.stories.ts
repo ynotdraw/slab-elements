@@ -33,9 +33,11 @@ const meta: Meta = {
     closedby: 'closerequest',
     'close(returnValue)': '',
     'hide-label': false,
+    modal: false,
     open: false,
     returnValue: '',
     'show()': '',
+    'showModal()': '',
     'slot="default"': 'Content',
     'slot="label"': '<h2>Label</h2>',
     version: '',
@@ -88,6 +90,15 @@ const meta: Meta = {
         },
       },
     },
+    modal: {
+      table: {
+        defaultValue: { summary: 'false' },
+        type: {
+          summary: 'boolean',
+          detail: '// Setting open opens it as a modal, as showModal() does.',
+        },
+      },
+    },
     open: {
       table: {
         defaultValue: { summary: 'false' },
@@ -109,7 +120,18 @@ const meta: Meta = {
     },
     'show()': {
       control: false,
-      table: { type: { summary: 'method', detail: '(): void' } },
+      table: {
+        type: {
+          summary: 'method',
+          detail: '(): void // Opens it non-modally, as setting open does.',
+        },
+      },
+    },
+    'showModal()': {
+      control: false,
+      table: {
+        type: { summary: 'method', detail: '(): void // Opens it as a modal.' },
+      },
     },
     'slot="default"': {
       table: { type: { summary: 'Element | string' } },
@@ -155,6 +177,7 @@ const meta: Meta = {
         closedby=${arguments_.closedby || nothing}
         label=${arguments_.label || nothing}
         ?hide-label=${arguments_['hide-label']}
+        ?modal=${arguments_.modal}
         ?open=${arguments_.open}
       >
         ${unsafeHTML(arguments_['slot="default"'])}
