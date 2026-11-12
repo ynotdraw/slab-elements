@@ -14,8 +14,19 @@ export default css`
     color: var(--ink);
     font-family: var(--font-body);
     inline-size: min(32rem, 100% - 2rem);
+
+    /*
+      Where a modal one is already, in the top layer. A non-modal one isn't
+      there, so it's fixed in the middle of the viewport too, rather than left
+      where it is in the page, and raised over what's around it. Drawer's
+      styles, which come after, put it at an edge instead.
+    */
+    inset: 0;
     line-height: 1.5;
+    margin: auto;
     padding: 0 1.5rem 1.5rem;
+    position: fixed;
+    z-index: 1;
 
     &::backdrop {
       animation: fade 200ms ease-out;

@@ -26,6 +26,19 @@ test(
 );
 
 test(
+  'opens non-modally when `showModal()` is called',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-drawer label="Label">Content</slab-drawer>`);
+
+    await callMethod(page.locator('slab-drawer'), 'showModal');
+
+    await expect(page.getByTestId('dialog')).toBeVisible();
+    await expect(page.locator('[data-test="dialog"]:modal')).toHaveCount(0);
+  },
+);
+
+test(
   'is closed by default',
   { tag: '@miscellaneous' },
   async ({ render, page }) => {

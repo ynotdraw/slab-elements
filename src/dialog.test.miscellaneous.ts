@@ -35,7 +35,7 @@ test(
 );
 
 test(
-  'opens when `show()` is called and closes when `open` is unset',
+  'opens non-modally when `show()` is called and closes when `open` is unset',
   { tag: '@miscellaneous' },
   async ({ callMethod, setProperty, render, page }) => {
     await render(() => html`<slab-dialog label="Label">Content</slab-dialog>`);
@@ -47,11 +47,96 @@ test(
     await expect(page.getByTestId('dialog')).toBeVisible();
     await expect(host).toHaveAttribute('open');
 
+    // `:modal` only matches a dialog opened with `showModal()`.
+    await expect(page.locator('[data-test="dialog"]:modal')).toHaveCount(0);
+
     await expect(host).toDispatchEvents(async () => {
       await setProperty(host, 'open', false);
     }, [{ type: 'close', bubbles: false, cancelable: false, composed: false }]);
 
     await expect(page.getByTestId('dialog')).toBeHidden();
+  },
+);
+
+test(
+  'opens as a modal when `showModal()` is called',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-dialog label="Label">Content</slab-dialog>`);
+
+    const host = page.locator('slab-dialog');
+
+    await callMethod(host, 'showModal');
+
+    await expect(page.locator('[data-test="dialog"]:modal')).toBeVisible();
+    await expect(host).toHaveAttribute('open');
+  },
+);
+
+test(
+  'stays as it is when opened again with the other method',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(() => html`<slab-dialog label="Label">Content</slab-dialog>`);
+
+    const host = page.locator('slab-dialog');
+
+    await callMethod(host, 'show');
+    await expect(page.getByTestId('dialog')).toBeVisible();
+
+    await callMethod(host, 'showModal');
+    await expect(page.locator('[data-test="dialog"]:modal')).toHaveCount(0);
+
+    await callMethod(host, 'close');
+    await expect(page.getByTestId('dialog')).toBeHidden();
+
+    await callMethod(host, 'showModal');
+    await expect(page.locator('[data-test="dialog"]:modal')).toBeVisible();
+
+    await callMethod(host, 'show');
+    await expect(page.locator('[data-test="dialog"]:modal')).toBeVisible();
+  },
+);
+
+test(
+  'opens as a modal when `open` is set after `show()` opened it and it closed',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, setProperty, render, page }) => {
+    await render(() => html`<slab-dialog label="Label">Content</slab-dialog>`);
+
+    const host = page.locator('slab-dialog');
+
+    await callMethod(host, 'show');
+    await expect(page.getByTestId('dialog')).toBeVisible();
+
+    await setProperty(host, 'open', false);
+    await expect(page.getByTestId('dialog')).toBeHidden();
+
+    await setProperty(host, 'open', true);
+    await expect(page.locator('[data-test="dialog"]:modal')).toBeVisible();
+  },
+);
+
+test(
+  'leaves the rest of the page interactive when `show()` opens it',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<button type="button">Outside</button>
+          <slab-dialog label="Label"
+            ><button type="button">Inside</button></slab-dialog
+          >`,
+    );
+
+    await callMethod(page.locator('slab-dialog'), 'show');
+
+    await expect(page.getByRole('button', { name: 'Inside' })).toBeFocused();
+
+    await page.getByRole('button', { name: 'Outside' }).click();
+
+    await expect(page.getByRole('button', { name: 'Outside' })).toBeFocused();
+    await expect(page.getByTestId('dialog')).toBeVisible();
   },
 );
 

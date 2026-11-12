@@ -29,6 +29,20 @@ test(
 );
 
 test(
+  'opens as a modal when `show()` is called',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`<slab-alert-dialog label="Label"></slab-alert-dialog>`,
+    );
+
+    await callMethod(page.locator('slab-alert-dialog'), 'show');
+
+    await expect(page.locator('[data-test="dialog"]:modal')).toBeVisible();
+  },
+);
+
+test(
   'treats `closedby="any"` as "closerequest"',
   { tag: '@miscellaneous' },
   async ({ render, page }) => {

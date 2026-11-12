@@ -36,6 +36,7 @@ const meta: Meta = {
     open: false,
     returnValue: '',
     'show()': '',
+    'showModal()': '',
     'slot="default"': 'Content',
     'slot="label"': '<h2>Label</h2>',
     version: '',
@@ -108,7 +109,21 @@ const meta: Meta = {
     },
     'show()': {
       control: false,
-      table: { type: { summary: 'method', detail: '(): void' } },
+      table: {
+        type: {
+          summary: 'method',
+          detail: '(): void // Opens it non-modally.',
+        },
+      },
+    },
+    'showModal()': {
+      control: false,
+      table: {
+        type: {
+          summary: 'method',
+          detail: '(): void // Opens it as a modal, as setting open does.',
+        },
+      },
     },
     'slot="default"': {
       table: { type: { summary: 'Element | string' } },

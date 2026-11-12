@@ -19,9 +19,15 @@ declare global {
 }
 
 /**
- * A modal dialog with no visual styles, around a native `<dialog>` opened with
- * `showModal()`, so it traps focus, closes on Escape, has a `::backdrop`, and
- * makes the rest of the page inert the way one does.
+ * A dialog with no visual styles, around a native `<dialog>`, opened modally or
+ * not the way one is.
+ *
+ * `showModal()`, or setting `open`, opens it as a modal: it traps focus, closes
+ * on Escape, has a `::backdrop`, and makes the rest of the page inert.
+ * `show()` opens it non-modally, as a `<dialog>`'s `show()` does: the rest of
+ * the page stays interactive, there's no backdrop, and, as natively, Escape
+ * only closes it with `closedby`. Calling either while it's open leaves it as
+ * it is. Match a modal one with `::part(dialog):modal`.
  *
  * `open` reflects, and it stays true to the dialog: when the dialog closes
  * itself, on Escape or through a `<form method="dialog">`, `open` goes false
@@ -66,7 +72,8 @@ declare global {
  * @method requestClose - Asks it to close, as a native dialog's `requestClose()` does: "cancel" first, then a close that sets `returnValue` to the value given, unless "cancel" is canceled.
  * @param {string} [returnValue]
  *
- * @method show - Opens it.
+ * @method show - Opens it non-modally, as a native dialog's `show()` does. The rest of the page stays interactive.
+ * @method showModal - Opens it as a modal, as a native dialog's `showModal()` does. Setting `open` does the same.
  */
 @customElement('slab-dialog')
 export default class Dialog extends LitElement {
@@ -210,14 +217,23 @@ export default class Dialog extends LitElement {
   }
 
   show(): void {
-    this.open = true;
+    this.#open({ isModal: false });
   }
 
-  // How the `<dialog>` is opened. Drawer overrides it to open the same
-  // `<dialog>` without making it modal, and inherits everything else.
+  // How the `<dialog>` is opened: modally unless `show()` opened it. Drawer
+  // overrides it to always open non-modally, and Alert Dialog and Command
+  // Palette to always open modally.
   /** @internal For Slab's own subclasses. Not public API. */
   protected showDialog(dialog: HTMLDialogElement): void {
-    dialog.showModal();
+    if (this.#isModal) {
+      dialog.showModal();
+    } else {
+      dialog.show();
+    }
+  }
+
+  showModal(): void {
+    this.#open({ isModal: true });
   }
 
   override updated() {
@@ -284,6 +300,10 @@ export default class Dialog extends LitElement {
 
   #internals: ElementInternals;
 
+  // Whether the next open is modal. Setting `open` opens it modally, so it's
+  // only false between `show()` and the dialog closing.
+  #isModal = true;
+
   // For a `returnValue` set before the `<dialog>` is rendered.
   #returnValue = '';
 
@@ -339,7 +359,20 @@ export default class Dialog extends LitElement {
   }
 
   #onDialogClose() {
+    this.#isModal = true;
     this.open = false;
     this.dispatchEvent(new Event('close'));
+  }
+
+  // Opening while it's open leaves it as it is, rather than throwing when the
+  // other method opened it, as a `<dialog>` does. Slab's elements don't throw
+  // for being opened twice.
+  #open({ isModal }: { isModal: boolean }) {
+    if (this.open) {
+      return;
+    }
+
+    this.#isModal = isModal;
+    this.open = true;
   }
 }

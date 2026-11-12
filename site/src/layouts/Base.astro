@@ -309,7 +309,7 @@ const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.
     const button = document.querySelector<HTMLButtonElement>('.menu')!;
     const menu = document.querySelector<Dialog>('#menu')!;
 
-    button.addEventListener('click', () => menu.show());
+    button.addEventListener('click', () => menu.showModal());
 
     menu.addEventListener('toggle', (event) => {
       button.setAttribute('aria-expanded', String(event.newState === 'open'));

@@ -52,7 +52,8 @@ declare global {
  * @method requestClose - Asks it to close, as a native dialog's `requestClose()` does: "cancel" first, then a close that sets `returnValue` to the value given, unless "cancel" is canceled.
  * @param {string} [returnValue]
  *
- * @method show - Opens it.
+ * @method show - Opens it non-modally, as a native dialog's `show()` does.
+ * @method showModal - Opens it. It's always non-modal, so this is the same as `show()`.
  */
 @customElement('slab-drawer')
 export default class Drawer extends Dialog {
