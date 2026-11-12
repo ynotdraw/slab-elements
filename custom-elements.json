@@ -1985,7 +1985,6 @@
                 "text": "boolean"
               },
               "default": "false",
-              "attribute": "indeterminate",
               "description": "Shows it as neither checked nor unchecked, as a native checkbox's `indeterminate` does. Checking or unchecking it clears it."
             },
             {
@@ -2300,15 +2299,6 @@
               "default": "false",
               "fieldName": "hideLabel",
               "description": "Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way."
-            },
-            {
-              "name": "indeterminate",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "indeterminate",
-              "description": "Shows it as neither checked nor unchecked, as a native checkbox's `indeterminate` does. Checking or unchecking it clears it."
             },
             {
               "name": "name",

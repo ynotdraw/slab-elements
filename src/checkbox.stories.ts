@@ -95,7 +95,10 @@ const meta: Meta = {
     indeterminate: {
       table: {
         defaultValue: { summary: 'false' },
-        type: { summary: 'boolean' },
+        type: {
+          summary: 'boolean',
+          detail: '// A property only, as on a native checkbox.',
+        },
       },
     },
     label: {
@@ -232,7 +235,7 @@ const meta: Meta = {
         ?checked=${arguments_.checked}
         ?disabled=${arguments_.disabled}
         ?hide-label=${arguments_['hide-label'] || nothing}
-        ?indeterminate=${arguments_.indeterminate}
+        .indeterminate=${arguments_.indeterminate}
         ?required=${arguments_.required}
       >
         ${

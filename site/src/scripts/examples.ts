@@ -36,6 +36,15 @@ const loaders = new Map([
 // module. Each page brings its own elements, and those already registered
 // are defined as soon as they're on it.
 document.addEventListener('astro:page-load', () => {
+  // `indeterminate` is a property only, as on a native checkbox, so markup
+  // can't set it. The examples' Checkboxes ask for it with
+  // `data-indeterminate`.
+  for (const checkbox of document.querySelectorAll<
+    HTMLElement & { indeterminate: boolean }
+  >('[data-indeterminate]')) {
+    checkbox.indeterminate = true;
+  }
+
   const tags = new Set(
     [...document.querySelectorAll(':not(:defined)')].map(
       (element) => element.localName,

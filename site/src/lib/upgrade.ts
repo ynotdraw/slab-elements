@@ -145,6 +145,23 @@ button.addEventListener('click', () => picker.showPicker());`,
     },
   },
   {
+    id: 'indeterminate',
+    heading: "Checkbox's `indeterminate`",
+    text: "`indeterminate` is now a property only, with no attribute, as on a native checkbox, and a form's reset leaves it as it is, as it does natively. Set the property from script, or bind it as a property in a framework, such as `.indeterminate` in Lit.",
+    code: {
+      code: `<!-- Before -->
+<slab-checkbox label="Select all" indeterminate></slab-checkbox>
+
+<!-- After -->
+<slab-checkbox label="Select all"></slab-checkbox>
+<script type="module">
+  document.querySelector('slab-checkbox').indeterminate = true;
+</script>`,
+      label: 'index.html',
+      lang: 'html',
+    },
+  },
+  {
     id: 'subclasses',
     heading: 'Subclasses',
     text: "The protected hooks Slab's own styled subclasses override, such as Dialog's `renderContent()` and Date Field's `renderControl()`, and every element's `version`, are marked `@internal`. They're out of the published types, so a subclass that overrides a hook with `override` no longer type checks. They were never public API and can change in any release. Subclassing an element to set `styles` is public and keeps working.",

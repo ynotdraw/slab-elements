@@ -110,7 +110,7 @@ test(
               label="One"
               value="one"
               checked
-              indeterminate
+              .indeterminate=${true}
             ></slab-checkbox>
 
             <slab-checkbox label="Two" value="two"></slab-checkbox>
