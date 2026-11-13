@@ -744,3 +744,110 @@ test(
     expect(before).toBe(after);
   },
 );
+
+test(
+  "doesn't save its value as a password for the browser to restore",
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-text-field
+            label="Label"
+            name="name"
+            type="password"
+          ></slab-text-field>
+        </form>
+      `,
+    );
+
+    // A browser saves the state from the last `setFormValue()` to restore
+    // after navigating back. Navigating in a test doesn't restore it, so the
+    // state is read from that call instead.
+    await page.evaluate(() => {
+      const setFormValue = ElementInternals.prototype.setFormValue;
+
+      ElementInternals.prototype.setFormValue = function (value, state) {
+        Object.assign(globalThis, { formState: state });
+        setFormValue.call(this, value, state);
+      };
+    });
+
+    await page.getByLabel('Label').fill('One');
+
+    const state = await page.evaluate(() => {
+      return (globalThis as { formState?: unknown }).formState;
+    });
+
+    expect(state).toBeNull();
+  },
+);
+
+test(
+  'doesn\'t save its value with `autocomplete="off"` for the browser to restore',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-text-field
+            autocomplete="off"
+            label="Label"
+            name="name"
+          ></slab-text-field>
+        </form>
+      `,
+    );
+
+    // A browser saves the state from the last `setFormValue()` to restore
+    // after navigating back. Navigating in a test doesn't restore it, so the
+    // state is read from that call instead.
+    await page.evaluate(() => {
+      const setFormValue = ElementInternals.prototype.setFormValue;
+
+      ElementInternals.prototype.setFormValue = function (value, state) {
+        Object.assign(globalThis, { formState: state });
+        setFormValue.call(this, value, state);
+      };
+    });
+
+    await page.getByLabel('Label').fill('One');
+
+    const state = await page.evaluate(() => {
+      return (globalThis as { formState?: unknown }).formState;
+    });
+
+    expect(state).toBeNull();
+  },
+);
+
+test(
+  'saves its value for the browser to restore',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-text-field label="Label" name="name"></slab-text-field>
+        </form>
+      `,
+    );
+
+    await page.evaluate(() => {
+      const setFormValue = ElementInternals.prototype.setFormValue;
+
+      ElementInternals.prototype.setFormValue = function (value, state) {
+        Object.assign(globalThis, { formState: state });
+        setFormValue.call(this, value, state);
+      };
+    });
+
+    await page.getByLabel('Label').fill('One');
+
+    const state = await page.evaluate(() => {
+      return (globalThis as { formState?: unknown }).formState;
+    });
+
+    expect(state).toBe('One');
+  },
+);

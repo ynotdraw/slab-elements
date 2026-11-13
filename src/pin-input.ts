@@ -811,7 +811,15 @@ export default class PinInput extends LitElement {
 
   #updateFormValue() {
     const isSubmittable = !this.#isDisabled && this.name !== '';
-    this.#internals.setFormValue(isSubmittable ? this.value : null);
+    const value = isSubmittable ? this.value : null;
+
+    // A browser doesn't restore a native input's value after navigating back
+    // or restoring a session when it's a password or its `autocomplete` is
+    // "off". A `null` state does the same here when masked, so the code
+    // isn't saved either.
+    const isRestorable = !this.mask && this.autocomplete !== 'off';
+
+    this.#internals.setFormValue(value, isRestorable ? value : null);
   }
 
   #updateValidity() {
