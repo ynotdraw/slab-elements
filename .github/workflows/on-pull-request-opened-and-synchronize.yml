@@ -131,4 +131,4 @@ jobs:
           path: ./dist/playwright
           pattern: coverage-report-*
       - name: Merge Coverage Reports
-        run: pnpm exec tsx ./src/playwright/merge-coverage-reports/run.ts ${{ github.head_ref }}
+        run: pnpm exec tsx ./src/playwright/merge-coverage-reports/run.ts
