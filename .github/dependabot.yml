@@ -1,9 +1,10 @@
-# Keeps the pinned actions current. Every action is pinned to a commit, with
-# its version in a comment, since a tag can be moved to other code; this opens
-# a pull request when a newer release is out.
+# Keeps the repository's dependencies current: the pinned actions, and the npm
+# packages of Slab and of the site. Every action is pinned to a commit, with its
+# version in a comment, since a tag can be moved to other code.
 #
-# Updates wait a week after a release, as `minimumReleaseAge` does for npm
-# packages, since a compromised release is usually caught within days.
+# Updates wait a week after a release, as `minimumReleaseAge` does for pnpm,
+# since a compromised release is usually caught within days. Security updates,
+# once they are turned on in the repository's settings, don't wait.
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -23,3 +24,22 @@ updates:
       actions:
         patterns:
           - '*'
+
+  # The root is the pnpm workspace, with `site` as a package of its own. Each
+  # gets its own pull requests so a site update doesn't hold up Slab's.
+  - package-ecosystem: npm
+    directories:
+      - /
+      - /site
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    # Minor and patch updates come together, one pull request a week for
+    # each package. A major gets a pull request of its own, since it may
+    # need changes.
+    groups:
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
