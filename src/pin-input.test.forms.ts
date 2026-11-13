@@ -689,3 +689,77 @@ test(
     expect(before).toBe(after);
   },
 );
+
+test(
+  "doesn't save its value when masked for the browser to restore",
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-pin-input label="Label" mask name="name"></slab-pin-input>
+        </form>
+      `,
+    );
+
+    // A browser saves the state from the last `setFormValue()` to restore
+    // after navigating back. Navigating in a test doesn't restore it, so the
+    // state is read from that call instead.
+    await page.evaluate(() => {
+      const setFormValue = ElementInternals.prototype.setFormValue;
+
+      ElementInternals.prototype.setFormValue = function (value, state) {
+        Object.assign(globalThis, { formState: state });
+        setFormValue.call(this, value, state);
+      };
+    });
+
+    await page.locator('slab-pin-input input').first().focus();
+    await page.keyboard.type('123456');
+
+    const state = await page.evaluate(() => {
+      return (globalThis as { formState?: unknown }).formState;
+    });
+
+    expect(state).toBeNull();
+  },
+);
+
+test(
+  'doesn\'t save its value with `autocomplete="off"` for the browser to restore',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-pin-input
+            autocomplete="off"
+            label="Label"
+            name="name"
+          ></slab-pin-input>
+        </form>
+      `,
+    );
+
+    // A browser saves the state from the last `setFormValue()` to restore
+    // after navigating back. Navigating in a test doesn't restore it, so the
+    // state is read from that call instead.
+    await page.evaluate(() => {
+      const setFormValue = ElementInternals.prototype.setFormValue;
+
+      ElementInternals.prototype.setFormValue = function (value, state) {
+        Object.assign(globalThis, { formState: state });
+        setFormValue.call(this, value, state);
+      };
+    });
+
+    await page.locator('slab-pin-input input').first().focus();
+    await page.keyboard.type('123456');
+
+    const state = await page.evaluate(() => {
+      return (globalThis as { formState?: unknown }).formState;
+    });
+
+    expect(state).toBeNull();
+  },
+);

@@ -520,7 +520,15 @@ export default class TextField extends LitElement {
 
   #updateFormValue() {
     const isSubmittable = !this.#isDisabled && this.name !== '';
-    this.#internals.setFormValue(isSubmittable ? this.value : null);
+    const value = isSubmittable ? this.value : null;
+
+    // A browser doesn't restore a native input's value after navigating back
+    // or restoring a session when it's a password or its `autocomplete` is
+    // "off". A `null` state does the same here, so it isn't saved either.
+    const isRestorable =
+      this.type !== 'password' && this.autocomplete !== 'off';
+
+    this.#internals.setFormValue(value, isRestorable ? value : null);
   }
 
   // The native input is the one deciding. Reading its `validity` and copying

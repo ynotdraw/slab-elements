@@ -584,7 +584,12 @@ export default class PasswordField extends LitElement {
 
   #updateFormValue() {
     const isSubmittable = !this.#isDisabled && this.name !== '';
-    this.#internals.setFormValue(isSubmittable ? this.value : null);
+    const value = isSubmittable ? this.value : null;
+
+    // A `null` state, so a browser doesn't save the password to restore it
+    // after navigating back or restoring a session. It never restores a
+    // native password input's.
+    this.#internals.setFormValue(value, null);
   }
 
   // The native input is the one deciding. Reading its `validity` and copying
