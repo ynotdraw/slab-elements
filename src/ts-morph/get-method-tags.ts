@@ -12,7 +12,7 @@ export default (
   }
 
   const methods = [...declaration.members]
-    .sort((a, b) => (a.name < b.name ? -1 : 1))
+    .toSorted((a, b) => (a.name < b.name ? -1 : 1))
     .filter((member) => {
       const isPrivate = 'privacy' in member && member.privacy === 'private';
 

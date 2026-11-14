@@ -618,7 +618,7 @@ export default class Calendar extends LitElement {
     }
 
     // "yyyy-mm-dd" sorts the way the dates do.
-    const value = anchor ? [format(anchor), iso].sort().join('/') : iso;
+    const value = anchor ? [format(anchor), iso].toSorted().join('/') : iso;
 
     this.anchorDate = '';
 

@@ -12,7 +12,7 @@ export default (
   }
 
   const properties = [...declaration.members]
-    .sort((a, b) => (a.name < b.name ? -1 : 1))
+    .toSorted((a, b) => (a.name < b.name ? -1 : 1))
     .filter((member) => {
       const isAttribute =
         'attributes' in declaration &&

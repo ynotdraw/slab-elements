@@ -15,7 +15,7 @@ export default (
     description?: string;
   }[];
 
-  const parts = [...cssParts].sort((a, b) => {
+  const parts = [...cssParts].toSorted((a, b) => {
     return a.name < b.name ? -1 : 1;
   });
 

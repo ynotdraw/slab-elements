@@ -11,9 +11,9 @@ export default (
     return tags;
   }
 
-  const slots = [...declaration.slots].sort((a, b) => {
+  const slots = [...declaration.slots].toSorted((a, b) => {
     // Default slot first. Then the rest sorted alphabetically.
-    return a.name === '' ? -1 : a.name < b.name ? -1 : 1;
+    return a.name === '' || a.name < b.name ? -1 : 1;
   });
 
   for (const [index, slot] of slots.entries()) {

@@ -5,9 +5,8 @@ import type Calendar from './calendar.js';
 // The tabbable day's date.
 const getFocused = (page: import('@playwright/test').Page) => {
   return page.locator('slab-calendar').evaluate((element) => {
-    return element.shadowRoot
-      ?.querySelector<HTMLElement>('[tabindex="0"]')
-      ?.getAttribute('data-date');
+    return element.shadowRoot?.querySelector<HTMLElement>('[tabindex="0"]')
+      ?.dataset.date;
   });
 };
 

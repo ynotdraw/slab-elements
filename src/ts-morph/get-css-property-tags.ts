@@ -21,7 +21,7 @@ export default (
       default?: string;
       description?: string;
     }[]),
-  ].sort((a, b) => {
+  ].toSorted((a, b) => {
     return a.name < b.name ? -1 : 1;
   });
 

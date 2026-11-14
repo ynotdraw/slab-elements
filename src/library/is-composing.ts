@@ -9,5 +9,7 @@
  * gives a key an input method has handled.
  */
 export default function isComposing(event: KeyboardEvent): boolean {
+  // `key` differs between browsers for these, so `keyCode` is the only signal.
+  // eslint-disable-next-line unicorn/prefer-keyboard-event-key
   return event.isComposing || event.keyCode === 229;
 }

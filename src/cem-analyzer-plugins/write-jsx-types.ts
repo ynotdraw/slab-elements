@@ -67,7 +67,7 @@ export default () => {
               );
             })
             .map(({ name }) => `'${name}'`)
-            .sort();
+            .toSorted();
 
           const file = `./${path.basename(module.path, '.ts')}.js`;
           const alias = `${declaration.name}${imports.length}`;
@@ -83,7 +83,7 @@ export default () => {
           const events = (declaration.events ?? [])
             .filter(({ name }) => name && !name.startsWith('private-'))
             .map(({ name, type }) => `'${name}': ${type?.text ?? 'Event'};`)
-            .sort();
+            .toSorted();
 
           eventEntries.push(
             `  '${declaration.tagName}': {${events.length > 0 ? ` ${events.join(' ')} ` : ''}};`,
