@@ -28,9 +28,14 @@ export const sections: Section[] = [
     text: "In October 2026, every element's semantics, keyboard support and announcements were audited, mostly by reading Chromium's accessibility tree, and everything found was fixed. That covered things like forced colors, right-to-left arrow keys, typing with an input method editor, validation messages and live announcements.",
   },
   {
+    id: 'by-hand',
+    heading: "What's been checked by hand",
+    text: 'In November 2026, the 21 elements most likely to go wrong were walked through with VoiceOver on macOS in Chrome, step by step: the composite ones, like Combobox, Menu, Tree and Calendar, and the ones that announce changes, like Toast and Tags Input. Most did what they should, and the gaps it found are being fixed. That was done to the best of our ability by people who build components, not by accessibility specialists or people who rely on a screen reader every day.',
+  },
+  {
     id: 'not-yet',
     heading: "What hasn't been checked yet",
-    text: "No element has been tested by hand with a screen reader yet, whether VoiceOver, NVDA, JAWS or TalkBack, or with voice control or switch access. Automated tools catch only some problems, and screen readers differ from each other and from the accessibility tree a browser builds. A screen reader pass is planned, and this page will say what it covered once it's done.",
+    text: "VoiceOver in Safari, NVDA, JAWS and TalkBack haven't been tried, and neither have voice control or switch access. The rest, which lean more on their native elements, haven't been checked by hand. Automated tools catch only some problems, and screen readers differ from each other and from the accessibility tree a browser builds.",
   },
   {
     id: 'yours',
