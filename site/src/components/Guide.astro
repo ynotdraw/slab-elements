@@ -42,12 +42,32 @@ const sidebar = [
       </header>
 
       {
-        sections.map(({ code, coda, heading, id, text }, index) => (
+        sections.map(({ code, coda, heading, id, points, stats, text }, index) => (
           <section aria-labelledby={id} class="step">
             <h2 id={id}>
               <span>{String(index + 1).padStart(2, '0')}</span> {heading}
             </h2>
             <p set:html={html(text, base)} />
+            {stats && (
+              <ul class="stats">
+                {stats.map(({ label, value }) => (
+                  <li>
+                    <strong>{value}</strong>
+                    <span>{label}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {points && (
+              <ul class="points">
+                {points.map(({ text, title }) => (
+                  <li>
+                    <h3>{title}</h3>
+                    <p set:html={html(text, base)} />
+                  </li>
+                ))}
+              </ul>
+            )}
             {code && <CodeBlock code={code.code} label={code.label} lang={code.lang} />}
             {coda && <p set:html={html(coda, base)} />}
           </section>
@@ -126,6 +146,72 @@ const sidebar = [
     }
 
     p {
+      margin: 0;
+    }
+  }
+
+  /* Numbers, each large over its label, as on a release's page. */
+  .stats {
+    background-color: var(--ink);
+    border-block-end: 8px solid var(--ember);
+    color: var(--paper);
+    display: grid;
+    gap: 1px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    li {
+      align-content: start;
+      display: grid;
+      gap: 0.25rem;
+      outline: 1px solid var(--rule-on-ink);
+      padding: 1.25rem clamp(1rem, 3vw, 1.5rem);
+    }
+
+    strong {
+      font-size: clamp(1.75rem, 5vw, 2.75rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    span {
+      color: var(--dim);
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+    }
+  }
+
+  /* Tiles, each a short title over a sentence. */
+  .points {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      align-content: start;
+      background-color: var(--paper);
+      border: 3px solid var(--ink);
+      border-block-start: 10px solid var(--ember);
+      display: grid;
+      gap: 0.5rem;
+      padding: 1rem 1.25rem 1.25rem;
+    }
+
+    h3 {
+      font-size: 1.1875rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
       margin: 0;
     }
   }
