@@ -1,7 +1,7 @@
-import { UPDATE_STORY_ARGS } from '@storybook/core-events';
-import { addons } from '@storybook/preview-api';
+import { UPDATE_STORY_ARGS } from 'storybook/internal/core-events';
+import { addons } from 'storybook/preview-api';
 import { html, nothing } from 'lit';
-import { withActions } from '@storybook/addon-actions/decorator';
+import { withActions } from 'storybook/actions/decorator';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import CommandPaletteComponent from './command-palette.js';
 import './option.js';

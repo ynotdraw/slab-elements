@@ -6,7 +6,7 @@ import './table.foot.js';
 import './table.head.js';
 import './table.row.js';
 import { html } from 'lit';
-import { withActions } from '@storybook/addon-actions/decorator';
+import { withActions } from 'storybook/actions/decorator';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
 const meta: Meta = {

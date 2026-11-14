@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { withActions } from '@storybook/addon-actions/decorator';
+import { withActions } from 'storybook/actions/decorator';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import './date-picker.js';
 
