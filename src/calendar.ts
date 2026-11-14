@@ -51,7 +51,8 @@ interface Highlight {
  * an interval. Between the two, the days from the first to the one focused
  * or hovered are `::part(preview)`, and Escape starts over. Screenreaders are
  * told when the first day is picked, by `rangeStartedLabel`, and what the
- * range is once the last is, by `rangeSelectedLabel`.
+ * range is once the last is, by `rangeSelectedLabel`. Without `range`,
+ * they're told the day that's picked, by `selectedLabel`.
  *
  * The month's name, the weekdays', each day's full date and its number are
  * the browser's own, from `Intl`, in the language of the nearest `lang`
@@ -92,6 +93,7 @@ interface Highlight {
  *
  * @prop {(range: string) => string} rangeSelectedLabel - With `range`, what screenreaders are told once its last day is picked, from the range, such as "Monday, January 5 – Friday, January 9, 2026" in the calendar's language. The range and "selected" in English when unset.
  * @prop {(date: string) => string} rangeStartedLabel - With `range`, what screenreaders are told once its first day is picked, from that day, in the calendar's language. That it's the range's start, and to pick its end, in English when unset.
+ * @prop {(date: string) => string} selectedLabel - Without `range`, what screenreaders are told once a day is picked, from that day, such as "Friday, October 16, 2026" in the calendar's language. The day and "selected" in English when unset.
  */
 @customElement('slab-calendar')
 export default class Calendar extends LitElement {
@@ -144,6 +146,15 @@ export default class Calendar extends LitElement {
   @property({ attribute: false })
   rangeStartedLabel: (date: string) => string = (date) =>
     this.#strings.value.calendarRangeStarted(date);
+
+  /**
+   * Without `range`, what screenreaders are told once a day is picked, from
+   * that day, such as "Friday, October 16, 2026" in the calendar's language.
+   * The day and "selected" in English when unset.
+   */
+  @property({ attribute: false })
+  selectedLabel: (date: string) => string = (date) =>
+    this.#strings.value.calendarSelected(date);
 
   /**
    * The selected date, as "yyyy-mm-dd", or with `range` the selected range, as
@@ -622,14 +633,16 @@ export default class Calendar extends LitElement {
 
     this.anchorDate = '';
 
-    // A single day's selection is read from the day itself, which is
-    // `aria-selected`. A range has no one element to read it from.
+    // A day's `aria-selected` changing isn't read out while it has focus, so
+    // the selection is told either way.
     if (anchor) {
       const [start, end] = anchor < date ? [anchor, date] : [date, anchor];
 
       announce(this.rangeSelectedLabel(formatDay.formatRange(start, end)), {
         source: this,
       });
+    } else {
+      announce(this.selectedLabel(formatDay.format(date)), { source: this });
     }
 
     if (value !== this.value) {

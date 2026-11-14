@@ -17,6 +17,7 @@ export interface Strings {
   calendarPreviousMonth: string;
   calendarRangeSelected: (range: string) => string;
   calendarRangeStarted: (date: string) => string;
+  calendarSelected: (date: string) => string;
   carouselMarker: (index: number) => string;
   carouselNext: string;
   carouselPrevious: string;
@@ -86,6 +87,7 @@ const english: Strings = {
   calendarPreviousMonth: 'Previous month',
   calendarRangeSelected: (range) => `${range} selected`,
   calendarRangeStarted: (date) => `${date} starts the range. Pick its end.`,
+  calendarSelected: (date) => `${date} selected`,
   carouselMarker: (index) => `Slide ${index + 1}`,
   carouselNext: 'Next slide',
   carouselPrevious: 'Previous slide',

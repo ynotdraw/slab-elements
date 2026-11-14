@@ -13,6 +13,8 @@ usage: |
   <slab-calendar value="2026-03-14"></slab-calendar>
 ---
 
+Picking a day tells screenreaders which day is now selected, since a focused day's selection changing isn't read out on its own. Change what they're told with `selectedLabel`, a function of the formatted day.
+
 With `range`, the first day picked starts a range and the second ends it, in either order. Until the second is picked, the days between the first and the one focused or hovered are `::part(preview)`. Then `value` is the range as "yyyy-mm-dd/yyyy-mm-dd", the ISO 8601 form of an interval, and "change" is dispatched. Its days are `::part(selected)`, and its ends `::part(range-start)` and `::part(range-end)`. Screenreaders are told when the first day starts the range, and what the range is once the second ends it. Change what they're told with `rangeStartedLabel` and `rangeSelectedLabel`, functions of the formatted day and range.
 
 ## Keyboard
