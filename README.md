@@ -86,10 +86,11 @@ the keyboard, including in right-to-left layouts. In October 2026, every compone
 support and announcements were audited, and everything found was fixed.
 
 In November 2026, the 21 components most likely to go wrong were also walked
-through by hand with VoiceOver on macOS in Chrome, and the gaps it found are
-being fixed. That was done to the best of our ability, not by accessibility
-specialists. VoiceOver in Safari, NVDA, JAWS, TalkBack, voice control and
-switch access haven't been tried yet. Automated tools catch only some problems.
+through by hand with VoiceOver on macOS in Chrome, and the nine riskiest of
+them in Safari too. The gaps it found have been fixed. That was done to the
+best of our ability, not by accessibility specialists. The other 12 haven't
+been checked in Safari yet, and NVDA, JAWS, TalkBack, voice control and switch
+access haven't been tried. Automated tools catch only some problems.
 And since Slab is headless, contrast, focus rings and target sizes are up to
 your styles.
 
