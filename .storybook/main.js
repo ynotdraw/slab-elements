@@ -1,16 +1,11 @@
 /** @type { import('@storybook/web-components-vite').StorybookConfig } */
 
 import { mergeConfig } from 'vite';
-import packageJson from '../package.json';
+import packageJson from '../package.json' with { type: 'json' };
 
 const config = {
   stories: ['../src/*.stories.ts'],
-  addons: [
-    '@storybook/addon-actions',
-    '@storybook/addon-controls',
-    '@storybook/addon-docs',
-    '@storybook/addon-toolbars',
-  ],
+  addons: ['@storybook/addon-docs'],
   core: {
     disableTelemetry: true,
     disableWhatsNewNotifications: true,

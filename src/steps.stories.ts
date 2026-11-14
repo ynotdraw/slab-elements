@@ -2,7 +2,7 @@ import './steps.js';
 import './steps.step.js';
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import { withActions } from '@storybook/addon-actions/decorator';
+import { withActions } from 'storybook/actions/decorator';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
 const meta: Meta = {

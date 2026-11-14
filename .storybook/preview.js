@@ -11,8 +11,8 @@ import {
   Title,
   useOf,
 } from '@storybook/addon-docs/blocks';
-import { GLOBALS_UPDATED } from '@storybook/core-events';
-import { create } from '@storybook/theming';
+import { GLOBALS_UPDATED } from 'storybook/internal/core-events';
+import { create } from 'storybook/theming';
 import { createElement, Fragment, useEffect, useState } from 'react';
 
 // The docs page's themes. The dark one's muted text clears AA, which
