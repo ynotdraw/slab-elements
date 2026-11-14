@@ -17,6 +17,7 @@ import afterReflection from './library/after-reflection.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
 import OptionsController from './library/options-controller.js';
+import announce from './library/announce.js';
 import Option from './option.js';
 import OptionGroup from './option-group.js';
 import styles from './select.styles.js';
@@ -771,9 +772,19 @@ export default class Select extends LitElement {
       }
 
       // From the selected Option rather than wherever the user last was.
-      options.activeOption = this.selectedOptions.at(0) ?? null;
+      const previous = this.selectedOptions.at(0) ?? null;
+
+      options.activeOption = previous;
       options.typeahead(event.key);
       this.#selectActive();
+
+      // Focus stays on the Select, whose text changes without anything
+      // saying so, where a native `<select>` reads out the new Option.
+      const selected = this.selectedOptions.at(0);
+
+      if (selected && selected !== previous) {
+        announce(selected.text, { source: this });
+      }
 
       return;
     }

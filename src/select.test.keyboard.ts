@@ -515,6 +515,55 @@ test(
 );
 
 test(
+  'tells screenreaders which Option typeahead selects while closed',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await page.clock.install();
+
+    await render(
+      () =>
+        html`<slab-select label="Label">
+          <slab-option>Red</slab-option>
+          <slab-option>Red grape</slab-option>
+          <slab-option label="Second">Two</slab-option>
+        </slab-select>`,
+    );
+
+    // A stand-in for `ariaNotify()`, since not every browser has one, and a
+    // real one can't be listened to.
+    await page.evaluate(() => {
+      const announcements: string[] = [];
+
+      Object.assign(globalThis, { announcements });
+
+      Object.defineProperty(Element.prototype, 'ariaNotify', {
+        configurable: true,
+        value(message: string) {
+          announcements.push(message);
+        },
+      });
+    });
+
+    await page.keyboard.press('Tab');
+
+    // Only when the selected Option changes, so "red g" says "Red" once.
+    await page.keyboard.type('red g');
+    await page.clock.runFor(500);
+    await page.keyboard.press('s');
+
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            (globalThis as unknown as { announcements: string[] })
+              .announcements,
+        ),
+      )
+      .toStrictEqual(['Red', 'Red grape', 'Second']);
+  },
+);
+
+test(
   'opens on typeahead while closed when multiple',
   { tag: '@keyboard' },
   async ({ render, page }) => {
