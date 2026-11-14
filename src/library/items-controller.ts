@@ -182,6 +182,15 @@ export default class ItemsController<
   }
 
   /**
+   * Announces the active item again in WebKit, for a change to its state that
+   * screenreaders aren't told about otherwise, such as a Tree Item expanding.
+   */
+  announceActiveItem(): void {
+    this.#announcedItem = null;
+    this.#updateActiveDescendant();
+  }
+
+  /**
    * Moves to the first navigable item, and returns where it ended up.
    */
   first(): T | null {
@@ -477,11 +486,14 @@ export default class ItemsController<
 
       if (item && item !== this.#announcedItem && isFocused && isWebKit()) {
         const { selected } = item as Partial<{ selected: boolean }>;
+        const expanded = item.getAttribute('aria-expanded');
 
         announce(
-          selected
-            ? stringsFor(this.#host).activeItemSelected(item.text)
-            : item.text,
+          stringsFor(this.#host).activeItem(item.text, {
+            checked: item.getAttribute('aria-checked') === 'true',
+            expanded: expanded === null ? undefined : expanded === 'true',
+            selected: selected === true,
+          }),
           // From the document, since VoiceOver doesn't speak `ariaNotify()`
           // from an element in a focused listbox.
           { notifier: document, source: this.#host },

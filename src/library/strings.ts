@@ -10,7 +10,10 @@ import type { ReactiveController, ReactiveControllerHost } from 'lit';
 // then "fr", then English. A registered table can leave strings out, and those
 // are the next table's.
 export interface Strings {
-  activeItemSelected: (text: string) => string;
+  activeItem: (
+    text: string,
+    state: { checked?: boolean; expanded?: boolean; selected?: boolean },
+  ) => string;
   alertDialogCancel: string;
   alertDismiss: string;
   breadcrumb: string;
@@ -81,7 +84,16 @@ export interface Strings {
 }
 
 const english: Strings = {
-  activeItemSelected: (text) => `${text}, selected`,
+  activeItem: (text, { checked, expanded, selected }) =>
+    [
+      text,
+      selected && 'selected',
+      checked && 'checked',
+      expanded === true && 'expanded',
+      expanded === false && 'collapsed',
+    ]
+      .filter(Boolean)
+      .join(', '),
   alertDialogCancel: 'Cancel',
   alertDismiss: 'Dismiss',
   breadcrumb: 'Breadcrumb',

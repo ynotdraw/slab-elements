@@ -212,6 +212,12 @@ export default class Tree extends LitElement {
   #onExpandedChange = (event: Event) => {
     const active = this.#items.activeItem;
 
+    // In WebKit, which doesn't pass the active item on to screenreaders, so
+    // "expanded" or "collapsed" is said.
+    if (event.target === active) {
+      this.#items.announceActiveItem();
+    }
+
     if (
       event.target instanceof TreeItem &&
       !event.target.expanded &&

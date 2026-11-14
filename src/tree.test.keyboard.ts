@@ -700,3 +700,65 @@ test(
     await expect(one).toHaveAttribute('aria-expanded', 'false');
   },
 );
+
+test(
+  'tells screenreaders in WebKit which item becomes active, and when it expands or collapses',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-tree label="Label">
+          <slab-tree-item>
+            One
+            <slab-tree-item>Two</slab-tree-item>
+          </slab-tree-item>
+          <slab-tree-item>Three</slab-tree-item>
+        </slab-tree>`,
+    );
+
+    // Safari doesn't pass `ariaActiveDescendantElement` on to VoiceOver, so
+    // the active item, and its state, is announced there instead.
+    await page.evaluate(() => {
+      const announcements: string[] = [];
+
+      Object.assign(globalThis, { announcements });
+
+      Object.defineProperty(navigator, 'userAgent', {
+        configurable: true,
+        value:
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15',
+      });
+
+      for (const prototype of [Element.prototype, Document.prototype]) {
+        Object.defineProperty(prototype, 'ariaNotify', {
+          configurable: true,
+          value(message: string) {
+            announcements.push(message);
+          },
+        });
+      }
+    });
+
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('ArrowLeft');
+
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            (globalThis as unknown as { announcements: string[] })
+              .announcements,
+        ),
+      )
+      .toStrictEqual([
+        'One, collapsed',
+        'One, expanded',
+        'Two',
+        'One, expanded',
+        'One, collapsed',
+      ]);
+  },
+);
