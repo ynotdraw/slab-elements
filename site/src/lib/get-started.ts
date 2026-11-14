@@ -1,5 +1,5 @@
 // The Get started guide, written once for both the page and its Markdown twin.
-// Text is plain, with `code` spans and [links](path). A link's path is from
+// Text is plain, with `code` spans, **bold** and [links](path). A link's path is from
 // the site's root, written as the page's URL ("components/form/", or "" for
 // the home page), and each renderer turns it into its own kind of link.
 
@@ -13,6 +13,15 @@ export type Section = {
   coda?: string;
   heading: string;
   id: string;
+
+  // Tiles after the text, each a short title over a sentence, for what's
+  // worth more than a line in a paragraph.
+  points?: { text: string; title: string }[];
+
+  // Numbers after the text, each large over its label, as on a release's
+  // page.
+  stats?: { label: string; value: string }[];
+
   text: string;
 };
 
@@ -212,7 +221,16 @@ import type {} from 'slab-elements/react.js';`,
   {
     id: 'size',
     heading: 'What it weighs',
-    text: 'You ship what you import. Minified and gzipped, Dialog is about 5 kB, Checkbox and Tooltip about 6 kB, Calendar 8 kB, Menu 10 kB, Select 13 kB and Combobox 16 kB, and elements share what they have in common, so two cost less than their sum. Lit adds about 7 kB, once. Every element in the package, with Lit, comes to under 90 kB.',
+    text: 'You ship what you import, and nothing else. These are minified and gzipped, each on its own without Lit. Elements share what they have in common, so two cost less than their sum.',
+    stats: [
+      { label: 'Dialog', value: '4.7 kB' },
+      { label: 'Checkbox', value: '6.3 kB' },
+      { label: 'Select', value: '12.5 kB' },
+      { label: 'Combobox', value: '16.3 kB' },
+      { label: 'Lit, once', value: '6.7 kB' },
+      { label: 'Every element, with Lit', value: '88 kB' },
+    ],
+    coda: 'Tooltip is about 6 kB, Calendar 8 kB and Menu 10 kB.',
   },
   {
     id: 'api',
@@ -234,7 +252,25 @@ import type {} from 'slab-elements/react.js';`,
   {
     id: 'compare',
     heading: 'How it compares',
-    text: "React Aria, Base UI and Radix are headless too, and they're built for React. Headless UI is for React and Vue, and Ark UI reaches a few more frameworks with a package for each. Slab is custom elements, so one package works in any of them, in a server-rendered template, or in a plain HTML file, and it stays put when your framework changes. Its controls are form-associated, so a `<form>` submits, validates and resets them with nothing in between. Web Awesome and Shoelace are custom elements too, and come with a design of their own to theme. Slab comes with none, so there's nothing to override.",
+    text: "React Aria, Base UI and Radix are headless too, and they're built for React. Headless UI is for React and Vue, and Ark UI reaches a few more frameworks with a package for each. Web Awesome and Shoelace are custom elements, as Slab is, and come with a design of their own to theme. **Slab comes with none, so there's nothing to override.**",
+    points: [
+      {
+        title: 'Any framework, or none',
+        text: 'One package works in React, Vue, Svelte, a server-rendered template or a plain HTML file, and it stays put when your framework changes.',
+      },
+      {
+        title: 'Forms without glue',
+        text: 'Its controls are form-associated, so a `<form>` submits, validates and resets them with nothing in between.',
+      },
+      {
+        title: 'What you already know',
+        text: 'Events, methods and validation are named as native elements name them, so what you know of `<input>` and `<dialog>` carries over.',
+      },
+      {
+        title: 'Only what you import',
+        text: 'Each element is its own module and a few kilobytes. [What it weighs](get-started/#size) has the numbers.',
+      },
+    ],
     coda: "What that costs: an element is empty markup until its script runs, where a React library can render on the server. Slab needs the [browsers](get-started/#browsers) above and has no fallbacks for older ones. And styling goes through `::part()` and `:state()` rather than class names, so utility classes reach an element's host and what you slot into it, not its insides.",
   },
 ];
@@ -252,7 +288,7 @@ const link = /\[([^\]]+)\]\(([^)]*)\)/g;
 const external = /^https?:\/\//;
 
 /**
- * Text as HTML, with `code` spans and links. `base` is put in front of each
+ * Text as HTML, with `code` spans, **bold** and links. `base` is put in front of each
  * link but one to another site.
  */
 export function html(text: string, base: string): string {
@@ -262,7 +298,8 @@ export function html(text: string, base: string): string {
       (_, label: string, path: string) =>
         `<a href="${external.test(path) ? '' : base}${path}">${label}</a>`,
     )
-    .replaceAll(/`([^`]+)`/g, '<code>$1</code>');
+    .replaceAll(/`([^`]+)`/g, '<code>$1</code>')
+    .replaceAll(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
 }
 
 /**
@@ -293,10 +330,18 @@ export function guideMarkdown(guide: {
   return [
     `# ${title}`,
     `> ${summary}`,
-    ...sections.map(({ code, coda, heading, text }) =>
+    ...sections.map(({ code, coda, heading, points, stats, text }) =>
       [
         `## ${heading}`,
         markdown(text),
+        stats
+          ? stats.map(({ label, value }) => `- ${label}: ${value}`).join('\n')
+          : '',
+        points
+          ? points
+              .map(({ text, title }) => `- **${title}.** ${markdown(text)}`)
+              .join('\n')
+          : '',
         code ? `\`\`\`${code.lang}\n${code.code}\n\`\`\`` : '',
         coda ? markdown(coda) : '',
       ]

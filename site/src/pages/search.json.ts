@@ -21,9 +21,9 @@ export interface SearchEntry {
   title: string;
 }
 
-// Text without the Markdown that's in it: `code` and [links](path).
+// Text without the Markdown that's in it: `code`, **bold** and [links](path).
 const plain = (text: string) =>
-  text.replaceAll('`', '').replaceAll(/\[([^\]]+)\]\([^)]*\)/g, '$1');
+  text.replaceAll(/`|\*\*/g, '').replaceAll(/\[([^\]]+)\]\([^)]*\)/g, '$1');
 
 export const GET: APIRoute = async () => {
   const components = (await getCollection('components')).toSorted((a, b) =>
@@ -68,10 +68,16 @@ export const GET: APIRoute = async () => {
       title: 'Releases',
     },
     ...guides.flatMap(({ guide, path }) =>
-      guide.sections.map(({ coda, heading, id, text }) => ({
+      guide.sections.map(({ coda, heading, id, points = [], text }) => ({
         href: `${path}#${id}`,
         kind: guide.title,
-        text: plain([text, coda ?? ''].join(' ')),
+        text: plain(
+          [
+            text,
+            ...points.flatMap((point) => [point.title, point.text]),
+            coda ?? '',
+          ].join(' '),
+        ),
         title: heading,
       })),
     ),
