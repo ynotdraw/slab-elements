@@ -1,4 +1,6 @@
 import { type ReactiveController, type ReactiveControllerHost } from 'lit';
+import announce from './announce.js';
+import { stringsFor } from './strings.js';
 
 export type ItemsControllerHost = ReactiveControllerHost &
   HTMLElement & { renderRoot: HTMLElement | DocumentFragment };
@@ -180,6 +182,15 @@ export default class ItemsController<
   }
 
   /**
+   * Announces the active item again in WebKit, for a change to its state that
+   * screenreaders aren't told about otherwise, such as a Tree Item expanding.
+   */
+  announceActiveItem(): void {
+    this.#announcedItem = null;
+    this.#updateActiveDescendant();
+  }
+
+  /**
    * Moves to the first navigable item, and returns where it ended up.
    */
   first(): T | null {
@@ -350,6 +361,10 @@ export default class ItemsController<
 
   #activeItem: T | null = null;
 
+  // The item last announced in WebKit, so it isn't announced again on every
+  // update.
+  #announcedItem: T | null = null;
+
   #config: ItemsControllerConfig<T>;
 
   #host: ItemsControllerHost;
@@ -445,12 +460,54 @@ export default class ItemsController<
   // in, and the items are in the light DOM while the element with focus is in
   // the shadow root. An element reference may point out of a shadow root into
   // the tree around it, which is where the items are.
+  //
+  // Safari doesn't pass an element reference in `aria-activedescendant` on to
+  // VoiceOver, so moving through the items is silent there. So in WebKit, the
+  // item is announced as it becomes active, as React Aria does on Apple
+  // devices. Only while the element has focus, since that's when the user is
+  // the one moving.
   #updateActiveDescendant() {
     const element = this.#config.activeDescendantElement?.();
 
     if (element) {
       const isShown = this.#config.isActiveDescendantShown?.() ?? true;
-      element.ariaActiveDescendantElement = isShown ? this.#activeItem : null;
+      const item = isShown ? this.#activeItem : null;
+
+      element.ariaActiveDescendantElement = item;
+
+      const isFocused = element.matches(':focus');
+
+      // Once it's hidden or loses focus, the item is announced again when it
+      // comes back. In between, an item that's briefly none, such as while a
+      // Command Palette filters, isn't announced twice.
+      if (!isShown || !isFocused) {
+        this.#announcedItem = null;
+      }
+
+      if (item && item !== this.#announcedItem && isFocused && isWebKit()) {
+        const { selected } = item as Partial<{ selected: boolean }>;
+        const expanded = item.getAttribute('aria-expanded');
+
+        announce(
+          stringsFor(this.#host).activeItem(item.text, {
+            checked: item.getAttribute('aria-checked') === 'true',
+            expanded: expanded === null ? undefined : expanded === 'true',
+            selected: selected === true,
+          }),
+          // From the document, since VoiceOver doesn't speak `ariaNotify()`
+          // from an element in a focused listbox.
+          { notifier: document, source: this.#host },
+        );
+
+        this.#announcedItem = item;
+      }
     }
   }
+}
+
+// Every browser on iOS is WebKit. On macOS, Chromium's user agent says
+// "AppleWebKit" too, but also "Chrome/", and it passes the reference on.
+function isWebKit() {
+  const { userAgent } = navigator;
+  return userAgent.includes('AppleWebKit') && !userAgent.includes('Chrome/');
 }

@@ -768,3 +768,106 @@ test(
     await expect(host).toHaveJSProperty('value', 'Option 950');
   },
 );
+
+test(
+  'tells screenreaders in WebKit which option becomes active',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-listbox label="Label">
+          <slab-option>One</slab-option>
+          <slab-option selected>Two</slab-option>
+          <slab-option>Three</slab-option>
+        </slab-listbox>`,
+    );
+
+    // Safari doesn't pass `ariaActiveDescendantElement` on to VoiceOver, so
+    // the active option is announced there instead. A stand-in for
+    // `ariaNotify()` too, since not every browser has one, and a real one
+    // can't be listened to.
+    await page.evaluate(() => {
+      const announcements: string[] = [];
+
+      Object.assign(globalThis, { announcements });
+
+      Object.defineProperty(navigator, 'userAgent', {
+        configurable: true,
+        value:
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15',
+      });
+
+      // On the document too, which is where the active item is announced
+      // from in WebKit.
+      for (const prototype of [Element.prototype, Document.prototype]) {
+        Object.defineProperty(prototype, 'ariaNotify', {
+          configurable: true,
+          value(message: string) {
+            announcements.push(message);
+          },
+        });
+      }
+    });
+
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('ArrowUp');
+
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            (globalThis as unknown as { announcements: string[] })
+              .announcements,
+        ),
+      )
+      .toStrictEqual(['Two, selected', 'Three', 'Two, selected']);
+  },
+);
+
+test(
+  'leaves the active option to `aria-activedescendant` outside WebKit',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-listbox label="Label">
+          <slab-option>One</slab-option>
+          <slab-option>Two</slab-option>
+        </slab-listbox>`,
+    );
+
+    await page.evaluate(() => {
+      const announcements: string[] = [];
+
+      Object.assign(globalThis, { announcements });
+
+      Object.defineProperty(navigator, 'userAgent', {
+        configurable: true,
+        value:
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36',
+      });
+
+      Object.defineProperty(Element.prototype, 'ariaNotify', {
+        configurable: true,
+        value(message: string) {
+          announcements.push(message);
+        },
+      });
+    });
+
+    const host = page.locator('slab-listbox');
+
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('ArrowDown');
+
+    await expect(host).toHaveJSProperty('activeOption.textContent', 'Two');
+
+    expect(
+      await page.evaluate(
+        () =>
+          (globalThis as unknown as { announcements: string[] }).announcements,
+      ),
+    ).toStrictEqual([]);
+  },
+);

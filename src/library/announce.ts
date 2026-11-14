@@ -42,6 +42,13 @@ interface Notifier {
 
 export interface AnnounceOptions {
   /**
+   * What `ariaNotify()` is called on, when it's not `source`. Safari's
+   * VoiceOver drops one called on an element inside a focused listbox, but
+   * speaks one called on the document.
+   */
+  notifier?: Document | Element;
+
+  /**
    * "assertive" interrupts what's being read, so it's for errors.
    */
   politeness?: Politeness;
@@ -115,14 +122,18 @@ function regionsIn(holder: Holder): { isNew: boolean; regions: Regions } {
 
 export default function announce(
   message: string,
-  { politeness = 'polite', source }: AnnounceOptions = {},
+  {
+    notifier: notifierOption,
+    politeness = 'polite',
+    source,
+  }: AnnounceOptions = {},
 ): void {
   if (message.trim() === '') {
     return;
   }
 
   // On the source, so the announcement is read in the source's language.
-  const notifier = (source ?? document) as Notifier;
+  const notifier = (notifierOption ?? source ?? document) as Notifier;
 
   if (notifier.ariaNotify) {
     notifier.ariaNotify(message, {

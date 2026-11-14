@@ -1171,3 +1171,56 @@ test(
     );
   },
 );
+
+test(
+  'tells screenreaders in WebKit which Option becomes active',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label">
+          <slab-option>One</slab-option>
+          <slab-option>Two</slab-option>
+        </slab-combobox>`,
+    );
+
+    // Safari doesn't pass `ariaActiveDescendantElement` on to VoiceOver, so
+    // the active Option is announced there instead.
+    await page.evaluate(() => {
+      const announcements: string[] = [];
+
+      Object.assign(globalThis, { announcements });
+
+      Object.defineProperty(navigator, 'userAgent', {
+        configurable: true,
+        value:
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15',
+      });
+
+      // On the document too, which is where the active item is announced
+      // from in WebKit.
+      for (const prototype of [Element.prototype, Document.prototype]) {
+        Object.defineProperty(prototype, 'ariaNotify', {
+          configurable: true,
+          value(message: string) {
+            announcements.push(message);
+          },
+        });
+      }
+    });
+
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('ArrowDown');
+
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            (globalThis as unknown as { announcements: string[] })
+              .announcements,
+        ),
+      )
+      .toStrictEqual(['One', 'Two']);
+  },
+);

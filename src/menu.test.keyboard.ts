@@ -651,3 +651,56 @@ test(
     await expect(page.getByRole('button', { name: 'After' })).toBeFocused();
   },
 );
+
+test(
+  'tells screenreaders in WebKit which item becomes active, and whether it is checked',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-menu label="Label">
+          <button slot="anchor">Anchor</button>
+          <slab-menu-item type="checkbox" checked>Bold</slab-menu-item>
+          <slab-menu-item type="checkbox">Italic</slab-menu-item>
+        </slab-menu>`,
+    );
+
+    // Safari doesn't pass `ariaActiveDescendantElement` on to VoiceOver, so
+    // the active item, and its state, is announced there instead.
+    await page.evaluate(() => {
+      const announcements: string[] = [];
+
+      Object.assign(globalThis, { announcements });
+
+      Object.defineProperty(navigator, 'userAgent', {
+        configurable: true,
+        value:
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15',
+      });
+
+      for (const prototype of [Element.prototype, Document.prototype]) {
+        Object.defineProperty(prototype, 'ariaNotify', {
+          configurable: true,
+          value(message: string) {
+            announcements.push(message);
+          },
+        });
+      }
+    });
+
+    await page.getByRole('button').focus();
+    await page.keyboard.press('Enter');
+    await expect(page.getByRole('menu')).toBeFocused();
+    await page.keyboard.press('ArrowDown');
+
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            (globalThis as unknown as { announcements: string[] })
+              .announcements,
+        ),
+      )
+      .toStrictEqual(['Bold, checked', 'Italic']);
+  },
+);
