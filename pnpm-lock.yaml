@@ -115,6 +115,7 @@ overrides:
   koa@<3.0.1: '>=3.0.1'
   tmp@<=0.2.3: '>=0.2.4'
   '@custom-elements-manifest/analyzer>typescript': ^5.9.3
+  playwright-core: 1.64.1
 
 importers:
 
@@ -122,7 +123,7 @@ importers:
     devDependencies:
       '@axe-core/playwright':
         specifier: ^4.13.0
-        version: 4.14.0(playwright-core@1.65.0)
+        version: 4.14.0(playwright-core@1.64.1)
       '@changesets/changelog-github':
         specifier: ^0.5.2
         version: 0.5.2
@@ -4247,11 +4248,6 @@ packages:
     engines: {node: '>=20'}
     hasBin: true
 
-  playwright-core@1.65.0:
-    resolution: {integrity: sha512-vNSKgH6YqtN7cdT/L334zo0a+YwkrpicyrHJlWWPIm/Q+Nn2SWInil01oT0mbu96U4GgoRtCYQD9CzJQgju+lA==}
-    engines: {node: '>=20'}
-    hasBin: true
-
   playwright@1.64.1:
     resolution: {integrity: sha512-HCrVhHr5QQuwYoswEUGTb7gGp522yflbv/ST8nF4sFWGuLjQCt17Q/EubpGGSNKYn1tsTCPZxqHhHCfVURu7UA==}
     engines: {node: '>=20'}
@@ -5464,10 +5460,10 @@ snapshots:
       is-docker: 4.0.0
       package-manager-detector: 1.9.0
 
-  '@axe-core/playwright@4.14.0(playwright-core@1.65.0)':
+  '@axe-core/playwright@4.14.0(playwright-core@1.64.1)':
     dependencies:
       axe-core: 4.14.0
-      playwright-core: 1.65.0
+      playwright-core: 1.64.1
 
   '@babel/code-frame@7.29.7':
     dependencies:
@@ -9258,8 +9254,6 @@ snapshots:
   pify@4.0.1: {}
 
   playwright-core@1.64.1: {}
-
-  playwright-core@1.65.0: {}
 
   playwright@1.64.1:
     dependencies:

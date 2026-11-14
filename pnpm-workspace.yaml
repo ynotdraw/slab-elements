@@ -38,3 +38,10 @@ overrides:
   # TypeScript releases, so a guard like `isDecorator` silently matches the
   # wrong node when the two copies disagree. Keep them on one version.
   '@custom-elements-manifest/analyzer>typescript': 'catalog:'
+
+  # Playwright 1.65 crashes Firefox's page when Axe and a role query both read
+  # an element with `aria-labelledby` (microsoft/playwright#43967), so
+  # `playwright` and `@playwright/test` are pinned to 1.64.1. Axe's
+  # `playwright-core` peer would otherwise resolve to the newest release, and
+  # its `Page` type wouldn't match ours. Remove this with the pins.
+  playwright-core: 1.64.1
