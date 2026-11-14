@@ -172,7 +172,7 @@
     "sinon": "^19.0.5",
     "storybook": "^8.6.19",
     "stylelint": "^16.26.1",
-    "stylelint-config-standard": "^36.0.1",
+    "stylelint-config-standard": "^39.0.1",
     "stylelint-order": "^7.0.1",
     "stylelint-prettier": "^5.0.3",
     "stylelint-use-logical": "^2.1.3",
