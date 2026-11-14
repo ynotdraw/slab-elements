@@ -149,8 +149,8 @@ importers:
         specifier: 1.64.1
         version: 1.64.1
       '@storybook/addon-actions':
-        specifier: ^8.6.19
-        version: 8.6.19(storybook@8.6.19(prettier@3.9.10)(supports-color@7.2.0))
+        specifier: ^9.0.8
+        version: 9.0.8
       '@storybook/addon-controls':
         specifier: ^8.6.19
         version: 8.6.19(storybook@8.6.19(prettier@3.9.10)(supports-color@7.2.0))
@@ -1830,10 +1830,8 @@ packages:
   '@speed-highlight/core@1.2.24':
     resolution: {integrity: sha512-qeW2e1l78afw8VhRPfPQ1Gjj+KU5XFQ/OFV5ti6eTa9bruO7mJyZtA4vw0ofqmA3tKCkROE9xLk3VZoeRc98nw==}
 
-  '@storybook/addon-actions@8.6.19':
-    resolution: {integrity: sha512-+Xl7wUTeZST3xZMZzHxYbJXuNe/l4hmMHBWZAdjwCeuz1/ABizHx7jzIv5jq2lyVfDNaRSrcGSajMTKcw8r3Ww==}
-    peerDependencies:
-      storybook: ^8.6.19
+  '@storybook/addon-actions@9.0.8':
+    resolution: {integrity: sha512-LFePu7PPnWN0Il/uoUpmA5T0J0C7d6haJIbg0pXrjxW2MQVSYXE4S4LSUz8fOImltBDV3xAl6tLPYHFj6VcrOA==}
 
   '@storybook/addon-controls@8.6.19':
     resolution: {integrity: sha512-/KZkoYar2hrWAN5DtvXEN4sijacfJ0YulKGqRTP55XuZuuE0jbqpgGWWsc0TB1DmgG91hZgGE6oBpSpFw33jPw==}
@@ -2039,9 +2037,6 @@ packages:
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
-
-  '@types/uuid@9.0.8':
-    resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
 
   '@typescript-eslint/eslint-plugin@8.72.1':
     resolution: {integrity: sha512-5CokTWXpmbylfFabsbvHC0CAw3XLaGnoa+nFJX5FR592h/LoZsENUE6p/rg5xvkKrFEXz6pYmgI29AgXc2N3BQ==}
@@ -4253,10 +4248,6 @@ packages:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
 
-  polished@4.3.1:
-    resolution: {integrity: sha512-OBatVyC/N7SCW/FaDHrSd+vn0o5cS855TOmYi4OkdWUMSJCET/xip//ch8xGUvtr3i44X9LVyWwQlRMTN3pwSA==}
-    engines: {node: '>=10'}
-
   portfinder@1.0.38:
     resolution: {integrity: sha512-rEwq/ZHlJIKw++XtLAO8PPuOQA/zaPJOZJ37BVuN97nLpMJeuDVLVGRwbFoBgLudgdTMP2hdRJP++H+8QOA3vg==}
     engines: {node: '>= 10.12'}
@@ -5068,11 +5059,6 @@ packages:
 
   util@0.12.5:
     resolution: {integrity: sha512-kZf/K6hEIrWHI6XqOFUiiMa+79wE/D8Q+NCNAWclkyg3b4d2k7s0QGepNjiABc+aR3N1PAyHL7p6UcLY6LmrnA==}
-
-  uuid@9.0.1:
-    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
-    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
-    hasBin: true
 
   v8-to-istanbul@9.3.0:
     resolution: {integrity: sha512-kiGUalWN+rgBJ/1OHZsBtU4rXZOfj/7rKQxULKlIzwzQSvMJUUNgPwJEEh7gU6xEVxC0ahoOBvN2YI8GH6FNgA==}
@@ -6591,14 +6577,7 @@ snapshots:
 
   '@speed-highlight/core@1.2.24': {}
 
-  '@storybook/addon-actions@8.6.19(storybook@8.6.19(prettier@3.9.10)(supports-color@7.2.0))':
-    dependencies:
-      '@storybook/global': 5.0.0
-      '@types/uuid': 9.0.8
-      dequal: 2.0.3
-      polished: 4.3.1
-      storybook: 8.6.19(prettier@3.9.10)(supports-color@7.2.0)
-      uuid: 9.0.1
+  '@storybook/addon-actions@9.0.8': {}
 
   '@storybook/addon-controls@8.6.19(storybook@8.6.19(prettier@3.9.10)(supports-color@7.2.0))':
     dependencies:
@@ -6833,8 +6812,6 @@ snapshots:
   '@types/trusted-types@2.0.7': {}
 
   '@types/unist@3.0.3': {}
-
-  '@types/uuid@9.0.8': {}
 
   '@typescript-eslint/eslint-plugin@8.72.1(@typescript-eslint/parser@8.72.1(eslint@9.39.5(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3))(eslint@9.39.5(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)':
     dependencies:
@@ -9255,10 +9232,6 @@ snapshots:
 
   pluralize@8.0.0: {}
 
-  polished@4.3.1:
-    dependencies:
-      '@babel/runtime': 7.29.7
-
   portfinder@1.0.38(supports-color@7.2.0):
     dependencies:
       async: 3.2.6
@@ -10177,8 +10150,6 @@ snapshots:
       is-generator-function: 1.1.2
       is-typed-array: 1.1.15
       which-typed-array: 1.1.22
-
-  uuid@9.0.1: {}
 
   v8-to-istanbul@9.3.0:
     dependencies:
