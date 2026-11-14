@@ -52,10 +52,10 @@ declare global {
  * Option's text unless it's replaced, and makes the first one left the active
  * one, so Enter runs the best match. An Option that doesn't match is hidden.
  * With none left, the listbox is hidden too, the host matches
- * `:state(empty)`, and whatever is slotted into `empty` is shown in a status
- * region, so it's announced. Once typing pauses, screenreaders are told how
- * many Options are left, by `resultsLabel`, or that none are when nothing is
- * slotted into `empty`.
+ * `:state(empty)`, and whatever is slotted into `empty` is shown. Once typing
+ * pauses, screenreaders are told how many Options are left, by
+ * `resultsLabel`, or with none left, the text slotted into `empty` when
+ * there is some.
  *
  * ArrowDown and ArrowUp move the active Option, stopping at each end and
  * skipping disabled Options. Enter and a click choose the active Option: the
@@ -91,7 +91,7 @@ declare global {
  *
  * @csspart close - Closes the palette with an empty returnValue
  * @csspart dialog - The native dialog. A modal one's backdrop is its ::backdrop
- * @csspart empty - A status region that shows the "empty" slot when no Option matches
+ * @csspart empty - Shows the "empty" slot when no Option matches
  * @csspart input - The input
  * @csspart label - The label
  * @csspart listbox - The Options, below the input
@@ -253,8 +253,8 @@ export default class CommandPalette extends Dialog {
         </slot>
       </div>
 
-      <div data-test="empty" part="empty" role="status">
-        <!-- A status region that shows the "empty" slot when no Option matches -->
+      <div data-test="empty" part="empty">
+        <!-- Shows the "empty" slot when no Option matches -->
         ${when(
           isEmpty,
           () =>
@@ -360,13 +360,19 @@ export default class CommandPalette extends Dialog {
     this.#announceTimeout = setTimeout(() => {
       const count = this.#visible.length;
 
-      // The "empty" slot's status region says so itself.
-      const isEmptySlotted = Boolean(
-        this.querySelector(':scope > [slot="empty"]'),
-      );
+      // Its own words for there being none, when it has some. A live region
+      // around the slot isn't announced when the slot is filled, so they're
+      // told rather than left to one.
+      const empty = [...this.querySelectorAll(':scope > [slot="empty"]')]
+        .map(({ textContent }) => textContent)
+        .join(' ')
+        .replaceAll(/\s+/g, ' ')
+        .trim();
 
-      if (this.open && (count > 0 || !isEmptySlotted)) {
-        announce(this.resultsLabel(count), { source: this });
+      if (this.open) {
+        announce(count === 0 && empty ? empty : this.resultsLabel(count), {
+          source: this,
+        });
       }
     }, announceDelay);
   };

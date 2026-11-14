@@ -35,7 +35,6 @@ test('open', { tag: '@accessibility' }, async ({ render, page }) => {
       - listbox "Label":
         - option "One"
         - option "Two" [disabled]
-      - status
   `);
 });
 
@@ -90,7 +89,7 @@ test(
 );
 
 test(
-  'hides its listbox and shows its "empty" slot in a status when nothing matches',
+  'hides its listbox and shows its "empty" slot when nothing matches',
   { tag: '@accessibility' },
   async ({ render, page }) => {
     await render(
@@ -110,7 +109,7 @@ test(
         - text: Label
         - combobox "Label"
         - button "Close"
-        - status: No results
+        - text: No results
     `);
 
     await expect(page.getByRole('combobox')).toHaveAttribute(
