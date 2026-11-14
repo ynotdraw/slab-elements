@@ -25,19 +25,17 @@ updates:
         patterns:
           - '*'
 
-  # The root is the pnpm workspace, with `site` as a package of its own. Each
-  # gets its own pull requests so a site update doesn't hold up Slab's.
+  # The root is the pnpm workspace, and its one lockfile covers `site` as well,
+  # so the root alone updates both. Listing `site` too opened a second pull
+  # request for each of its updates, without the lockfile.
   - package-ecosystem: npm
-    directories:
-      - /
-      - /site
+    directory: /
     schedule:
       interval: weekly
     cooldown:
       default-days: 7
-    # Minor and patch updates come together, one pull request a week for
-    # each package. A major gets a pull request of its own, since it may
-    # need changes.
+    # Minor and patch updates come together in one pull request a week. A
+    # major gets a pull request of its own, since it may need changes.
     groups:
       minor-and-patch:
         update-types:
