@@ -26,7 +26,7 @@ test(
           <div slot="target">Target</div>
           <slab-menu-item>One</slab-menu-item>
           <slab-menu-item disabled>Two</slab-menu-item>
-          <slab-menu-item label="Label">Three</slab-menu-item>
+          <slab-menu-item label="Three">Three</slab-menu-item>
         </slab-context-menu>
       `,
     );
