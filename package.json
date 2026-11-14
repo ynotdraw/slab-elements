@@ -112,7 +112,7 @@
     "@jridgewell/trace-mapping": "^0.3.31",
     "@playwright/test": "1.64.1",
     "@storybook/addon-actions": "^8.6.19",
-    "@storybook/addon-controls": "^8.6.19",
+    "@storybook/addon-controls": "^9.0.8",
     "@storybook/addon-docs": "^8.6.19",
     "@storybook/addon-toolbars": "^8.6.19",
     "@storybook/core-events": "^8.6.14",
