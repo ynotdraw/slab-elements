@@ -1,0 +1,26 @@
+name: Feature request
+description: Something a component can't do yet, or a component Slab doesn't have.
+title: '[Feature]: '
+labels: ['enhancement']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. What you're building is the most useful part, more so than how Slab should do it.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What you're trying to do
+      description: What you're building, and where Slab stops you.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you'd like
+      description: An attribute, a method, an event, a component. If a native element or another library already does it, say which, since Slab follows the platform where it can.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What you do today
+      description: Any way around it you've found.

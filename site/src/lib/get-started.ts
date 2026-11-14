@@ -1,5 +1,5 @@
 // The Get started guide, written once for both the page and its Markdown twin.
-// Text is plain, with `code` spans and [links](path). A link's path is from
+// Text is plain, with `code` spans, **bold** and [links](path). A link's path is from
 // the site's root, written as the page's URL ("components/form/", or "" for
 // the home page), and each renderer turns it into its own kind of link.
 
@@ -13,6 +13,15 @@ export type Section = {
   coda?: string;
   heading: string;
   id: string;
+
+  // Tiles after the text, each a short title over a sentence, for what's
+  // worth more than a line in a paragraph.
+  points?: { text: string; title: string }[];
+
+  // Numbers after the text, each large over its label, as on a release's
+  // page.
+  stats?: { label: string; value: string }[];
+
   text: string;
 };
 
@@ -85,6 +94,23 @@ export default {
       label: 'vite.config.js',
       lang: 'js',
     },
+  },
+  {
+    id: 'server',
+    heading: 'On the server',
+    text: "Importing an element where there's no DOM is safe, so Next.js, Nuxt, SvelteKit, Astro and Rails all work. Slab doesn't render on the server: the tag is sent as you wrote it, and the element takes over in the browser once its module loads. That module has to reach the browser, so in a framework with server components, import it from a client one.",
+    code: {
+      code: `'use client';
+
+import 'slab-elements/switch.js';
+
+export default function Notifications() {
+  return <slab-switch label="Notifications" name="notifications" />;
+}`,
+      label: 'notifications.jsx',
+      lang: 'js',
+    },
+    coda: "Until an element is defined it has no shadow root, so there's nothing of it to see. `:not(:defined)` selects it in that moment, to hold its space or hide what's slotted into it.",
   },
   {
     id: 'forms',
@@ -181,10 +207,30 @@ import type {} from 'slab-elements/react.js';`,
     coda: 'Events are typed too: a handler such as `oncopy-error` in React and Svelte, or `@copy-error` in Vue, gets the event with the element as its `currentTarget`. For any other framework, `slab-elements/jsx.js` has `SlabElementProps`, every tag and its properties, and `SlabElementEvents`, every tag and its events.',
   },
   {
+    id: 'testing',
+    heading: 'Test it in a browser',
+    text: "Test what you build with Slab in a real browser, with Playwright, Cypress, WebdriverIO or Vitest's browser mode. Slab is built on what browsers do, such as popovers, form association and custom states, and jsdom and happy-dom don't have enough of that for an element to render.",
+    coda: "In a browser, an element is found the way the native one is. Playwright's `getByRole()` and `getByLabel()` reach through shadow roots, so `getByRole('switch', { name: 'Notifications' })` finds a Switch, and its `checked`, `value` and events are there to assert on. It's how Slab tests itself.",
+  },
+  {
     id: 'browsers',
     heading: 'Browsers',
     text: 'Slab needs Chrome and Edge 125, Firefox 126, or Safari 17.4, on desktop or mobile, or anything newer. Those are the first versions with both popovers and custom states, which every element depends on, and from 1.0, raising them waits for a major version. Slab is tested in the latest Chromium, Firefox and WebKit.',
     coda: "Where a browser hasn't caught up on a newer feature, Slab uses it where it's there and leaves the platform's behavior where it isn't. Without CSS anchor positioning, for example, a popover is centered rather than placed beside its anchor, and without ARIA element reflection, an `aria-labelledby` or `aria-describedby` on the host doesn't reach the element inside. Every element still opens, closes, submits and is announced, everywhere.",
+  },
+  {
+    id: 'size',
+    heading: 'What it weighs',
+    text: 'You ship what you import, and nothing else. These are minified and gzipped, each on its own without Lit. Elements share what they have in common, so two cost less than their sum.',
+    stats: [
+      { label: 'Dialog', value: '4.7 kB' },
+      { label: 'Checkbox', value: '6.3 kB' },
+      { label: 'Select', value: '12.5 kB' },
+      { label: 'Combobox', value: '16.3 kB' },
+      { label: 'Lit, once', value: '6.7 kB' },
+      { label: 'Every element, with Lit', value: '88 kB' },
+    ],
+    coda: 'Tooltip is about 6 kB, Calendar 8 kB and Menu 10 kB.',
   },
   {
     id: 'api',
@@ -203,6 +249,30 @@ import type {} from 'slab-elements/react.js';`,
     heading: 'The same everywhere',
     text: "Elements that do the same thing do it the same way. `multiple` lets more than one be chosen, and `value` is the first of `values`. A number is a number where the native element's is, as on Meter and Progress, and a string where it isn't, as on Slider and Number, which add `valueAsNumber`. Anything with `open` dispatches a `ToggleEvent` named \"toggle\" that doesn't bubble, as a popover does. Those that open a popup, such as Popover, Select, Combobox, Menu, Tooltip and the date pickers, dispatch \"beforetoggle\" first, and cancelling it keeps one from opening. `readonly` is on the fields that take typing, Combobox and Tags Input among them, and on Rating, and leaves the value focusable and submitted. Controls a native `readonly` does nothing to, like Checkbox, Select and Slider, don't have it. And the form controls for a set of choices are Checkbox Group and Radio Group, since toggle buttons aren't form controls.",
   },
+  {
+    id: 'compare',
+    heading: 'How it compares',
+    text: "React Aria, Base UI and Radix are headless too, and they're built for React. Headless UI is for React and Vue, and Ark UI reaches a few more frameworks with a package for each. Web Awesome and Shoelace are custom elements, as Slab is, and come with a design of their own to theme. **Slab comes with none, so there's nothing to override.**",
+    points: [
+      {
+        title: 'Any framework, or none',
+        text: 'One package works in React, Vue, Svelte, a server-rendered template or a plain HTML file, and it stays put when your framework changes.',
+      },
+      {
+        title: 'Forms without glue',
+        text: 'Its controls are form-associated, so a `<form>` submits, validates and resets them with nothing in between.',
+      },
+      {
+        title: 'What you already know',
+        text: 'Events, methods and validation are named as native elements name them, so what you know of `<input>` and `<dialog>` carries over.',
+      },
+      {
+        title: 'Only what you import',
+        text: 'Each element is its own module and a few kilobytes. [What it weighs](get-started/#size) has the numbers.',
+      },
+    ],
+    coda: "What that costs: an element is empty markup until its script runs, where a React library can render on the server. Slab needs the [browsers](get-started/#browsers) above and has no fallbacks for older ones. And styling goes through `::part()` and `:state()` rather than class names, so utility classes reach an element's host and what you slot into it, not its insides.",
+  },
 ];
 
 const escape = (text: string) =>
@@ -218,7 +288,7 @@ const link = /\[([^\]]+)\]\(([^)]*)\)/g;
 const external = /^https?:\/\//;
 
 /**
- * Text as HTML, with `code` spans and links. `base` is put in front of each
+ * Text as HTML, with `code` spans, **bold** and links. `base` is put in front of each
  * link but one to another site.
  */
 export function html(text: string, base: string): string {
@@ -228,7 +298,8 @@ export function html(text: string, base: string): string {
       (_, label: string, path: string) =>
         `<a href="${external.test(path) ? '' : base}${path}">${label}</a>`,
     )
-    .replaceAll(/`([^`]+)`/g, '<code>$1</code>');
+    .replaceAll(/`([^`]+)`/g, '<code>$1</code>')
+    .replaceAll(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
 }
 
 /**
@@ -259,10 +330,18 @@ export function guideMarkdown(guide: {
   return [
     `# ${title}`,
     `> ${summary}`,
-    ...sections.map(({ code, coda, heading, text }) =>
+    ...sections.map(({ code, coda, heading, points, stats, text }) =>
       [
         `## ${heading}`,
         markdown(text),
+        stats
+          ? stats.map(({ label, value }) => `- ${label}: ${value}`).join('\n')
+          : '',
+        points
+          ? points
+              .map(({ text, title }) => `- **${title}.** ${markdown(text)}`)
+              .join('\n')
+          : '',
         code ? `\`\`\`${code.lang}\n${code.code}\n\`\`\`` : '',
         coda ? markdown(coda) : '',
       ]
