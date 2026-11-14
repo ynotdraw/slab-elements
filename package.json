@@ -139,7 +139,7 @@
     "eslint": "^9.39.5",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-lit": "^1.15.0",
+    "eslint-plugin-lit": "^2.3.1",
     "eslint-plugin-lit-a11y": "^4.1.4",
     "eslint-plugin-playwright": "^2.11.0",
     "eslint-plugin-sort-class-members": "^1.22.1",
