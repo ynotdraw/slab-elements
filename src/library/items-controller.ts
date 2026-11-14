@@ -482,7 +482,9 @@ export default class ItemsController<
           selected
             ? stringsFor(this.#host).activeItemSelected(item.text)
             : item.text,
-          { source: this.#host },
+          // From the document, since VoiceOver doesn't speak `ariaNotify()`
+          // from an element in a focused listbox.
+          { notifier: document, source: this.#host },
         );
 
         this.#announcedItem = item;
