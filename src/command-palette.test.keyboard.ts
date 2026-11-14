@@ -355,7 +355,7 @@ test(
 );
 
 test(
-  'leaves telling screenreaders there are no results to its "empty" slot',
+  'tells screenreaders its "empty" slot\'s text when nothing matches',
   { tag: '@keyboard' },
   async ({ render, page }) => {
     await page.clock.install();
@@ -396,9 +396,8 @@ test(
     await combobox.pressSequentially('z');
     await page.clock.runFor(500);
 
-    // Its status region says so instead.
     await expect(page.getByText('Nothing found')).toBeVisible();
-    expect(await announcements()).toStrictEqual(['1 result']);
+    expect(await announcements()).toStrictEqual(['1 result', 'Nothing found']);
   },
 );
 

@@ -3777,7 +3777,7 @@
             },
             {
               "name": "empty",
-              "description": "A status region that shows the \"empty\" slot when no Option matches"
+              "description": "Shows the \"empty\" slot when no Option matches"
             },
             {
               "name": "dialog",
