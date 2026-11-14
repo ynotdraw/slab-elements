@@ -98,7 +98,7 @@ export default {
   {
     id: 'server',
     heading: 'On the server',
-    text: "Importing an element where there's no DOM is safe, so Next.js, Nuxt, SvelteKit, Astro and Rails all work. Slab doesn't render on the server: the tag is sent as you wrote it, and the element takes over in the browser once its module loads. That module has to reach the browser, so in a framework with server components, import it from a client one.",
+    text: "Using Next.js, Nuxt, SvelteKit, Astro or Rails? You're good. Importing an element on the server is safe. Slab doesn't render there, though. The tag is sent as you wrote it, and the element takes over in the browser once its module loads. One thing to watch: that module has to reach the browser. With server components, import it from a client one.",
     code: {
       code: `'use client';
 
@@ -110,7 +110,7 @@ export default function Notifications() {
       label: 'notifications.jsx',
       lang: 'js',
     },
-    coda: "Until an element is defined it has no shadow root, so there's nothing of it to see. `:not(:defined)` selects it in that moment, to hold its space or hide what's slotted into it.",
+    coda: "Before an element is defined, there's nothing of it to see. Use `:not(:defined)` to hold its space, or to hide what's slotted into it, until it's ready.",
   },
   {
     id: 'forms',
@@ -209,8 +209,8 @@ import type {} from 'slab-elements/react.js';`,
   {
     id: 'testing',
     heading: 'Test it in a browser',
-    text: "Test what you build with Slab in a real browser, with Playwright, Cypress, WebdriverIO or Vitest's browser mode. Slab is built on what browsers do, such as popovers, form association and custom states, and jsdom and happy-dom don't have enough of that for an element to render.",
-    coda: "In a browser, an element is found the way the native one is. Playwright's `getByRole()` and `getByLabel()` reach through shadow roots, so `getByRole('switch', { name: 'Notifications' })` finds a Switch, and its `checked`, `value` and events are there to assert on. It's how Slab tests itself.",
+    text: "Test what you build with Slab in a real browser. Playwright, Cypress, WebdriverIO and Vitest's browser mode all work great. Why not jsdom or happy-dom? Slab leans on the platform: popovers, form association and custom states. They don't have enough of it for an element to render.",
+    coda: "The good news: you find a Slab element the same way you find a native one. Playwright's `getByRole()` and `getByLabel()` reach through shadow roots, so `getByRole('switch', { name: 'Notifications' })` finds a Switch. From there, assert on `checked`, `value` and its events. It's how Slab tests itself!",
   },
   {
     id: 'browsers',
@@ -221,7 +221,7 @@ import type {} from 'slab-elements/react.js';`,
   {
     id: 'size',
     heading: 'What it weighs',
-    text: 'You ship what you import, and nothing else. These are minified and gzipped, each on its own without Lit. Elements share what they have in common, so two cost less than their sum.',
+    text: "You only ship what you import. Here's what a few elements cost, minified and gzipped, each on its own without Lit. Elements share code too, so two cost less than their sum.",
     stats: [
       { label: 'Dialog', value: '4.7 kB' },
       { label: 'Checkbox', value: '6.3 kB' },
@@ -252,26 +252,26 @@ import type {} from 'slab-elements/react.js';`,
   {
     id: 'compare',
     heading: 'How it compares',
-    text: "React Aria, Base UI and Radix are headless too, and they're built for React. Headless UI is for React and Vue, and Ark UI reaches a few more frameworks with a package for each. Web Awesome and Shoelace are custom elements, as Slab is, and come with a design of their own to theme. **Slab comes with none, so there's nothing to override.**",
+    text: "There are a lot of great headless libraries out there. React Aria, Base UI and Radix are built for React. Headless UI is for React and Vue, and Ark UI reaches a few more frameworks with a package for each. Web Awesome and Shoelace are custom elements like Slab, and they come with a design of their own to theme. **Slab comes with none, so there's nothing to override.**",
     points: [
       {
         title: 'Any framework, or none',
-        text: 'One package works in React, Vue, Svelte, a server-rendered template or a plain HTML file, and it stays put when your framework changes.',
+        text: 'One package works in React, Vue, Svelte, a server-rendered template or a plain HTML file. Change frameworks and Slab comes with you.',
       },
       {
         title: 'Forms without glue',
-        text: 'Its controls are form-associated, so a `<form>` submits, validates and resets them with nothing in between.',
+        text: "Slab's controls are form-associated. A `<form>` submits, validates and resets them. No extra wiring needed.",
       },
       {
         title: 'What you already know',
-        text: 'Events, methods and validation are named as native elements name them, so what you know of `<input>` and `<dialog>` carries over.',
+        text: 'Events, methods and validation work the way native elements do. If you know `<input>` and `<dialog>`, you know Slab.',
       },
       {
         title: 'Only what you import',
-        text: 'Each element is its own module and a few kilobytes. [What it weighs](get-started/#size) has the numbers.',
+        text: 'Each element is its own module and only a few kilobytes. See [What it weighs](get-started/#size) for the numbers.',
       },
     ],
-    coda: "What that costs: an element is empty markup until its script runs, where a React library can render on the server. Slab needs the [browsers](get-started/#browsers) above and has no fallbacks for older ones. And styling goes through `::part()` and `:state()` rather than class names, so utility classes reach an element's host and what you slot into it, not its insides.",
+    coda: "It's not all free, though. An element is empty markup until its script runs, where a React library can render on the server. Slab needs the [browsers](get-started/#browsers) above, with no fallbacks for older ones. And you style through `::part()` and `:state()` rather than class names, so utility classes reach an element's host and what you slot into it, but not its insides.",
   },
 ];
 
