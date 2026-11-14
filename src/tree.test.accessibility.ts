@@ -10,12 +10,18 @@ test('is accessible', { tag: '@accessibility' }, async ({ render, page }) => {
           <slab-tree-item selected>Two</slab-tree-item>
           <slab-tree-item disabled>Three</slab-tree-item>
         </slab-tree-item>
-        <slab-tree-item label="Label">Four</slab-tree-item>
+        <slab-tree-item label="Four">Four</slab-tree-item>
       </slab-tree>
     `,
   );
 
-  await expect(page).toBeAccessible('slab-tree');
+  // Axe 4.14 checks that an element's name includes its text. A Tree Item's
+  // text includes the text of the Tree Items nested in it, which aren't part
+  // of its visible label, so "One" is reported for not being named "One Two
+  // Three". Its name, "One", is its visible label, as WCAG 2.5.3 asks.
+  await expect(page).toBeAccessible('slab-tree', [
+    'label-content-name-mismatch',
+  ]);
 });
 
 test('has a tree', { tag: '@accessibility' }, async ({ render, page }) => {
