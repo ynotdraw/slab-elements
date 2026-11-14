@@ -85,10 +85,13 @@ roles, names and states, and keyboard tests cover what each component does with
 the keyboard, including in right-to-left layouts. In October 2026, every component's semantics, keyboard
 support and announcements were audited, and everything found was fixed.
 
-What hasn't been done yet is testing by hand with a screen reader, such as
-VoiceOver, NVDA, JAWS or TalkBack, or with voice control or switch access.
-Automated tools catch only some problems. And since Slab is headless, contrast,
-focus rings and target sizes are up to your styles.
+In November 2026, the 21 components most likely to go wrong were also walked
+through by hand with VoiceOver on macOS in Chrome, and the gaps it found are
+being fixed. That was done to the best of our ability, not by accessibility
+specialists. VoiceOver in Safari, NVDA, JAWS, TalkBack, voice control and
+switch access haven't been tried yet. Automated tools catch only some problems.
+And since Slab is headless, contrast, focus rings and target sizes are up to
+your styles.
 
 If a component doesn't work with your assistive technology, please
 [open an issue](https://github.com/ynotdraw/slab-elements/issues/new?template=accessibility.yml)
