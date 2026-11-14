@@ -87,6 +87,23 @@ export default {
     },
   },
   {
+    id: 'server',
+    heading: 'On the server',
+    text: "Importing an element where there's no DOM is safe, so Next.js, Nuxt, SvelteKit, Astro and Rails all work. Slab doesn't render on the server: the tag is sent as you wrote it, and the element takes over in the browser once its module loads. That module has to reach the browser, so in a framework with server components, import it from a client one.",
+    code: {
+      code: `'use client';
+
+import 'slab-elements/switch.js';
+
+export default function Notifications() {
+  return <slab-switch label="Notifications" name="notifications" />;
+}`,
+      label: 'notifications.jsx',
+      lang: 'js',
+    },
+    coda: "Until an element is defined it has no shadow root, so there's nothing of it to see. `:not(:defined)` selects it in that moment, to hold its space or hide what's slotted into it.",
+  },
+  {
     id: 'forms',
     heading: 'Put it in a form',
     text: "Slab's controls are form-associated, so they work in a plain `<form>` the way an `<input>` does. They submit their `name` and `value`, reset with the form, and come back when the browser restores the page. Validation is the native element's too: `required`, `pattern` and the rest mean what they mean on an `<input>`, and `checkValidity()`, `reportValidity()` and `setCustomValidity()` work the same.",
@@ -181,10 +198,21 @@ import type {} from 'slab-elements/react.js';`,
     coda: 'Events are typed too: a handler such as `oncopy-error` in React and Svelte, or `@copy-error` in Vue, gets the event with the element as its `currentTarget`. For any other framework, `slab-elements/jsx.js` has `SlabElementProps`, every tag and its properties, and `SlabElementEvents`, every tag and its events.',
   },
   {
+    id: 'testing',
+    heading: 'Test it in a browser',
+    text: "Test what you build with Slab in a real browser, with Playwright, Cypress, WebdriverIO or Vitest's browser mode. Slab is built on what browsers do, such as popovers, form association and custom states, and jsdom and happy-dom don't have enough of that for an element to render.",
+    coda: "In a browser, an element is found the way the native one is. Playwright's `getByRole()` and `getByLabel()` reach through shadow roots, so `getByRole('switch', { name: 'Notifications' })` finds a Switch, and its `checked`, `value` and events are there to assert on. It's how Slab tests itself.",
+  },
+  {
     id: 'browsers',
     heading: 'Browsers',
     text: 'Slab needs Chrome and Edge 125, Firefox 126, or Safari 17.4, on desktop or mobile, or anything newer. Those are the first versions with both popovers and custom states, which every element depends on, and from 1.0, raising them waits for a major version. Slab is tested in the latest Chromium, Firefox and WebKit.',
     coda: "Where a browser hasn't caught up on a newer feature, Slab uses it where it's there and leaves the platform's behavior where it isn't. Without CSS anchor positioning, for example, a popover is centered rather than placed beside its anchor, and without ARIA element reflection, an `aria-labelledby` or `aria-describedby` on the host doesn't reach the element inside. Every element still opens, closes, submits and is announced, everywhere.",
+  },
+  {
+    id: 'size',
+    heading: 'What it weighs',
+    text: 'You ship what you import. Minified and gzipped, Dialog is about 5 kB, Checkbox and Tooltip about 6 kB, Calendar 8 kB, Menu 10 kB, Select 13 kB and Combobox 16 kB, and elements share what they have in common, so two cost less than their sum. Lit adds about 7 kB, once. Every element in the package, with Lit, comes to under 90 kB.',
   },
   {
     id: 'api',
@@ -202,6 +230,12 @@ import type {} from 'slab-elements/react.js';`,
     id: 'conventions',
     heading: 'The same everywhere',
     text: "Elements that do the same thing do it the same way. `multiple` lets more than one be chosen, and `value` is the first of `values`. A number is a number where the native element's is, as on Meter and Progress, and a string where it isn't, as on Slider and Number, which add `valueAsNumber`. Anything with `open` dispatches a `ToggleEvent` named \"toggle\" that doesn't bubble, as a popover does. Those that open a popup, such as Popover, Select, Combobox, Menu, Tooltip and the date pickers, dispatch \"beforetoggle\" first, and cancelling it keeps one from opening. `readonly` is on the fields that take typing, Combobox and Tags Input among them, and on Rating, and leaves the value focusable and submitted. Controls a native `readonly` does nothing to, like Checkbox, Select and Slider, don't have it. And the form controls for a set of choices are Checkbox Group and Radio Group, since toggle buttons aren't form controls.",
+  },
+  {
+    id: 'compare',
+    heading: 'How it compares',
+    text: "React Aria, Base UI and Radix are headless too, and they're built for React. Headless UI is for React and Vue, and Ark UI reaches a few more frameworks with a package for each. Slab is custom elements, so one package works in any of them, in a server-rendered template, or in a plain HTML file, and it stays put when your framework changes. Its controls are form-associated, so a `<form>` submits, validates and resets them with nothing in between. Web Awesome and Shoelace are custom elements too, and come with a design of their own to theme. Slab comes with none, so there's nothing to override.",
+    coda: "What that costs: an element is empty markup until its script runs, where a React library can render on the server. Slab needs the [browsers](get-started/#browsers) above and has no fallbacks for older ones. And styling goes through `::part()` and `:state()` rather than class names, so utility classes reach an element's host and what you slot into it, not its insides.",
   },
 ];
 

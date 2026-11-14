@@ -1,0 +1,61 @@
+name: Bug
+description: A component does something it shouldn't, or doesn't do something it should.
+title: '[Bug]: '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. The smaller the example, the faster the fix.
+
+        If it's about a screen reader or other assistive technology, the Accessibility problem form asks better questions. If it's a security problem, please [report it privately](https://github.com/ynotdraw/slab-elements/security/advisories/new) instead.
+  - type: input
+    id: component
+    attributes:
+      label: Component
+      description: Which element, and which page or example you saw it on, if any.
+      placeholder: slab-combobox on https://slab-elements.dev/components/combobox/
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Slab version
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser, operating system and their versions
+      placeholder: Firefox 145 on Windows 11
+    validations:
+      required: true
+  - type: input
+    id: framework
+    attributes:
+      label: Framework and version, if any
+      placeholder: React 19.2, Vue 3.5, none…
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps
+      description: The markup you used and what you did, in order. A link to a small example, on StackBlitz or CodePen or in a repository, helps most.
+      placeholder: |
+        1. Render `<slab-combobox label="City" multiple>` with three Options.
+        2. Choose the first Option.
+    validations:
+      required: true
+  - type: textarea
+    id: happened
+    attributes:
+      label: What happened
+      description: Including anything in the console.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
