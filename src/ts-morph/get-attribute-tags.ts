@@ -10,7 +10,7 @@ export default (
     return tags;
   }
 
-  const attributes = [...declaration.attributes].sort((a, b) => {
+  const attributes = [...declaration.attributes].toSorted((a, b) => {
     // First required attributes sorted alphabetically. Then optional ones
     // alphabetically.
     return 'required' in a && 'required' in b && a.name < b.name

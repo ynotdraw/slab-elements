@@ -354,11 +354,7 @@ export default {
             }
           }
 
-          if (
-            component === 'listbox' ||
-            component === 'combobox' ||
-            component === 'select'
-          ) {
+          if (['listbox', 'combobox', 'select'].includes(component)) {
             for (const $option of $component.querySelectorAll(
               'slab-option',
             )) {

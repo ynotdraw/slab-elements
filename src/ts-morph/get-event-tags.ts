@@ -12,7 +12,7 @@ export default (
   }
 
   const events = [...declaration.events]
-    .sort((a, b) => (a.name < b.name ? -1 : 1))
+    .toSorted((a, b) => (a.name < b.name ? -1 : 1))
     .filter((event) => !event.name?.startsWith('private'));
 
   for (const [index, event] of events.entries()) {

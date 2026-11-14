@@ -191,6 +191,18 @@ export default defineConfig([
       // https://github.com/CrowdStrike/glide-core/pull/551#discussion_r1892759742
       'unicorn/prefer-global-this': 'off',
 
+      // Our comments are wrapped by hand to the width Prettier gives code. The
+      // rule wants each sentence on one line.
+      'unicorn/no-manually-wrapped-comments': 'off',
+
+      // Playwright's custom matchers read `this.isNot` from a plain function,
+      // and our tests stand in for browser methods by assigning functions to
+      // prototypes. Both need `this` outside a class.
+      'unicorn/no-this-outside-of-class': 'off',
+
+      // `Iterator.concat()` is too new for the browsers Slab supports.
+      'unicorn/prefer-iterator-concat': 'off',
+
       'no-restricted-imports': [
         'error',
         {

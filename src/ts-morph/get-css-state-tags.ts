@@ -17,7 +17,7 @@ export default (
     description?: string;
   }[];
 
-  const states = [...cssStates].sort((a, b) => {
+  const states = [...cssStates].toSorted((a, b) => {
     return a.name < b.name ? -1 : 1;
   });
 

@@ -858,7 +858,7 @@ export default class RangeSlider extends LitElement {
 }
 
 function decimalPlaces(value: number) {
-  return String(value).split('.')[1]?.length ?? 0;
+  return String(value).split('.', 2)[1]?.length ?? 0;
 }
 
 // For `start-value` and `end-value`. A removed attribute is `null`, which

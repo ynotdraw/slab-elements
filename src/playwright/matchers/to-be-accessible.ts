@@ -9,13 +9,9 @@ export default expect.extend({
   ) {
     const result = await new AxeBuilder({ page }).include(selector).analyze();
 
-    const isAccessible =
-      expectedViolations &&
-      result.violations.length !== expectedViolations.length
-        ? false
-        : !expectedViolations && result.violations.length > 0
-          ? false
-          : true;
+    const isAccessible = expectedViolations
+      ? result.violations.length === expectedViolations.length
+      : result.violations.length === 0;
 
     const message = isAccessible
       ? () => ''

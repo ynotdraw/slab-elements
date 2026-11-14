@@ -79,7 +79,7 @@ test(
     });
 
     // Spaces alone are nothing.
-    await textbox.fill('   ');
+    await textbox.fill(' '.repeat(3));
     await textbox.press('Enter');
 
     expect(await submitted).toStrictEqual(['one']);
