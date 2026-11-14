@@ -384,6 +384,62 @@ test(
 );
 
 test(
+  'tells screenreaders which day is picked',
+  { tag: '@keyboard' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<slab-calendar lang="en-US" value="2026-10-12"></slab-calendar>`,
+    );
+
+    // A stand-in for `ariaNotify()`, since not every browser has one, and a
+    // real one can't be listened to.
+    await page.evaluate(() => {
+      const announcements: string[] = [];
+
+      Object.assign(globalThis, { announcements });
+
+      Object.defineProperty(Element.prototype, 'ariaNotify', {
+        configurable: true,
+        value(message: string) {
+          announcements.push(message);
+        },
+      });
+    });
+
+    const announcements = () =>
+      page.evaluate(
+        () =>
+          (globalThis as unknown as { announcements: string[] }).announcements,
+      );
+
+    await callMethod(page.locator('slab-calendar'), 'focus');
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('Enter');
+
+    await expect
+      .poll(announcements)
+      .toStrictEqual(['Tuesday, October 13, 2026 selected']);
+
+    await page
+      .locator('slab-calendar')
+      .evaluate<void, void, Calendar>((element) => {
+        element.selectedLabel = (date) => `Picked ${date}`;
+      });
+
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('Space');
+
+    await expect
+      .poll(announcements)
+      .toStrictEqual([
+        'Tuesday, October 13, 2026 selected',
+        'Picked Wednesday, October 14, 2026',
+      ]);
+  },
+);
+
+test(
   'tells screenreaders about a range in its own words when set',
   { tag: '@keyboard' },
   async ({ callMethod, render, page }) => {
@@ -439,44 +495,5 @@ test(
         'From Monday, October 12, 2026',
         'Picked Monday, October 12 – Tuesday, October 13, 2026',
       ]);
-  },
-);
-
-test(
-  'tells screenreaders nothing of its own about a single day',
-  { tag: '@keyboard' },
-  async ({ callMethod, render, page }) => {
-    await render(
-      () => html`<slab-calendar value="2026-10-12"></slab-calendar>`,
-    );
-
-    await page.evaluate(() => {
-      const announcements: string[] = [];
-
-      Object.assign(globalThis, { announcements });
-
-      Object.defineProperty(Element.prototype, 'ariaNotify', {
-        configurable: true,
-        value(message: string) {
-          announcements.push(message);
-        },
-      });
-    });
-
-    await callMethod(page.locator('slab-calendar'), 'focus');
-    await page.keyboard.press('ArrowRight');
-    await page.keyboard.press('Enter');
-
-    await expect(page.locator('slab-calendar')).toHaveJSProperty(
-      'value',
-      '2026-10-13',
-    );
-
-    expect(
-      await page.evaluate(
-        () =>
-          (globalThis as unknown as { announcements: string[] }).announcements,
-      ),
-    ).toStrictEqual([]);
   },
 );

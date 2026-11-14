@@ -957,6 +957,14 @@
             },
             {
               "kind": "field",
+              "name": "selectedLabel",
+              "type": {
+                "text": "(date: string) => string"
+              },
+              "description": "Without `range`, what screenreaders are told once a day is picked, from\nthat day, such as \"Friday, October 16, 2026\" in the calendar's language.\nThe day and \"selected\" in English when unset."
+            },
+            {
+              "kind": "field",
               "name": "value",
               "type": {
                 "text": "string"
