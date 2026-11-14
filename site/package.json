@@ -16,7 +16,7 @@
     "rpg:sprites:comment": "Draws the Retro RPG showcase's pixel sprites into `public/rpg` from the drawings in `rpg/art.js`. Run it when a drawing changes."
   },
   "devDependencies": {
-    "astro": "~7.3.8",
+    "astro": "~7.4.7",
     "wrangler": "^4.158.0"
   }
 }
