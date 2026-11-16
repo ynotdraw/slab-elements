@@ -54,6 +54,9 @@
       "import": "./dist/*.js"
     },
     "./custom-elements.json": "./dist/custom-elements.json",
+    "./vscode.css-custom-data.json": "./dist/vscode.css-custom-data.json",
+    "./vscode.html-custom-data.json": "./dist/vscode.html-custom-data.json",
+    "./web-types.json": "./dist/web-types.json",
     "./package.json": "./package.json",
     "./library/*": null,
     "./*.styles.js": null
@@ -63,12 +66,15 @@
     "start:development": "npm-run-all --parallel --print-name start:development:*",
     "start:development:cem-analyze": "chokidar ./custom-elements.config.js './src/*.ts' './src/cem-analyzer-plugins/**' --ignore '**/*stories*' --ignore '**/*test*' --initial --silent --command 'tsc --noCheck --outDir ./dist && NODE_OPTIONS=--no-warnings=ExperimentalWarning cem analyze --config ./custom-elements.config.js --quiet'",
     "start:development:cem-analyze:comment": "JSON module imports produce a warning. Remove NODE_OPTIONS when JSON module imports are no longer experimental.",
-    "start:development:skill": "chokidar ./custom-elements.json './site/src/content/components/*.md' './src/*.ts' ./src/build/skill.ts --ignore '**/*stories*' --ignore '**/*test*' --initial --silent --command 'tsx ./src/build/skill.ts'",
+    "start:development:editor-data": "chokidar ./custom-elements.json './site/src/content/components/*.md' './src/*.ts' ./src/build/components.ts ./src/build/editor-data.ts --ignore '**/*stories*' --ignore '**/*test*' --initial --silent --command 'tsx ./src/build/editor-data.ts'",
+    "start:development:skill": "chokidar ./custom-elements.json './site/src/content/components/*.md' './src/*.ts' ./src/build/components.ts ./src/build/skill.ts --ignore '**/*stories*' --ignore '**/*test*' --initial --silent --command 'tsx ./src/build/skill.ts'",
     "start:development:storybook": "storybook dev --config-dir .storybook --no-open --no-version-updates --port ${SLAB_STORYBOOK_PORT:-6006}",
     "start:development:ts-morph": "chokidar ./custom-elements.json './src/ts-morph/**' --initial --silent --command 'tsx ./src/ts-morph/run.ts'",
     "start:development:ts-morph:comment:tsx": "Remove `tsx` once Node.js type stripping is available.",
-    "start:production": "rimraf ./dist && pnpm start:production:cem-analyze && pnpm start:production:ts-morph && pnpm start:production:skill && npm-run-all --aggregate-output --print-label --parallel start:production:typescript start:production:storybook",
+    "start:production": "rimraf ./dist && pnpm start:production:cem-analyze && pnpm start:production:ts-morph && pnpm start:production:skill && pnpm start:production:editor-data && npm-run-all --aggregate-output --print-label --parallel start:production:typescript start:production:storybook",
     "start:production:cem-analyze": "tsc --noCheck --outDir ./dist && NODE_OPTIONS=--no-warnings=ExperimentalWarning cem analyze --config ./custom-elements.config.js --quiet && git diff --quiet ./custom-elements.json || { echo ERROR: Uncommitted elements manifest changes. Run this command locally and commit the changes.; exit 1; }",
+    "start:production:editor-data": "tsx ./src/build/editor-data.ts",
+    "start:production:editor-data:comment": "VS Code's custom data and JetBrains' web-types, for autocomplete and hover docs on Slab's tags, attributes, parts and states in plain HTML and CSS. Built into ./dist from the elements manifest, the JSDoc and the docs site's component pages.",
     "start:production:skill": "tsx ./src/build/skill.ts && test -z \"$(git status --porcelain -- ./skills)\" || { echo ERROR: Uncommitted agent skill changes. Run this command locally and commit the changes.; exit 1; }",
     "start:production:skill:comment": "The agent skill's references and component index, from the elements manifest, the JSDoc and the docs site's component pages. Committed, so `npx skills add` can install it from GitHub too.",
     "start:production:storybook": "storybook build --config-dir .storybook --disable-telemetry --output-dir ./dist/storybook",
@@ -190,5 +196,6 @@
     }
   },
   "packageManager": "pnpm@12.3.4+sha512.961aa41fb077da3a04a441d9f8e15ebc0c96da8ef710b2eb67bf9ee7cb0610eabd48f1fd85f51cffe73846785fa0f87c56a3a872a1d893f8446741b5cce45457",
-  "customElements": "./dist/custom-elements.json"
+  "customElements": "./dist/custom-elements.json",
+  "web-types": "./dist/web-types.json"
 }
