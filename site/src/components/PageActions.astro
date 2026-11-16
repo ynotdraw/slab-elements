@@ -91,5 +91,10 @@ const href = `${import.meta.env.BASE_URL}${markdown}`;
     &:hover {
       background-color: var(--ember-deep);
     }
+
+    /* It copies with a script, so without one there's only the link. */
+    @media (scripting: none) {
+      display: none;
+    }
   }
 </style>
