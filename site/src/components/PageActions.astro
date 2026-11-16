@@ -1,6 +1,7 @@
 ---
 // The page's Markdown twin, under its title: a button that copies it, for
-// pasting into a chat with an LLM, and a link that opens it.
+// pasting into a chat with an LLM, a link that opens it, and links that start
+// a chat in Claude or ChatGPT that reads it.
 
 interface Props {
   // The twin, from the site's root, as Base's `markdown`.
@@ -9,11 +10,18 @@ interface Props {
 
 const { markdown } = Astro.props;
 const href = `${import.meta.env.BASE_URL}${markdown}`;
+
+// The chat fetches the twin itself, so it needs the whole URL.
+const prompt = encodeURIComponent(
+  `Read ${new URL(href, Astro.site).href} so I can ask questions about it.`,
+);
 ---
 
 <div class="page-actions">
   <button class="copy-page" data-href={href} type="button">Copy page</button>
   <a href={href}>View as Markdown</a>
+  <a href={`https://claude.ai/new?q=${prompt}`}>Open in Claude</a>
+  <a href={`https://chatgpt.com/?q=${prompt}`}>Open in ChatGPT</a>
   <p aria-live="polite" class="visually-hidden" data-page-status></p>
 </div>
 
@@ -90,6 +98,11 @@ const href = `${import.meta.env.BASE_URL}${markdown}`;
 
     &:hover {
       background-color: var(--ember-deep);
+    }
+
+    /* It copies with a script, so without one there's only the link. */
+    @media (scripting: none) {
+      display: none;
     }
   }
 </style>
