@@ -525,10 +525,10 @@ Every component should have a suite of these.
 visual layer to check, these and Axe are the primary signal that a component
 does what it claims.
 
-Tests run against individual stories. Work down the component's controls table
-in Storybook and write a test for each optional attribute that affects
-accessibility. Required attributes don't need their own tests — the stories set
-them, so the optional-attribute tests cover them.
+Tests render their own markup with the `render` fixture. Work down the
+component's attributes and write a test for each optional one that affects
+accessibility. Required attributes don't need their own tests — every render
+sets them, so the optional-attribute tests cover them.
 
 ## Storybook conventions
 
