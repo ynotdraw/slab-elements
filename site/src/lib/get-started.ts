@@ -7,7 +7,7 @@ export type Section = {
   code?: {
     code: string;
     label: string;
-    lang: 'css' | 'html' | 'js' | 'sh' | 'ts';
+    lang: 'css' | 'html' | 'js' | 'json' | 'sh' | 'ts';
   };
   // Text after the code, if any.
   coda?: string;
@@ -205,6 +205,24 @@ import type {} from 'slab-elements/react.js';`,
       lang: 'ts',
     },
     coda: 'Events are typed too: a handler such as `oncopy-error` in React and Svelte, or `@copy-error` in Vue, gets the event with the element as its `currentTarget`. For any other framework, `slab-elements/jsx.js` has `SlabElementProps`, every tag and its properties, and `SlabElementEvents`, every tag and its events.',
+  },
+  {
+    id: 'editors',
+    heading: 'In your editor',
+    text: 'Slab comes with what editors need to autocomplete its tags in plain HTML. Type `<slab-` and you get every tag, its attributes, and the values one such as `placement` takes, with what each does on hover. In CSS, you get its `::part()` and `:state()` names. WebStorm and the other JetBrains editors find it on their own. For VS Code, and editors built on it such as Cursor, point your workspace settings at it.',
+    code: {
+      code: `{
+  "html.customData": [
+    "./node_modules/slab-elements/dist/vscode.html-custom-data.json"
+  ],
+  "css.customData": [
+    "./node_modules/slab-elements/dist/vscode.css-custom-data.json"
+  ]
+}`,
+      label: '.vscode/settings.json',
+      lang: 'json',
+    },
+    coda: "Both are built from `custom-elements.json` each release, so they match the version you've installed.",
   },
   {
     id: 'testing',

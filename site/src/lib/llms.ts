@@ -72,6 +72,6 @@ export const sections: Section[] = [
   {
     id: 'types',
     heading: 'Let your tools check the work',
-    text: "Agents still make mistakes. Your type checker catches a lot of them. Import your framework's types once, as [TypeScript](get-started/#typescript) shows, and a made-up attribute or a misspelled event is an error before it ships. Tools that read custom elements can use `slab-elements/custom-elements.json`, the manifest the skill is built from.",
+    text: "Agents still make mistakes. Your type checker catches a lot of them. Import your framework's types once, as [TypeScript](get-started/#typescript) shows, and a made-up attribute or a misspelled event is an error before it ships. Your editor can autocomplete Slab's tags and attributes in plain HTML too, once it's [set up](get-started/#editors). Tools that read custom elements can use `slab-elements/custom-elements.json`, the manifest the skill is built from.",
   },
 ];
