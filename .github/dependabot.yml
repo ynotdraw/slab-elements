@@ -34,6 +34,13 @@ updates:
       interval: weekly
     cooldown:
       default-days: 7
+    ignore:
+      # Pinned to 1.64.1 until microsoft/playwright#43967 is fixed. See the
+      # `playwright-core` override in pnpm-workspace.yaml, and move all three
+      # together when it is.
+      - dependency-name: '@playwright/test'
+      - dependency-name: playwright
+      - dependency-name: playwright-core
     # Minor and patch updates come together in one pull request a week. A
     # major gets a pull request of its own, since it may need changes.
     groups:
