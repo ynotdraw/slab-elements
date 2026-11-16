@@ -5,6 +5,7 @@ import prettier from 'eslint-config-prettier';
 import sortClassMembers from 'eslint-plugin-sort-class-members';
 import stylistic from '@stylistic/eslint-plugin';
 import importPlugin from 'eslint-plugin-import';
+import litA11y from 'eslint-plugin-lit-a11y';
 import typescript from 'typescript-eslint';
 import unicorn from 'eslint-plugin-unicorn';
 import { defineConfig, globalIgnores } from 'eslint/config';
@@ -36,7 +37,7 @@ export default defineConfig([
       compat.extends('plugin:lit/recommended'),
 
       // https://github.com/open-wc/open-wc/blob/master/packages/eslint-plugin-lit-a11y/lib/index.js
-      compat.extends('plugin:lit-a11y/recommended'),
+      litA11y.configs.recommended,
 
       // https://github.com/typescript-eslint/typescript-eslint/blob/9335077904aaa4a8ddcd3b446b5c28dd4e8079bf/packages/eslint-plugin/src/configs/flat/recommended-type-checked.ts
       typescript.configs.recommendedTypeChecked,
