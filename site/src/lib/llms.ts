@@ -63,6 +63,7 @@ export const sections: Section[] = [
     id: 'llms-txt',
     heading: 'llms.txt',
     text: 'Using a chat rather than an agent? [llms.txt](https://slab-elements.dev/llms.txt) follows the [llms.txt proposal](https://llmstxt.org): a short summary of Slab, then a link to every page on this site with a line about each. Hand it to an LLM and it can find the page it needs.',
+    coda: "Is your tool one that doesn't follow links? [llms-full.txt](https://slab-elements.dev/llms-full.txt) is every page on this site in one file, so it has the whole thing at once. It leaves out the styled examples' source, but it's still big, so save it for tools that can't fetch pages.",
   },
   {
     id: 'markdown',

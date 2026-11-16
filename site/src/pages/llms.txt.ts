@@ -31,7 +31,13 @@ export const GET: APIRoute = async ({ site }) => {
           )
           .join('\n')}`,
     ),
-    '## Optional\n\n- [Source](https://github.com/ynotdraw/slab-elements): the repository, with the components in `src` and the styled examples in `src/styled`',
+    [
+      '## Optional',
+      [
+        `- [Everything in one file](${url('llms-full.txt')}): every page above, as Markdown, in one file, for tools that don't follow links`,
+        '- [Source](https://github.com/ynotdraw/slab-elements): the repository, with the components in `src` and the styled examples in `src/styled`',
+      ].join('\n'),
+    ].join('\n\n'),
   ].join('\n\n');
 
   return new Response(`${text}\n`, {
