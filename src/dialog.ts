@@ -277,6 +277,9 @@ export default class Dialog extends LitElement {
     if (this.open) {
       this.#internals.states.add('open');
     } else {
+      // Here as well as on "close", which comes a task later: opened again
+      // before then, it goes by how it's opened this time.
+      this.#isModal = undefined;
       this.#internals.states.delete('open');
     }
 
@@ -372,8 +375,13 @@ export default class Dialog extends LitElement {
   }
 
   #onDialogClose() {
-    this.#isModal = undefined;
-    this.open = false;
+    // "close" comes a task after the dialog closes. Opened again in between,
+    // it stays open, and only the event is dispatched, as it is natively.
+    if (!this.#dialogElementRef.value?.open) {
+      this.#isModal = undefined;
+      this.open = false;
+    }
+
     this.dispatchEvent(new Event('close'));
   }
 
