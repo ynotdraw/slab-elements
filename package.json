@@ -26,6 +26,7 @@
   "files": [
     "NOTICE",
     "dist",
+    "skills",
     "!dist/*.*.test.*.d.ts",
     "!dist/*.*.test.*.js",
     "!dist/*.stories.d.ts",
@@ -62,11 +63,14 @@
     "start:development": "npm-run-all --parallel --print-name start:development:*",
     "start:development:cem-analyze": "chokidar ./custom-elements.config.js './src/*.ts' './src/cem-analyzer-plugins/**' --ignore '**/*stories*' --ignore '**/*test*' --initial --silent --command 'tsc --noCheck --outDir ./dist && NODE_OPTIONS=--no-warnings=ExperimentalWarning cem analyze --config ./custom-elements.config.js --quiet'",
     "start:development:cem-analyze:comment": "JSON module imports produce a warning. Remove NODE_OPTIONS when JSON module imports are no longer experimental.",
+    "start:development:skill": "chokidar ./custom-elements.json './site/src/content/components/*.md' './src/*.ts' ./src/build/skill.ts --ignore '**/*stories*' --ignore '**/*test*' --initial --silent --command 'tsx ./src/build/skill.ts'",
     "start:development:storybook": "storybook dev --config-dir .storybook --no-open --no-version-updates --port ${SLAB_STORYBOOK_PORT:-6006}",
     "start:development:ts-morph": "chokidar ./custom-elements.json './src/ts-morph/**' --initial --silent --command 'tsx ./src/ts-morph/run.ts'",
     "start:development:ts-morph:comment:tsx": "Remove `tsx` once Node.js type stripping is available.",
-    "start:production": "rimraf ./dist && pnpm start:production:cem-analyze && pnpm start:production:ts-morph && npm-run-all --aggregate-output --print-label --parallel start:production:typescript start:production:storybook",
+    "start:production": "rimraf ./dist && pnpm start:production:cem-analyze && pnpm start:production:ts-morph && pnpm start:production:skill && npm-run-all --aggregate-output --print-label --parallel start:production:typescript start:production:storybook",
     "start:production:cem-analyze": "tsc --noCheck --outDir ./dist && NODE_OPTIONS=--no-warnings=ExperimentalWarning cem analyze --config ./custom-elements.config.js --quiet && git diff --quiet ./custom-elements.json || { echo ERROR: Uncommitted elements manifest changes. Run this command locally and commit the changes.; exit 1; }",
+    "start:production:skill": "tsx ./src/build/skill.ts && test -z \"$(git status --porcelain -- ./skills)\" || { echo ERROR: Uncommitted agent skill changes. Run this command locally and commit the changes.; exit 1; }",
+    "start:production:skill:comment": "The agent skill's references and component index, from the elements manifest, the JSDoc and the docs site's component pages. Committed, so `npx skills add` can install it from GitHub too.",
     "start:production:storybook": "storybook build --config-dir .storybook --disable-telemetry --output-dir ./dist/storybook",
     "start:production:ts-morph": "tsx ./src/ts-morph/run.ts && git diff --quiet -- || { echo ERROR: Uncommitted code modifications. Run this command locally and commit the changes.; exit 1; }",
     "start:production:typescript": "tsc --noCheck --outDir ./dist && tsx ./src/build/inline-version.ts",
@@ -175,7 +179,8 @@
     "typescript": "catalog:",
     "typescript-eslint": "^8.70.0",
     "v8-to-istanbul": "^9.3.0",
-    "vite": "^6.4.5"
+    "vite": "^6.4.5",
+    "yaml": "^2.9.1"
   },
   "devEngines": {
     "runtime": {

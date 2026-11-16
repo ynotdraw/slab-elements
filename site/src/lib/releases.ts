@@ -207,6 +207,11 @@ export const announcements: Announcement[] = [
           text: 'How an API goes away after 1.0: a `@deprecated` note in the types and the manifest, a badge in these docs, and a minor release or more before the next major removes it.',
         },
         {
+          title: 'Agent skill',
+          href: 'llms/',
+          text: 'The package includes a skill that teaches coding agents to use Slab the native way, with a reference for every component built from the manifest. Add it with `npx skills add ynotdraw/slab-elements --skill slab`.',
+        },
+        {
           title: 'Upgrade to 1.0',
           href: 'upgrade/',
           text: 'Every change since 0.1 that can break something, in one guide, with what to change for each.',

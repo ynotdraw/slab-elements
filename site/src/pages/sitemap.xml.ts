@@ -15,6 +15,7 @@ export const GET: APIRoute = async ({ site }) => {
     'get-started/',
     'upgrade/',
     'accessibility/',
+    'llms/',
     'components/',
     ...components.map((component) => `components/${component.id}/`),
     'showcase/',
