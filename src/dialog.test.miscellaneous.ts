@@ -160,6 +160,46 @@ test(
 );
 
 test(
+  'stays open as `modal` says when `open` is set again before "close" fires',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-dialog label="Label" modal>Content</slab-dialog>`,
+    );
+
+    // "close" comes a task after the dialog closes, so setting `open` again
+    // within the same task opens it before then.
+    const result = await page
+      .locator('slab-dialog')
+      .evaluate(async (host: Dialog) => {
+        host.show();
+        await host.updateComplete;
+
+        host.open = false;
+        await host.updateComplete;
+
+        host.open = true;
+        await host.updateComplete;
+
+        const closed = new Promise<void>((resolve) => {
+          host.addEventListener('close', () => resolve(), { once: true });
+        });
+
+        await closed;
+
+        return {
+          isModal:
+            host.shadowRoot?.querySelector('dialog')?.matches(':modal') ??
+            false,
+          open: host.open,
+        };
+      });
+
+    expect(result).toStrictEqual({ isModal: true, open: true });
+  },
+);
+
+test(
   'leaves the rest of the page interactive when `show()` opens it',
   { tag: '@miscellaneous' },
   async ({ callMethod, render, page }) => {
