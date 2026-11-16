@@ -1,5 +1,4 @@
 {
-  "allowJs": true,
   "compilerOptions": {
     "declaration": true,
     "experimentalDecorators": true,
