@@ -26,7 +26,7 @@ allowBuilds:
   workerd: false
 
 catalog:
-  typescript: ^5.9.3
+  typescript: ^6.0.3
 
 overrides:
   # Floors for transitive dependencies with known advisories.
