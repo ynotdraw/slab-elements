@@ -207,6 +207,9 @@ const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.
               Accessibility
             </a>
           </li>
+          <li>
+            <a aria-current={current(`${base}llms/`)} href={`${base}llms/`}>LLMs and agents</a>
+          </li>
         </ul>
 
         <ul class="secondary">
@@ -234,6 +237,7 @@ const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.
         <li><a href={`${base}showcase/`}>Showcase</a></li>
         <li><a href={`${base}releases/`}>Releases</a></li>
         <li><a href={`${base}accessibility/`}>Accessibility</a></li>
+        <li><a href={`${base}llms/`}>LLMs and agents</a></li>
         <li><a href={`${base}llms.txt`}>llms.txt</a></li>
         {markdown && <li><a href={`${base}${markdown}`}>This page as Markdown</a></li>}
         <li><a href={github}>GitHub</a></li>
