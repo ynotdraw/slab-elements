@@ -153,7 +153,7 @@
     "istanbul-lib-coverage": "^3.2.2",
     "istanbul-lib-report": "^3.0.1",
     "istanbul-reports": "^3.2.0",
-    "lint-staged": "^15.5.2",
+    "lint-staged": "^17.6.0",
     "lit": "^3.3.3",
     "lit-analyzer": "^2.0.3",
     "matcher": "^5.0.0",
