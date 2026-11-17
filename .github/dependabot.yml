@@ -43,6 +43,14 @@ updates:
       - dependency-name: '@playwright/test'
       - dependency-name: playwright
       - dependency-name: playwright-core
+      # TypeScript 7 is the native rewrite and doesn't ship the JavaScript
+      # compiler API. The manifest's analyzer plugins in
+      # src/cem-analyzer-plugins, the analyzer itself, ts-morph
+      # (src/ts-morph) and typescript-eslint all import it, so 7 fails
+      # Typecheck, Lint and Test (Lint Rules) (#199). Remove this once all of
+      # them support TypeScript 7.
+      - dependency-name: typescript
+        update-types: ['version-update:semver-major']
     # Minor and patch updates come together in one pull request a week, and
     # majors in another, since they may need changes. Pull a major out to a
     # branch of its own when it needs work.
