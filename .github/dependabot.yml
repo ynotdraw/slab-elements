@@ -13,6 +13,7 @@ updates:
       - /.github/actions/pnpm
     schedule:
       interval: weekly
+      day: monday
     cooldown:
       default-days: 7
     ignore:
@@ -32,6 +33,7 @@ updates:
     directory: /
     schedule:
       interval: weekly
+      day: monday
     cooldown:
       default-days: 7
     ignore:
@@ -41,10 +43,14 @@ updates:
       - dependency-name: '@playwright/test'
       - dependency-name: playwright
       - dependency-name: playwright-core
-    # Minor and patch updates come together in one pull request a week. A
-    # major gets a pull request of its own, since it may need changes.
+    # Minor and patch updates come together in one pull request a week, and
+    # majors in another, since they may need changes. Pull a major out to a
+    # branch of its own when it needs work.
     groups:
       minor-and-patch:
         update-types:
           - minor
           - patch
+      major:
+        update-types:
+          - major
