@@ -464,3 +464,106 @@ test(
       .toBe(false);
   },
 );
+
+test(
+  "only opens or only closes when `toggle()` is forced, and returns whether it's open",
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-hover-card>
+          <div><a href="#">Link</a></div>
+          <a href="#" slot="anchor">Anchor</a>
+        </slab-hover-card>`,
+    );
+
+    const results = await page
+      .locator('slab-hover-card')
+      .evaluate<[boolean, boolean][], void, HoverCard>((element) => {
+        return [true, true, false, false, undefined, undefined].map((force) => [
+          element.toggle(force),
+          element.open,
+        ]);
+      });
+
+    expect(results).toStrictEqual([
+      [true, true],
+      [true, true],
+      [false, false],
+      [false, false],
+      [true, true],
+      [false, false],
+    ]);
+  },
+);
+
+test(
+  'returns false from `toggle()` when "beforetoggle" keeps it closed',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-hover-card>
+          <div><a href="#">Link</a></div>
+          <a href="#" slot="anchor">Anchor</a>
+        </slab-hover-card>`,
+    );
+
+    const results = await page
+      .locator('slab-hover-card')
+      .evaluate<[boolean, boolean], void, HoverCard>((element) => {
+        element.addEventListener('beforetoggle', (event) => {
+          event.preventDefault();
+        });
+
+        return [element.toggle(), element.open];
+      });
+
+    expect(results).toStrictEqual([false, false]);
+  },
+);
+
+test(
+  "returns false from `toggle()` while it's disabled",
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-hover-card disabled>
+          <div><a href="#">Link</a></div>
+          <a href="#" slot="anchor">Anchor</a>
+        </slab-hover-card>`,
+    );
+
+    const results = await page
+      .locator('slab-hover-card')
+      .evaluate<[boolean, boolean], void, HoverCard>((element) => {
+        return [element.toggle(true), element.open];
+      });
+
+    expect(results).toStrictEqual([false, false]);
+  },
+);
+
+test(
+  'opens via `toggle()` before it is rendered, once it is',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    // Rendered so it's defined, for the one below that isn't rendered yet.
+    await render(
+      () =>
+        html`<slab-hover-card>
+          <div><a href="#">Link</a></div>
+          <a href="#" slot="anchor">Anchor</a>
+        </slab-hover-card>`,
+    );
+
+    const results = await page.evaluate(() => {
+      const element = document.createElement('slab-hover-card') as HoverCard;
+
+      return [element.toggle(), element.open];
+    });
+
+    expect(results).toStrictEqual([true, true]);
+  },
+);

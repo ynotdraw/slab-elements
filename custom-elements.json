@@ -3513,6 +3513,25 @@
             },
             {
               "kind": "method",
+              "name": "toggle",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "force",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Opens it when it's closed, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it and `false` only closes it. Returns whether it's open."
+            },
+            {
+              "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
               "static": true,
@@ -4356,6 +4375,25 @@
                 }
               ],
               "description": "Opens the menu at `x` and `y`, in the viewport's coordinates, or below\nwhatever in the target has focus when they're left out."
+            },
+            {
+              "kind": "method",
+              "name": "toggle",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "force",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Opens it when it's closed, below whatever in the target has focus, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it, without moving it when it's open, and `false` only closes it. Returns whether it's open."
             },
             {
               "kind": "method",
@@ -10888,6 +10926,25 @@
             },
             {
               "kind": "method",
+              "name": "toggle",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "force",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Opens it when it's closed, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it and `false` only closes it. Returns whether it's open."
+            },
+            {
+              "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
               "static": true,
@@ -11998,6 +12055,25 @@
                 }
               },
               "description": "Opens it."
+            },
+            {
+              "kind": "method",
+              "name": "toggle",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "force",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Opens it when it's closed, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it and `false` only closes it. Returns whether it's open."
             },
             {
               "kind": "method",
@@ -18423,6 +18499,25 @@
                 }
               },
               "description": "Opens it."
+            },
+            {
+              "kind": "method",
+              "name": "toggle",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "force",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Opens it when it's closed, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it and `false` only closes it. Returns whether it's open."
             },
             {
               "kind": "method",
@@ -25334,6 +25429,25 @@
                 }
               },
               "description": "Opens it at once, without waiting for `open-delay`. It doesn't open while\nit's disabled."
+            },
+            {
+              "kind": "method",
+              "name": "toggle",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "force",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Opens it when it's closed, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it and `false` only closes it. Returns whether it's open."
             },
             {
               "kind": "method",

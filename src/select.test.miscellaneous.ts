@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
+import type Select from './select.js';
 
 test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
   await render(
@@ -756,5 +757,82 @@ test(
       'toggle closed',
       'open false',
     ]);
+  },
+);
+
+test(
+  "only opens or only closes when `toggle()` is forced, and returns whether it's open",
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-select label="Label">
+          <slab-option>One</slab-option>
+        </slab-select>`,
+    );
+
+    const results = await page
+      .locator('slab-select')
+      .evaluate<[boolean, boolean][], void, Select>((element) => {
+        return [true, true, false, false, undefined, undefined].map((force) => [
+          element.toggle(force),
+          element.open,
+        ]);
+      });
+
+    expect(results).toStrictEqual([
+      [true, true],
+      [true, true],
+      [false, false],
+      [false, false],
+      [true, true],
+      [false, false],
+    ]);
+  },
+);
+
+test(
+  'returns false from `toggle()` when "beforetoggle" keeps it closed',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-select label="Label">
+          <slab-option>One</slab-option>
+        </slab-select>`,
+    );
+
+    const results = await page
+      .locator('slab-select')
+      .evaluate<[boolean, boolean], void, Select>((element) => {
+        element.addEventListener('beforetoggle', (event) => {
+          event.preventDefault();
+        });
+
+        return [element.toggle(), element.open];
+      });
+
+    expect(results).toStrictEqual([false, false]);
+  },
+);
+
+test(
+  "returns false from `toggle()` while it's disabled",
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-select disabled label="Label">
+          <slab-option>One</slab-option>
+        </slab-select>`,
+    );
+
+    const results = await page
+      .locator('slab-select')
+      .evaluate<[boolean, boolean], void, Select>((element) => {
+        return [element.toggle(true), element.open];
+      });
+
+    expect(results).toStrictEqual([false, false]);
   },
 );

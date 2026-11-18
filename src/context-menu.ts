@@ -97,6 +97,10 @@ function fit(point: number, size: number, viewport: number, isAfter: boolean) {
  *
  * @method show - Opens the menu at `x` and `y`, in the viewport's coordinates, or below whatever in the target has focus when they're left out.
  * @param {{ x: number; y: number }} [position]
+ *
+ * @method toggle - Opens it when it's closed, below whatever in the target has focus, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it, without moving it when it's open, and `false` only closes it. Returns whether it's open.
+ * @param {boolean} [force]
+ * @returns boolean
  */
 @customElement('slab-context-menu')
 export default class ContextMenu extends LitElement {
@@ -195,6 +199,21 @@ export default class ContextMenu extends LitElement {
    */
   show(position?: { x: number; y: number }): void {
     this.#show(position ?? this.#positionBelow(this.#focusedTargetElement));
+  }
+
+  // As a native popover's `togglePopover(force)`: `true` only opens it,
+  // `false` only closes it, and it returns whether it's open. It opens where
+  // `show()` without a position does, and isn't moved when it's open already.
+  toggle(force?: boolean): boolean {
+    const isOpening = force ?? !this.#isPopoverOpen;
+
+    if (isOpening && !this.#isPopoverOpen) {
+      this.show();
+    } else if (!isOpening) {
+      this.hide();
+    }
+
+    return this.#isPopoverOpen;
   }
 
   override updated(changes: PropertyValues<this>) {

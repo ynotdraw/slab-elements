@@ -173,7 +173,11 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     members: { options: 'Its Options, in order.' },
   },
   'slab-context-menu': {
-    members: { items: 'Its Menu Items, in order.' },
+    members: {
+      items: 'Its Menu Items, in order.',
+      toggle:
+        "Opens it when it's closed, below whatever in the target has focus, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it, without moving it when it's open, and `false` only closes it. Returns whether it's open.",
+    },
   },
   'slab-copy-button': {
     cssParts: { button: 'The button' },
