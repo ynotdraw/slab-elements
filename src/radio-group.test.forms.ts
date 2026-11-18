@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type Form from './form.js';
+import type RadioGroup from './radio-group.js';
 
 test('has a `form` property', { tag: '@forms' }, async ({ render, page }) => {
   await render(
@@ -1098,3 +1099,28 @@ test(
     await expect(host).not.toHaveAttribute('checked');
   },
 );
+
+test('has a `labels` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <label for="control" id="for">For</label>
+
+      <label id="around">
+        Around
+        <slab-radio-group id="control" label="Label">
+          <slab-radio-group-radio label="One"></slab-radio-group-radio>
+
+          <slab-radio-group-radio label="Two"></slab-radio-group-radio>
+        </slab-radio-group>
+      </label>
+    `,
+  );
+
+  const ids = await page
+    .locator('slab-radio-group')
+    .evaluate((element: RadioGroup) =>
+      [...element.labels].map((label) => (label as HTMLLabelElement).id),
+    );
+
+  expect(ids).toStrictEqual(['for', 'around']);
+});

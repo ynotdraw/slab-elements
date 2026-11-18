@@ -45,3 +45,18 @@ const field = document.querySelector('slab-text-field');
 field.defaultValue = '14 Alder Lane foundation';
 field.form.reset();
 ```
+
+## Labels
+
+Each control has `labels`, as a native one does: the `<label>` elements
+associated with it, by a `for` that names its `id` or by being around it.
+Slab's controls are named by their own `label` attribute, so it's often
+empty.
+
+```js
+const field = document.querySelector('slab-text-field');
+
+for (const label of field.labels) {
+  label.classList.add('is-labelling');
+}
+```

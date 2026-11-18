@@ -1022,3 +1022,27 @@ test(
     await expect(host).toHaveJSProperty('endValue', '2026-11-20');
   },
 );
+
+test('has a `labels` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <label for="control" id="for">For</label>
+
+      <label id="around">
+        Around
+        <slab-date-range-field
+          id="control"
+          label="Label"
+        ></slab-date-range-field>
+      </label>
+    `,
+  );
+
+  const ids = await page
+    .locator('slab-date-range-field')
+    .evaluate((element: DateRangeField) =>
+      [...element.labels].map((label) => (label as HTMLLabelElement).id),
+    );
+
+  expect(ids).toStrictEqual(['for', 'around']);
+});

@@ -81,6 +81,9 @@ declare global {
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
  * @readonly
+ * @prop {NodeList} labels - The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it.
+ *
+ * @readonly
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`. Empty while it's valid.
  *
  * @readonly
@@ -181,6 +184,10 @@ export default class Editable extends LitElement {
 
   get form(): HTMLFormElement | null {
     return this.#internals.form;
+  }
+
+  get labels(): NodeList {
+    return this.#internals.labels;
   }
 
   /**

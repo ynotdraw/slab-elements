@@ -91,6 +91,9 @@ declare global {
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
  * @readonly
+ * @prop {NodeList} labels - The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it.
+ *
+ * @readonly
  * @prop {Option[]} options - Its Options, in order.
  *
  * @readonly
@@ -207,6 +210,10 @@ export default class Listbox extends LitElement {
 
   get form(): HTMLFormElement | null {
     return this.#internals.form;
+  }
+
+  get labels(): NodeList {
+    return this.#internals.labels;
   }
 
   // Those assigned to its default slot, found by class so a renamed subclass

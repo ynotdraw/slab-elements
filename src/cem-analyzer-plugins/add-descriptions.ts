@@ -73,6 +73,8 @@ const shared: Record<Kind, Descriptions> = {
       'Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.',
     label:
       "Names it. It's the accessible name, and the visible label where there is one.",
+    labels:
+      "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it.",
     maxlength:
       "The most characters the user can type, as a native input's `maxlength`.",
     minlength:

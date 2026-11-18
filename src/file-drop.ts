@@ -87,6 +87,9 @@ declare global {
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
+ * @readonly
+ * @prop {NodeList} labels - The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it.
+ *
  * @prop {(count: number) => string} notAcceptedLabel - What screenreaders are told when dropped files are left out for not matching `accept`, from how many were. "1 file isn't an accepted type" and so on in English when unset.
  *
  * @readonly
@@ -195,6 +198,10 @@ export default class FileDrop extends LitElement {
 
   get form(): HTMLFormElement | null {
     return this.#internals.form;
+  }
+
+  get labels(): NodeList {
+    return this.#internals.labels;
   }
 
   /**

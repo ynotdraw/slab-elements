@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type Form from './form.js';
+import type CheckboxGroup from './checkbox-group.js';
 
 test('has a `form` property', { tag: '@forms' }, async ({ render, page }) => {
   await render(
@@ -1153,3 +1154,26 @@ test(
     expect(before).toBe(after);
   },
 );
+
+test('has a `labels` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <label for="control" id="for">For</label>
+
+      <label id="around">
+        Around
+        <slab-checkbox-group id="control" label="Label">
+          <slab-checkbox label="Label"></slab-checkbox>
+        </slab-checkbox-group>
+      </label>
+    `,
+  );
+
+  const ids = await page
+    .locator('slab-checkbox-group')
+    .evaluate((element: CheckboxGroup) =>
+      [...element.labels].map((label) => (label as HTMLLabelElement).id),
+    );
+
+  expect(ids).toStrictEqual(['for', 'around']);
+});

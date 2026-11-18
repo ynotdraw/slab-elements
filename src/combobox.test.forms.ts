@@ -1005,3 +1005,26 @@ test(
     await expect(host).toHaveJSProperty('value', 'Two');
   },
 );
+
+test('has a `labels` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <label for="control" id="for">For</label>
+
+      <label id="around">
+        Around
+        <slab-combobox id="control" label="Label">
+          <slab-option>One</slab-option>
+        </slab-combobox>
+      </label>
+    `,
+  );
+
+  const ids = await page
+    .locator('slab-combobox')
+    .evaluate((element: Combobox) =>
+      [...element.labels].map((label) => (label as HTMLLabelElement).id),
+    );
+
+  expect(ids).toStrictEqual(['for', 'around']);
+});

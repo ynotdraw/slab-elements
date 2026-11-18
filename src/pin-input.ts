@@ -94,6 +94,9 @@ declare global {
  * @prop {(position: number, length: number) => string} inputLabel - Names each input from its position, starting at 1, and `length`. "Character 1 of 6" and so on in English when unset.
  *
  * @readonly
+ * @prop {NodeList} labels - The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it.
+ *
+ * @readonly
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
  *
  * @readonly
@@ -220,6 +223,10 @@ export default class PinInput extends LitElement {
 
   get form(): HTMLFormElement | null {
     return this.#internals.form;
+  }
+
+  get labels(): NodeList {
+    return this.#internals.labels;
   }
 
   /**
