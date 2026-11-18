@@ -836,3 +836,91 @@ test(
     expect(results).toStrictEqual([false, false]);
   },
 );
+
+test(
+  'opens via `showPicker()`',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<slab-select label="Label">
+          <slab-option>One</slab-option>
+        </slab-select>`,
+    );
+
+    const host = page.locator('slab-select');
+
+    await callMethod(host, 'showPicker');
+
+    await expect(page.getByRole('listbox')).toBeVisible();
+    await expect(host).toHaveAttribute('open');
+
+    // Again, while it's already open, which does nothing.
+    await callMethod(host, 'showPicker');
+
+    await expect(page.getByRole('listbox')).toBeVisible();
+  },
+);
+
+test(
+  'throws from `showPicker()` while disabled, as a native select does',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-select disabled label="Label">
+          <slab-option>One</slab-option>
+        </slab-select>`,
+    );
+
+    const host = page.locator('slab-select');
+
+    const errorName = () =>
+      host.evaluate<string | undefined, void, Select>((element) => {
+        try {
+          element.showPicker();
+        } catch (error) {
+          return error instanceof DOMException ? error.name : undefined;
+        }
+
+        return;
+      });
+
+    expect(await errorName()).toBe('InvalidStateError');
+    await expect(page.getByRole('listbox')).toBeHidden();
+  },
+);
+
+test(
+  'throws from `showPicker()` without a user gesture, as a native select does',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-select label="Label">
+          <slab-option>One</slab-option>
+        </slab-select>`,
+    );
+
+    // Playwright's `evaluate()` counts as a user gesture in some browsers, so
+    // the page is told there's been none.
+    const errorName = await page
+      .locator('slab-select')
+      .evaluate<string | undefined, void, Select>((element) => {
+        Object.defineProperty(navigator, 'userActivation', {
+          value: { hasBeenActive: false, isActive: false },
+        });
+
+        try {
+          element.showPicker();
+        } catch (error) {
+          return error instanceof DOMException ? error.name : undefined;
+        }
+
+        return;
+      });
+
+    expect(errorName).toBe('NotAllowedError');
+    await expect(page.getByRole('listbox')).toBeHidden();
+  },
+);

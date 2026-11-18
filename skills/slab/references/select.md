@@ -26,6 +26,8 @@ import 'slab-elements/select.js';
 
 Its Options, and Option Groups, are the same ones [Listbox](listbox.md) uses.
 
+`show()`, `hide()` and `toggle()` open and close it from code, as `open` does. `showPicker()` opens it too, but like a native select's, it only works from a user gesture, such as a click, and throws while it's disabled.
+
 ## Keyboard
 
 | Key                               | What it does                                                                                     |
@@ -96,6 +98,7 @@ Style it through its parts and through `:state(disabled)`, `:state(error)`, `:st
 | `setCustomValidity(message: string): void`                        | Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.                                                                         |
 | `setValidity(flags?: ValidityStateFlags, message?: string): void` | Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.                                                      |
 | `show(): void`                                                    | Opens it.                                                                                                                                                                          |
+| `showPicker(): void`                                              | Opens it, as `show()` does. As a native select's, it throws without a user gesture, or while it's disabled.                                                                        |
 | `toggle(force?: boolean): boolean`                                | Opens it when it's closed, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it and `false` only closes it. Returns whether it's open. |
 
 #### Events

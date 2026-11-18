@@ -16,6 +16,7 @@ import customElement from './library/custom-element.js';
 import StringsController from './library/strings.js';
 import assertSlot from './library/assert-slot.js';
 import afterReflection from './library/after-reflection.js';
+import assertCanShowPicker from './library/assert-can-show-picker.js';
 import OptionsController from './library/options-controller.js';
 import TagsController from './library/tags-controller.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
@@ -193,6 +194,7 @@ declare global {
  * @param {string} [message]
  *
  * @method show - Opens the listbox, unless there's nothing in it to choose: while it's disabled, or when no Option matches what's typed.
+ * @method showPicker - Opens the listbox, as `show()` does. As a native input's, it throws without a user gesture, or while it's disabled or read-only.
  *
  * @method toggle - Opens it when it's closed, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it and `false` only closes it. Returns whether it's open.
  * @param {boolean} [force]
@@ -626,6 +628,15 @@ export default class Combobox extends LitElement {
    */
   show(): void {
     this.open = true;
+  }
+
+  /**
+   * Opens the listbox, as `show()` does. As a native input's, it throws without
+   * a user gesture, or while it's disabled or read-only.
+   */
+  showPicker(): void {
+    assertCanShowPicker({ isMutable: !this.#isDisabled && !this.readonly });
+    this.show();
   }
 
   // As a native popover's `togglePopover(force)`: `true` only opens it,
