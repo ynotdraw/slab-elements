@@ -284,7 +284,7 @@ export default class DateRangePicker extends DateRangeField {
 
       // A disabled or readonly one stays closed, so `open` goes back to the
       // popover's word for it.
-      this.open = popover?.matches(':popover-open') ?? false;
+      this.open = popover?.matches(':popover-open') === true;
     }
 
     if (this.open) {

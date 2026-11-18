@@ -153,6 +153,25 @@ test(
 );
 
 test(
+  'has no items before it renders',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-toolbar label="Label">
+          <button>One</button>
+        </slab-toolbar>`,
+    );
+
+    const count = await page.evaluate(() => {
+      return (document.createElement('slab-toolbar') as Toolbar).items.length;
+    });
+
+    expect(count).toBe(0);
+  },
+);
+
+test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
   async ({ render }) => {
