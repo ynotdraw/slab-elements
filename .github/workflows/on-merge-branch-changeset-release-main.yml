@@ -80,8 +80,9 @@ jobs:
       contents: write
       id-token: write
     steps:
-      # Changesets pushes the release's tags with its own credentials, from
-      # `GITHUB_TOKEN`, so checkout's aren't needed.
+      # Changesets creates the release's tags and GitHub releases through the
+      # GitHub API with its `github-token`, `github.token` by default, so
+      # checkout's credentials aren't needed.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -94,10 +95,8 @@ jobs:
           path: dist
       - name: Publish to NPM
         id: changesets
-        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
-        with:
-          publish: pnpm release
+        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         # No `NPM_TOKEN`: npm trusted publishing exchanges this job's OIDC token
         # (`id-token: write`) for a short-lived publish token.
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          publish-script: pnpm release
