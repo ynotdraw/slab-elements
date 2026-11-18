@@ -29,3 +29,19 @@ want what it adds: a label that makes the form a landmark, and a
 | Key   | What it does                                      |
 | ----- | ------------------------------------------------- |
 | Enter | In a field, submits the form, as in a native one. |
+
+## Resetting
+
+A reset, from a `<button type="reset">` or `reset()`, puts each control back
+to the value it started with, as it does a native one. That's its `value`
+attribute, or `checked` on a Checkbox, Switch or Radio, and `selected` on an
+Option. Read or change it from code with `defaultValue`, `defaultChecked` or
+`defaultSelected`, just like a native input's. Range Slider and Date Range
+Field have `defaultStartValue` and `defaultEndValue`.
+
+```js
+const field = document.querySelector('slab-text-field');
+
+field.defaultValue = '14 Alder Lane foundation';
+field.form.reset();
+```

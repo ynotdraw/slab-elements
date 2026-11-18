@@ -909,3 +909,68 @@ test(
     expect(await getValidationMessage()).toBe('');
   },
 );
+
+test(
+  'has a `defaultValue` that is its `value` attribute',
+  { tag: '@forms' },
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-listbox label="Label">
+            <slab-option>One</slab-option>
+            <slab-option>Two</slab-option>
+          </slab-listbox>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-listbox');
+
+    await expect(host).toHaveJSProperty('defaultValue', '');
+
+    await setProperty(host, 'defaultValue', 'Two');
+    await expect(host).toHaveAttribute('value', 'Two');
+    await expect(host).toHaveJSProperty('value', 'Two');
+
+    await setProperty(host, 'value', 'One');
+    await expect(host).toHaveJSProperty('defaultValue', 'Two');
+
+    await callMethod(page.locator('form'), 'reset');
+    await expect(host).toHaveJSProperty('value', 'Two');
+  },
+);
+
+test(
+  'has Options with a `defaultSelected` that is their `selected` attribute',
+  { tag: '@forms' },
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-listbox label="Label" multiple>
+            <slab-option>One</slab-option>
+            <slab-option>Two</slab-option>
+          </slab-listbox>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-option').last();
+
+    await expect(host).toHaveJSProperty('defaultSelected', false);
+
+    await setProperty(host, 'defaultSelected', true);
+    await expect(host).toHaveAttribute('selected');
+    await expect(host).toHaveJSProperty('selected', true);
+
+    await setProperty(host, 'selected', false);
+    await expect(host).toHaveJSProperty('defaultSelected', true);
+
+    await callMethod(page.locator('form'), 'reset');
+    await expect(host).toHaveJSProperty('selected', true);
+
+    await setProperty(host, 'defaultSelected', false);
+    await expect(host).not.toHaveAttribute('selected');
+  },
+);

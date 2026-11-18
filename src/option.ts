@@ -39,6 +39,8 @@ declare global {
  * @cssstate disabled - While it's disabled.
  * @cssstate selected - While it's selected.
  *
+ * @prop {boolean} defaultSelected - Whether it starts selected, and is selected again when its form resets. It's the `selected` attribute, as a native option's `defaultSelected` is, so setting it sets the attribute, and `selected` with it.
+ *
  * @readonly
  * @prop {string} text - What the user reads as the Option's name: its label, or its text when it has no label.
  */
@@ -74,6 +76,16 @@ export default class Option extends LitElement {
 
   set value(value: string | null | undefined) {
     this.#value = value ?? undefined;
+  }
+
+  /** @default false */
+  @property({ attribute: false })
+  get defaultSelected(): boolean {
+    return this.hasAttribute('selected');
+  }
+
+  set defaultSelected(value: boolean) {
+    this.toggleAttribute('selected', value);
   }
 
   /** @internal Which version of Slab this is, for debugging. Not public API. */

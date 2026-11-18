@@ -974,3 +974,34 @@ test(
     expect(before).toBe(after);
   },
 );
+
+test(
+  'has a `defaultValue` that is its `value` attribute',
+  { tag: '@forms' },
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-combobox label="Label">
+            <slab-option>One</slab-option>
+            <slab-option>Two</slab-option>
+          </slab-combobox>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await expect(host).toHaveJSProperty('defaultValue', '');
+
+    await setProperty(host, 'defaultValue', 'Two');
+    await expect(host).toHaveAttribute('value', 'Two');
+    await expect(host).toHaveJSProperty('value', 'Two');
+
+    await setProperty(host, 'value', 'One');
+    await expect(host).toHaveJSProperty('defaultValue', 'Two');
+
+    await callMethod(page.locator('form'), 'reset');
+    await expect(host).toHaveJSProperty('value', 'Two');
+  },
+);

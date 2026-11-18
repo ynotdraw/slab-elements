@@ -139,6 +139,7 @@ declare global {
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
  * @prop {Option | null} activeOption - The Option the user is on, which Enter selects. It's pointed at rather than focused, so focus stays in the input.
+ * @prop {string} defaultValue - The value it selects when none of its Options has `selected`, and goes back to when its form resets. It's the `value` attribute, so setting it sets the attribute, and `value` with it.
  * @prop {(option: Option, query: string) => boolean} filter - Whether an Option matches what's been typed. A case-insensitive substring of its text by default.
  *
  * @readonly
@@ -335,6 +336,16 @@ export default class Combobox extends LitElement {
 
   set values(values: string[]) {
     this.#values = values;
+  }
+
+  /** @default '' */
+  @property({ attribute: false })
+  get defaultValue(): string {
+    return this.getAttribute('value') ?? '';
+  }
+
+  set defaultValue(value: string) {
+    this.setAttribute('value', value);
   }
 
   /** @internal Which version of Slab this is, for debugging. Not public API. */

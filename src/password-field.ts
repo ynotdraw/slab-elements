@@ -88,6 +88,8 @@ declare global {
  * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown.
  * @fires {Event} reveal-change - When the user shows or hides the password. Read `revealed` for which.
  *
+ * @prop {string} defaultValue - The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it.
+ *
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
@@ -200,6 +202,16 @@ export default class PasswordField extends LitElement {
    */
   @property()
   value = '';
+
+  /** @default '' */
+  @property({ attribute: false })
+  get defaultValue(): string {
+    return this.getAttribute('value') ?? '';
+  }
+
+  set defaultValue(value: string) {
+    this.setAttribute('value', value);
+  }
 
   /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })

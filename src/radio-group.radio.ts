@@ -38,6 +38,8 @@ declare global {
  *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
+ *
+ * @prop {boolean} defaultChecked - Whether it starts checked, and is checked again when its form resets. It's the `checked` attribute, as a native input's `defaultChecked` is, so setting it sets the attribute, and `checked` with it.
  */
 @customElement('slab-radio-group-radio')
 export default class Radio extends LitElement {
@@ -57,6 +59,16 @@ export default class Radio extends LitElement {
 
   @property({ reflect: true, useDefault: true })
   value = '';
+
+  /** @default false */
+  @property({ attribute: false })
+  get defaultChecked(): boolean {
+    return this.hasAttribute('checked');
+  }
+
+  set defaultChecked(value: boolean) {
+    this.toggleAttribute('checked', value);
+  }
 
   /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })

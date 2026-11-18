@@ -586,3 +586,43 @@ test(
     expect(before).toBe(after);
   },
 );
+
+test(
+  'has a `defaultStartValue` and `defaultEndValue` that are its `start-value` and `end-value` attributes',
+  { tag: '@forms' },
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-range-slider label="Label"></slab-range-slider>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-range-slider');
+
+    await expect(host).toHaveJSProperty('defaultStartValue', undefined);
+    await expect(host).toHaveJSProperty('defaultEndValue', undefined);
+
+    await setProperty(host, 'defaultStartValue', 20);
+    await setProperty(host, 'defaultEndValue', 80);
+    await expect(host).toHaveAttribute('start-value', '20');
+    await expect(host).toHaveAttribute('end-value', '80');
+    await expect(host).toHaveJSProperty('startValue', 20);
+    await expect(host).toHaveJSProperty('endValue', 80);
+
+    await setProperty(host, 'startValue', 30);
+    await setProperty(host, 'endValue', 40);
+    await expect(host).toHaveJSProperty('defaultStartValue', 20);
+    await expect(host).toHaveJSProperty('defaultEndValue', 80);
+
+    await callMethod(page.locator('form'), 'reset');
+    await expect(host).toHaveJSProperty('startValue', 20);
+    await expect(host).toHaveJSProperty('endValue', 80);
+
+    await setProperty(host, 'defaultStartValue', undefined);
+    await setProperty(host, 'defaultEndValue', undefined);
+    await expect(host).not.toHaveAttribute('start-value');
+    await expect(host).not.toHaveAttribute('end-value');
+  },
+);

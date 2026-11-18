@@ -60,13 +60,14 @@ Style it through its parts and through `:state(disabled)`, `:state(error)`, `:st
 
 #### Properties
 
-| Name                            | Type                      | Description                                                                                                                                                      |
-| ------------------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `form` (read-only)              | `HTMLFormElement \| null` | The form it belongs to, or `null`.                                                                                                                               |
-| `validationMessage` (read-only) | `string`                  | What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid. |
-| `validity` (read-only)          | `ValidityState`           | Its `ValidityState`, as a native control's.                                                                                                                      |
-| `willValidate` (read-only)      | `boolean`                 | Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.                                                                |
-| `valueAsDate`                   | `Date \| null`            | `value` as a `Date` on January 1, 1970, UTC, or `null` when empty, as on a native input.                                                                         |
+| Name                            | Type                      | Description                                                                                                                                                                                |
+| ------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `defaultValue`                  | `string`                  | The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it. |
+| `form` (read-only)              | `HTMLFormElement \| null` | The form it belongs to, or `null`.                                                                                                                                                         |
+| `validationMessage` (read-only) | `string`                  | What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.                           |
+| `validity` (read-only)          | `ValidityState`           | Its `ValidityState`, as a native control's.                                                                                                                                                |
+| `willValidate` (read-only)      | `boolean`                 | Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.                                                                                          |
+| `valueAsDate`                   | `Date \| null`            | `value` as a `Date` on January 1, 1970, UTC, or `null` when empty, as on a native input.                                                                                                   |
 
 #### Methods
 
