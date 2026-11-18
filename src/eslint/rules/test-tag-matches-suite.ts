@@ -33,7 +33,7 @@ export const testTagMatchesSuite = createRule({
           const base = path.parse(context.filename).base;
           const isTest = base.includes('__placeholder__');
 
-          let suite = '';
+          let suite: string;
 
           if (isTest) {
             suite = 'eslint';
