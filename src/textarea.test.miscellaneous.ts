@@ -238,3 +238,156 @@ test(
     await expect(textarea).not.toHaveAttribute('cols');
   },
 );
+
+test(
+  'reads and sets its selection through `selectionStart`, `selectionEnd` and `selectionDirection`',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-textarea label="Label" value="One Two"></slab-textarea>`,
+    );
+
+    const selections = await page
+      .locator('slab-textarea')
+      .evaluate<unknown[], void, Textarea>((element) => {
+        const textarea = element.shadowRoot?.querySelector<HTMLTextAreaElement>(
+          '[data-test="textarea"]',
+        );
+
+        element.setSelectionRange(1, 3, 'backward');
+
+        const read = [
+          element.selectionStart,
+          element.selectionEnd,
+          element.selectionDirection,
+        ];
+
+        element.selectionStart = 4;
+        element.selectionEnd = 7;
+        element.selectionDirection = 'forward';
+
+        return [
+          read,
+          [
+            textarea?.selectionStart,
+            textarea?.selectionEnd,
+            textarea?.selectionDirection,
+          ],
+        ];
+      });
+
+    expect(selections).toStrictEqual([
+      [1, 3, 'backward'],
+      [4, 7, 'forward'],
+    ]);
+  },
+);
+
+test(
+  'replaces its text with `setRangeText()` without dispatching events, as a textarea does',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<form>
+          <slab-textarea
+            label="Label"
+            name="name"
+            value="One Two"
+          ></slab-textarea>
+        </form>`,
+    );
+
+    const result = await page
+      .locator('slab-textarea')
+      .evaluate<unknown[], void, Textarea>((element) => {
+        const types: string[] = [];
+
+        element.addEventListener('input', (event) => {
+          types.push(event.type);
+        });
+
+        element.addEventListener('change', (event) => {
+          types.push(event.type);
+        });
+
+        element.setSelectionRange(0, 3);
+        element.setRangeText('Six');
+
+        const first = element.value;
+
+        element.setRangeText('Ten', 4, 7, 'select');
+
+        return [
+          types,
+          first,
+          element.value,
+          element.selectionStart,
+          element.selectionEnd,
+        ];
+      });
+
+    expect(result).toStrictEqual([[], 'Six Two', 'Six Ten', 4, 7]);
+    await expect(page.locator('[data-test="textarea"]')).toHaveValue('Six Ten');
+    await expect(page.locator('form')).toHaveFormData('name', 'Six Ten');
+  },
+);
+
+test(
+  'throws from `setRangeText()` where a textarea does',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-textarea label="Label" value="One Two"></slab-textarea>`,
+    );
+
+    const errors = await page
+      .locator('slab-textarea')
+      .evaluate<string[], void, Textarea>((element) => {
+        const names: string[] = [];
+
+        for (const call of [
+          () => {
+            element.setRangeText('Ten', 4);
+          },
+          () => {
+            element.setRangeText('Ten', 7, 4);
+          },
+        ]) {
+          try {
+            call();
+          } catch (error) {
+            names.push(error instanceof Error ? error.name : String(error));
+          }
+        }
+
+        return names;
+      });
+
+    expect(errors).toStrictEqual(['TypeError', 'IndexSizeError']);
+
+    await expect(page.locator('slab-textarea')).toHaveJSProperty(
+      'value',
+      'One Two',
+    );
+  },
+);
+
+test(
+  'replaces its text with `setRangeText()` before it renders',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(() => html`<slab-textarea label="Label"></slab-textarea>`);
+
+    const values = await page.evaluate(() => {
+      const element = document.createElement('slab-textarea');
+
+      element.value = 'One Two';
+      element.setRangeText('Ten', 4, 7);
+
+      return [element.value, element.selectionStart, element.selectionEnd];
+    });
+
+    expect(values).toStrictEqual(['One Ten', 7, 7]);
+  },
+);

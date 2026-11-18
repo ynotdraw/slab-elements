@@ -14493,6 +14493,33 @@
             },
             {
               "kind": "field",
+              "name": "selectionDirection",
+              "type": {
+                "text": "HTMLInputElement['selectionDirection']"
+              },
+              "description": "Which way the selection was made, \"forward\", \"backward\" or \"none\", as a\nnative input's `selectionDirection` is.",
+              "default": "'none'"
+            },
+            {
+              "kind": "field",
+              "name": "selectionEnd",
+              "type": {
+                "text": "number | null"
+              },
+              "description": "Where the selection ends, or where the caret is when nothing is selected,\nas a native input's `selectionEnd` is.",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "selectionStart",
+              "type": {
+                "text": "number | null"
+              },
+              "description": "Where the selection starts, or where the caret is when nothing is selected,\nas a native input's `selectionStart` is.",
+              "default": "0"
+            },
+            {
+              "kind": "field",
               "name": "form",
               "type": {
                 "text": "HTMLFormElement | null"
@@ -14649,6 +14676,45 @@
                 }
               ],
               "description": "Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does."
+            },
+            {
+              "kind": "method",
+              "name": "setRangeText",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "replacement",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "start",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "end",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "selectionMode",
+                  "optional": true,
+                  "type": {
+                    "text": "SelectionMode"
+                  }
+                }
+              ],
+              "description": "Replaces part of its text, or the selection when `start` and `end` are\nleft out, as a native input's `setRangeText()` does. `selectionMode` says\nwhat's selected afterward: \"select\", \"start\", \"end\" or \"preserve\", the\ndefault. Like a native input's, it dispatches no \"input\" or \"change\"."
             },
             {
               "kind": "method",
@@ -17933,6 +17999,33 @@
             },
             {
               "kind": "field",
+              "name": "selectionDirection",
+              "type": {
+                "text": "HTMLInputElement['selectionDirection']"
+              },
+              "description": "Which way the selection was made, \"forward\", \"backward\" or \"none\", as a\nnative input's `selectionDirection` is.",
+              "default": "'none'"
+            },
+            {
+              "kind": "field",
+              "name": "selectionEnd",
+              "type": {
+                "text": "number | null"
+              },
+              "description": "Where the selection ends, or where the caret is when nothing is selected,\nas a native input's `selectionEnd` is.",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "selectionStart",
+              "type": {
+                "text": "number | null"
+              },
+              "description": "Where the selection starts, or where the caret is when nothing is selected,\nas a native input's `selectionStart` is.",
+              "default": "0"
+            },
+            {
+              "kind": "field",
               "name": "form",
               "type": {
                 "text": "HTMLFormElement | null"
@@ -18089,6 +18182,45 @@
                 }
               ],
               "description": "Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does."
+            },
+            {
+              "kind": "method",
+              "name": "setRangeText",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "replacement",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "start",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "end",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "selectionMode",
+                  "optional": true,
+                  "type": {
+                    "text": "SelectionMode"
+                  }
+                }
+              ],
+              "description": "Replaces part of its text, or the selection when `start` and `end` are\nleft out, as a native input's `setRangeText()` does. `selectionMode` says\nwhat's selected afterward: \"select\", \"start\", \"end\" or \"preserve\", the\ndefault. Like a native input's, it dispatches no \"input\" or \"change\"."
             },
             {
               "kind": "method",
@@ -23068,6 +23200,33 @@
             },
             {
               "kind": "field",
+              "name": "selectionDirection",
+              "type": {
+                "text": "HTMLInputElement['selectionDirection']"
+              },
+              "description": "Which way the selection was made, \"forward\", \"backward\" or \"none\", as a\nnative input's `selectionDirection` is. `null` for an email field, which\nhas no selection, as an email input's is, and setting it then throws.",
+              "default": "'none'"
+            },
+            {
+              "kind": "field",
+              "name": "selectionEnd",
+              "type": {
+                "text": "number | null"
+              },
+              "description": "Where the selection ends, or where the caret is when nothing is selected,\nas a native input's `selectionEnd` is. `null` for an email field, which has\nno selection, as an email input's is, and setting it then throws.",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "selectionStart",
+              "type": {
+                "text": "number | null"
+              },
+              "description": "Where the selection starts, or where the caret is when nothing is selected,\nas a native input's `selectionStart` is. `null` for an email field, which\nhas no selection, as an email input's is, and setting it then throws.",
+              "default": "0"
+            },
+            {
+              "kind": "field",
               "name": "form",
               "type": {
                 "text": "HTMLFormElement | null"
@@ -23224,6 +23383,45 @@
                 }
               ],
               "description": "Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does."
+            },
+            {
+              "kind": "method",
+              "name": "setRangeText",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "replacement",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "start",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "end",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "selectionMode",
+                  "optional": true,
+                  "type": {
+                    "text": "SelectionMode"
+                  }
+                }
+              ],
+              "description": "Replaces part of its text, or the selection when `start` and `end` are left\nout, as a native input's `setRangeText()` does. `selectionMode` says what's\nselected afterward: \"select\", \"start\", \"end\" or \"preserve\", the default.\nLike a native input's, it dispatches no \"input\" or \"change\". Throws for an\nemail field, as an email input does."
             },
             {
               "kind": "method",
@@ -23699,6 +23897,33 @@
             },
             {
               "kind": "field",
+              "name": "selectionDirection",
+              "type": {
+                "text": "HTMLTextAreaElement['selectionDirection']"
+              },
+              "description": "Which way the selection was made, \"forward\", \"backward\" or \"none\", as a\nnative textarea's `selectionDirection` is.",
+              "default": "'none'"
+            },
+            {
+              "kind": "field",
+              "name": "selectionEnd",
+              "type": {
+                "text": "number"
+              },
+              "description": "Where the selection ends, or where the caret is when nothing is selected,\nas a native textarea's `selectionEnd` is.",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "selectionStart",
+              "type": {
+                "text": "number"
+              },
+              "description": "Where the selection starts, or where the caret is when nothing is selected,\nas a native textarea's `selectionStart` is.",
+              "default": "0"
+            },
+            {
+              "kind": "field",
               "name": "form",
               "type": {
                 "text": "HTMLFormElement | null"
@@ -23855,6 +24080,45 @@
                 }
               ],
               "description": "Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does."
+            },
+            {
+              "kind": "method",
+              "name": "setRangeText",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "replacement",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "start",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "end",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "selectionMode",
+                  "optional": true,
+                  "type": {
+                    "text": "SelectionMode"
+                  }
+                }
+              ],
+              "description": "Replaces part of its text, or the selection when `start` and `end` are left\nout, as a native textarea's `setRangeText()` does. `selectionMode` says\nwhat's selected afterward: \"select\", \"start\", \"end\" or \"preserve\", the\ndefault. Like a native textarea's, it dispatches no \"input\" or \"change\"."
             },
             {
               "kind": "method",
