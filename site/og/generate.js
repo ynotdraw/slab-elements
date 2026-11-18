@@ -8,35 +8,20 @@
 // Each card's text is read from its page, its eyebrow, its heading and its
 // description, so a card can't say something its page doesn't. The images are
 // committed, so the deploy needs no browser. Playwright is the repository's
-// own, from its tests.
+// own, from its tests. What each card says is kept in `cards.json`, which
+// `check.js` holds the built site to.
+//
+// Only cards that are missing, or whose page now says something else, are
+// drawn, since a browser update alone shifts a redrawn card's pixels. To
+// redraw them all after changing the card's design, build the site and run:
+//
+//   pnpm --filter slab-site og:generate --all
 
-import { mkdir, readdir, readFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
-
-const site = path.resolve(fileURLToPath(import.meta.url), '../..');
-const dist = path.join(site, 'dist');
-const out = path.join(site, 'public/og');
-
-// Every built page: `dist/index.html` is "index", and
-// `dist/components/alert/index.html` is "components/alert".
-async function pages(directory = dist) {
-  const found = [];
-
-  for (const entry of await readdir(directory, { withFileTypes: true })) {
-    const file = path.join(directory, entry.name);
-
-    if (entry.isDirectory() && entry.name !== '_astro' && entry.name !== 'og') {
-      found.push(...(await pages(file)));
-    } else if (entry.name === 'index.html') {
-      const route = path.relative(dist, directory);
-      found.push({ file, name: route === '' ? 'index' : route });
-    }
-  }
-
-  return found;
-}
+import { out, pages, record, text } from './cards.js';
 
 const escape = (text) =>
   text
@@ -194,48 +179,35 @@ const card = ({ description, eyebrow, heading }) => `<!doctype html>
 </html>`;
 
 const browser = await chromium.launch();
-const reader = await browser.newPage({ javaScriptEnabled: false });
 const painter = await browser.newPage({
   viewport: { height: 630, width: 1200 },
 });
+const all = process.argv.includes('--all');
+const before = existsSync(record)
+  ? JSON.parse(await readFile(record, 'utf8'))
+  : {};
+const drawn = {};
 
 for (const { file, name } of await pages()) {
-  await reader.setContent(await readFile(file, 'utf8'), {
-    waitUntil: 'domcontentloaded',
-  });
-
-  const text = await reader.evaluate(() => {
-    const main = document.querySelector('main');
-    const heading = main?.querySelector('h1');
-
-    // A line break in a heading is a space on the card, which sets its own.
-    for (const br of heading?.querySelectorAll('br') ?? []) {
-      br.replaceWith(' ');
-    }
-
-    return {
-      description:
-        document
-          .querySelector('meta[name="description"]')
-          ?.getAttribute('content') ?? '',
-      eyebrow: main?.querySelector('.eyebrow')?.textContent?.trim() ?? '',
-      heading: heading?.textContent?.replaceAll(/\s+/g, ' ').trim() ?? '',
-    };
-  });
-
-  // The home page's description opens with its eyebrow, which the card
-  // already shows.
-  if (text.eyebrow && text.description.startsWith(`${text.eyebrow}. `)) {
-    text.description = text.description.slice(text.eyebrow.length + 2);
-  }
-
-  await painter.setContent(card(text), { waitUntil: 'networkidle' });
-  await painter.evaluate(() => document.fonts.ready);
+  drawn[name] = await text(file);
 
   const image = path.join(out, `${name}.png`);
+
+  if (
+    !all &&
+    existsSync(image) &&
+    JSON.stringify(before[name]) === JSON.stringify(drawn[name])
+  ) {
+    continue;
+  }
+
+  await painter.setContent(card(drawn[name]), { waitUntil: 'networkidle' });
+  await painter.evaluate(() => document.fonts.ready);
+
   await mkdir(path.dirname(image), { recursive: true });
   await painter.screenshot({ path: image });
   console.log(`og/${name}.png`);
 }
 
 await browser.close();
+await writeFile(record, `${JSON.stringify(drawn, null, 2)}\n`);

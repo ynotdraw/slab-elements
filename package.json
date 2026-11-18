@@ -91,6 +91,8 @@
     "lint:production": "npm-run-all --aggregate-output --print-label --parallel lint:production:*",
     "lint:production:eslint": "tsc --noCheck --outDir ./dist && eslint .",
     "lint:production:lit-analyzer": "lit-analyzer **/*.ts",
+    "lint:production:og": "pnpm --filter slab-site og:check",
+    "lint:production:og:comment": "The docs site's link preview cards, drawn by hand and committed, so a new or changed page can't ship without its card.",
     "lint:production:stylelint": "tsc --noCheck --outDir ./dist && stylelint '**/*.styles.ts' --custom-syntax postcss-lit --no-color",
     "test": "per-env",
     "test:development": "pnpm test:development:playwright",

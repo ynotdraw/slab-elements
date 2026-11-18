@@ -104,11 +104,16 @@ These are generated and committed, and CI fails when they're out of date:
 - The JSDoc `@attr`, `@prop`, `@method` and similar tags in each component,
   written back into the source from the manifest. Don't write them by hand.
   Write the comment above the property, or inside the slot or part, instead.
+- The docs site's link preview cards in `site/public/og/`, and the text they
+  were drawn from in `site/og/cards.json`. A new page, or a change to a page's
+  heading, eyebrow or description, needs `pnpm --filter slab-site og`. It
+  draws only missing and out-of-date cards, and needs Playwright's Chromium.
+  `pnpm lint` fails until it's run.
 - `skills/slab/references/*.md` and the component index in
   `skills/slab/SKILL.md`, from the manifest, the JSDoc and the docs site's
   component pages. The rest of `SKILL.md` is written by hand.
 
-`NODE_ENV=production pnpm start` regenerates all three and fails on any
+`NODE_ENV=production pnpm start` regenerates all but the cards and fails on any
 difference, as CI does. To regenerate without building Storybook:
 
 ```sh
