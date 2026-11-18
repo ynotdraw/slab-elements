@@ -30,6 +30,8 @@ With `multiple`, each selected Option is shown before the input as a tag, a butt
 
 With `readonly`, the value can't be changed but the Combobox can still be focused, read and submitted, where `disabled` leaves it out of the form. The listbox doesn't open, the tags are text rather than buttons, and the host is `:state(readonly)`.
 
+`show()`, `hide()` and `toggle()` open and close the listbox from code, as `open` does. `showPicker()` opens it too, but like a native input's, it only works from a user gesture, such as a click, and throws while it's disabled or read-only.
+
 ## Long lists
 
 For thousands of Options, set `virtual`, as on [Listbox](listbox.md#long-lists). Only the Options in or near view are laid out, filtering and the arrow keys still reach every one, and the listbox scrolls to the selected Option as it opens. Give `::part(listbox)` a maximum block size so it scrolls.
@@ -141,6 +143,7 @@ Style it through its parts and through `:state(disabled)`, `:state(empty)`, `:st
 | `setCustomValidity(message: string): void`                        | Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.                                                                         |
 | `setValidity(flags?: ValidityStateFlags, message?: string): void` | Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.                                                      |
 | `show(): void`                                                    | Opens the listbox, unless there's nothing in it to choose: while it's disabled, or when no Option matches what's typed.                                                            |
+| `showPicker(): void`                                              | Opens the listbox, as `show()` does. As a native input's, it throws without a user gesture, or while it's disabled or read-only.                                                   |
 | `toggle(force?: boolean): boolean`                                | Opens it when it's closed, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it and `false` only closes it. Returns whether it's open. |
 
 #### Events

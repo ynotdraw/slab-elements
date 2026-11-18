@@ -22,6 +22,8 @@ usage: |
 
 Its Options, and Option Groups, are the same ones [Listbox](../listbox/) uses.
 
+`show()`, `hide()` and `toggle()` open and close it from code, as `open` does. `showPicker()` opens it too, but like a native select's, it only works from a user gesture, such as a click, and throws while it's disabled.
+
 ## Keyboard
 
 | Key                               | What it does                                                                                     |

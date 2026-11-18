@@ -3513,6 +3513,16 @@
             },
             {
               "kind": "method",
+              "name": "showPicker",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Opens the listbox, as `show()` does. As a native input's, it throws without\na user gesture, or while it's disabled or read-only."
+            },
+            {
+              "kind": "method",
               "name": "toggle",
               "return": {
                 "type": {
@@ -18551,6 +18561,16 @@
                 }
               },
               "description": "Opens it."
+            },
+            {
+              "kind": "method",
+              "name": "showPicker",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Opens it, as `show()` does. As a native select's, it throws without a user\ngesture, or while it's disabled."
             },
             {
               "kind": "method",

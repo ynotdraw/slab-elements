@@ -883,3 +883,97 @@ test(
     expect(results).toStrictEqual([true, true]);
   },
 );
+
+test(
+  'opens via `showPicker()`',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label">
+          <slab-option>One</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    await callMethod(host, 'showPicker');
+
+    await expect(page.getByRole('listbox')).toBeVisible();
+    await expect(host).toHaveAttribute('open');
+
+    // Again, while it's already open, which does nothing.
+    await callMethod(host, 'showPicker');
+
+    await expect(page.getByRole('listbox')).toBeVisible();
+  },
+);
+
+test(
+  'throws from `showPicker()` while disabled or readonly, as a native input does',
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () =>
+        html`<slab-combobox disabled label="Label">
+          <slab-option>One</slab-option>
+        </slab-combobox>`,
+    );
+
+    const host = page.locator('slab-combobox');
+
+    const errorName = () =>
+      host.evaluate<string | undefined, void, Combobox>((element) => {
+        try {
+          element.showPicker();
+        } catch (error) {
+          return error instanceof DOMException ? error.name : undefined;
+        }
+
+        return;
+      });
+
+    expect(await errorName()).toBe('InvalidStateError');
+    await expect(page.getByRole('listbox')).toBeHidden();
+
+    await setProperty(host, 'disabled', false);
+    await setProperty(host, 'readonly', true);
+
+    expect(await errorName()).toBe('InvalidStateError');
+    await expect(page.getByRole('listbox')).toBeHidden();
+  },
+);
+
+test(
+  'throws from `showPicker()` without a user gesture, as a native input does',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label">
+          <slab-option>One</slab-option>
+        </slab-combobox>`,
+    );
+
+    // Playwright's `evaluate()` counts as a user gesture in some browsers, so
+    // the page is told there's been none.
+    const errorName = await page
+      .locator('slab-combobox')
+      .evaluate<string | undefined, void, Combobox>((element) => {
+        Object.defineProperty(navigator, 'userActivation', {
+          value: { hasBeenActive: false, isActive: false },
+        });
+
+        try {
+          element.showPicker();
+        } catch (error) {
+          return error instanceof DOMException ? error.name : undefined;
+        }
+
+        return;
+      });
+
+    expect(errorName).toBe('NotAllowedError');
+    await expect(page.getByRole('listbox')).toBeHidden();
+  },
+);

@@ -35,6 +35,8 @@ With `multiple`, each selected Option is shown before the input as a tag, a butt
 
 With `readonly`, the value can't be changed but the Combobox can still be focused, read and submitted, where `disabled` leaves it out of the form. The listbox doesn't open, the tags are text rather than buttons, and the host is `:state(readonly)`.
 
+`show()`, `hide()` and `toggle()` open and close the listbox from code, as `open` does. `showPicker()` opens it too, but like a native input's, it only works from a user gesture, such as a click, and throws while it's disabled or read-only.
+
 ## Long lists
 
 For thousands of Options, set `virtual`, as on [Listbox](../listbox/#long-lists). Only the Options in or near view are laid out, filtering and the arrow keys still reach every one, and the listbox scrolls to the selected Option as it opens. Give `::part(listbox)` a maximum block size so it scrolls.

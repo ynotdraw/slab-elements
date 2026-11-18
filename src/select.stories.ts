@@ -138,6 +138,7 @@ const meta: Meta = {
     'setCustomValidity(message)': '',
     'setValidity(flags, message)': '',
     'show()': '',
+    'showPicker()': '',
     'slot="description"': '',
     value: '',
     version: '',
@@ -291,6 +292,15 @@ const meta: Meta = {
       },
     },
     'show()': {
+      control: false,
+      table: {
+        type: {
+          summary: 'method',
+          detail: '(): void',
+        },
+      },
+    },
+    'showPicker()': {
       control: false,
       table: {
         type: {

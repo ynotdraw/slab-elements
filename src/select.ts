@@ -14,6 +14,7 @@ import ToggleEvents from './library/toggle-events.js';
 import customElement from './library/custom-element.js';
 import assertSlot from './library/assert-slot.js';
 import afterReflection from './library/after-reflection.js';
+import assertCanShowPicker from './library/assert-can-show-picker.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import required from './library/required.js';
 import OptionsController from './library/options-controller.js';
@@ -143,6 +144,7 @@ declare global {
  * @param {string} [message]
  *
  * @method show - Opens it.
+ * @method showPicker - Opens it, as `show()` does. As a native select's, it throws without a user gesture, or while it's disabled.
  *
  * @method toggle - Opens it when it's closed, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it and `false` only closes it. Returns whether it's open.
  * @param {boolean} [force]
@@ -483,6 +485,15 @@ export default class Select extends LitElement {
       this.selectedOptions.at(0) ??
       this.#options.navigableOptions.at(0) ??
       this.#options.activeOption;
+  }
+
+  /**
+   * Opens it, as `show()` does. As a native select's, it throws without a user
+   * gesture, or while it's disabled.
+   */
+  showPicker(): void {
+    assertCanShowPicker({ isMutable: !this.#isDisabled });
+    this.show();
   }
 
   // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
