@@ -56,13 +56,14 @@ Style it through its parts and through `:state(checked)`, `:state(disabled)`, `:
 
 #### Properties
 
-| Name                            | Type                      | Description                                                                                                                                                      |
-| ------------------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `indeterminate`                 | `boolean`                 | Shows it as neither checked nor unchecked, as a native checkbox's `indeterminate` does. Checking or unchecking it clears it.                                     |
-| `form` (read-only)              | `HTMLFormElement \| null` | The form it belongs to, or `null`.                                                                                                                               |
-| `validationMessage` (read-only) | `string`                  | What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid. |
-| `validity` (read-only)          | `ValidityState`           | Its `ValidityState`, as a native control's.                                                                                                                      |
-| `willValidate` (read-only)      | `boolean`                 | Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.                                                                |
+| Name                            | Type                      | Description                                                                                                                                                                                           |
+| ------------------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `indeterminate`                 | `boolean`                 | Shows it as neither checked nor unchecked, as a native checkbox's `indeterminate` does. Checking or unchecking it clears it.                                                                          |
+| `defaultChecked`                | `boolean`                 | Whether it starts checked, and is checked again when its form resets. It's the `checked` attribute, as a native input's `defaultChecked` is, so setting it sets the attribute, and `checked` with it. |
+| `form` (read-only)              | `HTMLFormElement \| null` | The form it belongs to, or `null`.                                                                                                                                                                    |
+| `validationMessage` (read-only) | `string`                  | What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.                                      |
+| `validity` (read-only)          | `ValidityState`           | Its `ValidityState`, as a native control's.                                                                                                                                                           |
+| `willValidate` (read-only)      | `boolean`                 | Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.                                                                                                     |
 
 #### Methods
 

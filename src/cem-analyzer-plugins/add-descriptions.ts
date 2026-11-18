@@ -48,6 +48,16 @@ const shared: Record<Kind, Descriptions> = {
     click: "Clicks it, as a native element's `click()` does.",
     closeDelay:
       'How many milliseconds it waits after the pointer and focus leave before it closes.',
+    defaultChecked:
+      "Whether it starts checked, and is checked again when its form resets. It's the `checked` attribute, as a native input's `defaultChecked` is, so setting it sets the attribute, and `checked` with it.",
+    defaultEndValue:
+      "The end value it starts with, and goes back to when its form resets. It's the `end-value` attribute, as a native input's `defaultValue` is its `value` attribute, so setting it sets the attribute, and `endValue` with it.",
+    defaultSelected:
+      "Whether it starts selected, and is selected again when its form resets. It's the `selected` attribute, as a native option's `defaultSelected` is, so setting it sets the attribute, and `selected` with it.",
+    defaultStartValue:
+      "The start value it starts with, and goes back to when its form resets. It's the `start-value` attribute, as a native input's `defaultValue` is its `value` attribute, so setting it sets the attribute, and `startValue` with it.",
+    defaultValue:
+      "The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it.",
     disabled:
       "Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.",
     focus: 'Focuses it, or the part of it that takes focus.',
@@ -161,6 +171,8 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
         'While no option matches what the user typed, for a "no results" message of your own.',
     },
     members: {
+      defaultValue:
+        "The value it selects when none of its Options has `selected`, and goes back to when its form resets. It's the `value` attribute, so setting it sets the attribute, and `value` with it.",
       options: 'Its Options, in order.',
       selectedOption: 'The first selected Option, or `null`.',
     },
@@ -316,7 +328,11 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     slots: { anchor: 'What the card is about, such as a link' },
   },
   'slab-listbox': {
-    members: { options: 'Its Options, in order.' },
+    members: {
+      defaultValue:
+        "The value it selects when none of its Options has `selected`, and goes back to when its form resets. It's the `value` attribute, so setting it sets the attribute, and `value` with it.",
+      options: 'Its Options, in order.',
+    },
   },
   'slab-menu': {
     cssStates: {
@@ -416,7 +432,11 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
       'placeholder-shown':
         "While nothing is selected and its placeholder shows, as `:placeholder-shown` matches a native input's.",
     },
-    members: { options: 'Its Options, in order.' },
+    members: {
+      defaultValue:
+        "The value it selects when none of its Options has `selected`, and goes back to when its form resets. It's the `value` attribute, so setting it sets the attribute, and `value` with it.",
+      options: 'Its Options, in order.',
+    },
   },
   'slab-sortable-list': {
     events: {

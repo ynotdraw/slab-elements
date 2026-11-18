@@ -74,15 +74,16 @@ Style it through its parts and through `:state(disabled)`, `:state(error)`, `:st
 
 #### Properties
 
-| Name                            | Type                      | Description                                                                                                                                                      |
-| ------------------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `form` (read-only)              | `HTMLFormElement \| null` | The form it belongs to, or `null`.                                                                                                                               |
-| `options` (read-only)           | `Option[]`                | Its Options, in order.                                                                                                                                           |
-| `selectedOptions` (read-only)   | `Option[]`                | Selected and enabled Options, in the order they appear.                                                                                                          |
-| `validationMessage` (read-only) | `string`                  | What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid. |
-| `validity` (read-only)          | `ValidityState`           | Its `ValidityState`, as a native control's.                                                                                                                      |
-| `willValidate` (read-only)      | `boolean`                 | Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.                                                                |
-| `values`                        | `string[]`                | The value of every selected and enabled Option, in the order they appear. Setting it selects the Options with those values, and only those.                      |
+| Name                            | Type                      | Description                                                                                                                                                                             |
+| ------------------------------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `defaultValue`                  | `string`                  | The value it selects when none of its Options has `selected`, and goes back to when its form resets. It's the `value` attribute, so setting it sets the attribute, and `value` with it. |
+| `form` (read-only)              | `HTMLFormElement \| null` | The form it belongs to, or `null`.                                                                                                                                                      |
+| `options` (read-only)           | `Option[]`                | Its Options, in order.                                                                                                                                                                  |
+| `selectedOptions` (read-only)   | `Option[]`                | Selected and enabled Options, in the order they appear.                                                                                                                                 |
+| `validationMessage` (read-only) | `string`                  | What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.                        |
+| `validity` (read-only)          | `ValidityState`           | Its `ValidityState`, as a native control's.                                                                                                                                             |
+| `willValidate` (read-only)      | `boolean`                 | Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.                                                                                       |
+| `values`                        | `string[]`                | The value of every selected and enabled Option, in the order they appear. Setting it selects the Options with those values, and only those.                                             |
 
 #### Methods
 

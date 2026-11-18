@@ -100,6 +100,9 @@ declare global {
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown.
  *
+ * @prop {string} defaultEndValue - The end value it starts with, and goes back to when its form resets. It's the `end-value` attribute, as a native input's `defaultValue` is its `value` attribute, so setting it sets the attribute, and `endValue` with it.
+ * @prop {string} defaultStartValue - The start value it starts with, and goes back to when its form resets. It's the `start-value` attribute, as a native input's `defaultValue` is its `value` attribute, so setting it sets the attribute, and `startValue` with it.
+ *
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
@@ -211,6 +214,26 @@ export default class DateRangeField extends LitElement {
    */
   @property({ attribute: 'start-value' })
   startValue = '';
+
+  /** @default '' */
+  @property({ attribute: false })
+  get defaultEndValue(): string {
+    return this.getAttribute('end-value') ?? '';
+  }
+
+  set defaultEndValue(value: string) {
+    this.setAttribute('end-value', value);
+  }
+
+  /** @default '' */
+  @property({ attribute: false })
+  get defaultStartValue(): string {
+    return this.getAttribute('start-value') ?? '';
+  }
+
+  set defaultStartValue(value: string) {
+    this.setAttribute('start-value', value);
+  }
 
   /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })

@@ -95,6 +95,7 @@ declare global {
  * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown.
  *
  * @prop {(text: string) => string} addedLabel - What screenreaders are told when a tag is added, from the tag. The tag and "added" in English when unset.
+ * @prop {string} defaultValue - The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it.
  *
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
@@ -239,6 +240,16 @@ export default class TagsInput extends LitElement {
     const old = this.#values;
     this.#values = values;
     this.requestUpdate('values', old);
+  }
+
+  /** @default '' */
+  @property({ attribute: false })
+  get defaultValue(): string {
+    return this.getAttribute('value') ?? '';
+  }
+
+  set defaultValue(value: string) {
+    this.setAttribute('value', value);
   }
 
   /** @internal Which version of Slab this is, for debugging. Not public API. */

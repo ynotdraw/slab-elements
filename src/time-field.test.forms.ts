@@ -840,3 +840,31 @@ test(
     expect(before).toBe(after);
   },
 );
+
+test(
+  'has a `defaultValue` that is its `value` attribute',
+  { tag: '@forms' },
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-time-field label="Label"></slab-time-field>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-time-field');
+
+    await expect(host).toHaveJSProperty('defaultValue', '');
+
+    await setProperty(host, 'defaultValue', '09:30');
+    await expect(host).toHaveAttribute('value', '09:30');
+    await expect(host).toHaveJSProperty('value', '09:30');
+
+    await setProperty(host, 'value', '10:45');
+    await expect(host).toHaveJSProperty('defaultValue', '09:30');
+
+    await callMethod(page.locator('form'), 'reset');
+    await expect(host).toHaveJSProperty('value', '09:30');
+  },
+);

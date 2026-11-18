@@ -1064,3 +1064,37 @@ test(
     expect(before).toBe(after);
   },
 );
+
+test(
+  'has Radios with a `defaultChecked` that is their `checked` attribute',
+  { tag: '@forms' },
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-radio-group label="Label">
+            <slab-radio-group-radio label="One"></slab-radio-group-radio>
+            <slab-radio-group-radio label="Two"></slab-radio-group-radio>
+          </slab-radio-group>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-radio-group-radio').last();
+
+    await expect(host).toHaveJSProperty('defaultChecked', false);
+
+    await setProperty(host, 'defaultChecked', true);
+    await expect(host).toHaveAttribute('checked');
+    await expect(host).toHaveJSProperty('checked', true);
+
+    await setProperty(host, 'checked', false);
+    await expect(host).toHaveJSProperty('defaultChecked', true);
+
+    await callMethod(page.locator('form'), 'reset');
+    await expect(host).toHaveJSProperty('checked', true);
+
+    await setProperty(host, 'defaultChecked', false);
+    await expect(host).not.toHaveAttribute('checked');
+  },
+);

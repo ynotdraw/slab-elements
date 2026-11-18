@@ -81,16 +81,17 @@ Style it through its parts and through `:state(disabled)`, `:state(empty)` when 
 
 #### Properties
 
-| Name                            | Type                       | Description                                                                                                                                                      |
-| ------------------------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `removeLabel`                   | `(text: string) => string` | Names each tag's button, which shows only the tag, from the tag. "Remove" and the tag in English when unset.                                                     |
-| `removedLabel`                  | `(text: string) => string` | What screenreaders are told when a tag is removed, from the tag. The tag and "removed" in English when unset.                                                    |
-| `addedLabel`                    | `(text: string) => string` | What screenreaders are told when a tag is added, from the tag. The tag and "added" in English when unset.                                                        |
-| `values`                        | `string[]`                 | Every tag, in the order they were added.                                                                                                                         |
-| `form` (read-only)              | `HTMLFormElement \| null`  | The form it belongs to, or `null`.                                                                                                                               |
-| `validationMessage` (read-only) | `string`                   | What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid. |
-| `validity` (read-only)          | `ValidityState`            | Its `ValidityState`, as a native control's.                                                                                                                      |
-| `willValidate` (read-only)      | `boolean`                  | Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.                                                                |
+| Name                            | Type                       | Description                                                                                                                                                                                |
+| ------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `removeLabel`                   | `(text: string) => string` | Names each tag's button, which shows only the tag, from the tag. "Remove" and the tag in English when unset.                                                                               |
+| `removedLabel`                  | `(text: string) => string` | What screenreaders are told when a tag is removed, from the tag. The tag and "removed" in English when unset.                                                                              |
+| `addedLabel`                    | `(text: string) => string` | What screenreaders are told when a tag is added, from the tag. The tag and "added" in English when unset.                                                                                  |
+| `values`                        | `string[]`                 | Every tag, in the order they were added.                                                                                                                                                   |
+| `defaultValue`                  | `string`                   | The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it. |
+| `form` (read-only)              | `HTMLFormElement \| null`  | The form it belongs to, or `null`.                                                                                                                                                         |
+| `validationMessage` (read-only) | `string`                   | What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.                           |
+| `validity` (read-only)          | `ValidityState`            | Its `ValidityState`, as a native control's.                                                                                                                                                |
+| `willValidate` (read-only)      | `boolean`                  | Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.                                                                                          |
 
 #### Methods
 

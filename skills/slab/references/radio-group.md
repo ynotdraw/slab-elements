@@ -133,6 +133,12 @@ Radio Group sets its `:state(checked)` and `:state(disabled)`.
 | `disabled`         | `boolean` | `false` | Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.                 |
 | `value`            | `string`  | `''`    | What its Radio Group submits while it's checked.                                                                                              |
 
+#### Properties
+
+| Name             | Type      | Description                                                                                                                                                                                           |
+| ---------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `defaultChecked` | `boolean` | Whether it starts checked, and is checked again when its form resets. It's the `checked` attribute, as a native input's `defaultChecked` is, so setting it sets the attribute, and `checked` with it. |
+
 #### Events
 
 | Name     | Type    | Description                                                                                            |

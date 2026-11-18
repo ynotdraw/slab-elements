@@ -111,16 +111,17 @@ Style it through its parts and through `:state(disabled)`, `:state(error)`, and 
 
 #### Properties
 
-| Name                            | Type                      | Description                                                                                                                                                      |
-| ------------------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `activeOption`                  | `Option \| null`          | The Option the user is on, which Space, Enter and typeahead act from. It's pointed at rather than focused, so focus stays where it is.                           |
-| `form` (read-only)              | `HTMLFormElement \| null` | The form it belongs to, or `null`.                                                                                                                               |
-| `options` (read-only)           | `Option[]`                | Its Options, in order.                                                                                                                                           |
-| `selectedOptions` (read-only)   | `Option[]`                | Selected and enabled Options, in the order they appear.                                                                                                          |
-| `validationMessage` (read-only) | `string`                  | What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid. |
-| `validity` (read-only)          | `ValidityState`           | Its `ValidityState`, as a native control's.                                                                                                                      |
-| `willValidate` (read-only)      | `boolean`                 | Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.                                                                |
-| `values`                        | `string[]`                | The value of every selected and enabled Option, in the order they appear. Setting it selects the Options with those values, and only those.                      |
+| Name                            | Type                      | Description                                                                                                                                                                             |
+| ------------------------------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `defaultValue`                  | `string`                  | The value it selects when none of its Options has `selected`, and goes back to when its form resets. It's the `value` attribute, so setting it sets the attribute, and `value` with it. |
+| `activeOption`                  | `Option \| null`          | The Option the user is on, which Space, Enter and typeahead act from. It's pointed at rather than focused, so focus stays where it is.                                                  |
+| `form` (read-only)              | `HTMLFormElement \| null` | The form it belongs to, or `null`.                                                                                                                                                      |
+| `options` (read-only)           | `Option[]`                | Its Options, in order.                                                                                                                                                                  |
+| `selectedOptions` (read-only)   | `Option[]`                | Selected and enabled Options, in the order they appear.                                                                                                                                 |
+| `validationMessage` (read-only) | `string`                  | What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.                        |
+| `validity` (read-only)          | `ValidityState`           | Its `ValidityState`, as a native control's.                                                                                                                                             |
+| `willValidate` (read-only)      | `boolean`                 | Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.                                                                                       |
+| `values`                        | `string[]`                | The value of every selected and enabled Option, in the order they appear. Setting it selects the Options with those values, and only those.                                             |
 
 #### Methods
 
@@ -186,9 +187,10 @@ Its Listbox sets `:state(active)`. It sets `:state(disabled)`, which is also set
 
 #### Properties
 
-| Name               | Type     | Description                                                                            |
-| ------------------ | -------- | -------------------------------------------------------------------------------------- |
-| `text` (read-only) | `string` | What the user reads as the Option's name: its label, or its text when it has no label. |
+| Name               | Type      | Description                                                                                                                                                                                                 |
+| ------------------ | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `defaultSelected`  | `boolean` | Whether it starts selected, and is selected again when its form resets. It's the `selected` attribute, as a native option's `defaultSelected` is, so setting it sets the attribute, and `selected` with it. |
+| `text` (read-only) | `string`  | What the user reads as the Option's name: its label, or its text when it has no label.                                                                                                                      |
 
 #### Slots
 

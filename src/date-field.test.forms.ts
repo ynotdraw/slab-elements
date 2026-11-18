@@ -795,3 +795,31 @@ test(
     expect(before).toBe(after);
   },
 );
+
+test(
+  'has a `defaultValue` that is its `value` attribute',
+  { tag: '@forms' },
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-date-field label="Label"></slab-date-field>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-date-field');
+
+    await expect(host).toHaveJSProperty('defaultValue', '');
+
+    await setProperty(host, 'defaultValue', '2026-11-18');
+    await expect(host).toHaveAttribute('value', '2026-11-18');
+    await expect(host).toHaveJSProperty('value', '2026-11-18');
+
+    await setProperty(host, 'value', '2026-11-19');
+    await expect(host).toHaveJSProperty('defaultValue', '2026-11-18');
+
+    await callMethod(page.locator('form'), 'reset');
+    await expect(host).toHaveJSProperty('value', '2026-11-18');
+  },
+);

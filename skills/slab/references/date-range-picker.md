@@ -80,12 +80,14 @@ Style the field through Date Range Field's parts and states, the button through 
 
 #### Properties
 
-| Name                            | Type                      | Description                                                                                                                                                      |
-| ------------------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `form` (read-only)              | `HTMLFormElement \| null` | The form it belongs to, or `null`.                                                                                                                               |
-| `validationMessage` (read-only) | `string`                  | What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid. |
-| `validity` (read-only)          | `ValidityState`           | Its `ValidityState`, as a native control's.                                                                                                                      |
-| `willValidate` (read-only)      | `boolean`                 | Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.                                                                |
+| Name                            | Type                      | Description                                                                                                                                                                                                                       |
+| ------------------------------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `defaultEndValue`               | `string`                  | The end value it starts with, and goes back to when its form resets. It's the `end-value` attribute, as a native input's `defaultValue` is its `value` attribute, so setting it sets the attribute, and `endValue` with it.       |
+| `defaultStartValue`             | `string`                  | The start value it starts with, and goes back to when its form resets. It's the `start-value` attribute, as a native input's `defaultValue` is its `value` attribute, so setting it sets the attribute, and `startValue` with it. |
+| `form` (read-only)              | `HTMLFormElement \| null` | The form it belongs to, or `null`.                                                                                                                                                                                                |
+| `validationMessage` (read-only) | `string`                  | What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.                                                                  |
+| `validity` (read-only)          | `ValidityState`           | Its `ValidityState`, as a native control's.                                                                                                                                                                                       |
+| `willValidate` (read-only)      | `boolean`                 | Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.                                                                                                                                 |
 
 #### Methods
 

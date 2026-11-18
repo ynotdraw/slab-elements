@@ -85,6 +85,7 @@ declare global {
  * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown.
  *
  * @prop {Option | null} activeOption - The Option the user is on, which Space, Enter and typeahead act from. It's pointed at rather than focused, so focus stays where it is.
+ * @prop {string} defaultValue - The value it selects when none of its Options has `selected`, and goes back to when its form resets. It's the `value` attribute, so setting it sets the attribute, and `value` with it.
  *
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
@@ -174,6 +175,16 @@ export default class Listbox extends LitElement {
 
   set value(value: string) {
     this.values = value === '' ? [] : [value];
+  }
+
+  /** @default '' */
+  @property({ attribute: false })
+  get defaultValue(): string {
+    return this.getAttribute('value') ?? '';
+  }
+
+  set defaultValue(value: string) {
+    this.setAttribute('value', value);
   }
 
   /** @internal Which version of Slab this is, for debugging. Not public API. */

@@ -931,3 +931,34 @@ test(
     await expect(host).toHaveJSProperty('indeterminate', false);
   },
 );
+
+test(
+  'has a `defaultChecked` that is its `checked` attribute',
+  { tag: '@forms' },
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-checkbox label="Label"></slab-checkbox>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-checkbox').last();
+
+    await expect(host).toHaveJSProperty('defaultChecked', false);
+
+    await setProperty(host, 'defaultChecked', true);
+    await expect(host).toHaveAttribute('checked');
+    await expect(host).toHaveJSProperty('checked', true);
+
+    await setProperty(host, 'checked', false);
+    await expect(host).toHaveJSProperty('defaultChecked', true);
+
+    await callMethod(page.locator('form'), 'reset');
+    await expect(host).toHaveJSProperty('checked', true);
+
+    await setProperty(host, 'defaultChecked', false);
+    await expect(host).not.toHaveAttribute('checked');
+  },
+);

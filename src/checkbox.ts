@@ -64,6 +64,8 @@ declare global {
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown.
  *
+ * @prop {boolean} defaultChecked - Whether it starts checked, and is checked again when its form resets. It's the `checked` attribute, as a native input's `defaultChecked` is, so setting it sets the attribute, and `checked` with it.
+ *
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
@@ -146,6 +148,16 @@ export default class Checkbox extends LitElement {
    */
   @property({ reflect: true, useDefault: true })
   value = '';
+
+  /** @default false */
+  @property({ attribute: false })
+  get defaultChecked(): boolean {
+    return this.hasAttribute('checked');
+  }
+
+  set defaultChecked(value: boolean) {
+    this.toggleAttribute('checked', value);
+  }
 
   /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })

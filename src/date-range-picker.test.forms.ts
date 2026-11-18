@@ -127,3 +127,38 @@ test(
     await expect(page.locator('[data-test="button"]')).toBeEnabled();
   },
 );
+
+test(
+  'has a `defaultStartValue` and `defaultEndValue` that are its `start-value` and `end-value` attributes',
+  { tag: '@forms' },
+  async ({ callMethod, render, page, setProperty }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-date-range-picker label="Label"></slab-date-range-picker>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-date-range-picker');
+
+    await expect(host).toHaveJSProperty('defaultStartValue', '');
+    await expect(host).toHaveJSProperty('defaultEndValue', '');
+
+    await setProperty(host, 'defaultStartValue', '2026-11-18');
+    await setProperty(host, 'defaultEndValue', '2026-11-20');
+    await expect(host).toHaveAttribute('start-value', '2026-11-18');
+    await expect(host).toHaveAttribute('end-value', '2026-11-20');
+    await expect(host).toHaveJSProperty('startValue', '2026-11-18');
+    await expect(host).toHaveJSProperty('endValue', '2026-11-20');
+
+    await setProperty(host, 'startValue', '2026-11-01');
+    await setProperty(host, 'endValue', '2026-11-02');
+    await expect(host).toHaveJSProperty('defaultStartValue', '2026-11-18');
+    await expect(host).toHaveJSProperty('defaultEndValue', '2026-11-20');
+
+    await callMethod(page.locator('form'), 'reset');
+    await expect(host).toHaveJSProperty('startValue', '2026-11-18');
+    await expect(host).toHaveJSProperty('endValue', '2026-11-20');
+  },
+);

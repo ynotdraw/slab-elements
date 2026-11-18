@@ -71,14 +71,15 @@ Style it through its parts and through `:state(disabled)` and `:state(error)`. W
 
 #### Properties
 
-| Name                            | Type                                     | Description                                                                                                                           |
-| ------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `formatValue`                   | `(value: number) => string \| undefined` | What screenreaders read for the value, such as "$40" rather than "40". The value itself when unset.                                   |
-| `form` (read-only)              | `HTMLFormElement \| null`                | The form it belongs to, or `null`.                                                                                                    |
-| `validationMessage` (read-only) | `string`                                 | What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`. Empty while it's valid. |
-| `validity` (read-only)          | `ValidityState`                          | Its `ValidityState`, as a native control's.                                                                                           |
-| `valueAsNumber`                 | `number`                                 | `value` as a number, as on a native range input.                                                                                      |
-| `willValidate` (read-only)      | `boolean`                                | Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.                                     |
+| Name                            | Type                                     | Description                                                                                                                                                                                |
+| ------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `formatValue`                   | `(value: number) => string \| undefined` | What screenreaders read for the value, such as "$40" rather than "40". The value itself when unset.                                                                                        |
+| `defaultValue`                  | `string`                                 | The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it. |
+| `form` (read-only)              | `HTMLFormElement \| null`                | The form it belongs to, or `null`.                                                                                                                                                         |
+| `validationMessage` (read-only) | `string`                                 | What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`. Empty while it's valid.                                                      |
+| `validity` (read-only)          | `ValidityState`                          | Its `ValidityState`, as a native control's.                                                                                                                                                |
+| `valueAsNumber`                 | `number`                                 | `value` as a number, as on a native range input.                                                                                                                                           |
+| `willValidate` (read-only)      | `boolean`                                | Whether its validity is checked when its form submits. It isn't while it's disabled or read-only.                                                                                          |
 
 #### Methods
 
