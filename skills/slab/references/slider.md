@@ -30,6 +30,8 @@ Screenreaders read the value as a bare number. When it means more than that, set
 
 Its value is always in range, so it's never invalid on its own. For a rule of your own, such as a minimum, call `setCustomValidity()` with a message. It shows in `::part(validity-message)`, and the host matches `:state(error)`, once validity is reported, as on [Text Field](text-field.md): when focus leaves, when its form is submitted, or on `reportValidity()`.
 
+`stepUp()` and `stepDown()` step the value by `step` from code, as a range input's do, such as for buttons beside the slider. They're kept to `min` and `max`, dispatch no "input" or "change", and throw when `step` is "any".
+
 ## Keyboard
 
 | Key                   | What it does                                     |
@@ -82,15 +84,17 @@ Style it through its parts and through `:state(disabled)` and `:state(error)`. W
 
 #### Methods
 
-| Signature                                                         | Description                                                                                                                   |
-| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `checkValidity(): boolean`                                        | Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.                                   |
-| `click(): void`                                                   | Clicks it, as a native element's `click()` does.                                                                              |
-| `focus(options?: FocusOptions): void`                             | Focuses it, or the part of it that takes focus.                                                                               |
-| `reportValidity(): boolean`                                       | Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.   |
-| `resetValidityFeedback(): void`                                   | Clears the validity feedback without changing `validity`.                                                                     |
-| `setCustomValidity(message: string): void`                        | Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.                    |
-| `setValidity(flags?: ValidityStateFlags, message?: string): void` | Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`. |
+| Signature                                                         | Description                                                                                                                                                                                                    |
+| ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `checkValidity(): boolean`                                        | Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.                                                                                                                    |
+| `click(): void`                                                   | Clicks it, as a native element's `click()` does.                                                                                                                                                               |
+| `focus(options?: FocusOptions): void`                             | Focuses it, or the part of it that takes focus.                                                                                                                                                                |
+| `reportValidity(): boolean`                                       | Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.                                                                                    |
+| `resetValidityFeedback(): void`                                   | Clears the validity feedback without changing `validity`.                                                                                                                                                      |
+| `setCustomValidity(message: string): void`                        | Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.                                                                                                     |
+| `setValidity(flags?: ValidityStateFlags, message?: string): void` | Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.                                                                                  |
+| `stepDown(count?: number): void`                                  | Steps `value` down by `step` times `count`, as a native range input's `stepDown()` does: kept to `min` and snapped to a step. Like a native input's, it dispatches no events, and throws when `step` is "any". |
+| `stepUp(count?: number): void`                                    | Steps `value` up by `step` times `count`, as a native range input's `stepUp()` does: kept to `max` and snapped to a step. Like a native input's, it dispatches no events, and throws when `step` is "any".     |
 
 #### Events
 

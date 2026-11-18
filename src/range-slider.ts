@@ -145,6 +145,14 @@ interface Drag {
  * @method setValidity - Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.
  * @param {ValidityStateFlags} [flags]
  * @param {string} [message]
+ *
+ * @method stepDown - Steps a thumb down by `step` times `count`, as a native range input's `stepDown()` does, as far as `min` or the start thumb. `thumb` is "start" or "end". Left out, it's the thumb that has focus, or the start thumb when neither does. Like a native input's, it dispatches no events.
+ * @param {number} [count]
+ * @param {'start' | 'end'} [thumb]
+ *
+ * @method stepUp - Steps a thumb up by `step` times `count`, as a native range input's `stepUp()` does, as far as `max` or the end thumb. `thumb` is "start" or "end". Left out, it's the thumb that has focus, or the start thumb when neither does. Like a native input's, it dispatches no events.
+ * @param {number} [count]
+ * @param {'start' | 'end'} [thumb]
  */
 @customElement('slab-range-slider')
 export default class RangeSlider extends LitElement {
@@ -451,6 +459,26 @@ export default class RangeSlider extends LitElement {
 
   setValidity(flags?: ValidityStateFlags, message?: string): void {
     this.#customValidity.setValidity(flags, message);
+  }
+
+  /**
+   * Steps a thumb down by `step` times `count`, as a native range input's
+   * `stepDown()` does, as far as `min` or the start thumb. `thumb` is "start"
+   * or "end". Left out, it's the thumb that has focus, or the start thumb when
+   * neither does. Like a native input's, it dispatches no events.
+   */
+  stepDown(count?: number, thumb?: 'start' | 'end'): void {
+    this.#stepBy(-toLong(count ?? 1), thumb);
+  }
+
+  /**
+   * Steps a thumb up by `step` times `count`, as a native range input's
+   * `stepUp()` does, as far as `max` or the end thumb. `thumb` is "start" or
+   * "end". Left out, it's the thumb that has focus, or the start thumb when
+   * neither does. Like a native input's, it dispatches no events.
+   */
+  stepUp(count?: number, thumb?: 'start' | 'end'): void {
+    this.#stepBy(toLong(count ?? 1), thumb);
   }
 
   // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
@@ -829,6 +857,32 @@ export default class RangeSlider extends LitElement {
     }
   }
 
+  // A thumb is moved the way a native range input's `stepUp()` moves its
+  // value, which is always in range and on a step: by `count` steps, then
+  // kept between its bounds and snapped. Its bounds are `min` or `max` and the
+  // other thumb, as with the keyboard.
+  #stepBy(count: number, thumb?: Thumb) {
+    const focused = this.shadowRoot?.activeElement;
+
+    const which =
+      thumb ??
+      (focused && focused === this.#endInputElementRef.value ? 'end' : 'start');
+
+    if (which === 'start') {
+      this.startValue = this.#sanitize(
+        this.startValue + count * this.#step,
+        this.min,
+        this.endValue,
+      );
+    } else {
+      this.endValue = this.#sanitize(
+        this.endValue + count * this.#step,
+        this.startValue,
+        this.#max,
+      );
+    }
+  }
+
   #updateFormValue() {
     if (this.#isDisabled || this.name === '') {
       this.#internals.setFormValue(null);
@@ -859,6 +913,12 @@ export default class RangeSlider extends LitElement {
 
 function decimalPlaces(value: number) {
   return String(value).split('.', 2)[1]?.length ?? 0;
+}
+
+// The way a native method's `long` argument is converted: truncated, and 0
+// when it isn't a finite number.
+function toLong(value: number) {
+  return Number.isFinite(value) ? Math.trunc(value) : 0;
 }
 
 // For `start-value` and `end-value`. A removed attribute is `null`, which

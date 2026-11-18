@@ -16,6 +16,8 @@ Screenreaders read the value as a bare number. When it means more than that, set
 
 Its value is always in range, so it's never invalid on its own. For a rule of your own, such as a minimum, call `setCustomValidity()` with a message. It shows in `::part(validity-message)`, and the host matches `:state(error)`, once validity is reported, as on [Text Field](../text-field/): when focus leaves, when its form is submitted, or on `reportValidity()`.
 
+`stepUp()` and `stepDown()` step the value by `step` from code, as a range input's do, such as for buttons beside the slider. They're kept to `min` and `max`, dispatch no "input" or "change", and throw when `step` is "any".
+
 ## Keyboard
 
 | Key                   | What it does                                     |

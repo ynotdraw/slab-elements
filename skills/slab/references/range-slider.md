@@ -35,6 +35,8 @@ Screenreaders read each thumb's value as a bare number. When it means more than 
 
 Its range is always in bounds, so it's never invalid on its own. For a rule of your own, such as a minimum width, call `setCustomValidity()` with a message. It shows in `::part(validity-message)`, and the host matches `:state(error)`, once validity is reported, as on [Text Field](text-field.md): when focus leaves the slider, when its form is submitted, or on `reportValidity()`.
 
+`stepUp()` and `stepDown()` step a thumb by `step` from code, as a range input's do, such as for buttons beside the slider. Pass "start" or "end" after the count to pick the thumb, as in `stepUp(1, 'end')`. Without one, they step the thumb that has focus, or the start thumb when neither does. A thumb is kept to `min` or `max` and to the other thumb, and neither method dispatches "input" or "change".
+
 ## Keyboard
 
 | Key                   | What it does                                                                                   |
@@ -91,14 +93,16 @@ Placing the thumbs and the range between them along the track is what a slider d
 
 #### Methods
 
-| Signature                                                         | Description                                                                                                                   |
-| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `checkValidity(): boolean`                                        | Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.                                   |
-| `focus(options?: FocusOptions): void`                             | Focuses it, or the part of it that takes focus.                                                                               |
-| `reportValidity(): boolean`                                       | Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.   |
-| `resetValidityFeedback(): void`                                   | Clears the validity feedback without changing `validity`.                                                                     |
-| `setCustomValidity(message: string): void`                        | Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.                    |
-| `setValidity(flags?: ValidityStateFlags, message?: string): void` | Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`. |
+| Signature                                                         | Description                                                                                                                                                                                                                                                                              |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `checkValidity(): boolean`                                        | Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.                                                                                                                                                                                              |
+| `focus(options?: FocusOptions): void`                             | Focuses it, or the part of it that takes focus.                                                                                                                                                                                                                                          |
+| `reportValidity(): boolean`                                       | Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.                                                                                                                                                              |
+| `resetValidityFeedback(): void`                                   | Clears the validity feedback without changing `validity`.                                                                                                                                                                                                                                |
+| `setCustomValidity(message: string): void`                        | Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.                                                                                                                                                                               |
+| `setValidity(flags?: ValidityStateFlags, message?: string): void` | Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.                                                                                                                                                            |
+| `stepDown(count?: number, thumb?: 'start' \| 'end'): void`        | Steps a thumb down by `step` times `count`, as a native range input's `stepDown()` does, as far as `min` or the start thumb. `thumb` is "start" or "end". Left out, it's the thumb that has focus, or the start thumb when neither does. Like a native input's, it dispatches no events. |
+| `stepUp(count?: number, thumb?: 'start' \| 'end'): void`          | Steps a thumb up by `step` times `count`, as a native range input's `stepUp()` does, as far as `max` or the end thumb. `thumb` is "start" or "end". Left out, it's the thumb that has focus, or the start thumb when neither does. Like a native input's, it dispatches no events.       |
 
 #### Events
 
