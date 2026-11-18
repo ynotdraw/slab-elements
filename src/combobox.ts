@@ -648,8 +648,8 @@ export default class Combobox extends LitElement {
 
     for (const parent of parents) {
       if (parent instanceof OptionGroup) {
-        parent.hidden = ![...parent.children].some((child) => {
-          return visibleSet.has(child);
+        parent.hidden = [...parent.children].every((child) => {
+          return !visibleSet.has(child);
         });
       }
     }

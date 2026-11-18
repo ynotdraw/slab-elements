@@ -468,7 +468,7 @@ export default class GridList extends LitElement {
       event.preventDefault(); // Prevent page scroll
 
       const navigable = this.#items.navigableItems;
-      const to = event.key === 'Home' ? navigable.at(0) : navigable.at(-1);
+      const to = navigable.at(event.key === 'Home' ? 0 : -1);
 
       if (to) {
         this.#selectRange(item, to);

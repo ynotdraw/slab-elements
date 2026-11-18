@@ -128,7 +128,7 @@ test(
         element.append(first ?? '');
 
         // Long enough for a mutation observer to have heard of it.
-        await new Promise((resolve) => setTimeout(resolve));
+        await new Promise((resolve) => setTimeout(resolve, 0));
 
         return first?.slot;
       });

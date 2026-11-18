@@ -18,7 +18,7 @@ export default expect.extend({
       : () =>
           this.utils.matcherHint('toBeAccessible', isAccessible, true) +
           '\n\n' +
-          `${this.utils.printDiffOrStringify(
+          this.utils.printDiffOrStringify(
             expectedViolations ?? [],
             result.violations.filter((violation) => {
               return expectedViolations
@@ -28,7 +28,7 @@ export default expect.extend({
             'Expected',
             'Received',
             true,
-          )}`;
+          );
 
     return {
       message,

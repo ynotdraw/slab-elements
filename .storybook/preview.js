@@ -257,9 +257,7 @@ export default {
               $anchor.removeAttribute('aria-haspopup');
             }
 
-            for (const $item of $component.querySelectorAll(
-              'slab-menu-item',
-            )) {
+            for (const $item of $component.querySelectorAll('slab-menu-item')) {
               $item.removeAttribute('aria-checked');
               $item.removeAttribute('aria-disabled');
               $item.removeAttribute('aria-label');
@@ -275,9 +273,7 @@ export default {
           }
 
           if (component === 'tabs') {
-            for (const $tab of $component.querySelectorAll(
-              'slab-tabs-tab',
-            )) {
+            for (const $tab of $component.querySelectorAll('slab-tabs-tab')) {
               $tab.removeAttribute('aria-controls');
               $tab.removeAttribute('aria-disabled');
               $tab.removeAttribute('aria-selected');
@@ -297,9 +293,7 @@ export default {
           }
 
           if (component === 'tree') {
-            for (const $item of $component.querySelectorAll(
-              'slab-tree-item',
-            )) {
+            for (const $item of $component.querySelectorAll('slab-tree-item')) {
               $item.removeAttribute('aria-disabled');
               $item.removeAttribute('aria-expanded');
               $item.removeAttribute('aria-label');
@@ -319,9 +313,7 @@ export default {
               $anchor.removeAttribute('tabindex');
             }
 
-            for (const $item of $component.querySelectorAll(
-              'slab-menu-item',
-            )) {
+            for (const $item of $component.querySelectorAll('slab-menu-item')) {
               $item.removeAttribute('aria-checked');
               $item.removeAttribute('aria-disabled');
               $item.removeAttribute('aria-label');
@@ -355,9 +347,7 @@ export default {
           }
 
           if (['listbox', 'combobox', 'select'].includes(component)) {
-            for (const $option of $component.querySelectorAll(
-              'slab-option',
-            )) {
+            for (const $option of $component.querySelectorAll('slab-option')) {
               $option.removeAttribute('aria-disabled');
               $option.removeAttribute('hidden');
               $option.removeAttribute('aria-label');
@@ -375,7 +365,7 @@ export default {
           }
 
           // Clean up boolean attributes before returning: `disabled=""` → `disabled`.
-          return $container.innerHTML.replaceAll('=""', '');
+          return $container.getHTML().replaceAll('=""', '');
         },
       },
     },

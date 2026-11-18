@@ -1,5 +1,5 @@
 import { type CoverageMap } from 'istanbul-lib-coverage';
-import { thresholds } from './configuration.js';
+import { thresholds } from './config.js';
 
 export default (coverageMap: CoverageMap) => {
   const { branches, lines, functions, statements } =

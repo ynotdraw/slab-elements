@@ -211,7 +211,7 @@ export function langOf(element: Element) {
 /** The strings for an element, from the table for its nearest `lang`. */
 export function stringsFor(element: Element): Strings {
   const lang = langOf(element);
-  const [language] = lang.split('-');
+  const [language] = lang.split('-', 1);
 
   return {
     ...english,

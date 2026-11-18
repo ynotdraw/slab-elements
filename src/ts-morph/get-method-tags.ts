@@ -111,7 +111,7 @@ export default (
         tagName: 'returns',
         text(writer) {
           if (method.return?.type.text) {
-            writer.write(`${method.return.type.text}`);
+            writer.write(method.return.type.text);
           }
         },
       });

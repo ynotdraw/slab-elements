@@ -266,7 +266,7 @@ test(
               // After the component has had its turn.
               setTimeout(() => {
                 resolve(event.defaultPrevented);
-              });
+              }, 0);
             },
             { once: true },
           );

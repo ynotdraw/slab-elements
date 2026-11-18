@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { type ReportNode, type Context } from 'istanbul-lib-report';
 import { create, type LinkMapper } from 'istanbul-reports';
-import { coverageReporterOutputDirectory, reporters } from './configuration.js';
+import { coverageReporterOutputDirectory, reporters } from './config.js';
 
 export default (context: Context) => {
   for (const [name, options] of reporters) {

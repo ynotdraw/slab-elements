@@ -36,7 +36,7 @@ const longPressTolerance = 10;
 // there's room on neither side.
 function fit(point: number, size: number, viewport: number, isAfter: boolean) {
   const isAfterFit = point + size <= viewport;
-  const isBeforeFit = point - size >= 0;
+  const isBeforeFit = point >= size;
 
   if (isAfter ? isAfterFit : !isBeforeFit && isAfterFit) {
     return point;

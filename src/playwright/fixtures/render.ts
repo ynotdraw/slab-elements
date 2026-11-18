@@ -203,10 +203,10 @@ export default test.extend<{
 
               url.pathname = scriptPath;
 
-              throw new Error(`Failed to load "${url.toString()}".`);
-            } else {
-              throw new Error(`Failed to load "${scriptPath}".`);
+              throw new Error(`Failed to load "${url.href}".`);
             }
+
+            throw new Error(`Failed to load "${scriptPath}".`);
           }
         }
 

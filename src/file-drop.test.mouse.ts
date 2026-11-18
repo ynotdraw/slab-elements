@@ -169,8 +169,13 @@ test(
     const events = await host.evaluate((element) => {
       const types: string[] = [];
 
-      element.addEventListener('input', (event) => types.push(event.type));
-      element.addEventListener('change', (event) => types.push(event.type));
+      element.addEventListener('input', (event) => {
+        types.push(event.type);
+      });
+
+      element.addEventListener('change', (event) => {
+        types.push(event.type);
+      });
 
       const dataTransfer = new DataTransfer();
 

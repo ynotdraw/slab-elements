@@ -25,7 +25,7 @@ export default defineConfig([
       eslint.configs.recommended,
 
       // https://github.com/sindresorhus/eslint-plugin-unicorn/tree/main/rules
-      unicorn.configs['flat/all'],
+      unicorn.configs.all,
 
       // https://github.com/bryanrsmith/eslint-plugin-sort-class-members/blob/main/src/index.js
       sortClassMembers.configs['flat/recommended'],
@@ -203,6 +203,96 @@ export default defineConfig([
 
       // `Iterator.concat()` is too new for the browsers Slab supports.
       'unicorn/prefer-iterator-concat': 'off',
+
+      // Like `Iterator.concat()`, these are too new for the browsers Slab
+      // supports, or for Node 22.
+      'unicorn/prefer-error-is-error': 'off',
+      'unicorn/prefer-iterator-to-array': 'off',
+      'unicorn/prefer-temporal': 'off',
+
+      // A function Playwright runs in the page, like `page.evaluate()`'s, has
+      // the browser's globals rather than Node's.
+      'unicorn/isolated-functions': [
+        'error',
+        { overrideGlobals: globals.browser },
+      ],
+
+      // Our arrow functions return explicitly from a block body, whatever its
+      // length, so a one-liner doesn't have to be rewritten when it grows.
+      'unicorn/consistent-arrow-return-style': 'off',
+      'unicorn/prefer-short-arrow-method': 'off',
+
+      // The JSDoc tags written back from the manifest, and the comments around
+      // them, use the usual asterisk on each line. Single-line block comments,
+      // like `/* v8 ignore next */` and `/** @type */`, are on purpose.
+      'unicorn/no-asterisk-prefix-in-documentation-comments': 'off',
+      'unicorn/single-line-block-comment-style': 'off',
+
+      // `eslint-plugin-sort-class-members` already orders class members.
+      'unicorn/consistent-class-member-order': 'off',
+
+      // Tests and stories set `innerHTML` to markup they wrote themselves.
+      'unicorn/no-unsafe-dom-html': 'off',
+
+      // Rewrites of control flow and naming that are matters of taste, and
+      // that would change hundreds of lines without fixing anything.
+      'unicorn/class-reference-in-static-methods': 'off',
+      'unicorn/consistent-boolean-name': 'off',
+      'unicorn/iteration-fallback-style': 'off',
+      'unicorn/max-nested-calls': 'off',
+      'unicorn/no-declarations-before-early-exit': 'off',
+      'unicorn/no-unnecessary-parameters': 'off',
+      'unicorn/no-unreadable-for-of-expression': 'off',
+      'unicorn/no-unreadable-new-expression': 'off',
+      'unicorn/prefer-continue': 'off',
+      'unicorn/prefer-early-return': 'off',
+      'unicorn/prefer-else-if': 'off',
+      'unicorn/prefer-simple-condition-first': 'off',
+      'unicorn/prefer-smaller-scope': 'off',
+
+      // It would replace an early return with a ternary spanning the rest of
+      // the function.
+      'unicorn/prefer-ternary': 'off',
+
+      // `toggleAttribute()` can only add an empty attribute. Ours set a value.
+      'unicorn/prefer-toggle-attribute': 'off',
+
+      // It wants "Vue.js" for Vue, which reads oddly as a possessive.
+      'unicorn/comment-content': 'off',
+
+      // Sorting strings with the default comparison, and names with `<`, is
+      // on purpose: `localeCompare()` would reorder the generated JSDoc tags
+      // and the manifest.
+      'unicorn/prefer-simple-sort-comparator': 'off',
+      'unicorn/require-array-sort-compare': 'off',
+
+      // A `.then()` keeps a function synchronous where its caller relies on
+      // that, like Lit's lifecycle and Playwright's reporter.
+      'unicorn/prefer-await': 'off',
+
+      // These would change behavior, not only style: `Number()` doesn't parse
+      // "50%", `Number.isSafeInteger()` rejects integers that
+      // `Number.isInteger()` accepts, and an object's own properties aren't
+      // all of its properties.
+      'unicorn/no-computed-property-existence-check': 'off',
+      'unicorn/prefer-number-coercion': 'off',
+      'unicorn/prefer-number-is-safe-integer': 'off',
+
+      // Reported where the code reads more plainly as it is, or flagged
+      // patterns that are on purpose: a `flatMap()` that filters as it maps, a
+      // ternary that returns `true`, sibling guards with their own comments,
+      // a test standing in for a global, and a module that re-exports the
+      // translations.
+      'unicorn/no-barrel-files': 'off',
+      'unicorn/no-break-in-nested-loop': 'off',
+      'unicorn/no-global-object-property-assignment': 'off',
+      'unicorn/no-incorrect-template-string-interpolation': 'off',
+      'unicorn/no-non-function-verb-prefix': 'off',
+      'unicorn/no-top-level-assignment-in-function': 'off',
+      'unicorn/no-unnecessary-array-flat-map': 'off',
+      'unicorn/no-unsafe-string-replacement': 'off',
+      'unicorn/prefer-combined-guards': 'off',
+      'unicorn/prefer-logical-operator-over-ternary': 'off',
 
       'no-restricted-imports': [
         'error',

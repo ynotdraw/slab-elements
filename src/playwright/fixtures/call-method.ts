@@ -24,11 +24,11 @@ export default test.extend<{
               //
               // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return
               return element[name].call(element, ...arguments_);
-            } else {
-              throw new Error(
-                `${element.tagName} doesn't have a ${name} method.`,
-              );
             }
+
+            throw new Error(
+              `${element.tagName} doesn't have a ${name} method.`,
+            );
           },
           { name, arguments_ },
         );

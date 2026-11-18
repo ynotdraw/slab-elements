@@ -235,7 +235,7 @@ export default class Slider extends LitElement {
       return input.valueAsNumber;
     }
 
-    return this.#value === '' ? Number.NaN : Number(this.#value);
+    return this.#value === '' ? NaN : Number(this.#value);
   }
 
   set valueAsNumber(value: number) {

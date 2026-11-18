@@ -211,7 +211,7 @@ export default class Feed extends LitElement {
       );
     });
 
-    return direction === 'after' ? focusables.at(0) : focusables.at(-1);
+    return focusables.at(direction === 'after' ? 0 : -1);
   }
 
   // Gives each article its place in the feed, and the role and name of the

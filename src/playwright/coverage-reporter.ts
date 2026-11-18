@@ -23,7 +23,7 @@ import v8ToIstanbul from 'v8-to-istanbul';
 import { type EncodedSourceMap } from '@jridgewell/trace-mapping';
 import { isMatch } from 'matcher';
 import { v8CoverageAnnotationType } from './constants.js';
-import playwrightConfiguration from './playwright.config.js';
+import playwrightConfig from './playwright.config.js';
 
 export interface CoverageReporterOptions {
   include: string[];
@@ -62,12 +62,12 @@ interface V8Coverage {
 }
 
 export default class CoverageReporter implements Reporter {
-  onBegin(configuration: FullConfig) {
+  onBegin(config: FullConfig) {
     if (process.env.PLAYWRIGHT_SKIP_COVERAGE) {
       return;
     }
 
-    this.#isSharded = configuration.shard !== null;
+    this.#isSharded = config.shard !== null;
     this.#coverageMap = istanbulLibCoverage.createCoverageMap({});
     this.#pendingConversions = Promise.resolve();
   }
@@ -85,7 +85,7 @@ export default class CoverageReporter implements Reporter {
 
     const coverageMap = this.#coverageMap;
 
-    const { outputDir } = playwrightConfiguration as FullConfig & {
+    const { outputDir } = playwrightConfig as FullConfig & {
       // `outputDir` is a valid configuration key. But it's not on the type because, in
       // practice, Playwright inlines it into each project in `projects`.
       outputDir?: string;

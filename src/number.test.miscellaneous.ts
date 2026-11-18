@@ -211,7 +211,7 @@ test(
     await expect(host).toHaveJSProperty('valueAsNumber', 12.5);
 
     await setProperty(host, 'value', '');
-    await expect(host).toHaveJSProperty('valueAsNumber', Number.NaN);
+    await expect(host).toHaveJSProperty('valueAsNumber', NaN);
   },
 );
 
@@ -227,7 +227,7 @@ test(
     await expect(host).toHaveJSProperty('value', '7');
     await expect(page.getByRole('spinbutton')).toHaveValue('7');
 
-    await setProperty(host, 'valueAsNumber', Number.NaN);
+    await setProperty(host, 'valueAsNumber', NaN);
     await expect(host).toHaveJSProperty('value', '');
   },
 );
@@ -245,8 +245,13 @@ test(
     const events = await host.evaluate((element) => {
       const types: string[] = [];
 
-      element.addEventListener('input', (event) => types.push(event.type));
-      element.addEventListener('change', (event) => types.push(event.type));
+      element.addEventListener('input', (event) => {
+        types.push(event.type);
+      });
+
+      element.addEventListener('change', (event) => {
+        types.push(event.type);
+      });
 
       (element as HTMLElement & { stepUp(count?: number): void }).stepUp(2);
       (element as HTMLElement & { stepDown(): void }).stepDown();

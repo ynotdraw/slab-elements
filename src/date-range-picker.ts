@@ -341,7 +341,7 @@ export default class DateRangePicker extends DateRangeField {
 
     // Calendar only dispatches "change" once both days are picked, earliest
     // first.
-    const [start = '', end = ''] = event.target.value.split('/');
+    const [start = '', end = ''] = event.target.value.split('/', 2);
 
     this.startValue = start;
     this.endValue = end;

@@ -33,7 +33,7 @@ export default (
               : `{${slot.type.text}} [${slot.name}]`,
           );
         } else if (slot.name) {
-          writer.write(isRequired ? `${slot.name}` : `[${slot.name}]`);
+          writer.write(isRequired ? slot.name : `[${slot.name}]`);
         } else if (isTyped) {
           writer.write(`{${slot.type.text}}`);
         }

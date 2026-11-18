@@ -258,7 +258,7 @@ test(
 
     await host.evaluate((element) => {
       (element as HTMLElement & { valueAsDate: Date | null }).valueAsDate =
-        new Date(Number.NaN);
+        new Date(NaN);
     });
 
     await expect(host).toHaveJSProperty('value', '');

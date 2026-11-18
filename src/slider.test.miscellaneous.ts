@@ -65,7 +65,7 @@ test(
     await expect(host).toHaveJSProperty('value', '7');
 
     // Halfway, where a native range input settles an empty value.
-    await setProperty(host, 'valueAsNumber', Number.NaN);
+    await setProperty(host, 'valueAsNumber', NaN);
     await expect(host).toHaveJSProperty('valueAsNumber', 5);
   },
 );
@@ -85,7 +85,7 @@ test(
       return [empty, slider.valueAsNumber];
     });
 
-    expect(values).toStrictEqual([Number.NaN, 3]);
+    expect(values).toStrictEqual([NaN, 3]);
   },
 );
 

@@ -1,9 +1,9 @@
 import { type JsonOptions } from 'istanbul-reports';
 import type { FullConfig } from '@playwright/test';
-import playwrightConfiguration from '../playwright.config.js';
+import playwrightConfig from '../playwright.config.js';
 import { type CoverageReporterOptions } from '../coverage-reporter.js';
 
-const { reporter, outputDir } = playwrightConfiguration as FullConfig & {
+const { reporter, outputDir } = playwrightConfig as FullConfig & {
   // `outputDir` is a valid configuration key. But it's not on the type because, in
   // practice, Playwright inlines it into each project in `projects`.
   outputDir?: string;

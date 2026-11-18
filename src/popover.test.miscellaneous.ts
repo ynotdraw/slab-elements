@@ -211,7 +211,7 @@ test(
       element.hide();
 
       // "toggle" is queued as a task.
-      await new Promise((resolve) => setTimeout(resolve));
+      await new Promise((resolve) => setTimeout(resolve, 0));
     });
 
     await expect(host).not.toHaveAttribute('open');
