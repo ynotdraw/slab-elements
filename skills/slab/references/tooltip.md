@@ -58,10 +58,11 @@ Style it through its `tooltip` part and `:state(open)`.
 
 #### Methods
 
-| Signature      | Description                                                                              |
-| -------------- | ---------------------------------------------------------------------------------------- |
-| `hide(): void` | Closes it at once, without waiting for `close-delay`.                                    |
-| `show(): void` | Opens it at once, without waiting for `open-delay`. It doesn't open while it's disabled. |
+| Signature                          | Description                                                                                                                                                                        |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hide(): void`                     | Closes it at once, without waiting for `close-delay`.                                                                                                                              |
+| `show(): void`                     | Opens it at once, without waiting for `open-delay`. It doesn't open while it's disabled.                                                                                           |
+| `toggle(force?: boolean): boolean` | Opens it when it's closed, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it and `false` only closes it. Returns whether it's open. |
 
 #### Events
 

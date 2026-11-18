@@ -116,10 +116,11 @@ Style it through its parts and `:state(open)`, and each Menu Item through the st
 
 #### Methods
 
-| Signature      | Description |
-| -------------- | ----------- |
-| `hide(): void` | Closes it.  |
-| `show(): void` | Opens it.   |
+| Signature                          | Description                                                                                                                                                                        |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hide(): void`                     | Closes it.                                                                                                                                                                         |
+| `show(): void`                     | Opens it.                                                                                                                                                                          |
+| `toggle(force?: boolean): boolean` | Opens it when it's closed, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it and `false` only closes it. Returns whether it's open. |
 
 #### Events
 

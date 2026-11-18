@@ -131,16 +131,17 @@ Style it through its parts and through `:state(disabled)`, `:state(empty)`, `:st
 
 #### Methods
 
-| Signature                                                         | Description                                                                                                                   |
-| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `checkValidity(): boolean`                                        | Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.                                   |
-| `focus(options?: FocusOptions): void`                             | Focuses it, or the part of it that takes focus.                                                                               |
-| `hide(): void`                                                    | Closes the listbox.                                                                                                           |
-| `reportValidity(): boolean`                                       | Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.   |
-| `resetValidityFeedback(): void`                                   | Clears the validity feedback without changing `validity`.                                                                     |
-| `setCustomValidity(message: string): void`                        | Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.                    |
-| `setValidity(flags?: ValidityStateFlags, message?: string): void` | Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`. |
-| `show(): void`                                                    | Opens the listbox, unless there's nothing in it to choose: while it's disabled, or when no Option matches what's typed.       |
+| Signature                                                         | Description                                                                                                                                                                        |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `checkValidity(): boolean`                                        | Whether its value is valid. Dispatches "invalid" when it isn't, as a native control's does.                                                                                        |
+| `focus(options?: FocusOptions): void`                             | Focuses it, or the part of it that takes focus.                                                                                                                                    |
+| `hide(): void`                                                    | Closes the listbox.                                                                                                                                                                |
+| `reportValidity(): boolean`                                       | Whether its value is valid. When it isn't, dispatches "invalid" and shows the validity message, as a native control's does.                                                        |
+| `resetValidityFeedback(): void`                                   | Clears the validity feedback without changing `validity`.                                                                                                                          |
+| `setCustomValidity(message: string): void`                        | Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.                                                                         |
+| `setValidity(flags?: ValidityStateFlags, message?: string): void` | Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.                                                      |
+| `show(): void`                                                    | Opens the listbox, unless there's nothing in it to choose: while it's disabled, or when no Option matches what's typed.                                                            |
+| `toggle(force?: boolean): boolean`                                | Opens it when it's closed, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it and `false` only closes it. Returns whether it's open. |
 
 #### Events
 

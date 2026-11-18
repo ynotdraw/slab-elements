@@ -784,3 +784,102 @@ test(
     ]);
   },
 );
+
+test(
+  "only opens or only closes when `toggle()` is forced, and returns whether it's open",
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label">
+          <slab-option>One</slab-option>
+        </slab-combobox>`,
+    );
+
+    const results = await page
+      .locator('slab-combobox')
+      .evaluate<[boolean, boolean][], void, Combobox>((element) => {
+        return [true, true, false, false, undefined, undefined].map((force) => [
+          element.toggle(force),
+          element.open,
+        ]);
+      });
+
+    expect(results).toStrictEqual([
+      [true, true],
+      [true, true],
+      [false, false],
+      [false, false],
+      [true, true],
+      [false, false],
+    ]);
+  },
+);
+
+test(
+  'returns false from `toggle()` when "beforetoggle" keeps it closed',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox label="Label">
+          <slab-option>One</slab-option>
+        </slab-combobox>`,
+    );
+
+    const results = await page
+      .locator('slab-combobox')
+      .evaluate<[boolean, boolean], void, Combobox>((element) => {
+        element.addEventListener('beforetoggle', (event) => {
+          event.preventDefault();
+        });
+
+        return [element.toggle(), element.open];
+      });
+
+    expect(results).toStrictEqual([false, false]);
+  },
+);
+
+test(
+  "returns false from `toggle()` while it's disabled",
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-combobox disabled label="Label">
+          <slab-option>One</slab-option>
+        </slab-combobox>`,
+    );
+
+    const results = await page
+      .locator('slab-combobox')
+      .evaluate<[boolean, boolean], void, Combobox>((element) => {
+        return [element.toggle(true), element.open];
+      });
+
+    expect(results).toStrictEqual([false, false]);
+  },
+);
+
+test(
+  'opens via `toggle()` before it is rendered, once it is',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    // Rendered so it's defined, for the one below that isn't rendered yet.
+    await render(
+      () =>
+        html`<slab-combobox label="Label">
+          <slab-option>One</slab-option>
+        </slab-combobox>`,
+    );
+
+    const results = await page.evaluate(() => {
+      const element = document.createElement('slab-combobox') as Combobox;
+
+      return [element.toggle(), element.open];
+    });
+
+    expect(results).toStrictEqual([true, true]);
+  },
+);

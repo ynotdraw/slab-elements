@@ -549,3 +549,84 @@ test(
     ]);
   },
 );
+
+test(
+  "only opens or only closes when `toggle()` is forced, and returns whether it's open",
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-context-menu label="Label">
+          <div slot="target">Target</div>
+          <slab-menu-item>One</slab-menu-item>
+        </slab-context-menu>`,
+    );
+
+    const results = await page
+      .locator('slab-context-menu')
+      .evaluate<[boolean, boolean][], void, ContextMenu>((element) => {
+        return [true, true, false, false, undefined, undefined].map((force) => [
+          element.toggle(force),
+          element.open,
+        ]);
+      });
+
+    expect(results).toStrictEqual([
+      [true, true],
+      [true, true],
+      [false, false],
+      [false, false],
+      [true, true],
+      [false, false],
+    ]);
+  },
+);
+
+test(
+  'returns false from `toggle()` when "beforetoggle" keeps it closed',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-context-menu label="Label">
+          <div slot="target">Target</div>
+          <slab-menu-item>One</slab-menu-item>
+        </slab-context-menu>`,
+    );
+
+    const results = await page
+      .locator('slab-context-menu')
+      .evaluate<[boolean, boolean], void, ContextMenu>((element) => {
+        element.addEventListener('beforetoggle', (event) => {
+          event.preventDefault();
+        });
+
+        return [element.toggle(), element.open];
+      });
+
+    expect(results).toStrictEqual([false, false]);
+  },
+);
+
+test(
+  "doesn't move via `toggle(true)` when it's open already",
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<slab-context-menu label="Label">
+          <div slot="target">Target</div>
+          <slab-menu-item>One</slab-menu-item>
+        </slab-context-menu>`,
+    );
+
+    const host = page.locator('slab-context-menu');
+    const popover = page.locator('[data-test="popover"]');
+
+    await callMethod(host, 'show', { x: 30, y: 40 });
+    await callMethod(host, 'toggle', true);
+
+    await expect(host).toHaveJSProperty('open', true);
+    expect(await position(popover)).toStrictEqual({ x: 30, y: 40 });
+  },
+);

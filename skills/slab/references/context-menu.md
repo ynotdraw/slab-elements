@@ -74,10 +74,11 @@ Style it through its parts and `:state(open)`, and each Menu Item through the st
 
 #### Methods
 
-| Signature                                         | Description                                                                                                                    |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `hide(): void`                                    | Closes it.                                                                                                                     |
-| `show(position?: { x: number; y: number }): void` | Opens the menu at `x` and `y`, in the viewport's coordinates, or below whatever in the target has focus when they're left out. |
+| Signature                                         | Description                                                                                                                                                                                                                                                   |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hide(): void`                                    | Closes it.                                                                                                                                                                                                                                                    |
+| `show(position?: { x: number; y: number }): void` | Opens the menu at `x` and `y`, in the viewport's coordinates, or below whatever in the target has focus when they're left out.                                                                                                                                |
+| `toggle(force?: boolean): boolean`                | Opens it when it's closed, below whatever in the target has focus, and closes it when it's open, as a native popover's `togglePopover()` does. `true` only opens it, without moving it when it's open, and `false` only closes it. Returns whether it's open. |
 
 #### Events
 

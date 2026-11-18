@@ -574,3 +574,61 @@ test(
     ]);
   },
 );
+
+test(
+  "only opens or only closes when `toggle()` is forced, and returns whether it's open",
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-menu label="Label">
+          <button slot="anchor">Anchor</button>
+          <slab-menu-item>One</slab-menu-item>
+        </slab-menu>`,
+    );
+
+    const results = await page
+      .locator('slab-menu')
+      .evaluate<[boolean, boolean][], void, Menu>((element) => {
+        return [true, true, false, false, undefined, undefined].map((force) => [
+          element.toggle(force),
+          element.open,
+        ]);
+      });
+
+    expect(results).toStrictEqual([
+      [true, true],
+      [true, true],
+      [false, false],
+      [false, false],
+      [true, true],
+      [false, false],
+    ]);
+  },
+);
+
+test(
+  'returns false from `toggle()` when "beforetoggle" keeps it closed',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-menu label="Label">
+          <button slot="anchor">Anchor</button>
+          <slab-menu-item>One</slab-menu-item>
+        </slab-menu>`,
+    );
+
+    const results = await page
+      .locator('slab-menu')
+      .evaluate<[boolean, boolean], void, Menu>((element) => {
+        element.addEventListener('beforetoggle', (event) => {
+          event.preventDefault();
+        });
+
+        return [element.toggle(), element.open];
+      });
+
+    expect(results).toStrictEqual([false, false]);
+  },
+);
