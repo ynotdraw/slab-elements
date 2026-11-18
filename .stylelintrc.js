@@ -6,7 +6,7 @@ export default {
     'stylelint-use-nesting',
     'stylelint-use-logical',
     'stylelint-order',
-    './dist/stylelint/plugin',
+    './dist/stylelint/plugin.js',
   ],
   rules: {
     // https://github.com/w3c/csswg-drafts/issues/9496
