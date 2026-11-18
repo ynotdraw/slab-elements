@@ -236,6 +236,28 @@ test(
 );
 
 test(
+  'has no menus before it renders',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-menubar label="Label">
+          <slab-menu label="File">
+            <button slot="anchor">File</button>
+            <slab-menu-item>New</slab-menu-item>
+          </slab-menu>
+        </slab-menubar>`,
+    );
+
+    const count = await page.evaluate(() => {
+      return (document.createElement('slab-menubar') as Menubar).menus.length;
+    });
+
+    expect(count).toBe(0);
+  },
+);
+
+test(
   'throws when `label` is undefined',
   { tag: '@miscellaneous' },
   async ({ render }) => {

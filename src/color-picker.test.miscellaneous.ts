@@ -128,6 +128,27 @@ test(
   },
 );
 
+test(
+  'adds and removes the alpha slider as `alpha` changes',
+  { tag: '@miscellaneous' },
+  async ({ render, page, setProperty }) => {
+    await render(
+      () => html`<slab-color-picker label="Label"></slab-color-picker>`,
+    );
+
+    const host = page.locator('slab-color-picker');
+    const slider = page.getByRole('slider', { name: 'Label Alpha' });
+
+    await expect(slider).not.toBeAttached();
+
+    await setProperty(host, 'alpha', true);
+    await expect(slider).toBeAttached();
+
+    await setProperty(host, 'alpha', false);
+    await expect(slider).not.toBeAttached();
+  },
+);
+
 // As a native color input takes it.
 test(
   'takes a value that is not a color as "#000000"',
