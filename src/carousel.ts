@@ -8,6 +8,7 @@ import {
 import { property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { createRef, ref } from 'lit/directives/ref.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import StringsController from './library/strings.js';
@@ -185,7 +186,7 @@ export default class Carousel extends LitElement {
     // The slides are live only while they aren't rotating, so a screenreader
     // isn't interrupted every `interval`.
     return html`<section
-      aria-label=${this.label ?? ''}
+      aria-label=${ifDefined(this.label)}
       aria-roledescription="carousel"
       part="carousel"
       @focusin=${this.#onFocusIn}
