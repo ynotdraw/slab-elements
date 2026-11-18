@@ -2,8 +2,8 @@ import { css } from 'lit';
 
 /*
   Dialog's styles, then these, which move it to the page's end edge at full
-  height. A Drawer is non-modal, so there's no backdrop, and the shadow falls
-  across the page instead.
+  height. A non-modal one has no backdrop, so the shadow falls across the page
+  instead. A modal one, opened with showModal(), keeps Dialog's backdrop.
 */
 export default css`
   [part~='dialog'] {
