@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
+import type Slider from './slider.js';
 
 test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
   await render(() => html`<slab-slider label="Label"></slab-slider>`);
@@ -222,5 +223,152 @@ test(
       () => callMethod(host, 'click'),
       [{ type: 'click' }],
     );
+  },
+);
+
+test(
+  'steps its value with `stepUp()` and `stepDown()` without dispatching events',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-slider
+          label="Label"
+          max="50"
+          step="5"
+          value="10"
+        ></slab-slider>`,
+    );
+
+    const host = page.locator('slab-slider');
+
+    const events = await host.evaluate<string[], void, Slider>((element) => {
+      const types: string[] = [];
+
+      element.addEventListener('input', (event) => {
+        types.push(event.type);
+      });
+
+      element.addEventListener('change', (event) => {
+        types.push(event.type);
+      });
+
+      element.formatValue = (value) => `${value} GB`;
+      element.stepUp(2);
+      element.stepDown();
+
+      return types;
+    });
+
+    expect(events).toStrictEqual([]);
+
+    await expect(host).toHaveJSProperty('value', '15');
+    await expect(page.getByRole('slider')).toHaveValue('15');
+
+    await expect(page.getByRole('slider')).toHaveAttribute(
+      'aria-valuetext',
+      '15 GB',
+    );
+  },
+);
+
+test(
+  'keeps `stepUp()` and `stepDown()` to `min` and `max`, as a range input does',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-slider
+          label="Label"
+          max="50"
+          min="10"
+          step="5"
+          value="20"
+        ></slab-slider>`,
+    );
+
+    const host = page.locator('slab-slider');
+
+    const values = await host.evaluate<string[], void, Slider>((element) => {
+      const results: string[] = [];
+
+      element.stepUp(100);
+      results.push(element.value);
+
+      element.stepDown(100);
+      results.push(element.value);
+
+      // Truncated, as a native method's whole-number argument is.
+      element.stepUp(1.9);
+      results.push(element.value);
+
+      // Negative steps the other way.
+      element.stepUp(-1);
+      results.push(element.value);
+
+      return results;
+    });
+
+    expect(values).toStrictEqual(['50', '10', '15', '10']);
+  },
+);
+
+// The error's name is checked in the page because Firefox, unlike Chromium and
+// WebKit, leaves it out of the message Playwright passes back.
+test(
+  'throws from `stepUp()` and `stepDown()` when `step` is "any"',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-slider label="Label" step="any" value="1"></slab-slider>`,
+    );
+
+    const errorNames = await page
+      .locator('slab-slider')
+      .evaluate<(string | undefined)[], void, Slider>((element) => {
+        return [() => element.stepUp(), () => element.stepDown()].map(
+          (step) => {
+            try {
+              step();
+            } catch (error) {
+              return error instanceof DOMException ? error.name : undefined;
+            }
+          },
+        );
+      });
+
+    expect(errorNames).toStrictEqual([
+      'InvalidStateError',
+      'InvalidStateError',
+    ]);
+
+    await expect(page.locator('slab-slider')).toHaveJSProperty('value', '1');
+  },
+);
+
+test(
+  'steps its value with `stepUp()` and `stepDown()` before it renders',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(() => html`<slab-slider label="Label"></slab-slider>`);
+
+    const values = await page.evaluate(() => {
+      const element = document.createElement('slab-slider');
+
+      element.max = 50;
+      element.step = 10;
+      element.value = '20';
+
+      element.stepUp(2);
+      const up = element.value;
+
+      element.stepDown(10);
+      const down = element.value;
+
+      return [up, down];
+    });
+
+    expect(values).toStrictEqual(['40', '0']);
   },
 );

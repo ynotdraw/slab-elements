@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
+import type RangeSlider from './range-slider.js';
 
 test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
   await render(
@@ -539,5 +540,154 @@ test(
 
     await expect(host).toHaveJSProperty('startValue', 20);
     await expect(start).toHaveValue('20');
+  },
+);
+
+test(
+  'steps a thumb with `stepUp()` and `stepDown()` without dispatching events',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-range-slider
+          end-value="60"
+          label="Label"
+          start-value="20"
+          step="5"
+        ></slab-range-slider>`,
+    );
+
+    const host = page.locator('slab-range-slider');
+
+    const events = await host.evaluate<string[], void, RangeSlider>(
+      (element) => {
+        const types: string[] = [];
+
+        element.addEventListener('input', (event) => {
+          types.push(event.type);
+        });
+
+        element.addEventListener('change', (event) => {
+          types.push(event.type);
+        });
+
+        // The start thumb, since neither has focus.
+        element.stepUp();
+        element.stepDown(2, 'end');
+
+        return types;
+      },
+    );
+
+    expect(events).toStrictEqual([]);
+
+    await expect(host).toHaveJSProperty('startValue', 25);
+    await expect(host).toHaveJSProperty('endValue', 50);
+
+    await expect(page.getByRole('slider', { name: 'Minimum' })).toHaveValue(
+      '25',
+    );
+
+    await expect(page.getByRole('slider', { name: 'Maximum' })).toHaveValue(
+      '50',
+    );
+  },
+);
+
+test(
+  'steps the thumb that has focus with `stepUp()` and `stepDown()`',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-range-slider
+          end-value="60"
+          label="Label"
+          start-value="20"
+          step="5"
+        ></slab-range-slider>`,
+    );
+
+    const host = page.locator('slab-range-slider');
+
+    await page.getByRole('slider', { name: 'Maximum' }).focus();
+
+    await host.evaluate<void, void, RangeSlider>((element) => {
+      element.stepUp(2);
+      element.stepDown(1, 'start');
+    });
+
+    await expect(host).toHaveJSProperty('startValue', 15);
+    await expect(host).toHaveJSProperty('endValue', 70);
+
+    await page.getByRole('slider', { name: 'Minimum' }).focus();
+
+    await host.evaluate<void, void, RangeSlider>((element) => {
+      element.stepDown();
+    });
+
+    await expect(host).toHaveJSProperty('startValue', 10);
+    await expect(host).toHaveJSProperty('endValue', 70);
+  },
+);
+
+test(
+  'keeps `stepUp()` and `stepDown()` to `min`, `max` and the other thumb',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-range-slider
+          end-value="60"
+          label="Label"
+          max="90"
+          min="10"
+          start-value="20"
+          step="5"
+        ></slab-range-slider>`,
+    );
+
+    const values = await page
+      .locator('slab-range-slider')
+      .evaluate<[number, number][], void, RangeSlider>((element) => {
+        const results: [number, number][] = [];
+
+        const record = () => {
+          results.push([element.startValue, element.endValue]);
+        };
+
+        element.stepUp(100, 'start');
+        record();
+
+        element.stepDown(100, 'end');
+        record();
+
+        element.stepUp(100, 'end');
+        record();
+
+        element.stepDown(100, 'start');
+        record();
+
+        // Truncated, as a native method's whole-number argument is, and 0 when
+        // it isn't a finite number.
+        element.stepUp(1.9, 'start');
+        element.stepUp(NaN, 'end');
+        record();
+
+        // Negative steps the other way.
+        element.stepUp(-2, 'end');
+        record();
+
+        return results;
+      });
+
+    expect(values).toStrictEqual([
+      [60, 60],
+      [60, 60],
+      [60, 90],
+      [10, 90],
+      [15, 90],
+      [15, 80],
+    ]);
   },
 );

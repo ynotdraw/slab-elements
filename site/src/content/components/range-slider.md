@@ -20,6 +20,8 @@ Screenreaders read each thumb's value as a bare number. When it means more than 
 
 Its range is always in bounds, so it's never invalid on its own. For a rule of your own, such as a minimum width, call `setCustomValidity()` with a message. It shows in `::part(validity-message)`, and the host matches `:state(error)`, once validity is reported, as on [Text Field](../text-field/): when focus leaves the slider, when its form is submitted, or on `reportValidity()`.
 
+`stepUp()` and `stepDown()` step a thumb by `step` from code, as a range input's do, such as for buttons beside the slider. Pass "start" or "end" after the count to pick the thumb, as in `stepUp(1, 'end')`. Without one, they step the thumb that has focus, or the start thumb when neither does. A thumb is kept to `min` or `max` and to the other thumb, and neither method dispatches "input" or "change".
+
 ## Keyboard
 
 | Key                   | What it does                                                                                   |

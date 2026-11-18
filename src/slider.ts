@@ -112,6 +112,12 @@ declare global {
  * @method setValidity - Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`.
  * @param {ValidityStateFlags} [flags]
  * @param {string} [message]
+ *
+ * @method stepDown - Steps `value` down by `step` times `count`, as a native range input's `stepDown()` does: kept to `min` and snapped to a step. Like a native input's, it dispatches no events, and throws when `step` is "any".
+ * @param {number} [count]
+ *
+ * @method stepUp - Steps `value` up by `step` times `count`, as a native range input's `stepUp()` does: kept to `max` and snapped to a step. Like a native input's, it dispatches no events, and throws when `step` is "any".
+ * @param {number} [count]
  */
 @customElement('slab-slider')
 export default class Slider extends LitElement {
@@ -352,6 +358,24 @@ export default class Slider extends LitElement {
     this.#customValidity.setValidity(flags, message);
   }
 
+  /**
+   * Steps `value` down by `step` times `count`, as a native range input's
+   * `stepDown()` does: kept to `min` and snapped to a step. Like a native
+   * input's, it dispatches no events, and throws when `step` is "any".
+   */
+  stepDown(count?: number): void {
+    this.#step('stepDown', count);
+  }
+
+  /**
+   * Steps `value` up by `step` times `count`, as a native range input's
+   * `stepUp()` does: kept to `max` and snapped to a step. Like a native
+   * input's, it dispatches no events, and throws when `step` is "any".
+   */
+  stepUp(count?: number): void {
+    this.#step('stepUp', count);
+  }
+
   // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
   // only knows public keys.
   override updated(changes: PropertyValues) {
@@ -439,6 +463,24 @@ export default class Slider extends LitElement {
     return this.disabled || this.isFormDisabled;
   }
 
+  #detachedInput() {
+    const input = document.createElement('input');
+
+    input.type = 'range';
+
+    for (const attribute of ['max', 'min', 'step'] as const) {
+      const value = this[attribute];
+
+      if (value !== undefined) {
+        input.setAttribute(attribute, String(value));
+      }
+    }
+
+    input.value = this.#value;
+
+    return input;
+  }
+
   #onInputBlur() {
     this.#customValidity.reportOnBlur();
   }
@@ -479,6 +521,20 @@ export default class Slider extends LitElement {
     } else {
       this.#internals.states.delete(state);
     }
+  }
+
+  // The input steps, clamps and snaps the value, and throws where a native one
+  // does, since it is one. Before the first render there's no input, so a
+  // detached one stands in for it, under the same `min`, `max` and `step`.
+  #step(method: 'stepDown' | 'stepUp', count?: number) {
+    const input = this.#inputElementRef.value ?? this.#detachedInput();
+
+    input[method](count);
+    this.value = input.value;
+
+    // The setter's own update is skipped, as it is after "input", so
+    // `aria-valuetext` is rendered again here.
+    this.requestUpdate();
   }
 
   #updateFormValue() {

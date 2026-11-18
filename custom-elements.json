@@ -16758,6 +16758,58 @@
             },
             {
               "kind": "method",
+              "name": "stepDown",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "count",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "thumb",
+                  "optional": true,
+                  "type": {
+                    "text": "'start' | 'end'"
+                  }
+                }
+              ],
+              "description": "Steps a thumb down by `step` times `count`, as a native range input's\n`stepDown()` does, as far as `min` or the start thumb. `thumb` is \"start\"\nor \"end\". Left out, it's the thumb that has focus, or the start thumb when\nneither does. Like a native input's, it dispatches no events."
+            },
+            {
+              "kind": "method",
+              "name": "stepUp",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "count",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "thumb",
+                  "optional": true,
+                  "type": {
+                    "text": "'start' | 'end'"
+                  }
+                }
+              ],
+              "description": "Steps a thumb up by `step` times `count`, as a native range input's\n`stepUp()` does, as far as `max` or the end thumb. `thumb` is \"start\" or\n\"end\". Left out, it's the thumb that has focus, or the start thumb when\nneither does. Like a native input's, it dispatches no events."
+            },
+            {
+              "kind": "method",
               "name": "finalizeStyles",
               "privacy": "protected",
               "static": true,
@@ -19059,6 +19111,44 @@
                 }
               ],
               "description": "Sets its validity and message, as `ElementInternals.setValidity()` does, for checks of your own beyond `setCustomValidity()`."
+            },
+            {
+              "kind": "method",
+              "name": "stepDown",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "count",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Steps `value` down by `step` times `count`, as a native range input's\n`stepDown()` does: kept to `min` and snapped to a step. Like a native\ninput's, it dispatches no events, and throws when `step` is \"any\"."
+            },
+            {
+              "kind": "method",
+              "name": "stepUp",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "count",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Steps `value` up by `step` times `count`, as a native range input's\n`stepUp()` does: kept to `max` and snapped to a step. Like a native\ninput's, it dispatches no events, and throws when `step` is \"any\"."
             },
             {
               "kind": "method",
