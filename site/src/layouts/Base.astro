@@ -1,4 +1,5 @@
 ---
+import { existsSync } from 'node:fs';
 import { Font } from 'astro:assets';
 import { ClientRouter } from 'astro:transitions';
 import { version } from '../../../package.json';
@@ -28,8 +29,12 @@ const current = (href: string) => (Astro.url.pathname === href ? 'page' : undefi
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const page = Astro.url.pathname.slice(base.length).replace(/\/$/, '') || 'index';
 
-// The 404 page has no card of its own, and shows the home page's.
-const image = new URL(`${base}og/${page === '404' ? 'index' : page}.png`, Astro.site);
+// A page with no card of its own, like the 404 page or a new page whose card
+// hasn't been drawn yet, shows the home page's, so its link preview is never
+// a broken image. Draw the missing card with the site's `og` script. The build
+// runs from the site's root, where `public` is.
+const card = existsSync(`public/og/${page}.png`) ? page : 'index';
+const image = new URL(`${base}og/${card}.png`, Astro.site);
 ---
 
 <!doctype html>
