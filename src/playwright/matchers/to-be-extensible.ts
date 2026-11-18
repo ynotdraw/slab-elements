@@ -17,9 +17,9 @@ export default expect.extend({
         }
 
         return true;
-      } else {
-        return null;
       }
+
+      return null;
     });
 
     const message =

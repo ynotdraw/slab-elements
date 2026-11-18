@@ -7,7 +7,7 @@ import {
   coverageReporterOutputDirectory,
   playwrightOutputDirectory,
   thresholds,
-} from './configuration.js';
+} from './config.js';
 
 export default (coverageMapData: CoverageMapData[]) => {
   const map = istanbulLibCoverage.createCoverageMap({});

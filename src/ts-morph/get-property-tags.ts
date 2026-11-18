@@ -54,7 +54,7 @@ export default (
         writer.write(
           property.type
             ? `{${property.type.text}} ${property.name}`
-            : `${property.name}`,
+            : property.name,
         );
 
         if (

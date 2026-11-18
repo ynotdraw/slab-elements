@@ -74,7 +74,7 @@ test(
         // emptying below is under test.
         await new Promise((resolve) => setTimeout(resolve));
 
-        host.innerHTML = '';
+        host.replaceChildren();
       });
     });
 
@@ -147,7 +147,7 @@ test(
         // emptying below is under test.
         await new Promise((resolve) => setTimeout(resolve));
 
-        host.innerHTML = '';
+        host.replaceChildren();
       });
     });
 
@@ -229,7 +229,7 @@ test(
         // emptying below is under test.
         await new Promise((resolve) => setTimeout(resolve));
 
-        host.innerHTML = '';
+        host.replaceChildren();
       });
     });
 
@@ -393,7 +393,7 @@ test(
         // emptying below is under test.
         await new Promise((resolve) => setTimeout(resolve));
 
-        host.innerHTML = '';
+        host.replaceChildren();
       });
     });
 
@@ -540,7 +540,7 @@ test(
         // emptying below is under test.
         await new Promise((resolve) => setTimeout(resolve));
 
-        host.innerHTML = '';
+        host.replaceChildren();
       });
     });
 

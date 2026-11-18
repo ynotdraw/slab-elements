@@ -6,7 +6,7 @@ import {
   coverageReporterOutputDirectory,
   jsonReporterFile,
   playwrightOutputDirectory,
-} from './configuration.js';
+} from './config.js';
 
 export default async () => {
   const directories = await globby(

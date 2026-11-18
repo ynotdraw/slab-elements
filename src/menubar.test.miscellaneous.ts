@@ -189,7 +189,7 @@ test(
         }
 
         // A tick for an observer that's still watching to have run.
-        await new Promise((resolve) => setTimeout(resolve));
+        await new Promise((resolve) => setTimeout(resolve, 0));
 
         return button?.getAttribute('tabindex');
       });

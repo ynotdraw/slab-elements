@@ -119,7 +119,7 @@ export default class OptionsController extends ItemsController<Option> {
       option.selected = option.hasAttribute('selected');
     }
 
-    if (value !== null && !this.options.some(({ selected }) => selected)) {
+    if (value !== null && this.options.every(({ selected }) => !selected)) {
       this.#selectValues([value]);
     }
 

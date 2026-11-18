@@ -262,7 +262,7 @@ test(
     await setValueAsDate(Date.UTC(1970, 0, 1, 9, 30, 0, 500));
     await expect(host).toHaveJSProperty('value', '09:30:00.500');
 
-    await setValueAsDate(Number.NaN);
+    await setValueAsDate(NaN);
     await expect(host).toHaveJSProperty('value', '');
 
     await setValueAsDate(Date.UTC(1970, 0, 1, 9, 30));

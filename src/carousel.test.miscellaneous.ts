@@ -225,7 +225,7 @@ test(
             slide.hasAttribute('aria-label'),
             slide.hasAttribute('inert'),
           ]);
-        });
+        }, 0);
       });
     });
 

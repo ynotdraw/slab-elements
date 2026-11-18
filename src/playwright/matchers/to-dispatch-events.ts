@@ -218,13 +218,13 @@ export default expect.extend({
             //
 
             `Locator: ${locator.toString()}\n` +
-            `${this.utils.printDiffOrStringify(
+            this.utils.printDiffOrStringify(
               this.isNot ? [] : expectedEvents,
               receivedEvents,
               'Expected',
               'Received',
               true,
-            )}`;
+            );
 
     return {
       message,

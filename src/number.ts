@@ -232,7 +232,7 @@ export default class NumberField extends LitElement {
    * @default NaN
    */
   get valueAsNumber(): number {
-    return this.value === '' ? Number.NaN : Number(this.value);
+    return this.value === '' ? NaN : Number(this.value);
   }
 
   set valueAsNumber(value: number) {

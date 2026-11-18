@@ -168,7 +168,7 @@ function rule(actualOptions: unknown) {
       for (const resolvedSelector of getResolvedSelectors(rule)) {
         const selectors = selectorParser().astSync(resolvedSelector).nodes;
 
-        if (!selectors.every((selector) => isReachable(selector))) {
+        if (selectors.some((selector) => !isReachable(selector))) {
           stylelint.utils.report({
             result,
             ruleName,

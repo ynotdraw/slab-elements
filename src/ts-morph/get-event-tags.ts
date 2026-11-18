@@ -23,9 +23,7 @@ export default (
       },
       text(writer) {
         writer.write(
-          event.type?.text
-            ? `{${event.type?.text}} ${event.name}`
-            : `${event.name}`,
+          event.type?.text ? `{${event.type?.text}} ${event.name}` : event.name,
         );
 
         if ('description' in event && event.description) {
