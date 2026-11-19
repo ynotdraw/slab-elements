@@ -1,5 +1,9 @@
 import { type ReactiveControllerHost } from 'lit';
 import isFormCheckingValidity from './is-form-checking-validity.js';
+import {
+  isInvalidCancelled,
+  preventValidationBubble,
+} from './validation-bubble.js';
 
 export type CustomValidityHost = ReactiveControllerHost &
   HTMLElement & {
@@ -78,9 +82,18 @@ export default class CustomValidity {
   }
 
   reportValidity(): boolean {
-    this.#hasReported = true;
+    const wasReported = this.#hasReported;
+
+    this.#invalidEvent = undefined;
 
     const isValid = this.#config.internals().reportValidity();
+
+    // Unless a consumer cancelled "invalid", as a native control's message
+    // stays unshown when they do.
+    this.#hasReported =
+      this.#invalidEvent && isInvalidCancelled(this.#invalidEvent)
+        ? wasReported
+        : true;
 
     // So anything reading `validity.valid` renders again.
     this.#host.requestUpdate();
@@ -137,6 +150,8 @@ export default class CustomValidity {
 
   #host: CustomValidityHost;
 
+  #invalidEvent?: Event;
+
   #isBlurring = false;
 
   #isChecking = false;
@@ -144,7 +159,8 @@ export default class CustomValidity {
   #message?: string;
 
   #onInvalid = (event: Event) => {
-    event.preventDefault(); // So no native validation bubble is shown.
+    preventValidationBubble(event);
+    this.#invalidEvent = event;
 
     // Focus belongs to the user here unless the form was submitted, or
     // `reportValidity()` was called by something other than a blur.
@@ -156,12 +172,28 @@ export default class CustomValidity {
       return;
     }
 
+    const wasReported = this.#hasReported;
+
+    // The message shows now, so it's there once the control updates. Focus
+    // waits for the event's other listeners, and a consumer who cancels it
+    // keeps the message unshown and focus where it is, as with a native
+    // control.
     this.#hasReported = true;
     this.#host.requestUpdate();
 
-    // The browser ignores this when another control is the first invalid one.
-    if (this.#host.form?.querySelector(':invalid') === this.#host) {
-      this.#host.focus();
-    }
+    queueMicrotask(() => {
+      if (isInvalidCancelled(event)) {
+        this.#hasReported = wasReported;
+        this.#host.requestUpdate();
+
+        return;
+      }
+
+      // The browser ignores this when another control is the first invalid
+      // one.
+      if (this.#host.form?.querySelector(':invalid') === this.#host) {
+        this.#host.focus();
+      }
+    });
   };
 }

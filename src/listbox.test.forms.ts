@@ -1061,3 +1061,40 @@ test(
     await expect(host).toHaveJSProperty('validationMessage', 'Taken');
   },
 );
+
+test(
+  'leaves the validity message unshown when "invalid" is cancelled',
+  { tag: '@forms' },
+  async ({ addEventListener, callMethod, render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-listbox label="Label">
+            <slab-option>One</slab-option>
+          </slab-listbox>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-listbox');
+    const validityMessage = host.locator('[data-test="validity-message"]');
+
+    await callMethod(host, 'setCustomValidity', 'Taken');
+    await addEventListener(host, 'invalid', { preventDefault: true });
+
+    await test.step('reportValidity()', async () => {
+      await callMethod(host, 'reportValidity');
+
+      await expect(validityMessage).toBeHidden();
+    });
+
+    await test.step('submit', async () => {
+      await page.locator('form').evaluate((form: HTMLFormElement) => {
+        form.requestSubmit();
+      });
+
+      await expect(validityMessage).toBeHidden();
+      await expect(host).not.toBeFocused();
+    });
+  },
+);

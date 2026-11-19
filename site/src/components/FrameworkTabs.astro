@@ -25,7 +25,8 @@ const { frameworks } = Astro.props;
   }
 </slab-tabs>
 
-<style>
+<!-- Global, since a page's prose renders the same markup. -->
+<style is:global>
   .frameworks-tabs {
     background-color: var(--ink);
     /* Ink in either theme, like the code. */
@@ -102,9 +103,20 @@ const { frameworks } = Astro.props;
       outline-offset: -3px;
     }
 
-    :global(.code) {
+    .code {
       border: 0;
       flex: 1;
+    }
+
+    /* A fence in a page's prose. */
+    > pre {
+      flex: 1;
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      line-height: 1.7;
+      margin: 0;
+      overflow-x: auto;
+      padding: 1rem 1.25rem;
     }
   }
 

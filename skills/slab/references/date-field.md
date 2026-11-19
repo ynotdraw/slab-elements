@@ -85,11 +85,11 @@ Style it through its parts and through `:state(disabled)`, `:state(error)`, `:st
 
 #### Events
 
-| Name      | Type    | Description                                                                                                        |
-| --------- | ------- | ------------------------------------------------------------------------------------------------------------------ |
-| `input`   | `Event` | As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.               |
-| `change`  | `Event` | When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.             |
-| `invalid` | `Event` | When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown. |
+| Name      | Type    | Description                                                                                                                                                                             |
+| --------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `input`   | `Event` | As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.                                                                                    |
+| `change`  | `Event` | When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.                                                                                  |
+| `invalid` | `Event` | When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is. |
 
 #### Slots
 

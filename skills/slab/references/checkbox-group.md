@@ -84,9 +84,9 @@ Style it through its parts and through `:state(disabled)`, `:state(error)`, and 
 
 #### Events
 
-| Name      | Type    | Description                                                                                                        |
-| --------- | ------- | ------------------------------------------------------------------------------------------------------------------ |
-| `invalid` | `Event` | When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown. |
+| Name      | Type    | Description                                                                                                                                                                             |
+| --------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `invalid` | `Event` | When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is. |
 
 #### Slots
 

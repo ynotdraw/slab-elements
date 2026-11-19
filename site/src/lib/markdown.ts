@@ -18,6 +18,20 @@ export function exampleCode(example: string): string {
     .trim();
 }
 
+/**
+ * A page's framework tabs, written as Slab Tabs around fences in its prose, as
+ * a label above each fence instead, since a Markdown reader has no tabs.
+ */
+function frameworkTabsAsLabels(body: string): string {
+  return body
+    .replaceAll(
+      /<slab-tabs class="frameworks-tabs"[^>]*>\n(?:<slab-tabs-tab\b.*\n)*\n/g,
+      '',
+    )
+    .replaceAll(/<slab-tabs-panel name="([^"]+)">/g, '$1:')
+    .replaceAll(/<\/slab-tabs-panel>\n\n|<\/slab-tabs>\n?/g, '');
+}
+
 const fence = (lang: string, code: string) =>
   `\`\`\`${lang}\n${code.trim()}\n\`\`\``;
 
@@ -177,7 +191,9 @@ export function componentMarkdown(
     fence('html', exampleCode(example)),
     "Swap `slab-styled-` for `slab-` in that markup and you've got the same example as it ships: the headless elements with no CSS at all. That's your starting point.",
     // `../disclosure/` from the HTML page is `disclosure.md` from this one.
-    (entry.body ?? '').trim().replaceAll(/\]\(\.\.\/([\w-]+)\/\)/g, ']($1.md)'),
+    frameworkTabsAsLabels(entry.body ?? '')
+      .trim()
+      .replaceAll(/\]\(\.\.\/([\w-]+)\/\)/g, ']($1.md)'),
     '## Behavior',
     ...tags.flatMap((name) => [
       ...(tags.length > 1 ? [`### \`<${name}>\``] : []),

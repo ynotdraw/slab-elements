@@ -109,7 +109,7 @@ interface Drag {
  *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
- * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown.
+ * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is.
  *
  * @prop {number | undefined} defaultEndValue - The end value it starts with, and goes back to when its form resets. It's the `end-value` attribute, as a native input's `defaultValue` is its `value` attribute, so setting it sets the attribute, and `endValue` with it.
  * @prop {number | undefined} defaultStartValue - The start value it starts with, and goes back to when its form resets. It's the `start-value` attribute, as a native input's `defaultValue` is its `value` attribute, so setting it sets the attribute, and `startValue` with it.

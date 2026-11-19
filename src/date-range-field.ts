@@ -15,6 +15,10 @@ import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
 import StringsController from './library/strings.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
+import {
+  isInvalidCancelled,
+  preventValidationBubble,
+} from './library/validation-bubble.js';
 import required from './library/required.js';
 import styles from './date-range-field.styles.js';
 import afterReflection from './library/after-reflection.js';
@@ -100,7 +104,7 @@ declare global {
  *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
- * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown.
+ * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is.
  *
  * @prop {string} defaultEndValue - The end value it starts with, and goes back to when its form resets. It's the `end-value` attribute, as a native input's `defaultValue` is its `value` attribute, so setting it sets the attribute, and `endValue` with it.
  * @prop {string} defaultStartValue - The start value it starts with, and goes back to when its form resets. It's the `start-value` attribute, as a native input's `defaultValue` is its `value` attribute, so setting it sets the attribute, and `startValue` with it.
@@ -436,9 +440,18 @@ export default class DateRangeField extends LitElement {
   }
 
   reportValidity(): boolean {
-    this.hasReportedValidityOrSubmitted = true;
+    const wasReported = this.hasReportedValidityOrSubmitted;
+
+    this.#invalidEvent = undefined;
 
     const isValid = this.#internals.reportValidity();
+
+    // Unless a consumer cancelled "invalid", as a native control's message
+    // stays unshown when they do.
+    this.hasReportedValidityOrSubmitted =
+      this.#invalidEvent && isInvalidCancelled(this.#invalidEvent)
+        ? wasReported
+        : true;
 
     // So anything reading `validity.valid` renders again.
     this.requestUpdate();
@@ -549,7 +562,8 @@ export default class DateRangeField extends LitElement {
     // On the host because the host is what's form-associated, which is also
     // why a consumer could remove this listener. Nothing better is available.
     this.addEventListener('invalid', (event) => {
-      event.preventDefault(); // So no native validation bubble is shown.
+      preventValidationBubble(event);
+      this.#invalidEvent = event;
 
       // Focus belongs to the user here unless the form was submitted, or
       // `reportValidity()` was called by something other than a blur.
@@ -561,14 +575,28 @@ export default class DateRangeField extends LitElement {
         return;
       }
 
+      const wasReported = this.hasReportedValidityOrSubmitted;
+
+      // The message shows now, so it's there once the control updates. Focus
+      // waits for the event's other listeners, and a consumer who cancels it
+      // keeps the message unshown and focus where it is, as with a native
+      // control.
       this.hasReportedValidityOrSubmitted = true;
 
-      // The browser ignores this when another control is the first invalid
-      // one. Otherwise it's the input that's invalid that's focused, so a
-      // missing end is where the cursor goes.
-      if (this.form?.querySelector(':invalid') === this) {
-        this.#invalidInput?.focus();
-      }
+      queueMicrotask(() => {
+        if (isInvalidCancelled(event)) {
+          this.hasReportedValidityOrSubmitted = wasReported;
+
+          return;
+        }
+
+        // The browser ignores this when another control is the first invalid
+        // one. Otherwise it's the input that's invalid that's focused, so a
+        // missing end is where the cursor goes.
+        if (this.form?.querySelector(':invalid') === this) {
+          this.#invalidInput?.focus();
+        }
+      });
     });
   }
 
@@ -599,6 +627,8 @@ export default class DateRangeField extends LitElement {
   #hasCustomValidity = false;
 
   #internals: ElementInternals;
+
+  #invalidEvent?: Event;
 
   #startElementRef = createRef<HTMLInputElement>();
 

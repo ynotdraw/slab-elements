@@ -106,13 +106,13 @@ Style the field through Date Range Field's parts and states, the button through 
 
 #### Events
 
-| Name           | Type          | Description                                                                                                          |
-| -------------- | ------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `input`        | `Event`       | As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.                 |
-| `change`       | `Event`       | When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.               |
-| `beforetoggle` | `ToggleEvent` | Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed.   |
-| `toggle`       | `ToggleEvent` | When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does. |
-| `invalid`      | `Event`       | When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown.   |
+| Name           | Type          | Description                                                                                                                                                                             |
+| -------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `input`        | `Event`       | As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.                                                                                    |
+| `change`       | `Event`       | When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.                                                                                  |
+| `beforetoggle` | `ToggleEvent` | Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed.                                                                      |
+| `toggle`       | `ToggleEvent` | When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.                                                                    |
+| `invalid`      | `Event`       | When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is. |
 
 #### Slots
 

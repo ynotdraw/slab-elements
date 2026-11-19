@@ -1797,7 +1797,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -2335,7 +2335,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -2962,7 +2962,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -3739,7 +3739,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             },
             {
               "name": "beforetoggle",
@@ -5376,7 +5376,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -6197,7 +6197,7 @@
                 "name": "DateField",
                 "module": "src/date-field.ts"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -6955,7 +6955,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -7866,7 +7866,7 @@
                 "name": "DateRangeField",
                 "module": "src/date-range-field.ts"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -9469,7 +9469,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -10373,7 +10373,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -11978,7 +11978,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -13931,7 +13931,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -15274,7 +15274,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -15920,7 +15920,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -17025,7 +17025,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -17651,7 +17651,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -18227,7 +18227,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -18938,7 +18938,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -19623,7 +19623,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             },
             {
               "name": "beforetoggle",
@@ -20237,7 +20237,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -21823,7 +21823,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -23589,7 +23589,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -24304,7 +24304,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -25034,7 +25034,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [
@@ -25655,7 +25655,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown."
+              "description": "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is."
             }
           ],
           "attributes": [

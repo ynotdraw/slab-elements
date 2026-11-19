@@ -11,6 +11,10 @@ import slab from './library/version.js';
 import customElement from './library/custom-element.js';
 import assertSlot from './library/assert-slot.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
+import {
+  isInvalidCancelled,
+  preventValidationBubble,
+} from './library/validation-bubble.js';
 import required from './library/required.js';
 import Checkbox from './checkbox.js';
 import styles from './checkbox-group.styles.js';
@@ -61,7 +65,7 @@ declare global {
  * @cssstate error - While it's invalid and its validity message shows, which is once its validity is reported, as when its form is submitted.
  * @cssstate required - While it's required, for styles such as an asterisk.
  *
- * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown.
+ * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is.
  *
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
@@ -292,9 +296,18 @@ export default class CheckboxGroup extends LitElement {
   }
 
   reportValidity(): boolean {
-    this.hasReportedValidityOrSubmitted = true;
+    const wasReported = this.hasReportedValidityOrSubmitted;
+
+    this.#invalidEvent = undefined;
 
     const isValid = this.#internals.reportValidity();
+
+    // Unless a consumer cancelled "invalid", as a native control's message
+    // stays unshown when they do.
+    this.hasReportedValidityOrSubmitted =
+      this.#invalidEvent && isInvalidCancelled(this.#invalidEvent)
+        ? wasReported
+        : true;
 
     // So anything reading `validity.valid` renders again.
     this.requestUpdate();
@@ -426,7 +439,8 @@ export default class CheckboxGroup extends LitElement {
     // On the host because the host is what's form-associated, which is also
     // why a consumer could remove this listener. Nothing better is available.
     this.addEventListener('invalid', (event) => {
-      event.preventDefault(); // So no native validation bubble is shown.
+      preventValidationBubble(event);
+      this.#invalidEvent = event;
 
       // Focus belongs to the user here unless the form was submitted, or
       // `reportValidity()` was called by something other than a blur.
@@ -438,13 +452,27 @@ export default class CheckboxGroup extends LitElement {
         return;
       }
 
+      const wasReported = this.hasReportedValidityOrSubmitted;
+
+      // The message shows now, so it's there once the control updates. Focus
+      // waits for the event's other listeners, and a consumer who cancels it
+      // keeps the message unshown and focus where it is, as with a native
+      // control.
       this.hasReportedValidityOrSubmitted = true;
 
-      // The browser ignores this when another control is the first invalid
-      // one. A Checkbox that already has focus keeps it.
-      if (this.form?.querySelector(':invalid') === this && !this.#focused) {
-        this.focus();
-      }
+      queueMicrotask(() => {
+        if (isInvalidCancelled(event)) {
+          this.hasReportedValidityOrSubmitted = wasReported;
+
+          return;
+        }
+
+        // The browser ignores this when another control is the first invalid
+        // one. A Checkbox that already has focus keeps it.
+        if (this.form?.querySelector(':invalid') === this && !this.#focused) {
+          this.focus();
+        }
+      });
     });
   }
 
@@ -472,6 +500,8 @@ export default class CheckboxGroup extends LitElement {
   #hasCustomValidity = false;
 
   #internals: ElementInternals;
+
+  #invalidEvent?: Event;
 
   #values: string[] = [];
 
