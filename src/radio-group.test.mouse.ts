@@ -242,3 +242,37 @@ test(
     await expect(host).toHaveJSProperty('value', '');
   },
 );
+
+test(
+  'is focused when an outside label is clicked',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <label for="control">For</label>
+
+        <label>
+          <span>Around</span>
+          <slab-radio-group id="control" label="Label">
+            <slab-radio-group-radio label="One"></slab-radio-group-radio>
+
+            <slab-radio-group-radio label="Two"></slab-radio-group-radio>
+          </slab-radio-group>
+        </label>
+
+        <button type="button">Elsewhere</button>
+      `,
+    );
+
+    const focusable = page.getByRole('radio', { name: 'One' });
+
+    await page.getByText('For', { exact: true }).click();
+    await expect(focusable).toBeFocused();
+
+    await page.getByRole('button', { name: 'Elsewhere' }).focus();
+    await expect(focusable).not.toBeFocused();
+
+    await page.getByText('Around', { exact: true }).click();
+    await expect(focusable).toBeFocused();
+  },
+);

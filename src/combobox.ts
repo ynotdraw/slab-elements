@@ -13,6 +13,7 @@ import slab from './library/version.js';
 import ToggleEvents from './library/toggle-events.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
+import handleLabelClicks from './library/label-click.js';
 import StringsController from './library/strings.js';
 import assertSlot from './library/assert-slot.js';
 import afterReflection from './library/after-reflection.js';
@@ -758,6 +759,7 @@ export default class Combobox extends LitElement {
   constructor() {
     super();
     this.#internals = this.attachInternals();
+    handleLabelClicks(this);
 
     // On the host because the host is what's form-associated, which is also
     // why a consumer could remove this listener. Nothing better is available.
