@@ -21,6 +21,7 @@ const components = defineCollection({
     // `show()`. Markup alone is written from `usage` for each.
     frameworks: z
       .object({
+        ember: z.string(),
         lit: z.string(),
         react: z.string(),
         svelte: z.string(),

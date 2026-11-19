@@ -128,14 +128,14 @@ function apiMarkdown(
   ].join('\n\n');
 }
 
-// The styled example's files for React, Vue and Svelte, with the CSS they
+// The styled example's files for React, Vue, Svelte and Ember, with the CSS they
 // share given once.
 function outsideMarkdown(tags: string[]) {
   const outside = styledFrameworks(tags);
 
   if (!outside) {
     return [
-      "This one styles its native control's own pieces, like a range input's thumb or a meter's bar. Browsers only let those be styled from inside the element's shadow root, not through `::part()`, so it can't be written as plain CSS. Copy the Lit files instead. They're a custom element like any other, so they work in React, Vue and Svelte as they are.",
+      "This one styles its native control's own pieces, like a range input's thumb or a meter's bar. Browsers only let those be styled from inside the element's shadow root, not through `::part()`, so it can't be written as plain CSS. Copy the Lit files instead. They're a custom element like any other, so they work in React, Vue, Svelte and Ember as they are.",
     ];
   }
 
@@ -145,7 +145,8 @@ function outsideMarkdown(tags: string[]) {
     `The same styles, written from outside the element, so there's nothing to subclass. The CSS styles every \`<${tags[0]}>\` on the page. Import \`tokens.css\`, the colors and fonts every styled example shares, once, wherever your global styles go.`,
     "In React and Vue, each component registers its headless element and imports its CSS. Use it like the element: its props are the element's attributes and properties.",
     `In Svelte, import \`${outside.svelte[0]!.name}\` once, such as in your root layout, and use \`<${tags[0]}>\` as is. A Svelte component around it would take \`slot="…"\` content as its own slot and drop it.`,
-    ...[...outside.react, ...outside.vue, ...outside.svelte]
+    'In Ember, each component registers its headless element and imports its CSS. Use it like the element: its attributes and its content go to the element.',
+    ...[...outside.react, ...outside.vue, ...outside.svelte, ...outside.ember]
       .filter(({ lang }) => lang !== 'css')
       .concat(css)
       .flatMap((file) => [`#### ${file.name}`, fence(file.lang, file.code)]),
@@ -200,7 +201,7 @@ export function componentMarkdown(
       `#### ${file.name}`,
       fence('ts', file.code),
     ]),
-    '### React, Vue and Svelte',
+    '### React, Vue, Svelte and Ember',
     ...outsideMarkdown(tags),
   ]
     .filter(Boolean)

@@ -2,8 +2,9 @@
 // than in its shadow root. Inside, the styles select `[part~='track']`,
 // `::slotted(a)` and `:host(:state(open))`. Outside, the same rules are
 // `slab-range-slider::part(track)`, `slab-breadcrumb > a` and
-// `slab-disclosure:state(open)`. So React, Vue and Svelte can use the headless
-// element with a stylesheet, no subclass, and look the same as the Lit version.
+// `slab-disclosure:state(open)`. So React, Vue, Svelte and Ember can use the
+// headless element with a stylesheet, no subclass, and look the same as the
+// Lit version.
 
 type Kind = 'host' | 'part' | 'slotted';
 

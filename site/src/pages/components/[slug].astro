@@ -51,7 +51,7 @@ const sidebar = (await componentsByGroup()).map(({ components, group }) => ({
   })),
 }));
 
-const frameworkNames = ['React', 'Lit', 'Vue', 'Svelte'];
+const frameworkNames = ['React', 'Lit', 'Vue', 'Svelte', 'Ember'];
 
 // What a project that copies the styled examples needs for Lit's decorators.
 const tsconfig = `{
@@ -218,6 +218,12 @@ const tsconfig = `{
                       around it would take <code>slot="…"</code> content as its
                       own slot and drop it.
                     </p>
+                  ) : name === 'Ember' ? (
+                    <p>
+                      Each component registers its headless element and imports
+                      its CSS. Use it like the element: its attributes and its
+                      content go to the element.
+                    </p>
                   ) : (
                     <p>
                       Each component registers its headless element and imports
@@ -225,7 +231,7 @@ const tsconfig = `{
                       element's attributes and properties.
                     </p>
                   )}
-                  {outside[name.toLowerCase() as 'react' | 'svelte' | 'vue'].map((file) => (
+                  {outside[name.toLowerCase() as 'ember' | 'react' | 'svelte' | 'vue'].map((file) => (
                     <details class="file">
                       <summary>{file.name}</summary>
                       <button class="copy-file" type="button">
