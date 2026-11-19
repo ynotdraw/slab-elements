@@ -84,6 +84,10 @@ declare global {
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
+ * @prop {HTMLTextAreaElement['selectionDirection']} selectionDirection - Which way the selection was made, "forward", "backward" or "none", as a native textarea's `selectionDirection` is.
+ * @prop {number} selectionEnd - Where the selection ends, or where the caret is when nothing is selected, as a native textarea's `selectionEnd` is.
+ * @prop {number} selectionStart - Where the selection starts, or where the caret is when nothing is selected, as a native textarea's `selectionStart` is.
+ *
  * @readonly
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
  *
@@ -112,6 +116,12 @@ declare global {
  *
  * @method setCustomValidity - Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.
  * @param {string} message
+ *
+ * @method setRangeText - Replaces part of its text, or the selection when `start` and `end` are left out, as a native textarea's `setRangeText()` does. `selectionMode` says what's selected afterward: "select", "start", "end" or "preserve", the default. Like a native textarea's, it dispatches no "input" or "change".
+ * @param {string} replacement
+ * @param {number} [start]
+ * @param {number} [end]
+ * @param {SelectionMode} [selectionMode]
  *
  * @method setSelectionRange - Selects part of its text, as a native input's `setSelectionRange()` does.
  * @param {number} start
@@ -191,6 +201,48 @@ export default class Textarea extends LitElement {
   /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
+
+  /**
+   * Which way the selection was made, "forward", "backward" or "none", as a
+   * native textarea's `selectionDirection` is.
+   *
+   * @default 'none'
+   */
+  get selectionDirection(): HTMLTextAreaElement['selectionDirection'] {
+    return this.#selectionControl().selectionDirection;
+  }
+
+  set selectionDirection(value: HTMLTextAreaElement['selectionDirection']) {
+    this.#selectionControl().selectionDirection = value;
+  }
+
+  /**
+   * Where the selection ends, or where the caret is when nothing is selected,
+   * as a native textarea's `selectionEnd` is.
+   *
+   * @default 0
+   */
+  get selectionEnd(): number {
+    return this.#selectionControl().selectionEnd;
+  }
+
+  set selectionEnd(value: number) {
+    this.#selectionControl().selectionEnd = value;
+  }
+
+  /**
+   * Where the selection starts, or where the caret is when nothing is selected,
+   * as a native textarea's `selectionStart` is.
+   *
+   * @default 0
+   */
+  get selectionStart(): number {
+    return this.#selectionControl().selectionStart;
+  }
+
+  set selectionStart(value: number) {
+    this.#selectionControl().selectionStart = value;
+  }
 
   get form(): HTMLFormElement | null {
     return this.#internals.form;
@@ -356,12 +408,38 @@ export default class Textarea extends LitElement {
     );
   }
 
+  /**
+   * Replaces part of its text, or the selection when `start` and `end` are left
+   * out, as a native textarea's `setRangeText()` does. `selectionMode` says
+   * what's selected afterward: "select", "start", "end" or "preserve", the
+   * default. Like a native textarea's, it dispatches no "input" or "change".
+   */
+  setRangeText(
+    replacement: string,
+    start?: number,
+    end?: number,
+    selectionMode?: SelectionMode,
+  ): void {
+    const textarea = this.#selectionControl();
+
+    // With only as many arguments as it was given, so it throws where a
+    // native one would, such as for a `start` without an `end`.
+    const parameters = [replacement, start, end, selectionMode].slice(
+      0,
+      arguments.length,
+    ) as [string, number, number, SelectionMode?];
+
+    textarea.setRangeText(...parameters);
+
+    this.value = textarea.value;
+  }
+
   setSelectionRange(
     start: number,
     end: number,
     direction?: 'forward' | 'backward' | 'none',
   ): void {
-    this.#textareaElementRef.value?.setSelectionRange(start, end, direction);
+    this.#selectionControl().setSelectionRange(start, end, direction);
   }
 
   setValidity(flags?: ValidityStateFlags, message?: string): void {
@@ -480,6 +558,14 @@ export default class Textarea extends LitElement {
     );
   }
 
+  #detachedTextarea() {
+    const textarea = document.createElement('textarea');
+
+    textarea.value = this.value;
+
+    return textarea;
+  }
+
   #onTextareaBlur() {
     this.isBlurring = true;
     this.reportValidity();
@@ -509,6 +595,13 @@ export default class Textarea extends LitElement {
         new Event('change', { bubbles: true, composed: true }),
       );
     }
+  }
+
+  // The textarea keeps the selection and throws where a native one does, since
+  // it is one. Before the first render there's no textarea, so a detached one
+  // stands in for it, with the same value.
+  #selectionControl(): HTMLTextAreaElement {
+    return this.#textareaElementRef.value ?? this.#detachedTextarea();
   }
 
   #setState(state: string, isActive: boolean) {
