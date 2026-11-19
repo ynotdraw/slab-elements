@@ -1508,6 +1508,13 @@
               "type": {
                 "text": "Element | string"
               }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
+              "type": {
+                "text": "Element | string"
+              }
             }
           ],
           "members": [
@@ -1583,6 +1590,15 @@
               "description": "The value of the first checked and enabled Checkbox, in the order they\nwere checked. Setting it checks the Checkbox with that value, and only\nthat one. Not reflected, to match a native control.",
               "default": "''",
               "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -1838,6 +1854,14 @@
               "description": "The value of the first checked and enabled Checkbox, in the order they\nwere checked. Setting it checks the Checkbox with that value, and only\nthat one. Not reflected, to match a native control.",
               "default": "''",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -1929,6 +1953,13 @@
             {
               "name": "description",
               "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
               "type": {
                 "text": "Element | string"
               }
@@ -2045,6 +2076,15 @@
               },
               "default": "false",
               "description": "Whether it starts checked, and is checked again when its form resets. It's the `checked` attribute, as a native input's `defaultChecked` is, so setting it sets the attribute, and `checked` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -2361,6 +2401,14 @@
               "default": "''",
               "description": "An empty value is submitted as nothing, and counts for nothing in a\nCheckbox Group's `value`.",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -2500,6 +2548,13 @@
             {
               "name": "description",
               "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
               "type": {
                 "text": "Element | string"
               }
@@ -2677,6 +2732,15 @@
               },
               "default": "''",
               "description": "The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -3020,6 +3084,14 @@
               "description": "Like a native input's `value`, the attribute is the default and the\nproperty is the current value. \"#000000\" when unset.",
               "default": "'#000000'",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -3125,6 +3197,13 @@
             {
               "name": "description",
               "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
               "type": {
                 "text": "Element | string"
               }
@@ -3338,6 +3417,15 @@
               },
               "default": "''",
               "description": "The value it selects when none of its Options has `selected`, and goes back to when its form resets. It's the `value` attribute, so setting it sets the attribute, and `value` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -3777,6 +3865,14 @@
               "description": "The selected Option's value, or the typed text when `allow-custom` is set\nand it matches no Option. The first of `values` when `multiple` is set.\nSetting it selects the Option with that value, and only that one. Like a\nnative input, the attribute is the default value and the property is the\ncurrent one.",
               "default": "''",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -4875,6 +4971,13 @@
               "type": {
                 "text": "Element | string"
               }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
+              "type": {
+                "text": "Element | string"
+              }
             }
           ],
           "members": [
@@ -5019,6 +5122,15 @@
               },
               "default": "''",
               "description": "The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -5362,6 +5474,14 @@
               "default": "''",
               "description": "An ISO \"yyyy-mm-dd\" string. Like a native input, the attribute is the\ndefault value and the property is the current one, so the attribute\ndoesn't change as the field is edited.",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -5781,6 +5901,19 @@
                 "module": "src/date-field.ts"
               },
               "description": "The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              },
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -6232,6 +6365,18 @@
                 "name": "DateField",
                 "module": "src/date-field.ts"
               }
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              },
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -6282,6 +6427,17 @@
             {
               "name": "description",
               "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+              "type": {
+                "text": "Element | string"
+              },
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
               "type": {
                 "text": "Element | string"
               },
@@ -6396,6 +6552,13 @@
             {
               "name": "description",
               "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
               "type": {
                 "text": "Element | string"
               }
@@ -6562,6 +6725,15 @@
               },
               "default": "''",
               "description": "The start value it starts with, and goes back to when its form resets. It's the `start-value` attribute, as a native input's `defaultValue` is its `value` attribute, so setting it sets the attribute, and `startValue` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -6890,6 +7062,14 @@
               "default": "''",
               "description": "The first day of the range, as \"yyyy-mm-dd\". Like a native input's\n`value`, the attribute is the default and the property is the current\nvalue.",
               "fieldName": "startValue"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -7415,6 +7595,19 @@
             },
             {
               "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "inheritedFrom": {
+                "name": "DateRangeField",
+                "module": "src/date-range-field.ts"
+              },
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
+            },
+            {
+              "kind": "field",
               "name": "form",
               "type": {
                 "text": "HTMLFormElement | null"
@@ -7854,6 +8047,18 @@
                 "name": "DateRangeField",
                 "module": "src/date-range-field.ts"
               }
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "inheritedFrom": {
+                "name": "DateRangeField",
+                "module": "src/date-range-field.ts"
+              },
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -7904,6 +8109,17 @@
             {
               "name": "description",
               "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+              "type": {
+                "text": "Element | string"
+              },
+              "inheritedFrom": {
+                "name": "DateRangeField",
+                "module": "src/date-range-field.ts"
+              }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
               "type": {
                 "text": "Element | string"
               },
@@ -8873,6 +9089,13 @@
               "type": {
                 "text": "Element | string"
               }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
+              "type": {
+                "text": "Element | string"
+              }
             }
           ],
           "members": [
@@ -8986,6 +9209,15 @@
               },
               "default": "''",
               "description": "The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -9310,6 +9542,14 @@
               "default": "''",
               "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as edits are\ncommitted.",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -9761,6 +10001,13 @@
               "type": {
                 "text": "Element | string"
               }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
+              "type": {
+                "text": "Element | string"
+              }
             }
           ],
           "members": [
@@ -9882,6 +10129,15 @@
               "description": "What screenreaders are told when a drop of several files is ignored,\nwithout `multiple`. \"Only one file can be added\" in English when unset.",
               "attribute": "too-many-label",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -10190,6 +10446,14 @@
               },
               "description": "What screenreaders are told when a drop of several files is ignored,\nwithout `multiple`. \"Only one file can be added\" in English when unset.",
               "fieldName": "tooManyLabel"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -11335,6 +11599,13 @@
               "type": {
                 "text": "Element | string"
               }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
+              "type": {
+                "text": "Element | string"
+              }
             }
           ],
           "members": [
@@ -11441,6 +11712,15 @@
               },
               "default": "''",
               "description": "The value it selects when none of its Options has `selected`, and goes back to when its form resets. It's the `value` attribute, so setting it sets the attribute, and `value` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -11773,6 +12053,14 @@
               "description": "The value of the first selected and enabled Option. Setting it selects\nthe Option with that value, and only that one. Not reflected, to match a\nnative control.",
               "default": "''",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -13190,6 +13478,13 @@
               "type": {
                 "text": "Element | string"
               }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
+              "type": {
+                "text": "Element | string"
+              }
             }
           ],
           "members": [
@@ -13344,6 +13639,15 @@
               },
               "default": "''",
               "description": "The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -13733,6 +14037,14 @@
               "default": "''",
               "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as the field is typed\ninto.",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -14432,6 +14744,13 @@
               "type": {
                 "text": "Element | string"
               }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
+              "type": {
+                "text": "Element | string"
+              }
             }
           ],
           "members": [
@@ -14606,6 +14925,15 @@
               },
               "default": "''",
               "description": "The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -15069,6 +15397,14 @@
               "default": "''",
               "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as the field is typed\ninto.",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -15172,6 +15508,13 @@
             {
               "name": "description",
               "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
               "type": {
                 "text": "Element | string"
               }
@@ -15340,6 +15683,15 @@
               },
               "default": "''",
               "description": "The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -15677,6 +16029,14 @@
               "default": "''",
               "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as the field is typed\ninto.",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -16385,6 +16745,13 @@
               "type": {
                 "text": "Element | string"
               }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
+              "type": {
+                "text": "Element | string"
+              }
             }
           ],
           "members": [
@@ -16460,6 +16827,15 @@
               "description": "The value of the checked and enabled Radio. Not reflected, to match a\nnative control.",
               "default": "''",
               "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -16706,6 +17082,14 @@
               "description": "The value of the checked and enabled Radio. Not reflected, to match a\nnative control.",
               "default": "''",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -16813,6 +17197,13 @@
             {
               "name": "description",
               "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
               "type": {
                 "text": "Element | string"
               }
@@ -16978,6 +17369,15 @@
               },
               "default": "undefined",
               "description": "The start value it starts with, and goes back to when its form resets. It's the `start-value` attribute, as a native input's `defaultValue` is its `value` attribute, so setting it sets the attribute, and `startValue` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -17351,6 +17751,14 @@
               "default": "1",
               "fieldName": "step",
               "description": "How far apart the values either end can take are, as a native range input's `step`."
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -17454,6 +17862,13 @@
             {
               "name": "description",
               "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
               "type": {
                 "text": "Element | string"
               }
@@ -17582,6 +17997,15 @@
               },
               "default": "''",
               "description": "The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -17887,6 +18311,14 @@
               "description": "The checked radio's number. Like a native input, the attribute is the\ndefault value and the property is the current one. A value that isn't one\nof the radios' numbers, from `step` to `max`, checks nothing and reads\nback as an empty string.",
               "default": "''",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -17990,6 +18422,13 @@
             {
               "name": "description",
               "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
               "type": {
                 "text": "Element | string"
               }
@@ -18157,6 +18596,15 @@
               },
               "default": "''",
               "description": "The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -18604,6 +19052,14 @@
               "default": "''",
               "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as the field is typed\ninto.",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -18717,6 +19173,13 @@
             {
               "name": "description",
               "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
               "type": {
                 "text": "Element | string"
               }
@@ -18847,6 +19310,15 @@
               },
               "default": "''",
               "description": "The value it selects when none of its Options has `selected`, and goes back to when its form resets. It's the `value` attribute, so setting it sets the attribute, and `value` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -19250,6 +19722,14 @@
               "description": "The value of the first selected and enabled Option. Setting it selects\nthe Option with that value, and only that one. Not reflected, to match a\nnative control.",
               "default": "''",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -19345,6 +19825,13 @@
             {
               "name": "description",
               "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
               "type": {
                 "text": "Element | string"
               }
@@ -19468,6 +19955,15 @@
               },
               "default": "''",
               "description": "The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -19813,6 +20309,14 @@
               "description": "Like a native input, the attribute is the default value and the property\nis the current one. The property is always the value the input settled\non, so it's never outside the range or off a step.",
               "default": "''",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -20973,6 +21477,13 @@
               "type": {
                 "text": "Element | string"
               }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
+              "type": {
+                "text": "Element | string"
+              }
             }
           ],
           "members": [
@@ -21077,6 +21588,15 @@
               },
               "default": "false",
               "description": "Whether it starts checked, and is checked again when its form resets. It's the `checked` attribute, as a native input's `defaultChecked` is, so setting it sets the attribute, and `checked` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -21369,6 +21889,14 @@
               "default": "'on'",
               "fieldName": "value",
               "description": "What it submits while it's on, as a native checkbox's `value`."
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -22656,6 +23184,13 @@
               "type": {
                 "text": "Element | string"
               }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
+              "type": {
+                "text": "Element | string"
+              }
             }
           ],
           "members": [
@@ -22824,6 +23359,15 @@
               },
               "default": "''",
               "description": "The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -23136,6 +23680,14 @@
               "description": "The tags, separated by commas, each trimmed. Like a native input, the\nattribute is the default value and the property is the current one. Use\n`values` for tags with commas in them.",
               "default": "''",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -23235,6 +23787,13 @@
             {
               "name": "description",
               "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
               "type": {
                 "text": "Element | string"
               }
@@ -23403,6 +23962,15 @@
               },
               "default": "''",
               "description": "The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -23851,6 +24419,14 @@
               "default": "''",
               "description": "Like a native input, the attribute is the default value and the property\nis the current one, so the attribute doesn't change as the field is typed\ninto.",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -23942,6 +24518,13 @@
             {
               "name": "description",
               "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
               "type": {
                 "text": "Element | string"
               }
@@ -24109,6 +24692,15 @@
               },
               "default": "''",
               "description": "The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -24556,6 +25148,14 @@
               "default": "''",
               "description": "Like a native textarea's content, the attribute is the default value and\nthe property is the current one, so the attribute doesn't change as the\nfield is typed into.",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [
@@ -24647,6 +25247,13 @@
             {
               "name": "description",
               "description": "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+              "type": {
+                "text": "Element | string"
+              }
+            },
+            {
+              "name": "validity-message",
+              "description": "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
               "type": {
                 "text": "Element | string"
               }
@@ -24794,6 +25401,15 @@
               },
               "default": "''",
               "description": "The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it."
+            },
+            {
+              "kind": "field",
+              "name": "customValidity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "custom-validity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             },
             {
               "kind": "field",
@@ -25137,6 +25753,14 @@
               "default": "''",
               "description": "A 24-hour \"hh:mm\" string, with \":ss\" and \".sss\" when it has them. Like a\nnative input, the attribute is the default value and the property is the\ncurrent one, so the attribute doesn't change as the field is edited.",
               "fieldName": "value"
+            },
+            {
+              "name": "custom-validity",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "customValidity",
+              "description": "Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid."
             }
           ],
           "cssStates": [

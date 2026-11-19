@@ -45,6 +45,7 @@ declare global {
  *
  * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
  * @attr {HTMLInputElement['autocomplete']} [autocomplete] - What the browser may fill it with, as a native input's `autocomplete` says.
+ * @attr {string} [custom-validity] - Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid.
  * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {number} [maxlength] - The most characters the user can type, as a native input's `maxlength`.
@@ -58,6 +59,7 @@ declare global {
  * @attr {string} [value=''] - Like a native input, the attribute is the default value and the property is the current one, so the attribute doesn't change as the field is typed into.
  *
  * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
+ * @slot {Element | string} [validity-message] - Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.
  *
  * @csspart description - Text about the field, and its validity message when it has one
  * @csspart input - The input
@@ -198,6 +200,9 @@ export default class TextField extends LitElement {
   set defaultValue(value: string) {
     this.setAttribute('value', value);
   }
+
+  @property({ attribute: 'custom-validity' })
+  customValidity?: string;
 
   /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
@@ -354,7 +359,10 @@ export default class TextField extends LitElement {
           this.#isShowValidationFeedback && this.validationMessage,
           () =>
             html`<span data-test="validity-message" part="validity-message">
-              ${this.validationMessage}
+              <slot name="validity-message">
+                <!-- @type {Element | string} -->
+                ${this.validationMessage}
+              </slot>
             </span>`,
         )}
       </div>`;
@@ -461,7 +469,6 @@ export default class TextField extends LitElement {
     this.#internals.setValidity(flags, ' ', this.#inputElementRef.value);
   }
 
-  // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
   // only knows public keys.
   override updated(changes: PropertyValues) {
     const input = this.#inputElementRef.value;
@@ -491,6 +498,21 @@ export default class TextField extends LitElement {
     this.#updateValidity();
     this.#setState('error', this.#isShowValidationFeedback);
   }
+
+  override willUpdate(changes: PropertyValues) {
+    // `custom-validity` is `setCustomValidity()` from markup. Its message shows
+    // at once, rather than once validity is reported, since it's an error the
+    // page already knows about, such as one from a server.
+    if (changes.has('customValidity')) {
+      this.setCustomValidity(this.customValidity ?? '');
+
+      if (this.customValidity) {
+        this.hasReportedValidityOrSubmitted = true;
+      }
+    }
+  }
+
+  // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
 
   // Functional styles go in here rather than in `styles`, so a subclass that
   // sets its own `styles` keeps them.

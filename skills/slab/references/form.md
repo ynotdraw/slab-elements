@@ -69,6 +69,114 @@ for (const label of field.labels) {
 }
 ```
 
+## Validation
+
+Each control checks itself the way a native one does. A required field
+that's empty is invalid, and so is one whose value breaks its `pattern`. You
+don't have to write any of that yourself.
+
+### When errors show
+
+Nobody likes an error before they've had a chance to type. So a control's
+validity message shows once its validity is reported:
+
+- when focus leaves it
+- when its form is submitted, which also focuses the first invalid control
+- when you call `reportValidity()`
+
+While it shows, the control has `aria-invalid`, the message is part of its
+accessible description, and it matches `:state(error)`. Style the message
+through `::part(validity-message)`.
+
+`checkValidity()` asks without showing anything, on a control or a whole Form.
+`resetValidityFeedback()` hides the message again, and a form reset does it
+for you.
+
+### Your own words
+
+The browser's messages are generic, and they're in the browser's language,
+not your page's. Slot your own into `validity-message`. You don't need to
+make the control invalid yourself: the slot shows whenever it's invalid, for
+any reason, and its message shows.
+
+```html
+<slab-text-field label="Job name" name="job" required>
+  <span slot="validity-message"
+    >Give the job a name so the crew can find it.</span
+  >
+</slab-text-field>
+```
+
+It's markup, so a link works too. `validationMessage` stays the browser's
+message, or the one you set.
+
+### A different message for each problem
+
+The slot shows the same thing whatever went wrong. Can a field fail more than
+one way? Change the slotted text on "invalid", which fires just before the
+message shows. `validity` says what's wrong.
+
+```js
+const field = document.querySelector('slab-text-field[name="email"]');
+const message = field.querySelector('[slot="validity-message"]');
+
+field.addEventListener('invalid', () => {
+  message.textContent = field.validity.valueMissing
+    ? 'Enter an email so we can send the schedule.'
+    : "That doesn't look like an email. Check for typos?";
+});
+```
+
+### Errors from your server
+
+Some errors only your server knows about, like an email that's already
+taken. Put the message in `custom-validity`. It's `setCustomValidity()` from
+markup: the control is invalid with that message, and it shows right away,
+without waiting for a blur or a submit.
+
+```html
+<slab-text-field
+  custom-validity="That email is already taken"
+  label="Email"
+  name="email"
+  type="email"
+></slab-text-field>
+```
+
+The error stays until you take it away, just like `setCustomValidity()`, and
+it stops the form from submitting. Remove the attribute, or set it to an
+empty string, once the user has changed the value:
+
+```js
+field.addEventListener('input', () => {
+  field.removeAttribute('custom-validity');
+});
+```
+
+In a framework, keep the error in your state, bind it to `custom-validity`,
+and clear it on "input".
+
+### Rules of your own
+
+For a rule only your page knows, like two passwords that have to match, call
+`setCustomValidity()` whenever the value changes. An empty string makes it
+valid again.
+
+```js
+const password = document.querySelector('[name="password"]');
+const confirm = document.querySelector('[name="confirm"]');
+
+confirm.addEventListener('input', () => {
+  confirm.setCustomValidity(
+    confirm.value === password.value ? '' : "The passwords don't match.",
+  );
+});
+```
+
+`setValidity()` does the same with the flags of your choice, as
+`ElementInternals.setValidity()` does, when a rule should read as
+`rangeUnderflow` or `patternMismatch` rather than `customError`.
+
 ## Elements
 
 ### `<slab-form>`

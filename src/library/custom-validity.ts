@@ -102,12 +102,23 @@ export default class CustomValidity {
 
     // A space rather than nothing, since `ElementInternals` requires a message
     // with any flag set. `validationMessage` trims it away.
-    this.#config.internals().setValidity(
-      flags,
-      message?.trim() ? message : ' ',
-      this.#config.anchor(),
-    );
+    this.#config
+      .internals()
+      .setValidity(
+        flags,
+        message?.trim() ? message : ' ',
+        this.#config.anchor(),
+      );
 
+    this.#host.requestUpdate();
+  }
+
+  /**
+   * Shows the validity message without reporting validity, for an error the
+   * page already knows about, such as one from a server.
+   */
+  showFeedback(): void {
+    this.#hasReported = true;
     this.#host.requestUpdate();
   }
 

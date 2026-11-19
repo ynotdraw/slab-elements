@@ -103,6 +103,7 @@ const controls: Record<keyof Color, Control> = {
  * @attr {string} [alpha-label] - Names the alpha slider, after `label`. "Alpha" in English when unset.
  * @attr {string} [area-label] - Names the area, after `label`. "Saturation and brightness" in English when unset.
  * @attr {string} [brightness-label] - Read before the area's brightness. "Brightness" in English when unset.
+ * @attr {string} [custom-validity] - Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid.
  * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {string} [hex-label] - Names the hex field, after `label`. "Hex" in English when unset.
  * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
@@ -114,6 +115,7 @@ const controls: Record<keyof Color, Control> = {
  * @attr {string} [value='#000000'] - Like a native input's `value`, the attribute is the default and the property is the current value. "#000000" when unset.
  *
  * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
+ * @slot {Element | string} [validity-message] - Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.
  *
  * @csspart alpha - The alpha slider's track
  * @csspart alpha-thumb - The alpha slider's thumb
@@ -289,6 +291,9 @@ export default class ColorPicker extends LitElement {
   set defaultValue(value: string) {
     this.setAttribute('value', value);
   }
+
+  @property({ attribute: 'custom-validity' })
+  customValidity?: string;
 
   /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
@@ -570,7 +575,10 @@ export default class ColorPicker extends LitElement {
           this.#customValidity.isShowingFeedback && this.validationMessage,
           () =>
             html`<span data-test="validity-message" part="validity-message">
-              ${this.validationMessage}
+              <slot name="validity-message">
+                <!-- @type {Element | string} -->
+                ${this.validationMessage}
+              </slot>
             </span>`,
         )}
       </div>
@@ -610,7 +618,6 @@ export default class ColorPicker extends LitElement {
     this.#customValidity.setValidity(flags, message);
   }
 
-  // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
   // only knows public keys.
   override updated(changes: PropertyValues) {
     if (changes.has('disabled') || changes.has('isFormDisabled')) {
@@ -627,6 +634,21 @@ export default class ColorPicker extends LitElement {
 
     this.#updateFormValue();
   }
+
+  override willUpdate(changes: PropertyValues) {
+    // `custom-validity` is `setCustomValidity()` from markup. Its message shows
+    // at once, rather than once validity is reported, since it's an error the
+    // page already knows about, such as one from a server.
+    if (changes.has('customValidity')) {
+      this.#customValidity.setCustomValidity(this.customValidity ?? '');
+
+      if (this.customValidity) {
+        this.#customValidity.showFeedback();
+      }
+    }
+  }
+
+  // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
 
   // Functional styles go in here rather than in `styles`, so a subclass that
   // sets its own `styles` keeps them.

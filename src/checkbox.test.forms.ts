@@ -983,3 +983,64 @@ test('has a `labels` property', { tag: '@forms' }, async ({ render, page }) => {
 
   expect(ids).toStrictEqual(['for', 'around']);
 });
+
+test(
+  'supports `custom-validity`',
+  { tag: '@forms' },
+  async ({ removeAttribute, render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-checkbox custom-validity="Taken" label="Label"> </slab-checkbox>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-checkbox');
+    const validityMessage = host.locator('[data-test="validity-message"]');
+
+    await test.step('set', async () => {
+      await expect(host).toHaveJSProperty('validity.customError', true);
+      await expect(host).toHaveJSProperty('validationMessage', 'Taken');
+
+      // Without its validity being reported first.
+      await expect(validityMessage).toHaveText('Taken', {
+        useInnerText: true,
+      });
+    });
+
+    await test.step('removed', async () => {
+      await removeAttribute(host, 'custom-validity');
+
+      await expect(host).toHaveJSProperty('validity.valid', true);
+      await expect(validityMessage).toBeHidden();
+    });
+  },
+);
+
+test(
+  'has a `validity-message` slot',
+  { tag: '@forms' },
+  async ({ render, page, setAttribute }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-checkbox label="Label">
+            <span slot="validity-message">Pick another</span>
+          </slab-checkbox>
+        </form>
+      `,
+    );
+
+    const host = page.locator('slab-checkbox');
+    const message = page.getByText('Pick another');
+
+    // Only while it's invalid and its validity message shows.
+    await expect(message).toBeHidden();
+
+    await setAttribute(host, 'custom-validity', 'Taken');
+
+    await expect(message).toBeVisible();
+    await expect(host).toHaveJSProperty('validationMessage', 'Taken');
+  },
+);
