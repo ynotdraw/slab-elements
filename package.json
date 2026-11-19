@@ -128,7 +128,7 @@
     "@storybook/web-components-vite": "^10.6.6",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/convert-source-map": "^2.0.3",
-    "@types/eslint": "^8.56.12",
+    "@types/eslint": "^9.6.1",
     "@types/istanbul-lib-coverage": "^2.0.6",
     "@types/istanbul-lib-report": "^3.0.3",
     "@types/istanbul-reports": "^3.0.4",
