@@ -497,3 +497,28 @@ test(
     expect(await page.evaluate(getAnnouncements)).toStrictEqual([]);
   },
 );
+
+test(
+  'opens its file picker when an outside label is clicked',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <label for="control">For</label>
+
+        <label>
+          <span>Around</span>
+          <slab-file-drop id="control" label="Label"></slab-file-drop>
+        </label>
+      `,
+    );
+
+    let fileChooser = page.waitForEvent('filechooser');
+    await page.getByText('For', { exact: true }).click();
+    await fileChooser;
+
+    fileChooser = page.waitForEvent('filechooser');
+    await page.getByText('Around', { exact: true }).click();
+    await fileChooser;
+  },
+);

@@ -68,3 +68,35 @@ test(
     await expect(host).toHaveJSProperty('values', ['two', 'one']);
   },
 );
+
+test(
+  'is focused when an outside label is clicked',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <label for="control">For</label>
+
+        <label>
+          <span>Around</span>
+          <slab-checkbox-group id="control" label="Label">
+            <slab-checkbox label="Label"></slab-checkbox>
+          </slab-checkbox-group>
+        </label>
+
+        <button type="button">Elsewhere</button>
+      `,
+    );
+
+    const focusable = page.locator('slab-checkbox');
+
+    await page.getByText('For', { exact: true }).click();
+    await expect(focusable).toBeFocused();
+
+    await page.getByRole('button', { name: 'Elsewhere' }).focus();
+    await expect(focusable).not.toBeFocused();
+
+    await page.getByText('Around', { exact: true }).click();
+    await expect(focusable).toBeFocused();
+  },
+);

@@ -16,6 +16,7 @@ import afterReflection from './library/after-reflection.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import CustomValidity from './library/custom-validity.js';
 import customElement from './library/custom-element.js';
+import handleLabelClicks from './library/label-click.js';
 import StringsController from './library/strings.js';
 import required from './library/required.js';
 import styles from './range-slider.styles.js';
@@ -541,6 +542,7 @@ export default class RangeSlider extends LitElement {
   constructor() {
     super();
     this.#internals = this.attachInternals();
+    handleLabelClicks(this);
   }
 
   // Which thumb's input has focus that's visible, for its `focus-visible`

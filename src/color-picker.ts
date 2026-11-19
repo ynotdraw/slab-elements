@@ -17,6 +17,7 @@ import afterReflection from './library/after-reflection.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import CustomValidity from './library/custom-validity.js';
 import customElement from './library/custom-element.js';
+import handleLabelClicks from './library/label-click.js';
 import required from './library/required.js';
 import RovingTabindex from './library/roving-tabindex.js';
 import StringsController from './library/strings.js';
@@ -639,6 +640,7 @@ export default class ColorPicker extends LitElement {
   constructor() {
     super();
     this.#internals = this.attachInternals();
+    handleLabelClicks(this);
   }
 
   // Which thumb's input has focus that's visible, for its `focus-visible`

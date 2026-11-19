@@ -279,3 +279,84 @@ test(
     await expect(host).toHaveJSProperty('checked', false);
   },
 );
+
+test(
+  'is toggled when an outside label is clicked',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <label for="control">For</label>
+
+        <label>
+          <span>Around</span>
+          <slab-switch id="control" label="Label"></slab-switch>
+        </label>
+      `,
+    );
+
+    const host = page.locator('slab-switch');
+
+    await expect(host).toDispatchEvents(
+      () => page.getByText('For', { exact: true }).click(),
+      [
+        {
+          bubbles: true,
+          cancelable: false,
+          composed: true,
+          type: 'input',
+        },
+        {
+          bubbles: true,
+          cancelable: false,
+          composed: true,
+          type: 'change',
+        },
+      ],
+    );
+
+    await expect(host).toHaveJSProperty('checked', true);
+
+    await expect(host).toDispatchEvents(
+      () => page.getByText('Around', { exact: true }).click(),
+      [
+        {
+          bubbles: true,
+          cancelable: false,
+          composed: true,
+          type: 'input',
+        },
+        {
+          bubbles: true,
+          cancelable: false,
+          composed: true,
+          type: 'change',
+        },
+      ],
+    );
+
+    await expect(host).toHaveJSProperty('checked', false);
+  },
+);
+
+test(
+  'is not toggled when an outside label is clicked while disabled',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <label for="control">For</label>
+        <slab-switch disabled id="control" label="Label"></slab-switch>
+      `,
+    );
+
+    await page.getByText('For', { exact: true }).click();
+
+    await expect(page.locator('slab-switch')).toHaveJSProperty(
+      'checked',
+      false,
+    );
+
+    await expect(page.locator('slab-switch')).not.toBeFocused();
+  },
+);
