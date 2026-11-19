@@ -96,6 +96,10 @@ declare global {
  * @readonly
  * @prop {NodeList} labels - The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it.
  *
+ * @prop {HTMLInputElement['selectionDirection']} selectionDirection - Which way the selection was made, "forward", "backward" or "none", as a native input's `selectionDirection` is.
+ * @prop {number | null} selectionEnd - Where the selection ends, or where the caret is when nothing is selected, as a native input's `selectionEnd` is.
+ * @prop {number | null} selectionStart - Where the selection starts, or where the caret is when nothing is selected, as a native input's `selectionStart` is.
+ *
  * @readonly
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
  *
@@ -124,6 +128,12 @@ declare global {
  *
  * @method setCustomValidity - Makes it invalid with a message of your own, or valid again with an empty one, as a native control's does.
  * @param {string} message
+ *
+ * @method setRangeText - Replaces part of its text, or the selection when `start` and `end` are left out, as a native input's `setRangeText()` does. `selectionMode` says what's selected afterward: "select", "start", "end" or "preserve", the default. Like a native input's, it dispatches no "input" or "change".
+ * @param {string} replacement
+ * @param {number} [start]
+ * @param {number} [end]
+ * @param {SelectionMode} [selectionMode]
  *
  * @method setSelectionRange - Selects part of its text, as a native input's `setSelectionRange()` does.
  * @param {number} start
@@ -219,6 +229,48 @@ export default class PasswordField extends LitElement {
   /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
+
+  /**
+   * Which way the selection was made, "forward", "backward" or "none", as a
+   * native input's `selectionDirection` is.
+   *
+   * @default 'none'
+   */
+  get selectionDirection(): HTMLInputElement['selectionDirection'] {
+    return this.#selectionControl().selectionDirection;
+  }
+
+  set selectionDirection(value: HTMLInputElement['selectionDirection']) {
+    this.#selectionControl().selectionDirection = value;
+  }
+
+  /**
+   * Where the selection ends, or where the caret is when nothing is selected,
+   * as a native input's `selectionEnd` is.
+   *
+   * @default 0
+   */
+  get selectionEnd(): number | null {
+    return this.#selectionControl().selectionEnd;
+  }
+
+  set selectionEnd(value: number | null) {
+    this.#selectionControl().selectionEnd = value;
+  }
+
+  /**
+   * Where the selection starts, or where the caret is when nothing is selected,
+   * as a native input's `selectionStart` is.
+   *
+   * @default 0
+   */
+  get selectionStart(): number | null {
+    return this.#selectionControl().selectionStart;
+  }
+
+  set selectionStart(value: number | null) {
+    this.#selectionControl().selectionStart = value;
+  }
 
   get form(): HTMLFormElement | null {
     return this.#internals.form;
@@ -408,12 +460,38 @@ export default class PasswordField extends LitElement {
     );
   }
 
+  /**
+   * Replaces part of its text, or the selection when `start` and `end` are
+   * left out, as a native input's `setRangeText()` does. `selectionMode` says
+   * what's selected afterward: "select", "start", "end" or "preserve", the
+   * default. Like a native input's, it dispatches no "input" or "change".
+   */
+  setRangeText(
+    replacement: string,
+    start?: number,
+    end?: number,
+    selectionMode?: SelectionMode,
+  ): void {
+    const input = this.#selectionControl();
+
+    // With only as many arguments as it was given, so it throws where a
+    // native one would, such as for a `start` without an `end`.
+    const parameters = [replacement, start, end, selectionMode].slice(
+      0,
+      arguments.length,
+    ) as [string, number, number, SelectionMode?];
+
+    input.setRangeText(...parameters);
+
+    this.value = input.value;
+  }
+
   setSelectionRange(
     start: number,
     end: number,
     direction?: 'forward' | 'backward' | 'none',
   ): void {
-    this.#inputElementRef.value?.setSelectionRange(start, end, direction);
+    this.#selectionControl().setSelectionRange(start, end, direction);
   }
 
   setValidity(flags?: ValidityStateFlags, message?: string): void {
@@ -542,6 +620,15 @@ export default class PasswordField extends LitElement {
     );
   }
 
+  #detachedInput() {
+    const input = document.createElement('input');
+
+    input.type = this.revealed ? 'text' : 'password';
+    input.value = this.value;
+
+    return input;
+  }
+
   #onInputBlur() {
     this.isBlurring = true;
     this.reportValidity();
@@ -591,6 +678,13 @@ export default class PasswordField extends LitElement {
     this.dispatchEvent(
       new Event('reveal-change', { bubbles: true, composed: true }),
     );
+  }
+
+  // The input keeps the selection and throws where a native one does, since
+  // it is one. Before the first render there's no input, so a detached one
+  // stands in for it, with the same type and value.
+  #selectionControl(): HTMLInputElement {
+    return this.#inputElementRef.value ?? this.#detachedInput();
   }
 
   #setState(state: string, isActive: boolean) {

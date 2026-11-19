@@ -326,3 +326,171 @@ test(
     );
   },
 );
+
+test(
+  'reads and sets its selection through `selectionStart`, `selectionEnd` and `selectionDirection`',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-password-field
+          label="Label"
+          value="One Two"
+        ></slab-password-field>`,
+    );
+
+    const selections = await page
+      .locator('slab-password-field')
+      .evaluate<unknown[], void, PasswordField>((element) => {
+        const input = element.shadowRoot?.querySelector<HTMLInputElement>(
+          '[data-test="input"]',
+        );
+
+        element.setSelectionRange(1, 3, 'backward');
+
+        const read = [
+          element.selectionStart,
+          element.selectionEnd,
+          element.selectionDirection,
+        ];
+
+        element.selectionStart = 4;
+        element.selectionEnd = 7;
+        element.selectionDirection = 'forward';
+
+        return [
+          read,
+          [
+            input?.selectionStart,
+            input?.selectionEnd,
+            input?.selectionDirection,
+          ],
+        ];
+      });
+
+    expect(selections).toStrictEqual([
+      [1, 3, 'backward'],
+      [4, 7, 'forward'],
+    ]);
+  },
+);
+
+test(
+  'replaces its text with `setRangeText()` without dispatching events, as an input does',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<form>
+          <slab-password-field
+            label="Label"
+            name="name"
+            value="One Two"
+          ></slab-password-field>
+        </form>`,
+    );
+
+    const result = await page
+      .locator('slab-password-field')
+      .evaluate<unknown[], void, PasswordField>((element) => {
+        const types: string[] = [];
+
+        element.addEventListener('input', (event) => {
+          types.push(event.type);
+        });
+
+        element.addEventListener('change', (event) => {
+          types.push(event.type);
+        });
+
+        element.setSelectionRange(0, 3);
+        element.setRangeText('Six');
+
+        const first = element.value;
+
+        element.setRangeText('Ten', 4, 7, 'select');
+
+        return [
+          types,
+          first,
+          element.value,
+          element.selectionStart,
+          element.selectionEnd,
+        ];
+      });
+
+    expect(result).toStrictEqual([[], 'Six Two', 'Six Ten', 4, 7]);
+    await expect(page.locator('[data-test="input"]')).toHaveValue('Six Ten');
+    await expect(page.locator('form')).toHaveFormData('name', 'Six Ten');
+  },
+);
+
+test(
+  'throws from `setRangeText()` where an input does',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-password-field
+          label="Label"
+          value="One Two"
+        ></slab-password-field>`,
+    );
+
+    const errors = await page
+      .locator('slab-password-field')
+      .evaluate<string[], void, PasswordField>((element) => {
+        const names: string[] = [];
+
+        for (const call of [
+          () => {
+            element.setRangeText('Ten', 4);
+          },
+          () => {
+            element.setRangeText('Ten', 7, 4);
+          },
+        ]) {
+          try {
+            call();
+          } catch (error) {
+            names.push(error instanceof Error ? error.name : String(error));
+          }
+        }
+
+        return names;
+      });
+
+    expect(errors).toStrictEqual(['TypeError', 'IndexSizeError']);
+
+    await expect(page.locator('slab-password-field')).toHaveJSProperty(
+      'value',
+      'One Two',
+    );
+  },
+);
+
+test(
+  'replaces its text with `setRangeText()` before it renders',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-password-field label="Label"></slab-password-field>`,
+    );
+
+    const values = await page.evaluate(() => {
+      const hidden = document.createElement('slab-password-field');
+      const revealed = document.createElement('slab-password-field');
+
+      hidden.value = 'One Two';
+      hidden.setRangeText('Ten', 4, 7);
+
+      revealed.revealed = true;
+      revealed.value = 'One Two';
+      revealed.setRangeText('Six', 0, 3);
+
+      return [hidden.value, revealed.value];
+    });
+
+    expect(values).toStrictEqual(['One Ten', 'Six Two']);
+  },
+);
