@@ -87,6 +87,9 @@ declare global {
  * @prop {(value: number) => string | undefined} formatValue - Names each radio from its number, such as "3 stars" rather than "3". The number itself when unset.
  *
  * @readonly
+ * @prop {NodeList} labels - The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it.
+ *
+ * @readonly
  * @prop {string} validationMessage - What's wrong, as the validity message says it: the message given to `setCustomValidity()` or `setValidity()`, or else the browser's own. Empty while it's valid.
  *
  * @readonly
@@ -204,6 +207,10 @@ export default class Rating extends LitElement {
 
   get form(): HTMLFormElement | null {
     return this.#internals.form;
+  }
+
+  get labels(): NodeList {
+    return this.#internals.labels;
   }
 
   /**

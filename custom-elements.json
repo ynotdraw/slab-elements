@@ -1595,6 +1595,15 @@
             },
             {
               "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
+            },
+            {
+              "kind": "field",
               "name": "validationMessage",
               "type": {
                 "text": "string"
@@ -2045,6 +2054,15 @@
               },
               "readonly": true,
               "description": "The form it belongs to, or `null`."
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
             },
             {
               "kind": "field",
@@ -2668,6 +2686,15 @@
               },
               "readonly": true,
               "description": "The form it belongs to, or `null`."
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
             },
             {
               "kind": "field",
@@ -3329,6 +3356,15 @@
               },
               "readonly": true,
               "description": "The form it belongs to, or `null`."
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
             },
             {
               "kind": "field",
@@ -4995,6 +5031,15 @@
             },
             {
               "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
+            },
+            {
+              "kind": "field",
               "name": "validationMessage",
               "type": {
                 "text": "string"
@@ -5749,6 +5794,19 @@
                 "module": "src/date-field.ts"
               },
               "description": "The form it belongs to, or `null`."
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "DateField",
+                "module": "src/date-field.ts"
+              },
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
             },
             {
               "kind": "field",
@@ -6513,6 +6571,15 @@
               },
               "readonly": true,
               "description": "The form it belongs to, or `null`."
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
             },
             {
               "kind": "field",
@@ -7358,6 +7425,19 @@
                 "module": "src/date-range-field.ts"
               },
               "description": "The form it belongs to, or `null`."
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "DateRangeField",
+                "module": "src/date-range-field.ts"
+              },
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
             },
             {
               "kind": "field",
@@ -8918,6 +8998,15 @@
             },
             {
               "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
+            },
+            {
+              "kind": "field",
               "name": "validationMessage",
               "type": {
                 "text": "string"
@@ -9811,6 +9900,15 @@
               },
               "readonly": true,
               "description": "The form it belongs to, or `null`."
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
             },
             {
               "kind": "field",
@@ -11361,6 +11459,15 @@
               },
               "readonly": true,
               "description": "The form it belongs to, or `null`."
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
             },
             {
               "kind": "field",
@@ -13249,6 +13356,15 @@
             },
             {
               "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
+            },
+            {
+              "kind": "field",
               "name": "validationMessage",
               "type": {
                 "text": "string"
@@ -14529,6 +14645,15 @@
             },
             {
               "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
+            },
+            {
+              "kind": "field",
               "name": "validationMessage",
               "type": {
                 "text": "string"
@@ -15224,6 +15349,15 @@
               },
               "readonly": true,
               "description": "The form it belongs to, or `null`."
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
             },
             {
               "kind": "field",
@@ -16338,6 +16472,15 @@
             },
             {
               "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
+            },
+            {
+              "kind": "field",
               "name": "validationMessage",
               "type": {
                 "text": "string"
@@ -16844,6 +16987,15 @@
               },
               "readonly": true,
               "description": "The form it belongs to, or `null`."
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
             },
             {
               "kind": "field",
@@ -17442,6 +17594,15 @@
             },
             {
               "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
+            },
+            {
+              "kind": "field",
               "name": "validationMessage",
               "type": {
                 "text": "string"
@@ -18032,6 +18193,15 @@
               },
               "readonly": true,
               "description": "The form it belongs to, or `null`."
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
             },
             {
               "kind": "field",
@@ -18689,6 +18859,15 @@
             },
             {
               "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
+            },
+            {
+              "kind": "field",
               "name": "options",
               "type": {
                 "text": "Option[]"
@@ -19298,6 +19477,15 @@
               },
               "readonly": true,
               "description": "The form it belongs to, or `null`."
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
             },
             {
               "kind": "field",
@@ -20898,6 +21086,15 @@
               },
               "readonly": true,
               "description": "The form it belongs to, or `null`."
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
             },
             {
               "kind": "field",
@@ -22639,6 +22836,15 @@
             },
             {
               "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
+            },
+            {
+              "kind": "field",
               "name": "validationMessage",
               "type": {
                 "text": "string"
@@ -23233,6 +23439,15 @@
               },
               "readonly": true,
               "description": "The form it belongs to, or `null`."
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
             },
             {
               "kind": "field",
@@ -23933,6 +24148,15 @@
             },
             {
               "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
+            },
+            {
+              "kind": "field",
               "name": "validationMessage",
               "type": {
                 "text": "string"
@@ -24579,6 +24803,15 @@
               },
               "readonly": true,
               "description": "The form it belongs to, or `null`."
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "NodeList"
+              },
+              "readonly": true,
+              "description": "The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it."
             },
             {
               "kind": "field",

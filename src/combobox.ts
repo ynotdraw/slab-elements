@@ -146,6 +146,9 @@ declare global {
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
  * @readonly
+ * @prop {NodeList} labels - The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it.
+ *
+ * @readonly
  * @prop {Option[]} options - Its Options, in order.
  *
  * @prop {(text: string) => string} removeLabel - Names each tag's button, which shows only the selected Option's text, from that text. "Remove" and the text in English when unset.
@@ -369,6 +372,10 @@ export default class Combobox extends LitElement {
 
   get form(): HTMLFormElement | null {
     return this.#internals.form;
+  }
+
+  get labels(): NodeList {
+    return this.#internals.labels;
   }
 
   // Those assigned to its default slot, for the same reasons as Listbox's.

@@ -974,3 +974,26 @@ test(
     await expect(host).not.toHaveAttribute('selected');
   },
 );
+
+test('has a `labels` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <label for="control" id="for">For</label>
+
+      <label id="around">
+        Around
+        <slab-listbox id="control" label="Label">
+          <slab-option>One</slab-option>
+        </slab-listbox>
+      </label>
+    `,
+  );
+
+  const ids = await page
+    .locator('slab-listbox')
+    .evaluate((element: Listbox) =>
+      [...element.labels].map((label) => (label as HTMLLabelElement).id),
+    );
+
+  expect(ids).toStrictEqual(['for', 'around']);
+});

@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import type Form from './form.js';
+import type Rating from './rating.js';
 
 test('has a `form` property', { tag: '@forms' }, async ({ render, page }) => {
   await render(
@@ -791,3 +792,24 @@ test(
     await expect(host).toHaveJSProperty('value', '2');
   },
 );
+
+test('has a `labels` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <label for="control" id="for">For</label>
+
+      <label id="around">
+        Around
+        <slab-rating id="control" label="Label"></slab-rating>
+      </label>
+    `,
+  );
+
+  const ids = await page
+    .locator('slab-rating')
+    .evaluate((element: Rating) =>
+      [...element.labels].map((label) => (label as HTMLLabelElement).id),
+    );
+
+  expect(ids).toStrictEqual(['for', 'around']);
+});

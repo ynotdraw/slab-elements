@@ -100,6 +100,9 @@ declare global {
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
+ * @readonly
+ * @prop {NodeList} labels - The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it.
+ *
  * @prop {(text: string) => string} removeLabel - Names each tag's button, which shows only the tag, from the tag. "Remove" and the tag in English when unset.
  * @prop {(text: string) => string} removedLabel - What screenreaders are told when a tag is removed, from the tag. The tag and "removed" in English when unset.
  *
@@ -258,6 +261,10 @@ export default class TagsInput extends LitElement {
 
   get form(): HTMLFormElement | null {
     return this.#internals.form;
+  }
+
+  get labels(): NodeList {
+    return this.#internals.labels;
   }
 
   /**

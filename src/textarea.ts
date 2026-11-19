@@ -84,6 +84,9 @@ declare global {
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
+ * @readonly
+ * @prop {NodeList} labels - The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it.
+ *
  * @prop {HTMLTextAreaElement['selectionDirection']} selectionDirection - Which way the selection was made, "forward", "backward" or "none", as a native textarea's `selectionDirection` is.
  * @prop {number} selectionEnd - Where the selection ends, or where the caret is when nothing is selected, as a native textarea's `selectionEnd` is.
  * @prop {number} selectionStart - Where the selection starts, or where the caret is when nothing is selected, as a native textarea's `selectionStart` is.
@@ -246,6 +249,10 @@ export default class Textarea extends LitElement {
 
   get form(): HTMLFormElement | null {
     return this.#internals.form;
+  }
+
+  get labels(): NodeList {
+    return this.#internals.labels;
   }
 
   /**

@@ -962,3 +962,24 @@ test(
     await expect(host).not.toHaveAttribute('checked');
   },
 );
+
+test('has a `labels` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <label for="control" id="for">For</label>
+
+      <label id="around">
+        Around
+        <slab-checkbox id="control" label="Label"></slab-checkbox>
+      </label>
+    `,
+  );
+
+  const ids = await page
+    .locator('slab-checkbox')
+    .evaluate((element: Checkbox) =>
+      [...element.labels].map((label) => (label as HTMLLabelElement).id),
+    );
+
+  expect(ids).toStrictEqual(['for', 'around']);
+});

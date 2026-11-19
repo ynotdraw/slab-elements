@@ -684,3 +684,24 @@ test(
     expect(seen.findLast(({ type }) => type === 'change')?.during).toBe(after);
   },
 );
+
+test('has a `labels` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <label for="control" id="for">For</label>
+
+      <label id="around">
+        Around
+        <slab-file-drop id="control" label="Label"></slab-file-drop>
+      </label>
+    `,
+  );
+
+  const ids = await page
+    .locator('slab-file-drop')
+    .evaluate((element: FileDrop) =>
+      [...element.labels].map((label) => (label as HTMLLabelElement).id),
+    );
+
+  expect(ids).toStrictEqual(['for', 'around']);
+});

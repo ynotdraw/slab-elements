@@ -78,6 +78,9 @@ declare global {
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
+ * @readonly
+ * @prop {NodeList} labels - The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it.
+ *
  * @prop {HTMLInputElement['selectionDirection']} selectionDirection - Which way the selection was made, "forward", "backward" or "none", as a native input's `selectionDirection` is. `null` for an email field, which has no selection, as an email input's is, and setting it then throws.
  * @prop {number | null} selectionEnd - Where the selection ends, or where the caret is when nothing is selected, as a native input's `selectionEnd` is. `null` for an email field, which has no selection, as an email input's is, and setting it then throws.
  * @prop {number | null} selectionStart - Where the selection starts, or where the caret is when nothing is selected, as a native input's `selectionStart` is. `null` for an email field, which has no selection, as an email input's is, and setting it then throws.
@@ -247,6 +250,10 @@ export default class TextField extends LitElement {
 
   get form(): HTMLFormElement | null {
     return this.#internals.form;
+  }
+
+  get labels(): NodeList {
+    return this.#internals.labels;
   }
 
   /**

@@ -868,3 +868,24 @@ test(
     await expect(host).toHaveJSProperty('value', '09:30');
   },
 );
+
+test('has a `labels` property', { tag: '@forms' }, async ({ render, page }) => {
+  await render(
+    () => html`
+      <label for="control" id="for">For</label>
+
+      <label id="around">
+        Around
+        <slab-time-field id="control" label="Label"></slab-time-field>
+      </label>
+    `,
+  );
+
+  const ids = await page
+    .locator('slab-time-field')
+    .evaluate((element: TimeField) =>
+      [...element.labels].map((label) => (label as HTMLLabelElement).id),
+    );
+
+  expect(ids).toStrictEqual(['for', 'around']);
+});
