@@ -233,3 +233,57 @@ test(
     await expect(combobox).not.toBeFocused();
   },
 );
+
+test(
+  'is focused when an outside label is clicked',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <label for="control">For</label>
+
+        <label>
+          <span>Around</span>
+          <slab-select id="control" label="Label">
+            <slab-option>One</slab-option>
+          </slab-select>
+        </label>
+
+        <button type="button">Elsewhere</button>
+      `,
+    );
+
+    const focusable = page.locator('slab-select');
+
+    await page.getByText('For', { exact: true }).click();
+    await expect(focusable).toBeFocused();
+
+    await page.getByRole('button', { name: 'Elsewhere' }).focus();
+    await expect(focusable).not.toBeFocused();
+
+    await page.getByText('Around', { exact: true }).click();
+    await expect(focusable).toBeFocused();
+  },
+);
+
+test(
+  'is not focused by `click()`',
+  { tag: '@mouse' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`
+        <label for="control">For</label>
+
+        <slab-select id="control" label="Label">
+          <slab-option>One</slab-option>
+        </slab-select>
+      `,
+    );
+
+    const host = page.locator('slab-select');
+
+    // As a native select isn't. Only a label's click passes focus on.
+    await callMethod(host, 'click');
+    await expect(host).not.toBeFocused();
+  },
+);

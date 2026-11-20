@@ -18,7 +18,7 @@ export const GET: APIRoute = async () => {
     '## Why headless',
     "- **Bring your own design.** Slab doesn't ship a single line of visual CSS. No theme to fight, nothing to override. Every piece you'd want to style is a `::part()`, and every state you'd react to is a `:state()`.",
     "- **The platform first.** A Slab dialog is a `<dialog>`. A disclosure is a `<details>`. A switch is a checkbox. Slab leans on what browsers already do well and only fills in what's missing. Attributes in, events out.",
-    "- **Built to last.** Custom elements are a web standard, not a framework feature, so they work in React, Vue, Svelte, Rails, or plain HTML — and in whatever you're using three years from now.",
+    "- **Built to last.** Custom elements are a web standard, not a framework feature, so they work in React, Vue, Svelte, Ember, Rails, or plain HTML — and in whatever you're using three years from now.",
     '## One element, any look',
     'Every Slab element ships with no visual CSS, so the same `<slab-switch>` can be a plain checkbox, a hard-edged brick, a rounded pill, or anything else, with nothing but CSS from the outside. For example, a rounded pill:',
     `\`\`\`css

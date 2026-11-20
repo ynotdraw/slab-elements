@@ -107,6 +107,31 @@ const open = ref(false);
     name: 'Svelte',
     note: 'Svelte binds properties and events to custom elements like any other element.',
   },
+  {
+    code: `import 'slab-elements/disclosure.js';
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
+import { on } from '@ember/modifier';
+
+export class Foundation extends Component {
+  @tracked open = false;
+  toggle = (event) => (this.open = event.newState === 'open');
+
+  <template>
+    <slab-disclosure
+      label="Foundation"
+      open={{this.open}}
+      {{on "toggle" this.toggle}}
+    >
+      Poured once, built on forever.
+    </slab-disclosure>
+  </template>
+}`,
+    file: 'Foundation.gjs',
+    lang: 'gjs',
+    name: 'Ember',
+    note: 'Ember sets attributes on custom elements, and {{on}} listens for any event by its name.',
+  },
 ] as const;
 // One headless <slab-switch>, four ways. Each look is the CSS a consumer would
 // write, from outside, with only ::part() and :state(). The page runs exactly
@@ -268,8 +293,8 @@ const scoped = (id: string, css: string) =>
       <p class="lead">
         Slab handles the hard parts of a component — keyboard and focus, ARIA,
         forms, events — on top of the native elements browsers already ship.
-        What it looks like? That's all you, in React, Vue, Svelte, Rails, or
-        plain HTML.
+        What it looks like? That's all you, in React, Vue, Svelte, Ember,
+        Rails, or plain HTML.
       </p>
 
       <slab-tabs class="install" label="Package manager">
@@ -303,6 +328,7 @@ const scoped = (id: string, css: string) =>
             <span>React</span>
             <span>Vue</span>
             <span>Svelte</span>
+            <span>Ember</span>
           </div>
           <span>Plain HTML</span>
           <p class="layer-label">Your styles · your markup</p>

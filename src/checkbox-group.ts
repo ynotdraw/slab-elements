@@ -9,6 +9,7 @@ import { property, state } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
 import slab from './library/version.js';
 import customElement from './library/custom-element.js';
+import handleLabelClicks from './library/label-click.js';
 import assertSlot from './library/assert-slot.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import {
@@ -426,6 +427,7 @@ export default class CheckboxGroup extends LitElement {
   constructor() {
     super();
     this.#internals = this.attachInternals();
+    handleLabelClicks(this);
 
     this.addEventListener('private-checked-change', this.#onCheckedChange);
     this.addEventListener('private-connected', this.#onConnectedOrValueChange);

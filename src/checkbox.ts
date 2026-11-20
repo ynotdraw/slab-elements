@@ -11,6 +11,7 @@ import { when } from 'lit/directives/when.js';
 import slab from './library/version.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
+import handleLabelClicks from './library/label-click.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import {
   isInvalidCancelled,
@@ -459,6 +460,10 @@ export default class Checkbox extends LitElement {
   constructor() {
     super();
     this.#internals = this.attachInternals();
+
+    handleLabelClicks(this, () => {
+      this.click();
+    });
 
     // On the host because the host is what's form-associated, which is also
     // why a consumer could remove this listener. Nothing better is available.

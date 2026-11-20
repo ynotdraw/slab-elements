@@ -53,6 +53,11 @@ associated with it, by a `for` that names its `id` or by being around it.
 Slab's controls are named by their own `label` attribute, so it's often
 empty.
 
+Clicking one of those labels does what it does for a native control. A
+Checkbox or Switch toggles, a File Drop opens its file picker, and any other
+control takes focus. The label doesn't name the control, though, so keep its
+`label` attribute.
+
 ```js
 const field = document.querySelector('slab-text-field');
 

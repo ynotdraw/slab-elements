@@ -1,18 +1,19 @@
-// The styled examples for React, Vue and Svelte: the same CSS as the Lit
-// version, written from outside the element, so there's no subclass. In React
-// and Vue, a component for each element registers it and imports its CSS. In
-// Svelte, a module does, and the element is used as is.
+// The styled examples for React, Vue, Svelte and Ember: the same CSS as the
+// Lit version, written from outside the element, so there's no subclass. In
+// React, Vue and Ember, a component for each element registers it and imports
+// its CSS. In Svelte, a module does, and the element is used as is.
 
 import { moduleName, styledSource } from './elements.ts';
 import { styledCss } from './outside-css.ts';
 
 export type File = {
   code: string;
-  lang: 'css' | 'js' | 'jsx' | 'vue';
+  lang: 'css' | 'gjs' | 'js' | 'jsx' | 'vue';
   name: string;
 };
 
 export type StyledFrameworks = {
+  ember: File[];
   react: File[];
   svelte: File[];
   vue: File[];
@@ -108,7 +109,20 @@ ${imports(module)}
     name: `${elements[0]!.module.split('.')[0]}.js`,
   };
 
+  // Ember passes `slot="…"` content through `{{yield}}` as the element's own
+  // children, so a component around the element keeps it.
+  const ember = elements.map(({ module, tag }) => ({
+    code: `${imports(module)}
+
+export const ${pascal(tag)} = <template>
+  <${tag} ...attributes>{{yield}}</${tag}>
+</template>;`,
+    lang: 'gjs' as const,
+    name: `${pascal(tag)}.gjs`,
+  }));
+
   return {
+    ember: [...ember, ...styles, tokens],
     react: [react, ...styles, tokens],
     svelte: [svelte, ...styles, tokens],
     vue: [...vue, ...styles, tokens],

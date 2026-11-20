@@ -61,6 +61,22 @@ frameworks:
 
     <button onclick={() => toast.show()}>Save</button>
     <slab-toast bind:this={toast} duration={5000}>Changes saved</slab-toast>
+  ember: |
+    import 'slab-elements/toast.js';
+    import Component from '@glimmer/component';
+    import { on } from '@ember/modifier';
+    import { modifier } from 'ember-modifier';
+
+    export class MyToast extends Component {
+      #toast;
+      ref = modifier((element) => (this.#toast = element));
+      show = () => this.#toast.show();
+
+      <template>
+        <button type="button" {{on "click" this.show}}>Save</button>
+        <slab-toast duration="5000" {{this.ref}}>Changes saved</slab-toast>
+      </template>
+    }
 usage: |
   <slab-toast duration="5000">Changes saved</slab-toast>
 

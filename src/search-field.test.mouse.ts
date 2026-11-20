@@ -72,3 +72,33 @@ test(
     ).toHaveCount(0);
   },
 );
+
+test(
+  'is focused when an outside label is clicked',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <label for="control">For</label>
+
+        <label>
+          <span>Around</span>
+          <slab-search-field id="control" label="Label"></slab-search-field>
+        </label>
+
+        <button type="button">Elsewhere</button>
+      `,
+    );
+
+    const focusable = page.locator('slab-search-field');
+
+    await page.getByText('For', { exact: true }).click();
+    await expect(focusable).toBeFocused();
+
+    await page.getByRole('button', { name: 'Elsewhere' }).focus();
+    await expect(focusable).not.toBeFocused();
+
+    await page.getByText('Around', { exact: true }).click();
+    await expect(focusable).toBeFocused();
+  },
+);

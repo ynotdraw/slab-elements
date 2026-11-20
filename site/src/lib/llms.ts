@@ -50,7 +50,7 @@ export const sections: Section[] = [
       },
       {
         title: 'Forms, styles and frameworks',
-        text: 'Form association and validity, `::part()` and `:state()`, subclassing, React 19, Vue, Svelte and server rendering.',
+        text: 'Form association and validity, `::part()` and `:state()`, subclassing, React 19, Vue, Svelte, Ember and server rendering.',
       },
       {
         title: 'A page per component',

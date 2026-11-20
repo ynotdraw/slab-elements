@@ -12,6 +12,7 @@ import { when } from 'lit/directives/when.js';
 import slab from './library/version.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import customElement from './library/custom-element.js';
+import handleLabelClicks from './library/label-click.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
 import {
   isInvalidCancelled,
@@ -426,6 +427,10 @@ export default class FileDrop extends LitElement {
   constructor() {
     super();
     this.#internals = this.attachInternals();
+
+    handleLabelClicks(this, () => {
+      this.click();
+    });
 
     // So the form's data and its validity are current inside an "input" or
     // "change" listener, as a native control's are, rather than an update on.

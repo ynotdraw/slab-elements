@@ -131,3 +131,33 @@ test(
     await expect(radio).not.toBeChecked();
   },
 );
+
+test(
+  'is focused when an outside label is clicked',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <label for="control">For</label>
+
+        <label>
+          <span>Around</span>
+          <slab-rating id="control" label="Label"></slab-rating>
+        </label>
+
+        <button type="button">Elsewhere</button>
+      `,
+    );
+
+    const focusable = page.locator('slab-rating');
+
+    await page.getByText('For', { exact: true }).click();
+    await expect(focusable).toBeFocused();
+
+    await page.getByRole('button', { name: 'Elsewhere' }).focus();
+    await expect(focusable).not.toBeFocused();
+
+    await page.getByText('Around', { exact: true }).click();
+    await expect(focusable).toBeFocused();
+  },
+);

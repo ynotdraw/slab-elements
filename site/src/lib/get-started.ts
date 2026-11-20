@@ -76,7 +76,7 @@ import 'slab-elements/tabs.panel.js';`,
   {
     id: 'frameworks',
     heading: 'In your framework',
-    text: "There's no wrapper package. The tag is the component, in React, Vue, Svelte, Rails, or plain HTML. React 19 and Svelte listen for an event through `on` and its exact name, such as `onchange` or `oncopy-error`, and Vue needs to know which tags are custom elements. The [home page](#usage) shows the same Disclosure in each.",
+    text: "There's no wrapper package. The tag is the component, in React, Vue, Svelte, Ember, Rails, or plain HTML. React 19 and Svelte listen for an event through `on` and its exact name, such as `onchange` or `oncopy-error`, Ember's `{{on}}` takes the exact name too, and Vue needs to know which tags are custom elements. The [home page](#usage) shows the same Disclosure in each.",
     code: {
       code: `import vue from '@vitejs/plugin-vue';
 
@@ -98,7 +98,7 @@ export default {
   {
     id: 'server',
     heading: 'On the server',
-    text: "Using Next.js, Nuxt, SvelteKit, Astro or Rails? You're good. Importing an element on the server is safe. Slab doesn't render there, though. The tag is sent as you wrote it, and the element takes over in the browser once its module loads. One thing to watch: that module has to reach the browser. With server components, import it from a client one.",
+    text: "Using Next.js, Nuxt, SvelteKit, Astro, Ember or Rails? You're good. Importing an element on the server is safe. Slab doesn't render there, though. The tag is sent as you wrote it, and the element takes over in the browser once its module loads. One thing to watch: that module has to reach the browser. With server components, import it from a client one.",
     code: {
       code: `'use client';
 
@@ -199,12 +199,13 @@ registerStrings('de', {
     text: "The types come with the package. Each element adds its tag to `HTMLElementTagNameMap`, so `document.querySelector('slab-switch')` is typed as Slab's `Switch`. For your templates, import your framework's types once, and every tag's properties are checked, so a misspelled `hideLabel` or a wrong `orientation` is a type error.",
     code: {
       code: `// React. Or 'slab-elements/svelte.js' for Svelte 5,
-// or 'slab-elements/vue.js' for Vue.
+// 'slab-elements/vue.js' for Vue, or 'slab-elements/ember.js'
+// for Ember with Glint.
 import type {} from 'slab-elements/react.js';`,
       label: 'slab.d.ts',
       lang: 'ts',
     },
-    coda: 'Events are typed too: a handler such as `oncopy-error` in React and Svelte, or `@copy-error` in Vue, gets the event with the element as its `currentTarget`. For any other framework, `slab-elements/jsx.js` has `SlabElementProps`, every tag and its properties, and `SlabElementEvents`, every tag and its events.',
+    coda: 'Events are typed too: a handler such as `oncopy-error` in React and Svelte, `@copy-error` in Vue, or `{{on "copy-error"}}` in Ember, gets the event with the element as its `currentTarget`. In Ember, Glint checks the attributes of each tag, by their names in HTML, such as `hide-label`. For any other framework, `slab-elements/jsx.js` has `SlabElementProps`, every tag and its properties, and `SlabElementEvents`, every tag and its events.',
   },
   {
     id: 'editors',
@@ -274,7 +275,7 @@ import type {} from 'slab-elements/react.js';`,
     points: [
       {
         title: 'Any framework, or none',
-        text: 'One package works in React, Vue, Svelte, a server-rendered template or a plain HTML file. Change frameworks and Slab comes with you.',
+        text: 'One package works in React, Vue, Svelte, Ember, a server-rendered template or a plain HTML file. Change frameworks and Slab comes with you.',
       },
       {
         title: 'Forms without glue',

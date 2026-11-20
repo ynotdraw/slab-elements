@@ -112,6 +112,6 @@ function withoutStyledSource(markdown: string, twin: string): string {
     markdown.slice(0, start),
     heading,
     intro,
-    `\n\nIts source, for Lit, React, Vue and Svelte, is in [this page's own Markdown](${twin}#copy-and-own-it).`,
+    `\n\nIts source, for Lit, React, Vue, Svelte and Ember, is in [this page's own Markdown](${twin}#copy-and-own-it).`,
   ].join('');
 }

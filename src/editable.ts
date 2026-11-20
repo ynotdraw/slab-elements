@@ -14,6 +14,7 @@ import afterReflection from './library/after-reflection.js';
 import AriaForwarding from './library/aria-forwarding.js';
 import CustomValidity from './library/custom-validity.js';
 import customElement from './library/custom-element.js';
+import handleLabelClicks from './library/label-click.js';
 import required from './library/required.js';
 import styles from './editable.styles.js';
 import isComposing from './library/is-composing.js';
@@ -424,6 +425,7 @@ export default class Editable extends LitElement {
   constructor() {
     super();
     this.#internals = this.attachInternals();
+    handleLabelClicks(this);
   }
 
   @state()

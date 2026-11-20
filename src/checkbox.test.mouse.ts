@@ -223,3 +223,84 @@ test(
     await expect(host).toHaveJSProperty('checked', false);
   },
 );
+
+test(
+  'is toggled when an outside label is clicked',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <label for="control">For</label>
+
+        <label>
+          <span>Around</span>
+          <slab-checkbox id="control" label="Label"></slab-checkbox>
+        </label>
+      `,
+    );
+
+    const host = page.locator('slab-checkbox');
+
+    await expect(host).toDispatchEvents(
+      () => page.getByText('For', { exact: true }).click(),
+      [
+        {
+          bubbles: true,
+          cancelable: false,
+          composed: true,
+          type: 'input',
+        },
+        {
+          bubbles: true,
+          cancelable: false,
+          composed: true,
+          type: 'change',
+        },
+      ],
+    );
+
+    await expect(host).toHaveJSProperty('checked', true);
+
+    await expect(host).toDispatchEvents(
+      () => page.getByText('Around', { exact: true }).click(),
+      [
+        {
+          bubbles: true,
+          cancelable: false,
+          composed: true,
+          type: 'input',
+        },
+        {
+          bubbles: true,
+          cancelable: false,
+          composed: true,
+          type: 'change',
+        },
+      ],
+    );
+
+    await expect(host).toHaveJSProperty('checked', false);
+  },
+);
+
+test(
+  'is not toggled when an outside label is clicked while disabled',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <label for="control">For</label>
+        <slab-checkbox disabled id="control" label="Label"></slab-checkbox>
+      `,
+    );
+
+    await page.getByText('For', { exact: true }).click();
+
+    await expect(page.locator('slab-checkbox')).toHaveJSProperty(
+      'checked',
+      false,
+    );
+
+    await expect(page.locator('slab-checkbox')).not.toBeFocused();
+  },
+);

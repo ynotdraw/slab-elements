@@ -6,7 +6,17 @@ import theme from '../lib/code-theme.ts';
 interface Props {
   code: string;
   label?: string;
-  lang: 'css' | 'html' | 'js' | 'json' | 'jsx' | 'sh' | 'svelte' | 'ts' | 'vue';
+  lang:
+    | 'css'
+    | 'gjs'
+    | 'html'
+    | 'js'
+    | 'json'
+    | 'jsx'
+    | 'sh'
+    | 'svelte'
+    | 'ts'
+    | 'vue';
 }
 
 const { code, label, lang } = Astro.props;
