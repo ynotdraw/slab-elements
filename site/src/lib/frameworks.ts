@@ -1,15 +1,16 @@
 // A component's usage in each framework, written once as HTML in its
-// frontmatter and turned into React, Lit, Vue and Svelte here. Only what
-// differs changes: a number, like `max="10"`, is passed as one, since each of
-// the three frameworks sets a custom element's properties rather than its
-// attributes, and a string where Lit wants a number would stay a string.
+// frontmatter and turned into React, Lit, Vue, Svelte and Ember here. Only
+// what differs changes: a number, like `max="10"`, is passed as one in React,
+// Vue and Svelte, since each sets a custom element's properties rather than
+// its attributes, and a string where Lit wants a number would stay a string.
+// Ember sets the attribute, as HTML does, so its markup is the HTML's.
 
 import { api, importPath } from './elements.ts';
 
 export type Framework = {
   code: string;
   file: string;
-  lang: 'html' | 'jsx' | 'svelte' | 'ts' | 'vue';
+  lang: 'gjs' | 'html' | 'jsx' | 'svelte' | 'ts' | 'vue';
   name: string;
   note: string;
 };
@@ -26,7 +27,7 @@ export function usageCode(tags: string[], usage: string): string {
 // A usage that needs script, like Toast's `show()`, as each framework writes
 // it. The rest are markup alone and are written from their HTML.
 export type Overrides = Partial<
-  Record<'lit' | 'react' | 'svelte' | 'vue', string>
+  Record<'ember' | 'lit' | 'react' | 'svelte' | 'vue', string>
 >;
 
 // "color-picker" → "ColorPicker"
@@ -115,6 +116,12 @@ ${indent(imports, 2)}
 
 ${braced}`;
 
+  const ember = `${imports}
+
+export const ${name} = <template>
+${indent(markup, 2)}
+</template>;`;
+
   return [
     {
       code: overrides.react ?? react,
@@ -143,6 +150,13 @@ ${braced}`;
       lang: 'svelte',
       name: 'Svelte',
       note: 'Svelte binds properties and events to custom elements like any other element.',
+    },
+    {
+      code: overrides.ember ?? ember,
+      file: `${name}.gjs`,
+      lang: 'gjs',
+      name: 'Ember',
+      note: 'Ember sets attributes on custom elements, and {{on}} listens for any event by its name.',
     },
     {
       code: usageCode(tags, usage),

@@ -59,7 +59,9 @@ test(
         !file.includes('.test.') &&
         !file.includes('.stories.') &&
         !file.includes('.styles.') &&
-        !['jsx.js', 'react.js', 'svelte.js', 'vue.js'].includes(file)
+        !['ember.js', 'jsx.js', 'react.js', 'svelte.js', 'vue.js'].includes(
+          file,
+        )
       );
     });
 

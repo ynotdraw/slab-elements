@@ -53,6 +53,13 @@ frameworks:
     </script>
 
     <slab-alert dismissible>{message}</slab-alert>
+  ember: |
+    import 'slab-elements/alert.js';
+
+    // Empty until there's a message, so it's announced when it arrives.
+    export const MyAlert = <template>
+      <slab-alert dismissible>{{@message}}</slab-alert>
+    </template>;
 usage: |
   <slab-alert dismissible></slab-alert>
 

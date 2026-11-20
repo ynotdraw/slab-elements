@@ -117,13 +117,14 @@ Each component's docs page (linked from its reference) has a styled example, `<s
 
 ## Frameworks
 
-There's no wrapper package. The tag is the component in React, Vue, Svelte, Angular, server templates and plain HTML.
+There's no wrapper package. The tag is the component in React, Vue, Svelte, Ember, Angular, server templates and plain HTML.
 
 - **React 19** sets properties and listens for events with `on` plus the exact event name, lowercase: `onchange`, `ontoggle`, `oncopy-error`. Not `onChange`. Before React 19, use a ref and `addEventListener`.
 - **Vue** needs `compilerOptions.isCustomElement: (tag) => tag.startsWith('slab-')` in its Vue plugin config. Listen with `@change`, `@toggle` and so on.
 - **Svelte 5** listens with `onchange`. Don't wrap an element with `slot="…"` children in a Svelte component, since Svelte would take the slot.
-- **Server rendering** (Next.js, Nuxt, SvelteKit, Astro): importing an element on the server is safe, but it doesn't render there. The element upgrades in the browser once its module loads, so the import must reach the client. In React Server Components, import it from a `'use client'` module.
-- **TypeScript**: each module adds its tag to `HTMLElementTagNameMap`. For typed templates, add one of these once: `import type {} from 'slab-elements/react.js';`, `'slab-elements/vue.js'` or `'slab-elements/svelte.js'`. Other frameworks can use `SlabElementProps` and `SlabElementEvents` from `slab-elements/jsx.js`.
+- **Ember** sets attributes from the template, and properties for dynamic values such as `max={{10}}` when the element has a property by that name. Listen with `{{on "change" this.handler}}`. Wrapping an element in a component with `...attributes` and `{{yield}}` keeps `slot="…"` children.
+- **Server rendering** (Next.js, Nuxt, SvelteKit, Astro, Ember): importing an element on the server is safe, but it doesn't render there. The element upgrades in the browser once its module loads, so the import must reach the client. In React Server Components, import it from a `'use client'` module.
+- **TypeScript**: each module adds its tag to `HTMLElementTagNameMap`. For typed templates, add one of these once: `import type {} from 'slab-elements/react.js';`, `'slab-elements/vue.js'`, `'slab-elements/svelte.js'` or `'slab-elements/ember.js'` (Glint, by attribute name, in a `.d.ts` file, since Babel can't parse an empty type import in `.gjs`). Other frameworks can use `SlabElementProps` and `SlabElementEvents` from `slab-elements/jsx.js`.
 
 ## Words and languages
 
