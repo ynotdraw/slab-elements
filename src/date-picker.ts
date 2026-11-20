@@ -58,6 +58,7 @@ declare global {
  * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
  * @attr {HTMLInputElement['autocomplete']} [autocomplete] - What the browser may fill it with, as a native input's `autocomplete` says.
  * @attr {string} [button-label] - The button's text and so its accessible name. "Choose date" in English when unset.
+ * @attr {string} [custom-validity] - Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid.
  * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {string} [max] - The latest date allowed, as "yyyy-mm-dd".
@@ -71,6 +72,7 @@ declare global {
  * @attr {number} [week-start=0] - The day the Calendar's weeks start on, from 0 for Sunday to 6 for Saturday.
  *
  * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
+ * @slot {Element | string} [validity-message] - Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.
  *
  * @csspart button - Opens and closes the calendar
  * @csspart calendar - The Calendar in the popover
@@ -90,7 +92,7 @@ declare global {
  * @fires {ToggleEvent} beforetoggle - Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed.
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
- * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown.
+ * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is.
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
  * @prop {string} defaultValue - The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it.

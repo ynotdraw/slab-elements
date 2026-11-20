@@ -40,15 +40,16 @@ Style it through its parts and through `:state(checked)`, `:state(disabled)`, `:
 
 #### Attributes
 
-| Name               | Type      | Default | Description                                                                                                                                                                                                |
-| ------------------ | --------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `label` (required) | `string`  |         | Names it. It's the accessible name, and the visible label where there is one.                                                                                                                              |
-| `checked`          | `boolean` | `false` | Like a native checkbox, the attribute is the default state and the property is the current one, so the attribute doesn't change as the switch is toggled. Style `:state(checked)` rather than `[checked]`. |
-| `disabled`         | `boolean` | `false` | Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.                                                                              |
-| `hide-label`       | `boolean` | `false` | Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.                                                                                           |
-| `name`             | `string`  | `''`    | The name its value is submitted under, as a native control's `name`.                                                                                                                                       |
-| `required`         | `boolean` | `false` | Makes it invalid while it has no value, as `required` does a native control.                                                                                                                               |
-| `value`            | `string`  | `'on'`  | What it submits while it's on, as a native checkbox's `value`.                                                                                                                                             |
+| Name               | Type      | Default | Description                                                                                                                                                                                                                                                                                                                |
+| ------------------ | --------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `label` (required) | `string`  |         | Names it. It's the accessible name, and the visible label where there is one.                                                                                                                                                                                                                                              |
+| `checked`          | `boolean` | `false` | Like a native checkbox, the attribute is the default state and the property is the current one, so the attribute doesn't change as the switch is toggled. Style `:state(checked)` rather than `[checked]`.                                                                                                                 |
+| `disabled`         | `boolean` | `false` | Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.                                                                                                                                                                                              |
+| `hide-label`       | `boolean` | `false` | Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.                                                                                                                                                                                                           |
+| `name`             | `string`  | `''`    | The name its value is submitted under, as a native control's `name`.                                                                                                                                                                                                                                                       |
+| `required`         | `boolean` | `false` | Makes it invalid while it has no value, as `required` does a native control.                                                                                                                                                                                                                                               |
+| `value`            | `string`  | `'on'`  | What it submits while it's on, as a native checkbox's `value`.                                                                                                                                                                                                                                                             |
+| `custom-validity`  | `string`  |         | Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid. |
 
 #### Properties
 
@@ -75,17 +76,18 @@ Style it through its parts and through `:state(checked)`, `:state(disabled)`, `:
 
 #### Events
 
-| Name      | Type    | Description                                                                                                        |
-| --------- | ------- | ------------------------------------------------------------------------------------------------------------------ |
-| `input`   | `Event` | As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.               |
-| `change`  | `Event` | When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.             |
-| `invalid` | `Event` | When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown. |
+| Name      | Type    | Description                                                                                                                                                                             |
+| --------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `input`   | `Event` | As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.                                                                                    |
+| `change`  | `Event` | When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.                                                                                  |
+| `invalid` | `Event` | When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is. |
 
 #### Slots
 
-| Name          | Type                | Description                                                                                                 |
-| ------------- | ------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `description` | `Element \| string` | Text that describes it, such as a hint or what the validity message means. It's its accessible description. |
+| Name               | Type                | Description                                                                                                                                                                                                                                                 |
+| ------------------ | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `description`      | `Element \| string` | Text that describes it, such as a hint or what the validity message means. It's its accessible description.                                                                                                                                                 |
+| `validity-message` | `Element \| string` | Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s. |
 
 #### CSS parts
 

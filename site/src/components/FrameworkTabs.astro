@@ -25,7 +25,16 @@ const { frameworks } = Astro.props;
   }
 </slab-tabs>
 
-<style>
+<script>
+  import { addScrollButtons } from '../scripts/framework-tabs.ts';
+
+  for (const tabs of document.querySelectorAll<HTMLElement>('.frameworks-tabs')) {
+    void addScrollButtons(tabs);
+  }
+</script>
+
+<!-- Global, since a page's prose renders the same markup. -->
+<style is:global>
   .frameworks-tabs {
     background-color: var(--ink);
     /* Ink in either theme, like the code. */
@@ -60,13 +69,68 @@ const { frameworks } = Astro.props;
     }
   }
 
+  /*
+    One row that scrolls sideways when the tabs don't fit, as on a phone. The
+    script below adds a button at either end while there are more tabs that
+    way.
+  */
   .frameworks-tabs::part(tablist) {
     border-block-end: 1px solid var(--rule-on-ink);
     display: flex;
-    flex-wrap: wrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .frameworks-tabs::part(tablist)::-webkit-scrollbar {
+    display: none;
+  }
+
+  .frameworks-scroll {
+    min-inline-size: 0;
+    position: relative;
+  }
+
+  .frameworks-scroll-button {
+    background-color: transparent;
+    block-size: var(--frameworks-tab-block-size, 2.75rem);
+    border: 0;
+    color: var(--paper);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    inline-size: 3rem;
+    inset-block-start: 0;
+    position: absolute;
+    z-index: 1;
+
+    &[hidden] {
+      display: none;
+    }
+
+    &:hover {
+      color: var(--ember);
+    }
+  }
+
+  /* A fade, so a tab cut off under it reads as more to scroll to. */
+  .frameworks-scroll-start {
+    background-image: linear-gradient(to right, var(--ink) 55%, transparent);
+    inset-inline-start: 0;
+    text-align: start;
+    padding-inline-start: 0.875rem;
+  }
+
+  .frameworks-scroll-end {
+    background-image: linear-gradient(to left, var(--ink) 55%, transparent);
+    inset-inline-end: 0;
+    padding-inline-end: 0.875rem;
+    text-align: end;
   }
 
   .frameworks-tabs slab-tabs-tab {
+    flex-shrink: 0;
+    white-space: nowrap;
     border-inline-end: 1px solid var(--rule-on-ink);
     color: var(--dim);
     cursor: pointer;
@@ -102,9 +166,20 @@ const { frameworks } = Astro.props;
       outline-offset: -3px;
     }
 
-    :global(.code) {
+    .code {
       border: 0;
       flex: 1;
+    }
+
+    /* A fence in a page's prose. */
+    > pre {
+      flex: 1;
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      line-height: 1.7;
+      margin: 0;
+      overflow-x: auto;
+      padding: 1rem 1.25rem;
     }
   }
 

@@ -21,6 +21,10 @@ import assertCanShowPicker from './library/assert-can-show-picker.js';
 import OptionsController from './library/options-controller.js';
 import TagsController from './library/tags-controller.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
+import {
+  isInvalidCancelled,
+  preventValidationBubble,
+} from './library/validation-bubble.js';
 import required from './library/required.js';
 import announce from './library/announce.js';
 import Option from './option.js';
@@ -103,6 +107,7 @@ declare global {
  *
  * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
  * @attr {boolean} [allow-custom=false] - Lets the value be text that matches no Option.
+ * @attr {string} [custom-validity] - Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid.
  * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {boolean} [multiple=false] - Lets more than one Option be selected, each shown as a tag that removes it.
@@ -117,6 +122,7 @@ declare global {
  *
  * @slot {Option | OptionGroup}
  * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
+ * @slot {Element | string} [validity-message] - Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.
  *
  * @csspart description - Text about the Combobox, and its validity message when it has one
  * @csspart input - The input
@@ -136,7 +142,7 @@ declare global {
  * @fires {ToggleEvent} beforetoggle - Before it opens or closes, as a `ToggleEvent` that doesn't bubble. Cancel it while it's opening to keep it closed.
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
- * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown.
+ * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is.
  * @fires {ToggleEvent} toggle - When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.
  *
  * @prop {Option | null} activeOption - The Option the user is on, which Enter selects. It's pointed at rather than focused, so focus stays in the input.
@@ -351,6 +357,9 @@ export default class Combobox extends LitElement {
   set defaultValue(value: string) {
     this.setAttribute('value', value);
   }
+
+  @property({ attribute: 'custom-validity' })
+  customValidity?: string;
 
   /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
@@ -574,16 +583,28 @@ export default class Combobox extends LitElement {
           this.#isShowValidationFeedback && this.validationMessage,
           () =>
             html`<span data-test="validity-message" part="validity-message">
-              ${this.validationMessage}
+              <slot name="validity-message">
+                <!-- @type {Element | string} -->
+                ${this.validationMessage}
+              </slot>
             </span>`,
         )}
       </div>`;
   }
 
   reportValidity(): boolean {
-    this.hasReportedValidityOrSubmitted = true;
+    const wasReported = this.hasReportedValidityOrSubmitted;
+
+    this.#invalidEvent = undefined;
 
     const isValid = this.#internals.reportValidity();
+
+    // Unless a consumer cancelled "invalid", as a native control's message
+    // stays unshown when they do.
+    this.hasReportedValidityOrSubmitted =
+      this.#invalidEvent && isInvalidCancelled(this.#invalidEvent)
+        ? wasReported
+        : true;
 
     // So anything reading `validity.valid` renders again.
     this.requestUpdate();
@@ -740,7 +761,18 @@ export default class Combobox extends LitElement {
     this.#virtualizer.update();
   }
 
-  override willUpdate() {
+  override willUpdate(changes: PropertyValues) {
+    // `custom-validity` is `setCustomValidity()` from markup. Its message shows
+    // at once, rather than once validity is reported, since it's an error the
+    // page already knows about, such as one from a server.
+    if (changes.has('customValidity')) {
+      this.setCustomValidity(this.customValidity ?? '');
+
+      if (this.customValidity) {
+        this.hasReportedValidityOrSubmitted = true;
+      }
+    }
+
     // Nothing to show, or nothing to choose from, or nothing that can be
     // chosen.
     if (this.#isDisabled || this.readonly || this.#visible.length === 0) {
@@ -764,7 +796,8 @@ export default class Combobox extends LitElement {
     // On the host because the host is what's form-associated, which is also
     // why a consumer could remove this listener. Nothing better is available.
     this.addEventListener('invalid', (event) => {
-      event.preventDefault(); // So no native validation bubble is shown.
+      preventValidationBubble(event);
+      this.#invalidEvent = event;
 
       // Focus belongs to the user here unless the form was submitted, or
       // `reportValidity()` was called by something other than a blur.
@@ -776,12 +809,27 @@ export default class Combobox extends LitElement {
         return;
       }
 
+      const wasReported = this.hasReportedValidityOrSubmitted;
+
+      // The message shows now, so it's there once the control updates. Focus
+      // waits for the event's other listeners, and a consumer who cancels it
+      // keeps the message unshown and focus where it is, as with a native
+      // control.
       this.hasReportedValidityOrSubmitted = true;
 
-      // The browser ignores this when another control is the first invalid one.
-      if (this.form?.querySelector(':invalid') === this) {
-        this.focus();
-      }
+      queueMicrotask(() => {
+        if (isInvalidCancelled(event)) {
+          this.hasReportedValidityOrSubmitted = wasReported;
+
+          return;
+        }
+
+        // The browser ignores this when another control is the first invalid
+        // one.
+        if (this.form?.querySelector(':invalid') === this) {
+          this.focus();
+        }
+      });
     });
   }
 
@@ -814,6 +862,8 @@ export default class Combobox extends LitElement {
   #inputElementRef = createRef<HTMLInputElement>();
 
   #internals: ElementInternals;
+
+  #invalidEvent?: Event;
 
   #listboxElementRef = createRef<HTMLDivElement>();
 
@@ -1360,6 +1410,14 @@ export default class Combobox extends LitElement {
         browserValidationMessage(this.allowCustom ? 'fill' : 'select'),
         this.#anchor,
       );
+
+      return;
+    }
+
+    // A message from `setCustomValidity()` keeps it invalid, or the next update
+    // would clear it.
+    if (this.validityMessage) {
+      this.#internals.setValidity({ customError: true }, ' ', this.#anchor);
 
       return;
     }

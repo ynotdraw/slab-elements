@@ -36,7 +36,7 @@ const shared: Record<Kind, Descriptions> = {
     input:
       "As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.",
     invalid:
-      "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown.",
+      "When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is.",
     toggle:
       "When it opens or closes, as a `ToggleEvent` with `oldState` and `newState` that doesn't bubble, as a popover's does.",
   },
@@ -48,6 +48,8 @@ const shared: Record<Kind, Descriptions> = {
     click: "Clicks it, as a native element's `click()` does.",
     closeDelay:
       'How many milliseconds it waits after the pointer and focus leave before it closes.',
+    customValidity:
+      'Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid.',
     defaultChecked:
       "Whether it starts checked, and is checked again when its form resets. It's the `checked` attribute, as a native input's `defaultChecked` is, so setting it sets the attribute, and `checked` with it.",
     defaultEndValue:
@@ -111,6 +113,8 @@ const shared: Record<Kind, Descriptions> = {
   slots: {
     description:
       "Text that describes it, such as a hint or what the validity message means. It's its accessible description.",
+    'validity-message':
+      "Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.",
   },
 };
 

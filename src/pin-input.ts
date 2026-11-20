@@ -15,6 +15,10 @@ import customElement from './library/custom-element.js';
 import handleLabelClicks from './library/label-click.js';
 import StringsController from './library/strings.js';
 import isFormCheckingValidity from './library/is-form-checking-validity.js';
+import {
+  isInvalidCancelled,
+  preventValidationBubble,
+} from './library/validation-bubble.js';
 import required from './library/required.js';
 import styles from './pin-input.styles.js';
 import afterReflection from './library/after-reflection.js';
@@ -56,6 +60,7 @@ declare global {
  *
  * @attr {string} label - Names it. It's the accessible name, and the visible label where there is one.
  * @attr {HTMLInputElement['autocomplete']} [autocomplete] - Set on the first input. "one-time-code" for a code sent by text or email.
+ * @attr {string} [custom-validity] - Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid.
  * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {number} [length=6] - How many characters, and so how many inputs.
@@ -68,6 +73,7 @@ declare global {
  * @attr {string} [value=''] - Like a native input, the attribute is the default value and the property is the current one, so the attribute doesn't change as the field is typed into.
  *
  * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
+ * @slot {Element | string} [validity-message] - Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.
  *
  * @csspart description - Text about the field, and its validity message when it has one
  * @csspart filled - An input with a character in it
@@ -85,7 +91,7 @@ declare global {
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} complete - When the user fills the last box.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
- * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown.
+ * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is.
  *
  * @prop {string} defaultValue - The value it starts with, and goes back to when its form resets. It's the `value` attribute, as a native input's `defaultValue` is, so setting it sets the attribute, and `value` with it.
  *
@@ -217,6 +223,9 @@ export default class PinInput extends LitElement {
   set defaultValue(value: string) {
     this.setAttribute('value', value);
   }
+
+  @property({ attribute: 'custom-validity' })
+  customValidity?: string;
 
   /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
@@ -350,16 +359,28 @@ export default class PinInput extends LitElement {
           this.#isShowValidationFeedback && this.validationMessage,
           () =>
             html`<span data-test="validity-message" part="validity-message">
-              ${this.validationMessage}
+              <slot name="validity-message">
+                <!-- @type {Element | string} -->
+                ${this.validationMessage}
+              </slot>
             </span>`,
         )}
       </div>`;
   }
 
   reportValidity(): boolean {
-    this.hasReportedValidityOrSubmitted = true;
+    const wasReported = this.hasReportedValidityOrSubmitted;
+
+    this.#invalidEvent = undefined;
 
     const isValid = this.#internals.reportValidity();
+
+    // Unless a consumer cancelled "invalid", as a native control's message
+    // stays unshown when they do.
+    this.hasReportedValidityOrSubmitted =
+      this.#invalidEvent && isInvalidCancelled(this.#invalidEvent)
+        ? wasReported
+        : true;
 
     // So anything reading `validity.valid` renders again.
     this.requestUpdate();
@@ -421,7 +442,6 @@ export default class PinInput extends LitElement {
     );
   }
 
-  // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
   // only knows public keys.
   override updated(changes: PropertyValues) {
     const sanitized = this.#sanitize(this.value);
@@ -453,6 +473,21 @@ export default class PinInput extends LitElement {
     this.#setState('error', this.#isShowValidationFeedback);
   }
 
+  override willUpdate(changes: PropertyValues) {
+    // `custom-validity` is `setCustomValidity()` from markup. Its message shows
+    // at once, rather than once validity is reported, since it's an error the
+    // page already knows about, such as one from a server.
+    if (changes.has('customValidity')) {
+      this.setCustomValidity(this.customValidity ?? '');
+
+      if (this.customValidity) {
+        this.hasReportedValidityOrSubmitted = true;
+      }
+    }
+  }
+
+  // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
+
   // Functional styles go in here rather than in `styles`, so a subclass that
   // sets its own `styles` keeps them.
   protected static override finalizeStyles(
@@ -469,7 +504,8 @@ export default class PinInput extends LitElement {
     // On the host because the host is what's form-associated, which is also
     // why a consumer could remove this listener. Nothing better is available.
     this.addEventListener('invalid', (event) => {
-      event.preventDefault(); // So no native validation bubble is shown.
+      preventValidationBubble(event);
+      this.#invalidEvent = event;
 
       // Focus belongs to the user here unless the form was submitted, or
       // `reportValidity()` was called by something other than a blur.
@@ -481,12 +517,27 @@ export default class PinInput extends LitElement {
         return;
       }
 
+      const wasReported = this.hasReportedValidityOrSubmitted;
+
+      // The message shows now, so it's there once the control updates. Focus
+      // waits for the event's other listeners, and a consumer who cancels it
+      // keeps the message unshown and focus where it is, as with a native
+      // control.
       this.hasReportedValidityOrSubmitted = true;
 
-      // The browser ignores this when another control is the first invalid one.
-      if (this.form?.querySelector(':invalid') === this) {
-        this.focus();
-      }
+      queueMicrotask(() => {
+        if (isInvalidCancelled(event)) {
+          this.hasReportedValidityOrSubmitted = wasReported;
+
+          return;
+        }
+
+        // The browser ignores this when another control is the first invalid
+        // one.
+        if (this.form?.querySelector(':invalid') === this) {
+          this.focus();
+        }
+      });
     });
   }
 
@@ -517,6 +568,8 @@ export default class PinInput extends LitElement {
   #inputsElementRef = createRef<HTMLElement>();
 
   #internals: ElementInternals;
+
+  #invalidEvent?: Event;
 
   // Where the input's selection was before an edit, so the edit can be told
   // apart from the character that was already there. Set only by an edit

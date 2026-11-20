@@ -79,6 +79,7 @@ interface Drag {
  * input has visible focus has a `focus-visible` part for a focus ring.
  *
  * @attr {string} label - Names the group. Each thumb is named by it and its own label.
+ * @attr {string} [custom-validity] - Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid.
  * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
  * @attr {string} [end-label] - Names the end thumb, after `label`. "Maximum" in English when unset.
  * @attr {number} [end-value] - Like a native input's `value`, the attribute is the default and the property is the current value. Between `start-value` and `max`, on a step. `max` when unset.
@@ -91,6 +92,7 @@ interface Drag {
  * @attr {number} [step=1] - How far apart the values either end can take are, as a native range input's `step`.
  *
  * @slot {Element | string} [description] - Text that describes it, such as a hint or what the validity message means. It's its accessible description.
+ * @slot {Element | string} [validity-message] - Shown in place of the validity message's text while it's invalid and the message shows, for wording of your own, a translation, or a link. It's part of its accessible description, and `validationMessage` stays the browser's or `setCustomValidity()`'s.
  *
  * @csspart container - The label, the track and the description
  * @csspart description - Text about the slider, and its validity message when it has one
@@ -108,7 +110,7 @@ interface Drag {
  *
  * @fires {Event} change - When the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
  * @fires {Event} input - As the user changes its value, as a native control's does. Setting it from code doesn't dispatch it.
- * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown.
+ * @fires {Event} invalid - When a check finds its value invalid, as a native control's does. Cancel it to leave the validity message unshown, after a blur, a submit or `reportValidity()`, and focus where it is.
  *
  * @prop {number | undefined} defaultEndValue - The end value it starts with, and goes back to when its form resets. It's the `end-value` attribute, as a native input's `defaultValue` is its `value` attribute, so setting it sets the attribute, and `endValue` with it.
  * @prop {number | undefined} defaultStartValue - The start value it starts with, and goes back to when its form resets. It's the `start-value` attribute, as a native input's `defaultValue` is its `value` attribute, so setting it sets the attribute, and `startValue` with it.
@@ -288,6 +290,9 @@ export default class RangeSlider extends LitElement {
     }
   }
 
+  @property({ attribute: 'custom-validity' })
+  customValidity?: string;
+
   /** @internal Which version of Slab this is, for debugging. Not public API. */
   @property({ reflect: true })
   readonly version: string = slab.version;
@@ -460,7 +465,10 @@ export default class RangeSlider extends LitElement {
           this.#customValidity.isShowingFeedback && this.validationMessage,
           () =>
             html`<span data-test="validity-message" part="validity-message">
-              ${this.validationMessage}
+              <slot name="validity-message">
+                <!-- @type {Element | string} -->
+                ${this.validationMessage}
+              </slot>
             </span>`,
         )}
       </div>
@@ -520,7 +528,6 @@ export default class RangeSlider extends LitElement {
     this.#stepBy(toLong(count ?? 1), thumb);
   }
 
-  // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
   // only knows public keys.
   override updated(changes: PropertyValues) {
     if (changes.has('disabled') || changes.has('isFormDisabled')) {
@@ -530,6 +537,21 @@ export default class RangeSlider extends LitElement {
     this.#setState('error', this.#customValidity.isShowingFeedback);
     this.#updateFormValue();
   }
+
+  override willUpdate(changes: PropertyValues) {
+    // `custom-validity` is `setCustomValidity()` from markup. Its message shows
+    // at once, rather than once validity is reported, since it's an error the
+    // page already knows about, such as one from a server.
+    if (changes.has('customValidity')) {
+      this.#customValidity.setCustomValidity(this.customValidity ?? '');
+
+      if (this.customValidity) {
+        this.#customValidity.showFeedback();
+      }
+    }
+  }
+
+  // Untyped because `isFormDisabled` is private, and `PropertyValues<this>`
 
   // Functional styles go in here rather than in `styles`, so a subclass that
   // sets its own `styles` keeps them.

@@ -1,4 +1,5 @@
 import { defineConfig, fontProviders } from 'astro/config';
+import codeTheme from './src/lib/code-theme.ts';
 
 // The site is static, served from the root of slab-elements.dev. `site` makes
 // llms.txt's links, the canonical links and the sitemap absolute. Every
@@ -60,6 +61,11 @@ export default defineConfig({
       },
     },
   ],
+
+  // Code in a page's prose is highlighted like the rest of the site's.
+  markdown: {
+    shikiConfig: { theme: codeTheme },
+  },
 
   vite: {
     server: {
