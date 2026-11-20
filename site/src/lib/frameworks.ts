@@ -3,7 +3,8 @@
 // what differs changes: a number, like `max="10"`, is passed as one in React,
 // Vue and Svelte, since each sets a custom element's properties rather than
 // its attributes, and a string where Lit wants a number would stay a string.
-// Ember sets the attribute, as HTML does, so its markup is the HTML's.
+// Ember sets a value written in the template as an attribute, as HTML
+// does, so its markup is the HTML's.
 
 import { api, importPath } from './elements.ts';
 
@@ -156,7 +157,7 @@ ${indent(markup, 2)}
       file: `${name}.gjs`,
       lang: 'gjs',
       name: 'Ember',
-      note: 'Ember sets attributes on custom elements, and {{on}} listens for any event by its name.',
+      note: 'Ember sets attributes, and a dynamic value like {{this.max}} sets the property when the element has one. {{on}} listens for any event by its name.',
     },
     {
       code: usageCode(tags, usage),
