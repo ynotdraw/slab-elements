@@ -101,6 +101,7 @@ any reason, and its message shows.
 <slab-tabs-tab panel="Lit">Lit</slab-tabs-tab>
 <slab-tabs-tab panel="Vue">Vue</slab-tabs-tab>
 <slab-tabs-tab panel="Svelte">Svelte</slab-tabs-tab>
+<slab-tabs-tab panel="Ember">Ember</slab-tabs-tab>
 <slab-tabs-tab panel="HTML">HTML</slab-tabs-tab>
 
 <slab-tabs-panel name="React">
@@ -161,6 +162,20 @@ render() {
 
 </slab-tabs-panel>
 
+<slab-tabs-panel name="Ember">
+
+```gjs
+<template>
+  <slab-text-field label="Job name" name="job" required>
+    <span slot="validity-message">
+      Give the job a name so the crew can find it.
+    </span>
+  </slab-text-field>
+</template>
+```
+
+</slab-tabs-panel>
+
 <slab-tabs-panel name="HTML">
 
 ```html
@@ -189,6 +204,7 @@ shows. `validity` says what's wrong.
 <slab-tabs-tab panel="Lit">Lit</slab-tabs-tab>
 <slab-tabs-tab panel="Vue">Vue</slab-tabs-tab>
 <slab-tabs-tab panel="Svelte">Svelte</slab-tabs-tab>
+<slab-tabs-tab panel="Ember">Ember</slab-tabs-tab>
 <slab-tabs-tab panel="HTML">HTML</slab-tabs-tab>
 
 <slab-tabs-panel name="React">
@@ -313,6 +329,32 @@ function onInvalid(event) {
 
 </slab-tabs-panel>
 
+<slab-tabs-panel name="Ember">
+
+```gjs
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
+import { on } from '@ember/modifier';
+
+export class Email extends Component {
+  @tracked message = '';
+
+  onInvalid = (event) => {
+    this.message = event.target.validity.valueMissing
+      ? 'Enter an email so we can send the schedule.'
+      : "That doesn't look like an email. Check for typos?";
+  };
+
+  <template>
+    <slab-text-field label="Email" name="email" required type="email" {{on "invalid" this.onInvalid}}>
+      <span slot="validity-message">{{this.message}}</span>
+    </slab-text-field>
+  </template>
+}
+```
+
+</slab-tabs-panel>
+
 <slab-tabs-panel name="HTML">
 
 ```js
@@ -346,6 +388,7 @@ An empty string, or no attribute at all, makes the control valid again.
 <slab-tabs-tab panel="Lit">Lit</slab-tabs-tab>
 <slab-tabs-tab panel="Vue">Vue</slab-tabs-tab>
 <slab-tabs-tab panel="Svelte">Svelte</slab-tabs-tab>
+<slab-tabs-tab panel="Ember">Ember</slab-tabs-tab>
 <slab-tabs-tab panel="HTML">HTML</slab-tabs-tab>
 
 <slab-tabs-panel name="React">
@@ -437,6 +480,33 @@ const error = ref(props.error);
 
 </slab-tabs-panel>
 
+<slab-tabs-panel name="Ember">
+
+```gjs
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
+import { on } from '@ember/modifier';
+
+// `@error` is what your server said, such as "That email is already taken".
+export class Email extends Component {
+  @tracked error = this.args.error;
+
+  clear = () => (this.error = '');
+
+  <template>
+    <slab-text-field
+      custom-validity={{this.error}}
+      label="Email"
+      name="email"
+      type="email"
+      {{on "input" this.clear}}
+    ></slab-text-field>
+  </template>
+}
+```
+
+</slab-tabs-panel>
+
 <slab-tabs-panel name="HTML">
 
 ```html
@@ -471,6 +541,7 @@ valid again.
 <slab-tabs-tab panel="Lit">Lit</slab-tabs-tab>
 <slab-tabs-tab panel="Vue">Vue</slab-tabs-tab>
 <slab-tabs-tab panel="Svelte">Svelte</slab-tabs-tab>
+<slab-tabs-tab panel="Ember">Ember</slab-tabs-tab>
 <slab-tabs-tab panel="HTML">HTML</slab-tabs-tab>
 
 <slab-tabs-panel name="React">
@@ -594,6 +665,37 @@ function onInput() {
 
 </slab-tabs-panel>
 
+<slab-tabs-panel name="Ember">
+
+```gjs
+import Component from '@glimmer/component';
+import { on } from '@ember/modifier';
+import { modifier } from 'ember-modifier';
+
+export class Passwords extends Component {
+  #password;
+  #confirm;
+
+  password = modifier((element) => (this.#password = element));
+  confirm = modifier((element) => (this.#confirm = element));
+
+  onInput = () => {
+    this.#confirm.setCustomValidity(
+      this.#confirm.value === this.#password.value
+        ? ''
+        : "The passwords don't match.",
+    );
+  };
+
+  <template>
+    <slab-password-field label="Password" name="password" {{this.password}} {{on "input" this.onInput}}></slab-password-field>
+    <slab-password-field label="Confirm password" name="confirm" {{this.confirm}} {{on "input" this.onInput}}></slab-password-field>
+  </template>
+}
+```
+
+</slab-tabs-panel>
+
 <slab-tabs-panel name="HTML">
 
 ```js
@@ -631,6 +733,7 @@ still invalid, so `validity`, `:invalid` and a blocked submit work as usual.
 <slab-tabs-tab panel="Lit">Lit</slab-tabs-tab>
 <slab-tabs-tab panel="Vue">Vue</slab-tabs-tab>
 <slab-tabs-tab panel="Svelte">Svelte</slab-tabs-tab>
+<slab-tabs-tab panel="Ember">Ember</slab-tabs-tab>
 <slab-tabs-tab panel="HTML">HTML</slab-tabs-tab>
 
 <slab-tabs-panel name="React">
@@ -708,6 +811,20 @@ render() {
   required
   type="email"
 ></slab-text-field>
+```
+
+</slab-tabs-panel>
+
+<slab-tabs-panel name="Ember">
+
+```gjs
+import { on } from '@ember/modifier';
+
+const preventDefault = (event) => event.preventDefault();
+
+<template>
+  <slab-text-field label="Email" name="email" required type="email" {{on "invalid" preventDefault}}></slab-text-field>
+</template>
 ```
 
 </slab-tabs-panel>
