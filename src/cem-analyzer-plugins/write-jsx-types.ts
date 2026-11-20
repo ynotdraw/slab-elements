@@ -266,9 +266,19 @@ type SlabEmberValue<Value> = Value extends boolean
     ? Value | \`\${Value}\`
     : Value;
 
+// The attributes any element takes, like \`class\`, \`id\` and \`aria-*\`, from
+// Glint's own list. That list is internal to Glint, so it's read only if it's
+// there, and any attribute is allowed beside Slab's if a version of Glint
+// doesn't have it.
+type SlabEmberGlobalAttributes = GlintHtmlElementAttributesMap extends {
+  HTMLElement: infer Attributes;
+}
+  ? Attributes
+  : Record<string, unknown>;
+
 type SlabEmberElements = {
   [Tag in keyof SlabElementAttributes]: Omit<
-    GlintHtmlElementAttributesMap['HTMLElement'],
+    SlabEmberGlobalAttributes,
     keyof SlabElementAttributes[Tag]
   > & {
     [Name in keyof SlabElementAttributes[Tag]]: SlabEmberValue<
@@ -278,6 +288,8 @@ type SlabEmberElements = {
 };
 
 declare global {
+  // Merges with Glint's, so the name resolves whatever Glint's version.
+  interface GlintHtmlElementAttributesMap {}
   interface GlintCustomElementAttributesMap extends SlabEmberElements {}
 }
 `;
