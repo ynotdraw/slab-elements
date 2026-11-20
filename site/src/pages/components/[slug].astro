@@ -515,6 +515,11 @@ const tsconfig = `{
       margin: 0 0 1rem;
     }
 
+    /* Framework tabs in the prose, which FrameworkTabs.astro's script wraps. */
+    :global(.frameworks-scroll) {
+      margin-block-end: 1rem;
+    }
+
     /*
       Full width, as a table rather than a scrolling block, so its header spans
       it. Each is a Keyboard table of two columns, and the second wraps, so it
