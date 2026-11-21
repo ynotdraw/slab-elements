@@ -33,6 +33,7 @@ const tldrSections = async (
     fixes,
     fixesTitle = 'Accessibility, everywhere',
     points,
+    spotlight,
     upgradeGuide = false,
   }: Tldr,
 ) => {
@@ -41,6 +42,28 @@ const tldrSections = async (
 
   return [
     ['## TL;DR', points.map((point) => `- ${point}`).join('\n')].join('\n\n'),
+    spotlight &&
+      [
+        `## ${spotlight.title}`,
+        spotlight.lede,
+        ...[spotlight.before, spotlight.after].map(
+          ({ code, label, lang }) =>
+            `${label}:\n\n\`\`\`${lang}\n${code}\n\`\`\``,
+        ),
+        ...spotlight.examples.map(({ code, example, text, title }) =>
+          [
+            `### ${title}`,
+            text,
+            code
+              ? `\`\`\`${code.lang}\n${code.code}\n\`\`\``
+              : example &&
+                `\`\`\`html\n${example.replaceAll('slab-styled-', 'slab-')}\n\`\`\``,
+          ]
+            .filter(Boolean)
+            .join('\n\n'),
+        ),
+        fromHere(`[${spotlight.more}](${spotlight.href})`),
+      ].join('\n\n'),
     highlights.length > 0 &&
       [
         '## New components',

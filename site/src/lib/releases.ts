@@ -64,6 +64,42 @@ export interface Check {
   title: string;
 }
 
+// Code shown in a spotlight, with the label over it.
+export interface Sample {
+  code: string;
+  label: string;
+  lang: 'html' | 'js' | 'jsx';
+}
+
+// One feature of a TL;DR told at length, after the short version: how it was
+// done before, how it's done now, and examples of it, live.
+export interface Spotlight {
+  after: Sample;
+  before: Sample;
+  examples: {
+    // Shown under the example, or alone when there's nothing live. An
+    // example's own markup, headless, when it's left out.
+    code?: Sample;
+
+    // Styled markup, live.
+    example?: string;
+
+    text: string;
+    title: string;
+    wide?: boolean;
+  }[];
+
+  // The docs to read next, from the site's root.
+  href: string;
+  id: string;
+
+  // A paragraph or two, with `code` spans.
+  lede: string;
+
+  more: string;
+  title: string;
+}
+
 // A release that's too big to walk through a component at a time is a
 // TL;DR instead: its numbers, a few lines, a tile per new component, and
 // every fix a line each. The numbers are counted from the rest.
@@ -83,6 +119,8 @@ export interface Tldr {
   // A major version's breaking changes are in its upgrade guide rather than
   // in `checks`, and "Before you upgrade" links to each of its sections.
   upgradeGuide?: boolean;
+
+  spotlight?: Spotlight;
 }
 
 // A release dedicated to someone, at the top of its page.
@@ -123,7 +161,7 @@ export const announcements: Announcement[] = [
     summary:
       'Validation errors from markup, more of the native form, field and popup APIs, and Ember types.',
     intro:
-      "1.1.0 is the first release since 1.0, and it fills in more of the platform. Form controls show validation errors from markup, have the defaults and labels a native input has, and popups and fields gain the methods their native elements have. It's a minor release, so nothing needs changing.",
+      "1.1.0 is the first release since 1.0, and its headline is validation errors: every form control can now show one from markup, in your own words, with no script. It fills in more of the platform too. Form controls have the defaults and labels a native input has, and popups and fields gain the methods their native elements have. It's a minor release, so nothing needs changing.",
     tldr: {
       points: [
         '`custom-validity` and a `validity-message` slot show a validation error, in your own words, from markup.',
@@ -224,6 +262,102 @@ export const announcements: Announcement[] = [
         },
       ],
       checks: [],
+      spotlight: {
+        id: 'validation-errors',
+        title: 'Validation errors, your way',
+        lede: "1.0 gave every form control the native validation API: `required`, `pattern`, `setCustomValidity()`, `reportValidity()` and `validationMessage`, with the browser's own wording. All of that still works. But rewording an error, or showing one from your server, took script. 1.1 makes it markup: a `validity-message` slot for your own words, and a `custom-validity` attribute for an error you already know about. They work on every form control, in every framework, and the message is still the control's accessible description.",
+        before: {
+          label: '1.0: script to reword a required field',
+          lang: 'js',
+          code: `const field = document.querySelector('slab-text-field');
+
+const check = () => {
+  field.setCustomValidity('');
+
+  if (field.validity.valueMissing) {
+    field.setCustomValidity(
+      'Give the job a name so the crew can find it.',
+    );
+  }
+};
+
+check();
+field.addEventListener('input', check);`,
+        },
+        after: {
+          label: '1.1: markup',
+          lang: 'html',
+          code: `<slab-text-field label="Job name" required>
+  <span slot="validity-message">
+    Give the job a name so the crew can find it.
+  </span>
+</slab-text-field>`,
+        },
+        examples: [
+          {
+            title: 'Your own words',
+            text: "The snippet above, live. Tab into the field and away again, and your message shows in place of the browser's.",
+            example: `<slab-styled-text-field label="Job name" required>
+  <span slot="validity-message">
+    Give the job a name so the crew can find it.
+  </span>
+</slab-styled-text-field>`,
+          },
+          {
+            title: 'Errors from your server',
+            text: "`custom-validity` is `setCustomValidity()` as an attribute, so a page rendered on a server can say what's wrong. It shows at once, with no script. Set it to an empty string to clear it.",
+            example: `<slab-styled-text-field
+  label="Email"
+  type="email"
+  value="sam@example.com"
+  custom-validity="That email already has an account."
+></slab-styled-text-field>`,
+          },
+          {
+            title: 'Every control',
+            wide: true,
+            text: "Checkbox, Select and the rest of the form controls take the slot too, so a whole form's errors read the same. Tab through both and away.",
+            example: `<slab-styled-checkbox
+  label="I've read the safety notes"
+  required
+>
+  <span slot="validity-message">
+    Read the safety notes before you book.
+  </span>
+</slab-styled-checkbox>
+
+<slab-styled-select
+  label="Crew"
+  placeholder="Pick a crew"
+  required
+>
+  <slab-styled-option value="north">North</slab-styled-option>
+  <slab-styled-option value="south">South</slab-styled-option>
+  <span slot="validity-message">
+    Pick a crew for this job.
+  </span>
+</slab-styled-select>`,
+          },
+          {
+            title: 'A message for each problem',
+            text: 'The slot is markup, so it can hold a link or your page\'s own language, and you can change it. Pick the words on "invalid", which fires just before the message shows, and `validity` says what\'s wrong.',
+            code: {
+              label: 'index.js',
+              lang: 'js',
+              code: `const field = document.querySelector('slab-text-field');
+const message = field.querySelector('[slot="validity-message"]');
+
+field.addEventListener('invalid', () => {
+  message.textContent = field.validity.valueMissing
+    ? 'Enter an email so we can send the schedule.'
+    : "That doesn't look like an email. Check for typos?";
+});`,
+            },
+          },
+        ],
+        href: 'components/form/#validation',
+        more: 'Read the validation guide, in every framework',
+      },
     },
     highlights: [],
   },
