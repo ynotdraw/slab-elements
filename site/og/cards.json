@@ -354,6 +354,11 @@
     "eyebrow": "What's new",
     "heading": "1.0.0"
   },
+  "releases/1.1.0": {
+    "description": "Validation errors from markup, more of the native form, field and popup APIs, and Ember types.",
+    "eyebrow": "What's new",
+    "heading": "1.1.0"
+  },
   "showcase": {
     "description": "The same headless Slab elements under completely different designs. Each theme is one stylesheet of ::part() and :state() selectors.",
     "eyebrow": "Showcase",

@@ -21,6 +21,7 @@ const {
   fixesLede = "From an accessibility audit of every component. A line each, and the components it's in.",
   fixesTitle = 'Accessibility, everywhere',
   points,
+  spotlight,
   upgradeGuide = false,
 } = tldr;
 const published = isPublished(version);
@@ -77,6 +78,21 @@ const groups = await Promise.all(
     ),
   })),
 );
+
+// A live example's code, when it isn't given, is its markup as you'd write
+// it, with the headless tags.
+const demos = (spotlight?.examples ?? []).map((demo) => ({
+  ...demo,
+  code:
+    demo.code ??
+    (demo.example
+      ? {
+          code: demo.example.replaceAll('slab-styled-', 'slab-'),
+          label: 'index.html',
+          lang: 'html' as const,
+        }
+      : undefined),
+}));
 
 const fixed = new Set(fixes.flatMap((group) => group.fixes.flatMap((fix) => fix.components)));
 
@@ -146,6 +162,34 @@ const stats = [
     <h2 id="short"><span class="label">TL;DR</span> The short version</h2>
     <ol>{points.map((point) => <li><span set:html={inline(point)} /></li>)}</ol>
   </section>
+
+  {
+    spotlight && (
+      <section aria-labelledby={spotlight.id} class="block spotlight">
+        <h2 id={spotlight.id}>{spotlight.title}</h2>
+        <p class="lede" set:html={inline(spotlight.lede)} />
+        <div class="diff">
+          <CodeBlock {...spotlight.before} />
+          <CodeBlock {...spotlight.after} />
+        </div>
+        <ul class="demos">
+          {demos.map(({ code, example, text, title, wide }) => (
+            <li class:list={['demo', { wide: wide ?? !example }]}>
+              {example && <div class="stage" set:html={example} />}
+              <div class="caption">
+                <h3>{title}</h3>
+                <p set:html={inline(text)} />
+              </div>
+              {code && <CodeBlock {...code} />}
+            </li>
+          ))}
+        </ul>
+        <p>
+          <a class="more" href={`${base}${spotlight.href}`}>{spotlight.more}</a>
+        </p>
+      </section>
+    )
+  }
 
   {
     tiles.length > 0 && (
@@ -574,6 +618,63 @@ const stats = [
     &::after {
       content: ' →';
     }
+  }
+
+  .spotlight {
+    background-color: var(--paper);
+    border: 3px solid var(--ink);
+    border-block-start: 10px solid var(--ember);
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+
+    > p {
+      margin: 0;
+    }
+  }
+
+  .demos {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1fr);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  @media (width >= 48rem) {
+    .demos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* A wide example with its code beside it. */
+    .demo.wide:has(.stage) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: auto 1fr;
+
+      .stage {
+        border-inline-end: 3px solid var(--ink);
+      }
+
+      > :global(.code) {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+      }
+    }
+  }
+
+  .demo {
+    border: 3px solid var(--ink);
+    display: grid;
+    min-inline-size: 0;
+
+    .caption {
+      align-content: start;
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* The code fills what's left, so tiles side by side end together. */
+  .demo:has(.stage) {
+    grid-template-rows: auto auto 1fr;
   }
 
   .additions {
