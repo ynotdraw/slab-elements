@@ -6,7 +6,6 @@ import ShowcaseCards from '../components/ShowcaseCards.astro';
 import Base from '../layouts/Base.astro';
 import { comparisons } from '../lib/compare.ts';
 import { componentsByGroup, description } from '../lib/index-markdown.ts';
-import { inline } from '../lib/prose.ts';
 
 const base = import.meta.env.BASE_URL;
 const components = (await componentsByGroup()).flatMap(({ components }) => components);
@@ -316,7 +315,7 @@ const scoped = (id: string, css: string) =>
       <p aria-live="polite" class="visually-hidden" data-copy-status></p>
 
       <div class="ctas">
-        <a class="button button--primary" href={`${base}components/`}>Browse the components</a>
+        <a class="button button--primary" href={`${base}components/`}>Browse all {components.length} components</a>
         <a class="button" href="#usage">See how it works</a>
       </div>
     </div>
@@ -430,39 +429,6 @@ const scoped = (id: string, css: string) =>
     <FrameworkTabs frameworks={frameworks} />
   </section>
 
-  <section aria-labelledby="elements" class="elements">
-    <div class="elements-heading">
-      <h2 id="elements">{components.length} elements</h2>
-    </div>
-    <ul class="element-grid">
-      {
-        components.map((component) => (
-          <li>
-            <a href={`${base}components/${component.id}/`}>
-              <span>&lt;{component.data.tags[0]}&gt;</span>
-              <span set:html={inline(component.data.element)} />
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
-
-  <section aria-labelledby="showcase-heading" class="showcase" id="showcase">
-    <div class="looks-intro">
-      <p class="eyebrow">Showcase</p>
-      <h2 id="showcase-heading">Not convinced?</h2>
-      <p>
-        Here are the same elements dressed up four very different ways. No
-        forks, no tokens, just one stylesheet each.
-      </p>
-    </div>
-
-    <ShowcaseCards />
-
-    <a class="button" href={`${base}showcase/`}>See the showcase</a>
-  </section>
-
   <section aria-labelledby="compare-heading" class="compare" id="compare">
     <div class="looks-intro">
       <p class="eyebrow">How it compares</p>
@@ -486,6 +452,21 @@ const scoped = (id: string, css: string) =>
         ))
       }
     </ul>
+  </section>
+
+  <section aria-labelledby="showcase-heading" class="showcase" id="showcase">
+    <div class="looks-intro">
+      <p class="eyebrow">Showcase</p>
+      <h2 id="showcase-heading">Not convinced?</h2>
+      <p>
+        Here are the same elements dressed up four very different ways. No
+        forks, no tokens, just one stylesheet each.
+      </p>
+    </div>
+
+    <ShowcaseCards />
+
+    <a class="button" href={`${base}showcase/`}>See the showcase</a>
   </section>
 
   <section aria-labelledby="cta" class="cta">
@@ -979,82 +960,6 @@ const scoped = (id: string, css: string) =>
       font-size: 1.125rem;
       margin: 0;
       max-inline-size: 42ch;
-    }
-  }
-
-  .elements {
-    border-block-end: 3px solid var(--ink);
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 2.875rem var(--gutter);
-  }
-
-  .elements-heading {
-    align-items: flex-end;
-    border-block-end: 4px solid var(--ink);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 1.25rem;
-    padding-block-end: 1.125rem;
-
-    h2 {
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 600;
-      letter-spacing: -0.03em;
-      line-height: 1;
-      margin: 0;
-    }
-  }
-
-  .element-grid {
-    border-block-start: 1px solid var(--ink);
-    border-inline-start: 1px solid var(--ink);
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr));
-    list-style: none;
-    margin: 0;
-    padding: 0;
-
-    li {
-      border-block-end: 1px solid var(--ink);
-      border-inline-end: 1px solid var(--ink);
-    }
-
-    a {
-      background-color: var(--paper);
-      block-size: 100%;
-      display: flex;
-      flex-direction: column;
-      font-family: var(--font-mono);
-      gap: 0.4375rem;
-      padding: 0.9375rem 1.125rem;
-      text-decoration: none;
-
-      &:hover {
-        background-color: var(--ink);
-        color: var(--paper);
-
-        span:last-child {
-          color: var(--dim);
-        }
-      }
-
-      &:focus-visible {
-        outline-offset: -3px;
-      }
-    }
-
-    span:first-child {
-      font-size: 0.8125rem;
-      font-weight: 500;
-      overflow-wrap: anywhere;
-    }
-
-    span:last-child {
-      color: var(--muted);
-      font-size: 0.6875rem;
-      letter-spacing: 0.06em;
     }
   }
 

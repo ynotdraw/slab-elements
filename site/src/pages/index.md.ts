@@ -38,12 +38,6 @@ slab-switch:state(checked)::part(input) {
     "That's what headless means: Slab handles how it works, and you decide how it looks.",
     '## Usage',
     usage,
-    `## ${count} elements`,
-    `Every one has its own page. [Components](components.md) lists them all, grouped.`,
-    ...byGroup.map(
-      ({ components, group }) =>
-        `- **${group}:** ${components.map((component) => `[${component.data.title}](components/${component.id}.md)`).join(', ')}`,
-    ),
     '## How it compares',
     comparisons
       .map(
@@ -51,6 +45,8 @@ slab-switch:state(checked)::part(input) {
           `- [${title}](compare/${slug}.md): ${summary}`,
       )
       .join('\n'),
+    '## Components',
+    `Slab has ${count} components, each with its own page. [Components](components.md) lists them all, grouped.`,
   ].join('\n\n');
 
   return new Response(`${markdown}\n`, {
