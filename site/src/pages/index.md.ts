@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { comparisons } from '../lib/compare.ts';
 import {
   componentsByGroup,
   description,
@@ -43,6 +44,13 @@ slab-switch:state(checked)::part(input) {
       ({ components, group }) =>
         `- **${group}:** ${components.map((component) => `[${component.data.title}](components/${component.id}.md)`).join(', ')}`,
     ),
+    '## How it compares',
+    comparisons
+      .map(
+        ({ slug, summary, title }) =>
+          `- [${title}](compare/${slug}.md): ${summary}`,
+      )
+      .join('\n'),
   ].join('\n\n');
 
   return new Response(`${markdown}\n`, {

@@ -4,6 +4,7 @@ import FrameworkTabs from '../components/FrameworkTabs.astro';
 import Logo from '../components/Logo.astro';
 import ShowcaseCards from '../components/ShowcaseCards.astro';
 import Base from '../layouts/Base.astro';
+import { comparisons } from '../lib/compare.ts';
 import { componentsByGroup, description } from '../lib/index-markdown.ts';
 import { inline } from '../lib/prose.ts';
 
@@ -460,6 +461,31 @@ const scoped = (id: string, css: string) =>
     <ShowcaseCards />
 
     <a class="button" href={`${base}showcase/`}>See the showcase</a>
+  </section>
+
+  <section aria-labelledby="compare-heading" class="compare" id="compare">
+    <div class="looks-intro">
+      <p class="eyebrow">How it compares</p>
+      <h2 id="compare-heading">Weighing your options?</h2>
+      <p>
+        There are a lot of great headless libraries out there. Here's how Slab
+        stacks up against them, and when one of them is the better pick.
+      </p>
+    </div>
+
+    <ul class="compare-grid">
+      {
+        comparisons.map(({ slug, summary, title }) => (
+          <li>
+            <a href={`${base}compare/${slug}/`}>
+              <span class="compare-title">{title}</span>
+              <span class="compare-summary">{summary}</span>
+              <span class="compare-more">Read the comparison</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
   </section>
 
   <section aria-labelledby="cta" class="cta">
@@ -1042,6 +1068,59 @@ const scoped = (id: string, css: string) =>
     > :global(.cards) {
       inline-size: 100%;
     }
+  }
+
+  .compare {
+    border-block-end: 3px solid var(--ink);
+    display: grid;
+    gap: 2rem;
+    padding: 2.875rem var(--gutter);
+  }
+
+  .compare-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    a {
+      background-color: var(--paper);
+      block-size: 100%;
+      border: 3px solid var(--ink);
+      box-shadow: 6px 6px 0 var(--ink);
+      box-sizing: border-box;
+      display: grid;
+      gap: 0.75rem;
+      grid-template-rows: auto 1fr auto;
+      padding: 1.5rem 1.25rem;
+      text-decoration: none;
+      transition: box-shadow 150ms ease-out;
+
+      &:hover {
+        background-color: var(--paper);
+        box-shadow: 6px 6px 0 var(--ember);
+        color: var(--ink);
+      }
+    }
+  }
+
+  .compare-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .compare-summary {
+    line-height: 1.5;
+  }
+
+  .compare-more {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
   }
 
   .cta {
