@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import * as accessibility from '../lib/accessibility.ts';
+import { comparisons } from '../lib/compare.ts';
 import * as getStarted from '../lib/get-started.ts';
 import * as llms from '../lib/llms.ts';
 import { showcases } from '../lib/showcases.ts';
@@ -36,6 +37,7 @@ export const GET: APIRoute = async () => {
     { guide: upgrade, path: 'upgrade/' },
     { guide: accessibility, path: 'accessibility/' },
     { guide: llms, path: 'llms/' },
+    ...comparisons.map((guide) => ({ guide, path: `compare/${guide.slug}/` })),
   ];
 
   const entries: SearchEntry[] = [

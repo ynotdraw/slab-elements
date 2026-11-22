@@ -4,6 +4,16 @@
     "eyebrow": "Guide",
     "heading": "Accessibility"
   },
+  "compare/react-aria": {
+    "description": "All of them leave the design to you. React Aria, Radix and Base UI are built for React. Slab works anywhere HTML does.",
+    "eyebrow": "Compare",
+    "heading": "Slab vs React Aria, Radix and Base UI"
+  },
+  "compare/web-awesome": {
+    "description": "All three are custom elements that work in any framework. The difference is the design: theirs come with one, and Slab leaves it to you.",
+    "eyebrow": "Compare",
+    "heading": "Slab vs Web Awesome and Shoelace"
+  },
   "components": {
     "description": "All 60 of Slab's headless Web Components, each built on a native element.",
     "eyebrow": "Components",

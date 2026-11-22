@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { comparisons } from '../lib/compare.ts';
 import { componentsByGroup, description } from '../lib/index-markdown.ts';
 
 // The llms.txt proposal (https://llmstxt.org): an H1, a blockquote summary,
@@ -21,7 +22,7 @@ export const GET: APIRoute = async ({ site }) => {
       "Each component's page also shows a styled version, `<slab-styled-*>`. That's not in the package — it's an example to copy into a project and make your own, and the page includes its source.",
       `For a coding agent, the package includes an agent skill at \`skills/slab\`. Add it with \`npx skills add ynotdraw/slab-elements --skill slab\`. [LLMs and agents](${url('llms.md')}) has more.`,
     ].join('\n\n'),
-    `## Docs\n\n- [Introduction](${url('index.md')}): what Slab is, and how to install, use, and style it\n- [Get started](${url('get-started.md')}): installing, importing, frameworks, servers, forms, styling, subclassing, translating, TypeScript, testing, browsers, sizes, and how it compares\n- [Upgrade to 1.0](${url('upgrade.md')}): every breaking change since 0.1, and what to change for it\n- [Accessibility](${url('accessibility.md')}): what Slab does for accessibility, how it's tested, and what hasn't been checked yet\n- [LLMs and agents](${url('llms.md')}): the agent skill in the package, and how to add it to your coding agent\n- [Components](${url('components.md')}): every element, grouped\n- [Releases](${url('releases.md')}): every version and what changed in it`,
+    `## Docs\n\n- [Introduction](${url('index.md')}): what Slab is, and how to install, use, and style it\n- [Get started](${url('get-started.md')}): installing, importing, frameworks, servers, forms, styling, subclassing, translating, TypeScript, testing, browsers, sizes, and how it compares\n- [Upgrade to 1.0](${url('upgrade.md')}): every breaking change since 0.1, and what to change for it\n- [Accessibility](${url('accessibility.md')}): what Slab does for accessibility, how it's tested, and what hasn't been checked yet\n- [LLMs and agents](${url('llms.md')}): the agent skill in the package, and how to add it to your coding agent\n${comparisons.map(({ slug, summary, title }) => `- [${title}](${url(`compare/${slug}.md`)}): ${summary}\n`).join('')}- [Components](${url('components.md')}): every element, grouped\n- [Releases](${url('releases.md')}): every version and what changed in it`,
     ...byGroup.map(
       ({ components, group }) =>
         `## ${group}\n\n${components

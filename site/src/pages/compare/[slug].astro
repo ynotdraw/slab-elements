@@ -1,0 +1,22 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Guide from '../../components/Guide.astro';
+import { type Comparison, comparisons } from '../../lib/compare.ts';
+
+export const getStaticPaths = (() =>
+  comparisons.map((comparison) => ({
+    params: { slug: comparison.slug },
+    props: { comparison },
+  }))) satisfies GetStaticPaths;
+
+const { comparison } = Astro.props as { comparison: Comparison };
+const { sections, slug, summary, title } = comparison;
+---
+
+<Guide
+  eyebrow="Compare"
+  markdown={`compare/${slug}.md`}
+  sections={sections}
+  summary={summary}
+  title={title}
+/>

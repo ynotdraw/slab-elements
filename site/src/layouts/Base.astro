@@ -35,6 +35,70 @@ const page = Astro.url.pathname.slice(base.length).replace(/\/$/, '') || 'index'
 // runs from the site's root, where `public` is.
 const card = existsSync(`public/og/${page}.png`) ? page : 'index';
 const image = new URL(`${base}og/${card}.png`, Astro.site);
+
+// Structured data, for search engines. Every page says where it sits, as a
+// trail of links from the home page that search results can show in place of
+// its address. A page in a section with a page of its own, like a component's,
+// has that section in the middle. The home page says what the site is, and
+// what Slab is: the site's name is shown beside its results.
+const home = new URL(base, Astro.site).href;
+const sections: Record<string, string> = {
+  components: 'Components',
+  releases: 'Releases',
+  showcase: 'Showcase',
+};
+const [section = ''] = page.split('/');
+
+const structuredData =
+  page === 'index'
+    ? [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: 'Slab',
+          alternateName: 'slab-elements',
+          url: home,
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareSourceCode',
+          name: 'Slab',
+          description,
+          url: home,
+          codeRepository: github,
+          programmingLanguage: ['TypeScript', 'JavaScript'],
+          runtimePlatform: 'Web browsers',
+          license: 'https://www.apache.org/licenses/LICENSE-2.0',
+          version,
+          author: { '@type': 'Person', name: 'Tony Ward' },
+        },
+      ]
+    : [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { name: 'Slab', url: home },
+            ...(page.includes('/') && sections[section]
+              ? [
+                  {
+                    name: sections[section],
+                    url: new URL(`${base}${section}/`, Astro.site).href,
+                  },
+                ]
+              : []),
+            { name: title.replace(/ · Slab$/, ''), url: canonical.href },
+          ].map(({ name, url }, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            name,
+            item: url,
+          })),
+        },
+      ];
+
+// As JSON in a script element, where "</script>" in the text would end it.
+const json = JSON.stringify(structuredData).replaceAll('<', String.raw`\u003c`);
 ---
 
 <!doctype html>
@@ -58,6 +122,7 @@ const image = new URL(`${base}og/${card}.png`, Astro.site);
     <meta content={title} name="twitter:title" />
     <meta content={description} name="twitter:description" />
     <meta content={image} name="twitter:image" />
+    <script is:inline set:html={json} type="application/ld+json" />
     {
       markdown && (
         <link

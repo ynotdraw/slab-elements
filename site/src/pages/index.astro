@@ -4,8 +4,8 @@ import FrameworkTabs from '../components/FrameworkTabs.astro';
 import Logo from '../components/Logo.astro';
 import ShowcaseCards from '../components/ShowcaseCards.astro';
 import Base from '../layouts/Base.astro';
+import { comparisons } from '../lib/compare.ts';
 import { componentsByGroup, description } from '../lib/index-markdown.ts';
-import { inline } from '../lib/prose.ts';
 
 const base = import.meta.env.BASE_URL;
 const components = (await componentsByGroup()).flatMap(({ components }) => components);
@@ -315,7 +315,7 @@ const scoped = (id: string, css: string) =>
       <p aria-live="polite" class="visually-hidden" data-copy-status></p>
 
       <div class="ctas">
-        <a class="button button--primary" href={`${base}components/`}>Browse the components</a>
+        <a class="button button--primary" href={`${base}components/`}>Browse all {components.length} components</a>
         <a class="button" href="#usage">See how it works</a>
       </div>
     </div>
@@ -337,12 +337,12 @@ const scoped = (id: string, css: string) =>
         <p class="layer-label">Slab custom elements</p>
         <div class="slab">
           <div class="course">
-            <span>State</span>
+            <span>State · events</span>
             <span>ARIA</span>
           </div>
           <div class="course course--staggered">
-            <span>Keys</span>
-            <span>Focus · forms</span>
+            <span>Keys · focus</span>
+            <span>Forms · validation</span>
           </div>
           <span class="base">Native HTML elements</span>
         </div>
@@ -429,17 +429,24 @@ const scoped = (id: string, css: string) =>
     <FrameworkTabs frameworks={frameworks} />
   </section>
 
-  <section aria-labelledby="elements" class="elements">
-    <div class="elements-heading">
-      <h2 id="elements">{components.length} elements</h2>
+  <section aria-labelledby="compare-heading" class="compare" id="compare">
+    <div class="looks-intro">
+      <p class="eyebrow">How it compares</p>
+      <h2 id="compare-heading">Weighing your options?</h2>
+      <p>
+        There are a lot of great headless libraries out there. Here's how Slab
+        stacks up against them, and when one of them is the better pick.
+      </p>
     </div>
-    <ul class="element-grid">
+
+    <ul class="compare-grid">
       {
-        components.map((component) => (
+        comparisons.map(({ slug, summary, title }) => (
           <li>
-            <a href={`${base}components/${component.id}/`}>
-              <span>&lt;{component.data.tags[0]}&gt;</span>
-              <span set:html={inline(component.data.element)} />
+            <a href={`${base}compare/${slug}/`}>
+              <span class="compare-title">{title}</span>
+              <span class="compare-summary">{summary}</span>
+              <span class="compare-more">Read the comparison</span>
             </a>
           </li>
         ))
@@ -956,82 +963,6 @@ const scoped = (id: string, css: string) =>
     }
   }
 
-  .elements {
-    border-block-end: 3px solid var(--ink);
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 2.875rem var(--gutter);
-  }
-
-  .elements-heading {
-    align-items: flex-end;
-    border-block-end: 4px solid var(--ink);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 1.25rem;
-    padding-block-end: 1.125rem;
-
-    h2 {
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 600;
-      letter-spacing: -0.03em;
-      line-height: 1;
-      margin: 0;
-    }
-  }
-
-  .element-grid {
-    border-block-start: 1px solid var(--ink);
-    border-inline-start: 1px solid var(--ink);
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr));
-    list-style: none;
-    margin: 0;
-    padding: 0;
-
-    li {
-      border-block-end: 1px solid var(--ink);
-      border-inline-end: 1px solid var(--ink);
-    }
-
-    a {
-      background-color: var(--paper);
-      block-size: 100%;
-      display: flex;
-      flex-direction: column;
-      font-family: var(--font-mono);
-      gap: 0.4375rem;
-      padding: 0.9375rem 1.125rem;
-      text-decoration: none;
-
-      &:hover {
-        background-color: var(--ink);
-        color: var(--paper);
-
-        span:last-child {
-          color: var(--dim);
-        }
-      }
-
-      &:focus-visible {
-        outline-offset: -3px;
-      }
-    }
-
-    span:first-child {
-      font-size: 0.8125rem;
-      font-weight: 500;
-      overflow-wrap: anywhere;
-    }
-
-    span:last-child {
-      color: var(--muted);
-      font-size: 0.6875rem;
-      letter-spacing: 0.06em;
-    }
-  }
-
   .showcase {
     border-block-end: 3px solid var(--ink);
     display: grid;
@@ -1042,6 +973,59 @@ const scoped = (id: string, css: string) =>
     > :global(.cards) {
       inline-size: 100%;
     }
+  }
+
+  .compare {
+    border-block-end: 3px solid var(--ink);
+    display: grid;
+    gap: 2rem;
+    padding: 2.875rem var(--gutter);
+  }
+
+  .compare-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    a {
+      background-color: var(--paper);
+      block-size: 100%;
+      border: 3px solid var(--ink);
+      box-shadow: 6px 6px 0 var(--ink);
+      box-sizing: border-box;
+      display: grid;
+      gap: 0.75rem;
+      grid-template-rows: auto 1fr auto;
+      padding: 1.5rem 1.25rem;
+      text-decoration: none;
+      transition: box-shadow 150ms ease-out;
+
+      &:hover {
+        background-color: var(--paper);
+        box-shadow: 6px 6px 0 var(--ember);
+        color: var(--ink);
+      }
+    }
+  }
+
+  .compare-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .compare-summary {
+    line-height: 1.5;
+  }
+
+  .compare-more {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
   }
 
   .cta {
