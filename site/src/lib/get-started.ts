@@ -289,8 +289,16 @@ import type {} from 'slab-elements/react.js';`,
         title: 'Only what you import',
         text: 'Each element is its own module and only a few kilobytes. See [What it weighs](get-started/#size) for the numbers.',
       },
+      {
+        title: 'Slab vs Web Awesome and Shoelace',
+        text: 'Custom elements too, with a design of their own. [See how they compare](compare/web-awesome/).',
+      },
+      {
+        title: 'Slab vs React Aria, Radix and Base UI',
+        text: 'Headless too, and built for React. [See how they compare](compare/react-aria/).',
+      },
     ],
-    coda: "It's not all free, though. An element is empty markup until its script runs, where a React library can render on the server. Slab needs the [browsers](get-started/#browsers) above, with no fallbacks for older ones. And you style through `::part()` and `:state()` rather than class names, so utility classes reach an element's host and what you slot into it, but not its insides. For more, see [Slab vs Web Awesome and Shoelace](compare/web-awesome/) and [Slab vs React Aria, Radix and Base UI](compare/react-aria/).",
+    coda: "It's not all free, though. An element is empty markup until its script runs, where a React library can render on the server. Slab needs the [browsers](get-started/#browsers) above, with no fallbacks for older ones. And you style through `::part()` and `:state()` rather than class names, so utility classes reach an element's host and what you slot into it, but not its insides.",
   },
 ];
 
