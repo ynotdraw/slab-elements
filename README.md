@@ -9,6 +9,8 @@ Headless Web Components · [slab-elements.dev](https://slab-elements.dev)
 
 [![Build status](https://img.shields.io/github/check-runs/ynotdraw/slab-elements/main)](https://github.com/ynotdraw/slab-elements/actions?query=branch%3Amain)
 [![NPM version](https://img.shields.io/npm/v/slab-elements)](https://www.npmjs.com/package/slab-elements)
+[![NPM downloads](https://img.shields.io/npm/dm/slab-elements)](https://www.npmjs.com/package/slab-elements)
+[![License](https://img.shields.io/github/license/ynotdraw/slab-elements)](LICENSE)
 
 </div>
 
@@ -17,6 +19,21 @@ handling, ARIA, form participation, and events. Every component is built on the
 native element it corresponds to, so it inherits that element's semantics
 rather than reimplementing them. The design is yours, through `::part()` and
 `:state()`.
+
+[![Four apps built from the same Slab elements: a neon cyberpunk console, a finance dashboard, a pottery class booking form and a pixel-art RPG battle](.github/readme/showcase.png)](https://slab-elements.dev/showcase/)
+
+The four apps above use the same elements, each styled by one stylesheet of
+`::part()` and `:state()` selectors. [Try them](https://slab-elements.dev/showcase/).
+
+- **60 components**, from Checkbox and Dialog to Combobox, Calendar, Tree and
+  Command Palette.
+- **Any framework, or none.** One package works in React, Vue, Svelte, Ember, a
+  server-rendered template or a plain HTML file, with types for each.
+- **Forms without glue.** The controls are form-associated, so a `<form>`
+  submits, validates and resets them.
+- **What you already know.** Events, methods and validation work the way
+  `<input>` and `<dialog>` do.
+- **Only what you import.** Each element is its own module and a few kilobytes.
 
 The [docs](https://slab-elements.dev) have every component, each with a styled
 example to copy, and a [guide to getting started](https://slab-elements.dev/get-started/).
