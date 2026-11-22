@@ -1,7 +1,7 @@
 ---
 // A guide page: numbered sections, each with text, maybe code, and maybe more
 // text after it, beside a sidebar of its sections. Get started and Upgrade to
-// 1.0 are both one.
+// 1.0 are both one, and so is each comparison.
 import { type Section, html } from '../lib/get-started.ts';
 import Base from '../layouts/Base.astro';
 import CodeBlock from './CodeBlock.astro';
@@ -9,6 +9,9 @@ import PageActions from './PageActions.astro';
 import Sidebar from './Sidebar.astro';
 
 type Props = {
+  // Above the title. "Guide" unless it's given.
+  eyebrow?: string;
+
   // The page's Markdown twin, such as "get-started.md".
   markdown: string;
   sections: Section[];
@@ -16,7 +19,7 @@ type Props = {
   title: string;
 };
 
-const { markdown, sections, summary, title } = Astro.props;
+const { eyebrow = 'Guide', markdown, sections, summary, title } = Astro.props;
 const base = import.meta.env.BASE_URL;
 
 // The sections, as the sidebar's one group.
@@ -35,7 +38,7 @@ const sidebar = [
 
     <article class="doc">
       <header class="intro">
-        <p class="eyebrow">Guide</p>
+        <p class="eyebrow">{eyebrow}</p>
         <h1>{title}</h1>
         <p>{summary}</p>
         <PageActions markdown={markdown} />

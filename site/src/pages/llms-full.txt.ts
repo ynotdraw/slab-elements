@@ -1,7 +1,9 @@
 import type { APIContext, APIRoute } from 'astro';
+import { comparisons } from '../lib/compare.ts';
 import { componentsByGroup, description } from '../lib/index-markdown.ts';
 import { announcements } from '../lib/releases.ts';
 import { GET as accessibility } from './accessibility.md.ts';
+import { GET as comparison } from './compare/[slug].md.ts';
 import { GET as componentsIndex } from './components.md.ts';
 import { GET as component } from './components/[slug].md.ts';
 import { GET as getStarted } from './get-started.md.ts';
@@ -42,6 +44,9 @@ export const GET: APIRoute = async ({ site }) => {
     twin(upgrade, 'upgrade.md'),
     twin(accessibility, 'accessibility.md'),
     twin(llms, 'llms.md'),
+    ...comparisons.map((entry) =>
+      twin(comparison, `compare/${entry.slug}.md`, { comparison: entry }),
+    ),
     twin(componentsIndex, 'components.md'),
     ...byGroup.flatMap(({ components }) =>
       components.map(async (entry) => {
