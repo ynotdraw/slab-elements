@@ -20,7 +20,14 @@
     "web-components",
     "custom-elements",
     "headless",
+    "unstyled",
     "accessibility",
+    "a11y",
+    "aria",
+    "form-associated",
+    "components",
+    "ui-components",
+    "design-system",
     "lit"
   ],
   "files": [
