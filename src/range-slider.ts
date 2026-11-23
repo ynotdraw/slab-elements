@@ -727,13 +727,9 @@ export default class RangeSlider extends LitElement {
       const value = this.#valueAt(event.clientX, track);
 
       const nearest =
-        value < start
+        value < start || (value <= end && value - start <= end - value)
           ? 'start'
-          : value > end
-            ? 'end'
-            : value - start <= end - value
-              ? 'start'
-              : 'end';
+          : 'end';
 
       drag = { end, position: event.clientX, start, thumb: nearest, value };
       this.#moveTo(nearest, value);

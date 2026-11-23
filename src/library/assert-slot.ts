@@ -136,11 +136,7 @@ class AssertSlot extends Directive {
                   // `slotted`, then it's filtered out so `isAllowed` doesn't result in a false
                   // positive. This doesn't mean that a slot can't contain `Text` node. It just
                   // means the presence of a `Text` node isn't enough to satisfy the requirements.
-                  return node instanceof Text && slotted.includes(Text)
-                    ? true
-                    : node instanceof Text
-                      ? false
-                      : true;
+                  return !(node instanceof Text) || slotted.includes(Text);
                 });
 
               // If `nodes` is empty after filtering, then the slot only contains `Text`

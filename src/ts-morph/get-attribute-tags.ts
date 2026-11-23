@@ -13,17 +13,14 @@ export default (
   const attributes = [...declaration.attributes].toSorted((a, b) => {
     // First required attributes sorted alphabetically. Then optional ones
     // alphabetically.
-    return 'required' in a && 'required' in b && a.name < b.name
-      ? -1
-      : 'required' in a && 'required' in b
-        ? 1
-        : 'required' in a
-          ? -1
-          : 'required' in b
-            ? 1
-            : a.name < b.name
-              ? -1
-              : 1;
+    const isARequired = 'required' in a;
+    const isBRequired = 'required' in b;
+
+    if (isARequired !== isBRequired) {
+      return isARequired ? -1 : 1;
+    }
+
+    return a.name < b.name ? -1 : 1;
   });
 
   for (const [index, attribute] of attributes.entries()) {
