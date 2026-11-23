@@ -51,12 +51,12 @@ export default (context: Context) => {
             const isSummaryPageLinkToDetailPage =
               typeof target !== 'string' && targetPath !== 'index.html';
 
-            return isSummaryPageAssetReference || isSummaryPageLinkToDetailPage
-              ? path.posix.relative(
-                  sourcePath,
-                  `${coverageReporterOutputDirectory}/${targetPath}`,
-                )
-              : path.posix.relative(sourcePath, targetPath);
+            return path.posix.relative(
+              sourcePath,
+              isSummaryPageAssetReference || isSummaryPageLinkToDetailPage
+                ? `${coverageReporterOutputDirectory}/${targetPath}`
+                : targetPath,
+            );
           },
           assetPath(node, name) {
             return this.relativePath(this.getPath(node), name);
