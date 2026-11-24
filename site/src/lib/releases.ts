@@ -161,14 +161,14 @@ export const announcements: Announcement[] = [
     summary:
       'Validation errors from markup, more of the native form, field and popup APIs, and Ember types.',
     intro:
-      "1.1.0 is the first release since 1.0, and its headline is validation errors: every form control can now show one from markup, in your own words, with no script. It fills in more of the platform too. Form controls have the defaults and labels a native input has, and popups and fields gain the methods their native elements have. It's a minor release, so nothing needs changing.",
+      "1.1.0 is the first release since 1.0, and its headline is validation errors: every form control can now show one from markup, in your own words, with no script. It fills in more of the platform too. Form controls have the defaults and labels a native input has, and popups and fields gain the methods their native elements have. It's a minor release, so nothing needs changing, unless you worked around one of its fixes.",
     tldr: {
       points: [
         '`custom-validity` and a `validity-message` slot show a validation error, in your own words, from markup.',
-        'Every form control has `defaultValue` or `defaultChecked`, and `labels`, and an outside `<label>` works as it does for a native one.',
+        'Form controls have `defaultValue` or `defaultChecked` where a native input does, every one has `labels`, and an outside `<label>` works as it does for a native one.',
         '`toggle(force)`, `showPicker()`, `stepUp()` and `setRangeText()` are on the components whose native elements have them.',
         'Ember templates are type-checked with Glint, and every component page shows its usage in Ember.',
-        'Nothing to change: every addition adds to what you have.',
+        'Nothing to change: the additions add to what you have, and the fixes make outside labels and a cancelled "invalid" work as they do natively.',
       ],
       additions: [
         {
@@ -184,7 +184,7 @@ export const announcements: Announcement[] = [
         {
           title: 'Default values',
           href: 'components/form/#resetting',
-          text: 'Form controls have `defaultValue`, and Checkbox, Switch and Radio have `defaultChecked`, as native inputs do: the value a form resets to.',
+          text: 'Form controls have `defaultValue`, Checkbox, Switch and Radio have `defaultChecked`, and Option has `defaultSelected`, as native inputs and options do: what a form resets to. Range Slider and Date Range Field have `defaultStartValue` and `defaultEndValue`.',
         },
         {
           title: 'Labels',
@@ -265,7 +265,7 @@ export const announcements: Announcement[] = [
       spotlight: {
         id: 'validation-errors',
         title: 'Validation errors, your way',
-        lede: "1.0 gave every form control the native validation API: `required`, `pattern`, `setCustomValidity()`, `reportValidity()` and `validationMessage`, with the browser's own wording. All of that still works. But rewording an error, or showing one from your server, took script. 1.1 makes it markup: a `validity-message` slot for your own words, and a `custom-validity` attribute for an error you already know about. They work on every form control, in every framework, and the message is still the control's accessible description.",
+        lede: "1.0 gave every form control the native validation API, `setCustomValidity()`, `reportValidity()` and `validationMessage`, with `required` and `pattern` where a native control has them, and the browser's own wording. All of that still works. But rewording an error, or showing one from your server, took script. 1.1 makes it markup: a `validity-message` slot for your own words, and a `custom-validity` attribute for an error you already know about. They work on every form control, in every framework, and the message is still the control's accessible description.",
         before: {
           label: '1.0: script to reword a required field',
           lang: 'js',

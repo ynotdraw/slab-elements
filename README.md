@@ -17,7 +17,8 @@ Headless Web Components · [slab-elements.dev](https://slab-elements.dev)
 Slab ships behavior and nothing about how it looks: keyboard and focus
 handling, ARIA, form participation, and events. Every component is built on the
 native element it corresponds to, so it inherits that element's semantics
-rather than reimplementing them. The design is yours, through `::part()` and
+rather than reimplementing them. Only where the platform has no element for the
+job does it use an ARIA role instead. The design is yours, through `::part()` and
 `:state()`.
 
 [![Four apps built from the same Slab elements: a neon cyberpunk console, a finance dashboard, a pottery class booking form and a pixel-art RPG battle](.github/readme/showcase.png)](https://slab-elements.dev/showcase/)
@@ -99,8 +100,9 @@ customElements.define(
 Every change is tested in the latest Chromium, Firefox and WebKit. Axe checks
 every component for known violations, ARIA snapshot tests pin down each one's
 roles, names and states, and keyboard tests cover what each component does with
-the keyboard, including in right-to-left layouts. In October 2026, every component's semantics, keyboard
-support and announcements were audited, and everything found was fixed.
+the keyboard, including in right-to-left layouts. In October 2026, the semantics, keyboard
+support and announcements of all 52 components Slab had then were audited, and
+everything found was fixed.
 
 In November 2026, the 21 components most likely to go wrong were also walked
 through by hand with VoiceOver on macOS in Chrome, and the nine riskiest of
