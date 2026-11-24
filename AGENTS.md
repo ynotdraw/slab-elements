@@ -111,7 +111,8 @@ These are generated and committed, and CI fails when they're out of date:
   `pnpm lint` fails until it's run.
 - `skills/slab/references/*.md` and the component index in
   `skills/slab/SKILL.md`, from the manifest, the JSDoc and the docs site's
-  component pages. The rest of `SKILL.md` is written by hand.
+  component pages. The rest of `SKILL.md` is written by hand, and nothing
+  checks it, so see [The agent skill](#the-agent-skill).
 
 `NODE_ENV=production pnpm start` regenerates all but the cards and fails on any
 difference, as CI does. To regenerate without building Storybook:
@@ -125,6 +126,16 @@ pnpm exec tsx ./src/build/skill.ts
 
 Run them in that order after changing a component's API or JSDoc, and commit
 the result.
+
+## The agent skill
+
+`skills/slab/SKILL.md` ships in the package and teaches agents Slab's
+conventions. Its hand-written sections, everything outside the generated
+component index, go stale silently. When a change adds, renames or changes
+something those sections describe, such as a method several components share,
+a form or validation feature, how popups open, a framework's types or a
+browser requirement, update them in the same pull request. Check them against
+the release's changesets before a minor or major release.
 
 ## Changesets
 

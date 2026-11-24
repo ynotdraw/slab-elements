@@ -49,7 +49,7 @@ slab-checkbox:state(checked)::part(checkbox) {
       {
         id: 'native',
         heading: 'Native first',
-        text: 'Every Slab element is built on the native element it corresponds to, and works the way that element does. Fields take `value`, `checkValidity()` and `setCustomValidity()`. Dialogs take `show()`, `showModal()` and `close()`. Anything with `open` dispatches "toggle". If you know `<input>` and `<dialog>`, you already know most of Slab\'s API.',
+        text: 'Where the platform has an element for the job, Slab builds on it and works the way it does, and it uses an ARIA role only where there is none. Fields take `value`, `checkValidity()` and `setCustomValidity()`. Dialogs take `show()`, `showModal()` and `close()`. Anything with `open` dispatches "toggle". If you know `<input>` and `<dialog>`, you already know most of Slab\'s API.',
       },
       {
         id: 'choose',
@@ -105,7 +105,7 @@ export function Terms() {
         id: 'tradeoffs',
         heading: 'What you give up',
         text: "It's not all free. A React library renders its markup on the server. A Slab element is empty until its script runs. You style Slab's insides through `::part()` and `:state()`, so utility classes reach an element's host and what you slot into it, but not its parts. And React Aria has years of use at Adobe behind it, with internationalized dates across many calendar systems.",
-        coda: "Slab is tested in Chromium, Firefox and WebKit, with Axe, ARIA snapshots and keyboard tests on every component. [Accessibility](accessibility/) says what has been checked by hand and what hasn't.",
+        coda: "Slab is tested in Chromium, Firefox and WebKit, with Axe and ARIA snapshots on every component, and keyboard tests for what each one does with the keyboard. [Accessibility](accessibility/) says what has been checked by hand and what hasn't.",
       },
       {
         id: 'choose',

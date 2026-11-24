@@ -94,6 +94,13 @@ Pick the bump type that matches your change under
 consumer reading the changelog would want it described — what changed and what
 they need to do about it, not how you implemented it.
 
+A change a consumer would notice often changes what the agent skill we ship
+should say too. Its component references are generated, but the rest of
+[`skills/slab/SKILL.md`](skills/slab/SKILL.md) is written by hand, and nothing
+checks it. Update it in the same pull request when your change adds or changes
+a convention it describes, such as a method several components share, a form
+feature, how popups open or a framework's types.
+
 ### Deprecating something
 
 From 1.0, public API is removed or renamed only in a major version, and only

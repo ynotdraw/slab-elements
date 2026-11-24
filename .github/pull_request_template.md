@@ -15,6 +15,7 @@
 - [ ] I followed the [ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/patterns/).
 - [ ] I reviewed the Visual Report linked below.
 - [ ] I added a [changeset](https://github.com/ynotdraw/slab-elements/blob/main/CONTRIBUTING.md#release-notes) if consumers are affected.
+- [ ] I updated the hand-written parts of [`skills/slab/SKILL.md`](https://github.com/ynotdraw/slab-elements/blob/main/skills/slab/SKILL.md) if a convention it describes changed.
 
 ## How to test
 

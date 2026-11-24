@@ -15,7 +15,7 @@ export const sections: Section[] = [
   {
     id: 'what-slab-does',
     heading: 'What Slab does',
-    text: "Each element is built on the native element it corresponds to, so it gets that element's semantics from the platform instead of rebuilding them in ARIA. Slab adds what the platform doesn't have: keyboard and focus handling, ARIA where no native element fits, labels and descriptions wired to the right element, validation messages, and announcements for changes that aren't otherwise read out.",
+    text: "Each element is built on the native element it corresponds to, where there is one, so it gets that element's semantics from the platform instead of rebuilding them in ARIA. Slab adds what the platform doesn't have: keyboard and focus handling, ARIA where no native element fits, labels and descriptions wired to the right element, validation messages, and announcements for changes that aren't otherwise read out.",
   },
   {
     id: 'tested',
@@ -25,7 +25,7 @@ export const sections: Section[] = [
   {
     id: 'audited',
     heading: "What's been checked beyond that",
-    text: "In October 2026, every element's semantics, keyboard support and announcements were audited, mostly by reading Chromium's accessibility tree, and everything found was fixed. That covered things like forced colors, right-to-left arrow keys, typing with an input method editor, validation messages and live announcements.",
+    text: "In October 2026, the semantics, keyboard support and announcements of all 52 elements Slab had then were audited, mostly by reading Chromium's accessibility tree, and everything found was fixed. That covered things like forced colors, right-to-left arrow keys, typing with an input method editor, validation messages and live announcements.",
   },
   {
     id: 'by-hand',
