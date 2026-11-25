@@ -26,6 +26,42 @@ import 'slab-elements/number.js';
 ></slab-number>
 ```
 
+## Currency, percent and unit
+
+Set `format-options` to [`Intl.NumberFormat` options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#options) as JSON, or the `formatOptions` property to the object, and the field shows its value formatted in the language of the nearest `lang`, such as "$1,234.50" or "1.234,50 €".
+
+```html
+<slab-number
+  format-options='{"style":"currency","currency":"USD"}'
+  label="Price"
+  min="0"
+  name="price"
+  step="0.01"
+  value="1234.5"
+></slab-number>
+
+<slab-number
+  format-options='{"style":"percent"}'
+  label="Discount"
+  max="1"
+  min="0"
+  value="0.15"
+></slab-number>
+
+<slab-number
+  format-options='{"style":"unit","unit":"kilometer-per-hour"}'
+  label="Speed"
+  min="0"
+  value="88"
+></slab-number>
+```
+
+`value` stays a plain number, and is what the form submits. The field reads what's typed back into one for its language, so "$1,234.50", "1234.5" and "1,234.5" are all 1234.5 in English, and "1.234,5 €" is in German. Once the value changes, it's rounded to the digits the format shows and formatted, so "1.239" becomes "$1.24". Text that isn't a number for the format is `badInput`, with an empty value, as on a number input. Its message is "Enter a number.", which `registerStrings()` translates as `numberBadInput`.
+
+A percent's value is a fraction, as `Intl` formats one, so "15%" is 0.15, and `min`, `max` and `step` are fractions too. A percent steps by 0.01, or 1%, unless `step` says otherwise.
+
+`min`, `max`, `step`, stepping and their validity are a number input's own, as they are without a format. The input is a text input with the `spinbutton` role, since a number input can't show a currency symbol or a unit, and screenreaders read the formatted value. It shows a decimal keypad on phones when `min` is 0 or more, and a full keyboard otherwise, since some decimal keypads have no minus sign. Standard notation is read back. Compact and scientific notation format, but "1.2K" and "1.2E3" aren't read as numbers.
+
 ## Keyboard
 
 | Key      | What it does                           |
@@ -46,25 +82,28 @@ Validity is the native input's. `required`, `min`, `max` and `step` are passed t
 
 `value` is a string, as it is on the input, so an empty field and one a person is partway through typing aren't forced into a number.
 
+With `format-options`, it shows its value formatted by `Intl.NumberFormat`, as a currency, a percent or a unit, and reads what's typed back as a number for its language. The input is then a text input with the `spinbutton` role, since a number input can't show "$" or "km/h". A number input that's never on the page still holds the value, so stepping and validity are still its own.
+
 Style it through its parts and through `:state(disabled)`, `:state(error)`, `:state(readonly)` and `:state(required)`. Where the label sits relative to the input is layout, so it's left to the styles around it.
 
 #### Attributes
 
-| Name               | Type                               | Default | Description                                                                                                                                                                                                                                                                                                                |
-| ------------------ | ---------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `label` (required) | `string`                           |         | Names it. It's the accessible name, and the visible label where there is one.                                                                                                                                                                                                                                              |
-| `autocomplete`     | `HTMLInputElement['autocomplete']` |         | What the browser may fill it with, as a native input's `autocomplete` says.                                                                                                                                                                                                                                                |
-| `disabled`         | `boolean`                          | `false` | Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.                                                                                                                                                                                              |
-| `hide-label`       | `boolean`                          | `false` | Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.                                                                                                                                                                                                           |
-| `max`              | `number`                           |         | The highest valid value, as a native number input's `max`.                                                                                                                                                                                                                                                                 |
-| `min`              | `number`                           |         | The lowest valid value, as a native number input's `min`.                                                                                                                                                                                                                                                                  |
-| `name`             | `string`                           | `''`    | The name its value is submitted under, as a native control's `name`.                                                                                                                                                                                                                                                       |
-| `placeholder`      | `string`                           |         | Shown while it's empty, as a native input's `placeholder`. It's a hint, not a label.                                                                                                                                                                                                                                       |
-| `readonly`         | `boolean`                          | `false` | Lets the user select the value but not change it, as `readonly` does a native input. The value is still submitted.                                                                                                                                                                                                         |
-| `required`         | `boolean`                          | `false` | Makes it invalid while it has no value, as `required` does a native control.                                                                                                                                                                                                                                               |
-| `step`             | `number \| 'any'`                  |         | A number, or "any" to allow any value. Left unset, the input's own default of 1 applies.                                                                                                                                                                                                                                   |
-| `value`            | `string`                           | `''`    | Like a native input, the attribute is the default value and the property is the current one, so the attribute doesn't change as the field is typed into.                                                                                                                                                                   |
-| `custom-validity`  | `string`                           |         | Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid. |
+| Name               | Type                               | Default | Description                                                                                                                                                                                                                                                                                                                                           |
+| ------------------ | ---------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `label` (required) | `string`                           |         | Names it. It's the accessible name, and the visible label where there is one.                                                                                                                                                                                                                                                                         |
+| `autocomplete`     | `HTMLInputElement['autocomplete']` |         | What the browser may fill it with, as a native input's `autocomplete` says.                                                                                                                                                                                                                                                                           |
+| `disabled`         | `boolean`                          | `false` | Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.                                                                                                                                                                                                                         |
+| `hide-label`       | `boolean`                          | `false` | Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.                                                                                                                                                                                                                                      |
+| `format-options`   | `Intl.NumberFormatOptions`         |         | Formats the value with `Intl.NumberFormat`, in the language of the nearest `lang`, using these options, such as `{ style: 'currency', currency: 'USD' }`, and reads what's typed back as a number. The attribute is the options as JSON. A percent's value is a fraction, as `Intl` formats one, so "12%" is 0.12. Unset, it's a native number input. |
+| `max`              | `number`                           |         | The highest valid value, as a native number input's `max`.                                                                                                                                                                                                                                                                                            |
+| `min`              | `number`                           |         | The lowest valid value, as a native number input's `min`.                                                                                                                                                                                                                                                                                             |
+| `name`             | `string`                           | `''`    | The name its value is submitted under, as a native control's `name`.                                                                                                                                                                                                                                                                                  |
+| `placeholder`      | `string`                           |         | Shown while it's empty, as a native input's `placeholder`. It's a hint, not a label.                                                                                                                                                                                                                                                                  |
+| `readonly`         | `boolean`                          | `false` | Lets the user select the value but not change it, as `readonly` does a native input. The value is still submitted.                                                                                                                                                                                                                                    |
+| `required`         | `boolean`                          | `false` | Makes it invalid while it has no value, as `required` does a native control.                                                                                                                                                                                                                                                                          |
+| `step`             | `number \| 'any'`                  |         | A number, or "any" to allow any value. Left unset, the input's own default of 1 applies.                                                                                                                                                                                                                                                              |
+| `value`            | `string`                           | `''`    | Like a native input, the attribute is the default value and the property is the current one, so the attribute doesn't change as the field is typed into.                                                                                                                                                                                              |
+| `custom-validity`  | `string`                           |         | Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid.                            |
 
 #### Properties
 

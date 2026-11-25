@@ -22,6 +22,8 @@ import required from './library/required.js';
 import styles from './number.styles.js';
 import afterReflection from './library/after-reflection.js';
 import isComposing from './library/is-composing.js';
+import NumberFormat from './library/number-format.js';
+import StringsController, { langOf } from './library/strings.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -48,6 +50,13 @@ declare global {
  * `value` is a string, as it is on the input, so an empty field and one a
  * person is partway through typing aren't forced into a number.
  *
+ * With `format-options`, it shows its value formatted by `Intl.NumberFormat`,
+ * as a currency, a percent or a unit, and reads what's typed back as a number
+ * for its language. The input is then a text input with the `spinbutton` role,
+ * since a number input can't show "$" or "km/h". A number input that's never
+ * on the page still holds the value, so stepping and validity are still its
+ * own.
+ *
  * Style it through its parts and through `:state(disabled)`, `:state(error)`,
  * `:state(readonly)` and `:state(required)`. Where the label sits relative to
  * the input is layout, so it's left to the styles around it.
@@ -56,6 +65,7 @@ declare global {
  * @attr {HTMLInputElement['autocomplete']} [autocomplete] - What the browser may fill it with, as a native input's `autocomplete` says.
  * @attr {string} [custom-validity] - Makes it invalid with this message, as `setCustomValidity()` does, and shows the message at once rather than once validity is reported, for an error the page already knows about, such as one from a server. Removing it, or setting it to an empty string, makes it valid again, unless something else makes it invalid.
  * @attr {boolean} [disabled=false] - Disables it, as `disabled` does a native control: the user can't focus or use it, and a form control's value isn't submitted.
+ * @attr {Intl.NumberFormatOptions} [format-options] - Formats the value with `Intl.NumberFormat`, in the language of the nearest `lang`, using these options, such as `{ style: 'currency', currency: 'USD' }`, and reads what's typed back as a number. The attribute is the options as JSON. A percent's value is a fraction, as `Intl` formats one, so "12%" is 0.12. Unset, it's a native number input.
  * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {number} [max] - The highest valid value, as a native number input's `max`.
  * @attr {number} [min] - The lowest valid value, as a native number input's `min`.
@@ -155,6 +165,39 @@ export default class NumberField extends LitElement {
 
   @property({ attribute: 'hide-label', reflect: true, type: Boolean })
   hideLabel = false;
+
+  /**
+   * Formats the value with `Intl.NumberFormat`, in the language of the nearest
+   * `lang`, using these options, such as `{ style: 'currency', currency:
+   * 'USD' }`, and reads what's typed back as a number. The attribute is the
+   * options as JSON. A percent's value is a fraction, as `Intl` formats one,
+   * so "12%" is 0.12. Unset, it's a native number input.
+   */
+  @property({
+    attribute: 'format-options',
+    converter: {
+      // JSON that doesn't parse, or isn't an object, is left unset, rather
+      // than throwing from the attribute.
+      fromAttribute(value) {
+        if (value === null) {
+          return;
+        }
+
+        let options: unknown;
+
+        try {
+          options = JSON.parse(value);
+        } catch {
+          return;
+        }
+
+        return typeof options === 'object' && options !== null
+          ? options
+          : undefined;
+      },
+    },
+  })
+  formatOptions?: Intl.NumberFormatOptions;
 
   @property({ reflect: true, type: Number })
   max?: number;
@@ -292,6 +335,12 @@ export default class NumberField extends LitElement {
 
   formResetCallback(): void {
     this.value = this.getAttribute('value') ?? '';
+
+    // Text that wasn't a number goes too, as it does from a number input.
+    if (this.#isFormatted && this.#inputElementRef.value) {
+      this.#writeFormattedValue(this.#inputElementRef.value, true);
+    }
+
     this.resetValidityFeedback();
   }
 
@@ -311,13 +360,21 @@ export default class NumberField extends LitElement {
       <input
         aria-describedby="description"
         aria-invalid=${this.#isShowValidationFeedback ? 'true' : 'false'}
+        aria-valuemax=${ifDefined(this.#isFormatted ? this.max : undefined)}
+        aria-valuemin=${ifDefined(this.#isFormatted ? this.min : undefined)}
+        aria-valuenow=${ifDefined(this.#isFormatted ? this.#valueNow : undefined)}
+        aria-valuetext=${ifDefined(
+          this.#isFormatted ? this.#valueText : undefined,
+        )}
         data-test="input"
         id="input"
-        max=${ifDefined(this.max)}
-        min=${ifDefined(this.min)}
+        inputmode=${ifDefined(this.#inputMode)}
+        max=${ifDefined(this.#isFormatted ? undefined : this.max)}
+        min=${ifDefined(this.#isFormatted ? undefined : this.min)}
         part="input"
         placeholder=${ifDefined(this.placeholder)}
-        type="number"
+        role=${ifDefined(this.#isFormatted ? 'spinbutton' : undefined)}
+        type=${this.#isFormatted ? 'text' : 'number'}
         ?disabled=${this.#isDisabled}
         ?readonly=${this.readonly}
         ?required=${this.required}
@@ -454,10 +511,16 @@ export default class NumberField extends LitElement {
     // Set here for the same reason. lit-analyzer types the input's `step` as a
     // number, and "any" is the one value that isn't. Removed rather than
     // emptied when unset, so the input's default of 1 applies.
-    if (input && this.step === undefined) {
+    if (input && (this.step === undefined || this.#isFormatted)) {
       input.removeAttribute('step');
     } else if (input) {
       input.step = String(this.step);
+    }
+
+    // Options that format the same number differently, like more fraction
+    // digits, show it again.
+    if (input && this.#isFormatted && changes.has('formatOptions')) {
+      this.#writeFormattedValue(input, true);
     }
 
     if (changes.has('disabled') || changes.has('isFormDisabled')) {
@@ -567,6 +630,8 @@ export default class NumberField extends LitElement {
     target: () => this.#inputElementRef.value,
   });
 
+  #formatKey?: string;
+
   #hasCustomValidity = false;
 
   #inputElementRef = createRef<HTMLInputElement>();
@@ -574,6 +639,17 @@ export default class NumberField extends LitElement {
   #internals: ElementInternals;
 
   #invalidEvent?: Event;
+
+  #isBadInput = false;
+
+  // The rest of the formatted field: a text input shows the formatted value,
+  // and a number input that's never on the page holds the number, so `min`,
+  // `max`, `step`, stepping and their validity are still the platform's own.
+  #mirrorElement = document.createElement('input');
+
+  #numberFormatCache?: NumberFormat;
+
+  #strings = new StringsController(this);
 
   get #isDisabled() {
     return this.disabled || this.isFormDisabled;
@@ -587,6 +663,69 @@ export default class NumberField extends LitElement {
     );
   }
 
+  get #inputMode() {
+    if (!this.#isFormatted) {
+      return;
+    }
+
+    // A decimal keypad has no minus sign on some phones.
+    return this.min !== undefined && this.min >= 0 ? 'decimal' : 'text';
+  }
+
+  get #isFormatted() {
+    return this.formatOptions !== undefined;
+  }
+
+  // Made again only when the language or the options change.
+  get #numberFormat(): NumberFormat {
+    const lang = langOf(this);
+    const key = `${lang} ${JSON.stringify(this.formatOptions)}`;
+
+    if (!this.#numberFormatCache || this.#formatKey !== key) {
+      this.#numberFormatCache = new NumberFormat(
+        lang || undefined,
+        this.formatOptions,
+      );
+
+      this.#formatKey = key;
+    }
+
+    return this.#numberFormatCache;
+  }
+
+  // stepping a fraction by 1 would jump by 100%.
+  #mirror(): HTMLInputElement {
+    const mirror = this.#mirrorElement;
+
+    mirror.type = 'number';
+    mirror.required = this.required;
+    mirror.readOnly = this.readonly;
+
+    for (const [name, value] of [
+      ['max', this.max],
+      ['min', this.min],
+      [
+        'step',
+        this.step ??
+          (this.#numberFormat.resolvedOptions.style === 'percent'
+            ? 0.01
+            : undefined),
+      ],
+    ] as const) {
+      if (value === undefined) {
+        mirror.removeAttribute(name);
+      } else {
+        mirror.setAttribute(name, String(value));
+      }
+    }
+
+    // Where stepping starts from when there's no `min`, as on an input.
+    mirror.defaultValue = this.defaultValue;
+    mirror.value = this.value;
+
+    return mirror;
+  }
+
   #onInputBlur() {
     this.isBlurring = true;
     this.reportValidity();
@@ -594,7 +733,9 @@ export default class NumberField extends LitElement {
   }
 
   #onInputChangeOrInput(event: Event) {
-    if (event.target instanceof HTMLInputElement) {
+    if (event.target instanceof HTMLInputElement && this.#isFormatted) {
+      this.#readTypedValue(event.target, event.type === 'change');
+    } else if (event.target instanceof HTMLInputElement) {
       this.value = event.target.value;
     }
 
@@ -628,6 +769,55 @@ export default class NumberField extends LitElement {
     if (event.key === 'Enter') {
       this.form?.requestSubmit();
     }
+
+    // A native number input steps on its own. A formatted one is a text input,
+    // so it steps here, the same way.
+    if (
+      this.#isFormatted &&
+      (event.key === 'ArrowUp' || event.key === 'ArrowDown') &&
+      !this.readonly
+    ) {
+      event.preventDefault();
+      this.#stepFromKeyboard(event.key === 'ArrowUp' ? 'stepUp' : 'stepDown');
+    }
+  }
+
+  get #valueNow() {
+    return Number.isFinite(this.valueAsNumber) ? this.valueAsNumber : undefined;
+  }
+
+  get #valueText() {
+    return this.#valueNow === undefined
+      ? undefined
+      : this.#numberFormat.format(this.#valueNow);
+  }
+
+  // The number input that isn't on the page, given the host's constraints and
+  // value. A percent steps by 0.01, or 1%, unless `step` says otherwise, as
+
+  // What's typed is read as a number for the locale. Text that isn't one is
+  // `badInput`, with an empty value, as on a number input. Once it's changed,
+  // the value is rounded to what the format shows, so the value and the text
+  // agree, and the text is formatted.
+  #readTypedValue(input: HTMLInputElement, isChange: boolean) {
+    const typed = this.#numberFormat.parse(input.value);
+
+    this.#isBadInput = input.value.trim() !== '' && Number.isNaN(typed);
+
+    if (Number.isNaN(typed)) {
+      this.value = '';
+
+      return;
+    }
+
+    if (isChange) {
+      const text = this.#numberFormat.format(typed);
+
+      this.value = String(this.#numberFormat.parse(text));
+      input.value = text;
+    } else {
+      this.value = String(typed);
+    }
   }
 
   #setState(state: string, isActive: boolean) {
@@ -641,9 +831,38 @@ export default class NumberField extends LitElement {
   #step(method: 'stepDown' | 'stepUp', count?: number) {
     const input = this.#inputElementRef.value;
 
-    if (input) {
+    if (this.#isFormatted) {
+      const mirror = this.#mirror();
+
+      mirror[method](count);
+      this.#isBadInput = false;
+      this.value = mirror.value;
+    } else if (input) {
       input[method](count);
       this.value = input.value;
+    }
+  }
+
+  #stepFromKeyboard(method: 'stepDown' | 'stepUp') {
+    const mirror = this.#mirror();
+    const previous = this.value;
+
+    // Arrow keys step by 1 when `step` is "any", as they do on an input,
+    // though `stepUp()` and `stepDown()` throw.
+    if (this.step === 'any') {
+      mirror.removeAttribute('step');
+    }
+
+    mirror[method]();
+    this.#isBadInput = false;
+    this.value = mirror.value;
+
+    if (this.value !== previous) {
+      this.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+
+      this.dispatchEvent(
+        new Event('change', { bubbles: true, composed: true }),
+      );
     }
   }
 
@@ -668,7 +887,21 @@ export default class NumberField extends LitElement {
       return;
     }
 
-    if (input.validity.valid) {
+    if (this.#isFormatted && this.#isBadInput) {
+      this.#internals.setValidity(
+        { badInput: true },
+        this.#strings.value.numberBadInput,
+        input,
+      );
+
+      return;
+    }
+
+    const { validationMessage, validity } = this.#isFormatted
+      ? this.#mirror()
+      : input;
+
+    if (validity.valid) {
       this.#internals.setValidity({});
 
       return;
@@ -676,19 +909,36 @@ export default class NumberField extends LitElement {
 
     this.#internals.setValidity(
       {
-        badInput: input.validity.badInput,
-        rangeOverflow: input.validity.rangeOverflow,
-        rangeUnderflow: input.validity.rangeUnderflow,
-        stepMismatch: input.validity.stepMismatch,
-        valueMissing: input.validity.valueMissing,
+        badInput: validity.badInput,
+        rangeOverflow: validity.rangeOverflow,
+        rangeUnderflow: validity.rangeUnderflow,
+        stepMismatch: validity.stepMismatch,
+        valueMissing: validity.valueMissing,
       },
       // A space in case the browser has no message, since one that's invalid
       // has to have one. File Drop's input can be invalid without one, but
       // this one isn't known to.
       /* v8 ignore next */
-      input.validationMessage || ' ',
+      validationMessage || ' ',
       input,
     );
+  }
+
+  // already says it, as it does while a person types.
+  #writeFormattedValue(input: HTMLInputElement, isForced = false) {
+    const typed = this.#numberFormat.parse(input.value);
+
+    const isShowingValue = Number.isNaN(typed)
+      ? this.value === ''
+      : String(typed) === this.value;
+
+    if (isShowingValue && !isForced) {
+      return;
+    }
+
+    // The text is replaced, so it's no longer what was typed.
+    this.#isBadInput = false;
+    input.value = this.#valueText ?? '';
   }
 
   #writeValue() {
@@ -698,8 +948,12 @@ export default class NumberField extends LitElement {
     // the value back on every keystroke would clobber a value a person is
     // partway through typing: "1e" is `badInput` on the input, which reports
     // its value as "", and writing that back would erase what they typed.
-    if (input && input.value !== this.value) {
+    if (input && this.#isFormatted) {
+      this.#writeFormattedValue(input);
+    } else if (input && input.value !== this.value) {
       input.value = this.value;
     }
   }
+
+  // Formatted when the value is set from code, and left alone while the text
 }

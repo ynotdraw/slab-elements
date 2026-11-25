@@ -49,6 +49,7 @@ export interface Strings {
   fileDropAdded: (count: number) => string;
   fileDropNotAccepted: (count: number) => string;
   fileDropTooMany: string;
+  numberBadInput: string;
   pagination: string;
   paginationNext: string;
   paginationPage: (page: number) => string;
@@ -135,6 +136,7 @@ const english: Strings = {
       ? "1 file isn't an accepted type"
       : `${count} files aren't an accepted type`,
   fileDropTooMany: 'Only one file can be added',
+  numberBadInput: 'Enter a number.',
   pagination: 'Pagination',
   paginationNext: 'Next',
   paginationPage: (page) => `Page ${page}`,

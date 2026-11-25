@@ -13550,6 +13550,15 @@
             },
             {
               "kind": "field",
+              "name": "formatOptions",
+              "type": {
+                "text": "Intl.NumberFormatOptions | undefined"
+              },
+              "description": "Formats the value with `Intl.NumberFormat`, in the language of the nearest\n`lang`, using these options, such as `{ style: 'currency', currency:\n'USD' }`, and reads what's typed back as a number. The attribute is the\noptions as JSON. A percent's value is a fraction, as `Intl` formats one,\nso \"12%\" is 0.12. Unset, it's a native number input.",
+              "attribute": "format-options"
+            },
+            {
+              "kind": "field",
               "name": "max",
               "type": {
                 "text": "number | undefined"
@@ -13969,6 +13978,14 @@
               "default": "false",
               "fieldName": "hideLabel",
               "description": "Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way."
+            },
+            {
+              "name": "format-options",
+              "type": {
+                "text": "Intl.NumberFormatOptions | undefined"
+              },
+              "description": "Formats the value with `Intl.NumberFormat`, in the language of the nearest\n`lang`, using these options, such as `{ style: 'currency', currency:\n'USD' }`, and reads what's typed back as a number. The attribute is the\noptions as JSON. A percent's value is a fraction, as `Intl` formats one,\nso \"12%\" is 0.12. Unset, it's a native number input.",
+              "fieldName": "formatOptions"
             },
             {
               "name": "max",

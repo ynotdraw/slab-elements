@@ -929,3 +929,156 @@ test(
     });
   },
 );
+
+test(
+  'submits a formatted value as a number',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-number
+            .formatOptions=${{ style: 'currency', currency: 'USD' } as const}
+            label="Label"
+            lang="en-US"
+            name="name"
+          ></slab-number>
+        </form>
+      `,
+    );
+
+    await page.getByRole('spinbutton').fill('$1,234.50');
+    await expect(page.locator('form')).toHaveFormData('name', '1234.5');
+  },
+);
+
+test(
+  'is `badInput` when what is typed is not a number for its format',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-number
+          .formatOptions=${{}}
+          label="Label"
+          lang="en-US"
+        ></slab-number>`,
+    );
+
+    const host = page.locator('slab-number');
+    const input = page.getByRole('spinbutton');
+
+    await input.fill('twelve');
+    await input.blur();
+
+    await expect(host).toHaveJSProperty('value', '');
+    await expect(host).toHaveJSProperty('validity.badInput', true);
+    await expect(host).toHaveJSProperty('validationMessage', 'Enter a number.');
+
+    // What was typed is kept, as on a number input.
+    await expect(input).toHaveValue('twelve');
+    await expect(input).toHaveAttribute('aria-invalid', 'true');
+
+    await input.fill('12');
+    await expect(host).toHaveJSProperty('validity.valid', true);
+  },
+);
+
+test(
+  'is `badInput` in the language of the nearest `lang`',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-number
+          .formatOptions=${{}}
+          label="Label"
+          lang="fr"
+        ></slab-number>`,
+    );
+
+    await page.evaluate(async (path) => {
+      const { registerStrings } = (await import(path)) as {
+        registerStrings: (lang: string, strings: object) => void;
+      };
+
+      registerStrings('fr', { numberBadInput: 'Saisissez un nombre.' });
+    }, '/src/strings.ts');
+
+    await page.getByRole('spinbutton').fill('douze');
+
+    await expect(page.locator('slab-number')).toHaveJSProperty(
+      'validationMessage',
+      'Saisissez un nombre.',
+    );
+  },
+);
+
+test(
+  'is invalid outside `min` and `max` and off `step` when formatted',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-number
+          .formatOptions=${{ style: 'percent' } as const}
+          label="Label"
+          lang="en-US"
+          max="0.5"
+          min="0.1"
+          required
+        ></slab-number>`,
+    );
+
+    const host = page.locator('slab-number');
+    const input = page.getByRole('spinbutton');
+
+    await expect(host).toHaveJSProperty('validity.valueMissing', true);
+
+    await input.fill('60%');
+    await expect(host).toHaveJSProperty('validity.rangeOverflow', true);
+
+    await input.fill('5%');
+    await expect(host).toHaveJSProperty('validity.rangeUnderflow', true);
+
+    // A percent steps by 1% unless `step` says otherwise.
+    await input.fill('12.5%');
+    await expect(host).toHaveJSProperty('validity.stepMismatch', true);
+
+    await input.fill('12%');
+    await expect(host).toHaveJSProperty('validity.valid', true);
+  },
+);
+
+test(
+  'clears what was typed when its form resets, when formatted',
+  { tag: '@forms' },
+  async ({ render, page }) => {
+    await render(
+      () => html`
+        <form>
+          <slab-number
+            .formatOptions=${{}}
+            label="Label"
+            lang="en-US"
+          ></slab-number>
+        </form>
+      `,
+    );
+
+    const input = page.getByRole('spinbutton');
+
+    await input.fill('twelve');
+
+    await page.locator('form').evaluate((form: HTMLFormElement) => {
+      form.reset();
+    });
+
+    await expect(input).toHaveValue('');
+
+    await expect(page.locator('slab-number')).toHaveJSProperty(
+      'validity.valid',
+      true,
+    );
+  },
+);
