@@ -70,6 +70,25 @@ export default css`
   }
 
   /*
+    With months, the months sit side by side, and wrap where there isn't room
+    for them all.
+  */
+  [part~='months'] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+  }
+
+  [part~='month-heading'] {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    margin-block-end: 0.5rem;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  /*
     Separate rather than collapsed, so each day draws its own border whole.
     Collapsed, a day's border merges with its neighbors' and today's ring
     breaks up.
@@ -175,7 +194,8 @@ export default css`
     }
   }
 
-  [part~='disabled'] {
+  [part~='disabled'],
+  [part~='unavailable'] {
     color: var(--ash);
     cursor: not-allowed;
     text-decoration: line-through;

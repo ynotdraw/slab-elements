@@ -16,6 +16,8 @@ It's [Date Field](../date-field/), so the input, the value, validity and the for
 
 Opening it focuses the selected day, or else today, kept between `min` and `max`. Picking a day sets the value, dispatches "input" and "change", closes the calendar and puts focus back on the button. `open` reflects whether it's open, and `showPicker()` and `hidePicker()` open and close it. Like a native input's, `showPicker()` only works from a user gesture, such as a click, and throws while it's disabled or read-only. The Calendar's parts are exported with the same names, so style its days with `::part(day)`, `::part(selected)` and the rest. `step` isn't passed to the Calendar, so a day it offers can still be a `stepMismatch`.
 
+`months` and `isDateUnavailable` are passed to the Calendar, to show more than one month and to keep days such as weekends from being picked, as on [Calendar](../calendar/#unavailable-dates). A day typed into the input isn't checked against `isDateUnavailable`, since validity is the native input's. To make one invalid, call `setCustomValidity()` on "change".
+
 ## Keyboard
 
 | Key                  | What it does                                                                |

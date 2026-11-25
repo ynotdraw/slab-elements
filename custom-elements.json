@@ -840,15 +840,27 @@
             },
             {
               "name": "heading",
-              "description": "The month and year"
+              "description": "The month and year, or with months the first to the last"
             },
             {
               "name": "next",
               "description": "The button to the next month"
             },
             {
+              "name": "months",
+              "description": "The months, each with its heading and grid"
+            },
+            {
+              "name": "month",
+              "description": "A month's heading and grid"
+            },
+            {
+              "name": "month-heading",
+              "description": "With months, a month's own month and year"
+            },
+            {
               "name": "grid",
-              "description": "The days"
+              "description": "A month's days"
             },
             {
               "name": "weekday",
@@ -880,7 +892,11 @@
             },
             {
               "name": "disabled",
-              "description": "A day before the earliest date or after the latest"
+              "description": "A day before the earliest date or after the latest, or with range one past an unavailable day from the first one picked"
+            },
+            {
+              "name": "unavailable",
+              "description": "A day that isDateUnavailable says can't be picked"
             },
             {
               "name": "empty",
@@ -888,6 +904,14 @@
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "isDateUnavailable",
+              "type": {
+                "text": "(date: string) => boolean | undefined"
+              },
+              "description": "Whether a day can't be picked, from that day as \"yyyy-mm-dd\", for days\nsuch as weekends or ones already booked. An unavailable day can still be\nfocused, but not selected, and with `range` a range can't span one. Set a\nnew function when what it returns changes, so the days are drawn again."
+            },
             {
               "kind": "field",
               "name": "max",
@@ -906,6 +930,17 @@
               },
               "description": "The earliest date that can be selected, as \"yyyy-mm-dd\".",
               "attribute": "min",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "months",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "How many months to show side by side, from the one the tabbable day is\nin.",
+              "attribute": "months",
               "reflects": true
             },
             {
@@ -1044,6 +1079,15 @@
               },
               "description": "The earliest date that can be selected, as \"yyyy-mm-dd\".",
               "fieldName": "min"
+            },
+            {
+              "name": "months",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "How many months to show side by side, from the one the tabbable day is\nin.",
+              "fieldName": "months"
             },
             {
               "name": "next-label",
@@ -5614,6 +5658,25 @@
             },
             {
               "kind": "field",
+              "name": "isDateUnavailable",
+              "type": {
+                "text": "(date: string) => boolean | undefined"
+              },
+              "description": "Whether a day can't be picked in the Calendar, from that day as\n\"yyyy-mm-dd\", for days such as weekends or ones already booked. It's\npassed to the Calendar. A day typed into the input isn't checked against\nit, as validity is the native input's."
+            },
+            {
+              "kind": "field",
+              "name": "months",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "How many months the Calendar shows side by side.",
+              "attribute": "months",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "open",
               "type": {
                 "text": "boolean"
@@ -6208,6 +6271,15 @@
               },
               "description": "The button's text and so its accessible name. \"Choose date\" in English\nwhen unset.",
               "fieldName": "buttonLabel"
+            },
+            {
+              "name": "months",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "How many months the Calendar shows side by side.",
+              "fieldName": "months"
             },
             {
               "name": "open",
@@ -7282,6 +7354,25 @@
             },
             {
               "kind": "field",
+              "name": "isDateUnavailable",
+              "type": {
+                "text": "(date: string) => boolean | undefined"
+              },
+              "description": "Whether a day can't be picked in the Calendar, from that day as\n\"yyyy-mm-dd\", for days such as weekends or ones already booked. It's\npassed to the Calendar. A day typed into the input isn't checked against\nit, as validity is the native input's."
+            },
+            {
+              "kind": "field",
+              "name": "months",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "How many months the Calendar shows side by side.",
+              "attribute": "months",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "open",
               "type": {
                 "text": "boolean"
@@ -7877,6 +7968,15 @@
               },
               "description": "The button's text and so its accessible name. \"Choose dates\" in English\nwhen unset.",
               "fieldName": "buttonLabel"
+            },
+            {
+              "name": "months",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "How many months the Calendar shows side by side.",
+              "fieldName": "months"
             },
             {
               "name": "open",

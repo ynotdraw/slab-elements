@@ -386,3 +386,37 @@ test(
       .toBe(false);
   },
 );
+
+test(
+  'passes `months` and `isDateUnavailable` to its calendar, and exports its parts',
+  { tag: '@miscellaneous' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<slab-date-picker
+          label="Label"
+          months="2"
+          value="2026-09-28"
+          .isDateUnavailable=${(date: string) => date === '2026-10-02'}
+        ></slab-date-picker>`,
+    );
+
+    await callMethod(page.locator('slab-date-picker'), 'showPicker');
+
+    const calendar = page.locator('[data-test="calendar"]');
+
+    await expect(calendar).toHaveAttribute('months', '2');
+    await expect(page.getByRole('grid')).toHaveCount(2);
+
+    await expect(page.locator('[data-date="2026-10-02"]')).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    );
+
+    const exported = await calendar.getAttribute('exportparts');
+
+    for (const part of ['month', 'month-heading', 'months', 'unavailable']) {
+      expect(exported?.split(', ')).toContain(part);
+    }
+  },
+);

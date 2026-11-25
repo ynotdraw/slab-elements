@@ -51,6 +51,7 @@ const meta: Meta = {
     step: '',
     value: '',
     version: '',
+    months: 1,
     'week-start': 0,
   },
   argTypes: {
@@ -235,6 +236,16 @@ const meta: Meta = {
         type: { summary: 'string', detail: '// For debugging' },
       },
     },
+    months: {
+      control: { type: 'number', min: 1, max: 4 },
+      table: {
+        defaultValue: { summary: '1' },
+        type: {
+          summary: 'number',
+          detail: '// How many months the Calendar shows side by side.',
+        },
+      },
+    },
     'week-start': {
       control: { type: 'number', min: 0, max: 6 },
       table: {
@@ -258,6 +269,7 @@ const meta: Meta = {
       name=${arguments_.name || nothing}
       step=${arguments_.step || nothing}
       value=${arguments_.value || nothing}
+      months=${arguments_.months}
       week-start=${arguments_['week-start'] || nothing}
       ?disabled=${arguments_.disabled}
       ?hide-label=${arguments_['hide-label']}
