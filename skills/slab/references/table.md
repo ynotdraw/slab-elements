@@ -2,7 +2,7 @@
 
 # Table
 
-> Rows and columns, laid out and announced like a native table, that components can render into. Column headers can be buttons that sort.
+> Rows and columns, laid out and announced like a native table, that components can render into. Column headers can be buttons that sort, and rows can be selected.
 
 `<slab-table>` · Data · built on `[role=table] + rowgroups, rows and cells`
 
@@ -55,14 +55,42 @@ A `sortable` Column Header is a `<button>`. Clicking it sorts its column ascendi
 
 Sorting the rows is yours, since Table doesn't move them: on "sort", put the Table Body's rows in the order the Column Header's `sort` says, as the example above does, or sort your data and let your framework render it. Set `sort` yourself for a Table that starts out sorted.
 
-It's a table, not a grid. It's read, not moved through with the arrow keys, and only a sortable Column Header's button and what you put in a Cell take focus. Cells can't span columns or rows.
+It's a table, not a grid. It's read, not moved through with the arrow keys, and only a sortable Column Header's button, a selectable Table's check boxes and what you put in a Cell take focus. Cells can't span columns or rows.
+
+## Selecting rows
+
+Rows aren't selected unless the Table is `selectable`, or `multiple`, which allows more than one and needs no `selectable`, as in Grid List. Then each body row starts with a native check box, named "Select" and the text of its row header, so a screenreader hears "Select Garage" rather than a column of "checkbox, not checked". Checking one sets the row's `selected`, gives it `aria-selected="true"`, and dispatches "change" from the Table. Without `multiple`, checking one unchecks the rest.
+
+With `multiple`, the head row starts with a check box that selects every enabled row, or none when they all are. It's mixed while only some are. Shift with a click on a check box selects every row from the one last checked. A `disabled` row's check box is disabled, and selecting every row leaves it as it is. The foot row starts with an empty Cell, so the columns line up.
+
+```html
+<slab-table aria-label="Pours" multiple>
+  <slab-table-head>…</slab-table-head>
+  <slab-table-body>
+    <slab-table-row selected>…</slab-table-row>
+    <slab-table-row>…</slab-table-row>
+    <slab-table-row disabled>…</slab-table-row>
+  </slab-table-body>
+</slab-table>
+```
+
+```js
+const table = document.querySelector('slab-table');
+
+table.addEventListener('change', () => {
+  console.log(table.selectedRows); // The selected body rows, in order.
+});
+```
+
+As on an Option, a row's `selected` attribute is how it starts, and its `selected` property is how it is now. Setting the property selects the row without dispatching "change". Style the check boxes through `::part(checkbox)` and `::part(selection-cell)`, and a selected row on `:state(selected)`. Word the check boxes' names with `select-all-label`, `selectRowLabel`, or `tableSelectAll` and `tableSelectRow` in `registerStrings()`. A `selectable` Table that isn't `multiple` has no select-all check box, so its head row's first Column Header is named "Selection" for screenreaders, which `selection-label` or `tableSelection` words.
 
 ## Keyboard
 
-| Key          | What it does                                                       |
-| ------------ | ------------------------------------------------------------------ |
-| Tab          | Moves to each sortable Column Header, then to what's in the Cells. |
-| Enter, Space | On a sortable Column Header, sorts its column.                     |
+| Key          | What it does                                                                                      |
+| ------------ | ------------------------------------------------------------------------------------------------- |
+| Tab          | Moves through the check boxes, sortable Column Headers and what's in the Cells, in order.         |
+| Enter, Space | On a sortable Column Header, sorts its column.                                                    |
+| Space        | On a row's check box, selects or unselects the row. On the head row's, selects every row or none. |
 
 ## Elements
 
@@ -78,13 +106,33 @@ Name the Table with `aria-labelledby`, pointing at a heading or caption near it,
 
 Clicking a `sortable` Column Header sorts its column and dispatches "sort" from it. Table makes every other Column Header unsorted first, so only one column is sorted at a time. Sorting the rows is yours.
 
-It's a table, not a grid: it's read rather than moved through with the arrow keys, and the only things in it that take focus are a sortable Column Header's button and whatever you put in a Cell.
+Rows aren't selected unless `selectable` or `multiple` is set. `multiple` allows more than one, and needs no `selectable`. Then each body row starts with a check box that selects it, and Table dispatches "change" when the user checks or unchecks one. Without `multiple`, checking one unchecks the rest. With `multiple`, the head row's check box selects every enabled row, or none when they all are, and Shift with a click selects every row from the one last checked to the clicked one.
+
+It's a table, not a grid: it's read rather than moved through with the arrow keys, and the only things in it that take focus are a sortable Column Header's button, the check boxes of a selectable Table, and whatever you put in a Cell.
+
+#### Attributes
+
+| Name               | Type      | Default | Description                                                                                                                                                  |
+| ------------------ | --------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `multiple`         | `boolean` | `false` | Whether more than one row can be selected, with a check box in the head row that selects every row. Rows are selectable when it's set, without `selectable`. |
+| `select-all-label` | `string`  |         | Names the head row's check box when `multiple`. "Select all" in English when unset.                                                                          |
+| `selectable`       | `boolean` | `false` | Whether a row can be selected, with a check box at its start.                                                                                                |
+| `selection-label`  | `string`  |         | Names the column of check boxes when the Table is `selectable` but not `multiple`, and so has no select-all check box. "Selection" in English when unset.    |
 
 #### Properties
 
-| Name                        | Type                  | Description                   |
-| --------------------------- | --------------------- | ----------------------------- |
-| `columnHeaders` (read-only) | `TableColumnHeader[]` | Its Column Headers, in order. |
+| Name                        | Type                      | Description                                                                                                                                                 |
+| --------------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `selectRowLabel`            | `(row: string) => string` | Names each body row's check box, from the text of its row header, or its first Cell when it has no row header. "Select" and the text in English when unset. |
+| `columnHeaders` (read-only) | `TableColumnHeader[]`     | Its Column Headers, in order.                                                                                                                               |
+| `selectedRow` (read-only)   | `TableRow \| null`        | The first selected body row, or `null`.                                                                                                                     |
+| `selectedRows` (read-only)  | `TableRow[]`              | Every selected body row, in order.                                                                                                                          |
+
+#### Events
+
+| Name     | Type    | Description                                                                                                                      |
+| -------- | ------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `change` | `Event` | When the user checks or unchecks a row's check box, or the head row's. Setting a row's `selected` from code doesn't dispatch it. |
 
 #### Slots
 
@@ -134,11 +182,44 @@ Import `slab-elements/table.row.js` to register it.
 
 A Table Row with no visual styles: a `[role=row]` of Column Headers or Cells, in a Table Head, Body or Foot.
 
+In a `selectable` Table, each body row starts with a Cell holding a check box that selects it, named "Select" and its row header's text. The head row starts with a Column Header holding a check box that selects every row, when the Table is `multiple`, and the foot row with an empty Cell, so the columns line up. A selected row has `aria-selected="true"`.
+
+Its Table sets `:state(selectable)` on each body row while it's selectable. The row sets `:state(disabled)` and `:state(selected)` itself.
+
+#### Attributes
+
+| Name       | Type      | Default | Description                                                                                                                               |
+| ---------- | --------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `disabled` | `boolean` | `false` | Can't be selected.                                                                                                                        |
+| `selected` | `boolean` | `false` | Like Option's, the attribute is the default state and the property is the current one. Style `:state(selected)` rather than `[selected]`. |
+
+#### Properties
+
+| Name         | Type      | Description                      |
+| ------------ | --------- | -------------------------------- |
+| `selectable` | `boolean` | Set by its Table, on a body row. |
+
 #### Slots
 
 | Name      | Type                             | Description                            |
 | --------- | -------------------------------- | -------------------------------------- |
 | (default) | `TableCell \| TableColumnHeader` | The row's Cells, or its Column Headers |
+
+#### CSS parts
+
+| Name              | Description                                                                                                                                              |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `checkbox`        | The check box, a native `<input type="checkbox">`: the row's own in a body row, or the head row's, which selects every row, when its Table is `multiple` |
+| `selection-cell`  | Holds the check box, before the row's Cells, while its Table is selectable. In a head row it's a Column Header, and in a foot row it's empty             |
+| `selection-label` | Names the column of check boxes, visually hidden, when its Table is selectable but not multiple                                                          |
+
+#### CSS states
+
+| Name                 | Description                                   |
+| -------------------- | --------------------------------------------- |
+| `:state(disabled)`   | While it's disabled.                          |
+| `:state(selectable)` | While its Table is selectable, on a body row. |
+| `:state(selected)`   | While it's selected.                          |
 
 ### `<slab-table-column-header>`
 

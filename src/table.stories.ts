@@ -5,7 +5,7 @@ import './table.column-header.js';
 import './table.foot.js';
 import './table.head.js';
 import './table.row.js';
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { withActions } from 'storybook/actions/decorator';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
@@ -28,7 +28,7 @@ const meta: Meta = {
   ],
   parameters: {
     actions: {
-      handles: ['sort'],
+      handles: ['change', 'sort'],
     },
     docs: {
       story: {
@@ -38,6 +38,11 @@ const meta: Meta = {
   },
   args: {
     'slot="default"': '',
+    'addEventListener(event, handler)': '',
+    multiple: false,
+    'select-all-label': '',
+    selectable: false,
+    'selection-label': '',
     version: '',
   },
   argTypes: {
@@ -51,6 +56,54 @@ const meta: Meta = {
       },
       type: { name: 'function', required: true },
     },
+    'addEventListener(event, handler)': {
+      table: {
+        type: {
+          summary: 'method',
+          detail:
+            '(event: "change", handler: (event: Event) => void): void\n\n// When the user checks or unchecks a row\'s check box, or the head row\'s.',
+        },
+      },
+      type: { name: 'function' },
+    },
+    multiple: {
+      table: {
+        defaultValue: { summary: 'false' },
+        type: {
+          summary: 'boolean',
+          detail:
+            "// Whether more than one row can be selected, with a check box in the head row that selects every row. Rows are selectable when it's set, without `selectable`.",
+        },
+      },
+    },
+    'select-all-label': {
+      table: {
+        type: {
+          summary: 'string',
+          detail:
+            '// Names the head row\'s check box when `multiple`. "Select all" in English when unset.',
+        },
+      },
+    },
+    selectable: {
+      table: {
+        defaultValue: { summary: 'false' },
+        type: {
+          summary: 'boolean',
+          detail:
+            '// Whether a row can be selected, with a check box at its start.',
+        },
+      },
+    },
+    'selection-label': {
+      table: {
+        type: {
+          summary: 'string',
+          detail:
+            '// Names the column of check boxes when the Table is `selectable` but not `multiple`. "Selection" in English when unset.',
+        },
+      },
+    },
     version: {
       control: false,
       table: {
@@ -61,8 +114,15 @@ const meta: Meta = {
       },
     },
   },
-  render() {
-    return html`<slab-table aria-label="Pours">
+  render(arguments_) {
+    /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+    return html`<slab-table
+      aria-label="Pours"
+      ?multiple=${arguments_.multiple}
+      select-all-label=${arguments_['select-all-label'] || nothing}
+      ?selectable=${arguments_.selectable}
+      selection-label=${arguments_['selection-label'] || nothing}
+    >
       <slab-table-head>
         <slab-table-row>
           <slab-table-column-header sortable sort="ascending">

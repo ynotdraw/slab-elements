@@ -10,7 +10,7 @@ declare global {
 }
 
 /**
- * Table Row, styled: a thin ash rule below each row but the last.
+ * Table Row, styled: a thin ash rule below each row but the last. In a selectable Table, a square check box, and chalk behind a selected row.
  */
 @customElement('slab-styled-table-row')
 export default class StyledTableRow extends TableRow {

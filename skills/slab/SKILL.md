@@ -242,6 +242,6 @@ Chrome and Edge 125, Firefox 126 and Safari 17.4 or newer. Don't add polyfills f
 - [Meter](references/meter.md): `slab-meter`, built on `<meter>`. A measurement in a known range, like disk usage. It tells you which region the value's in, so your design can show it.
 - [Progress](references/progress.md): `slab-progress`, built on `<progress>`. How far along a task is, or just that it's happening when you don't know yet. That's your spinner, too.
 - [Sortable List](references/sortable-list.md): `slab-sortable-list`, `slab-sortable-list-item`, built on `[role=list] + handle <button>s`. A list the user puts in order, by dragging each item by its handle or with the keyboard, while a screenreader hears where the item is as it moves.
-- [Table](references/table.md): `slab-table`, `slab-table-head`, `slab-table-body`, `slab-table-foot`, `slab-table-row`, `slab-table-column-header`, `slab-table-cell`, built on `[role=table] + rowgroups, rows and cells`. Rows and columns, laid out and announced like a native table, that components can render into. Column headers can be buttons that sort.
+- [Table](references/table.md): `slab-table`, `slab-table-head`, `slab-table-body`, `slab-table-foot`, `slab-table-row`, `slab-table-column-header`, `slab-table-cell`, built on `[role=table] + rowgroups, rows and cells`. Rows and columns, laid out and announced like a native table, that components can render into. Column headers can be buttons that sort, and rows can be selected.
 
 <!-- components:end -->
