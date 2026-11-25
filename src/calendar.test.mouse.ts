@@ -182,3 +182,116 @@ test(
     await expect(page.locator('[part~="preview"]')).toHaveCount(2);
   },
 );
+
+test(
+  'does not select an unavailable day when it is clicked',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-calendar
+          value="2026-10-15"
+          .isDateUnavailable=${(date: string) => date === '2026-10-17'}
+        ></slab-calendar>`,
+    );
+
+    const host = page.locator('slab-calendar');
+
+    const unavailable = page.getByRole('gridcell', {
+      name: 'Saturday, October 17, 2026',
+    });
+
+    await expect(unavailable).toHaveAttribute('aria-disabled', 'true');
+
+    // Forced because Playwright won't click what's `aria-disabled`.
+    await expect(host).not.toDispatchEvents(
+      () => unavailable.click({ force: true }),
+      [{ type: 'change' }],
+    );
+
+    await expect(host).toHaveJSProperty('value', '2026-10-15');
+  },
+);
+
+test(
+  'does not preview or end a range past an unavailable day',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-calendar
+          range
+          .isDateUnavailable=${(date: string) => date === '2026-10-17'}
+          value="2026-10-01/2026-10-02"
+        ></slab-calendar>`,
+    );
+
+    const host = page.locator('slab-calendar');
+
+    await page.locator('[data-date="2026-10-14"]').click();
+
+    await page.locator('[data-date="2026-10-16"]').hover();
+    await expect(page.locator('[part~="preview"]')).toHaveCount(3);
+
+    // Past it, the preview goes back to the first day alone.
+    await page.locator('[data-date="2026-10-20"]').hover({ force: true });
+    await expect(page.locator('[part~="preview"]')).toHaveCount(1);
+
+    await expect(host).not.toDispatchEvents(
+      () => page.locator('[data-date="2026-10-20"]').click({ force: true }),
+      [{ type: 'change' }],
+    );
+
+    await page.locator('[data-date="2026-10-16"]').click();
+    await expect(host).toHaveJSProperty('value', '2026-10-14/2026-10-16');
+  },
+);
+
+test(
+  'moves the months shown with `months` a month at a time via its buttons',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-calendar
+          max="2026-12-10"
+          min="2026-09-20"
+          months="2"
+          value="2026-10-15"
+        ></slab-calendar>`,
+    );
+
+    const heading = page.locator('[part="heading"]');
+    const previous = page.getByRole('button', { name: 'Previous month' });
+    const next = page.getByRole('button', { name: 'Next month' });
+
+    await expect(heading).toHaveText(/October.+November 2026/);
+
+    await next.click();
+    await expect(heading).toHaveText(/November.+December 2026/);
+    await expect(next).toHaveAttribute('aria-disabled', 'true');
+
+    // Already at `max`, so the months stay, and the tabbable day goes as far
+    // as it can. Forced because Playwright won't click what's `aria-disabled`.
+    await next.click({ force: true });
+    await expect(heading).toHaveText(/November.+December 2026/);
+
+    await expect(page.locator('[tabindex="0"]')).toHaveAttribute(
+      'data-date',
+      '2026-12-10',
+    );
+
+    await previous.click();
+    await previous.click();
+    await expect(heading).toHaveText(/September.+October 2026/);
+    await expect(previous).toHaveAttribute('aria-disabled', 'true');
+
+    await previous.click({ force: true });
+    await expect(heading).toHaveText(/September.+October 2026/);
+
+    await expect(page.locator('[tabindex="0"]')).toHaveAttribute(
+      'data-date',
+      '2026-09-20',
+    );
+  },
+);

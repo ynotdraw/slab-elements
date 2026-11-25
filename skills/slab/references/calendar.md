@@ -24,6 +24,39 @@ Picking a day tells screenreaders which day is now selected, since a focused day
 
 With `range`, the first day picked starts a range and the second ends it, in either order. Until the second is picked, the days between the first and the one focused or hovered are `::part(preview)`. Then `value` is the range as "yyyy-mm-dd/yyyy-mm-dd", the ISO 8601 form of an interval, and "change" is dispatched. Its days are `::part(selected)`, and its ends `::part(range-start)` and `::part(range-end)`. Screenreaders are told when the first day starts the range, and what the range is once the second ends it. Change what they're told with `rangeStartedLabel` and `rangeSelectedLabel`, functions of the formatted day and range.
 
+## Unavailable dates
+
+To keep days from being picked, such as weekends or ones already booked, set `isDateUnavailable` to a function of a "yyyy-mm-dd" day that returns `true` for each one. It's a property, so it's set from script. Unlike days outside `min` and `max`, an unavailable day can still be focused, so the keys move across it as across any other, but it can't be selected. It's `aria-disabled` and `::part(unavailable)`. With `range`, a range can't span one: once the first day is picked, the days past the nearest unavailable day on either side are `::part(disabled)` until the last is picked. The function is called as the days are drawn, so set a new one when what it returns changes.
+
+```html
+<slab-calendar range></slab-calendar>
+
+<script type="module">
+  const booked = new Set(['2026-10-21', '2026-10-22']);
+
+  document.querySelector('slab-calendar').isDateUnavailable = (date) => {
+    const day = new Date(date).getUTCDay();
+    return day === 0 || day === 6 || booked.has(date);
+  };
+</script>
+```
+
+## More than one month
+
+Set `months` to show that many months side by side, from the one the tabbable day is in. Each month has its own grid, named by its own `::part(month-heading)`, and the heading between the buttons names them all, such as "October – November 2026". The keys move from one month to the next as they do in one, and the months shown follow the tabbable day. The previous and next buttons move them a month at a time. Lay the months out with `::part(months)`, which holds a `::part(month)` for each.
+
+```html
+<style>
+  slab-calendar::part(months) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+</style>
+
+<slab-calendar months="2" range></slab-calendar>
+```
+
 ## Keyboard
 
 | Key                | What it does                                             |
@@ -49,9 +82,13 @@ One day is tabbable: the selected one, or else today, kept between `min` and `ma
 
 With `range`, two days are picked rather than one: the first and the last of a range, in either order. "change" is dispatched once both are, and `value` is then the range as "yyyy-mm-dd/yyyy-mm-dd", the ISO 8601 form of an interval. Between the two, the days from the first to the one focused or hovered are `::part(preview)`, and Escape starts over. Screenreaders are told when the first day is picked, by `rangeStartedLabel`, and what the range is once the last is, by `rangeSelectedLabel`. Without `range`, they're told the day that's picked, by `selectedLabel`.
 
+`isDateUnavailable` is a function of a "yyyy-mm-dd" day that says whether it can be picked, for days such as weekends or ones already booked. Unlike days outside `min` and `max`, an unavailable day can still be focused, so the keys move across it as across any other, but it can't be selected, and it's `aria-disabled` and `::part(unavailable)`. With `range`, a range can't span one: once the first day is picked, the days past the nearest unavailable day on either side are `::part(disabled)` until the last is.
+
+`months` shows that many months side by side, from the one the tabbable day is in. Each has its own grid, named by its own `::part(month-heading)`, and the heading between the buttons names them all. The keys move from one month to the next as they do in one, and the months shown follow the tabbable day. The previous and next buttons move them a month at a time.
+
 The month's name, the weekdays', each day's full date and its number are the browser's own, from `Intl`, in the language of the nearest `lang` attribute. The only words that aren't the browser's are the previous and next buttons', which `previous-label` and `next-label` set, and what screenreaders are told about a range, or else the strings registered for that language with `registerStrings()`.
 
-Style it through its parts. A day is also `::part(selected)`, `::part(today)` and `::part(disabled)` when it's those, and with `range`, `::part(range-start)`, `::part(range-end)` and `::part(preview)`. The first day picked of a range is its start and end until the last is picked.
+Style it through its parts. A day is also `::part(selected)`, `::part(today)`, `::part(disabled)` and `::part(unavailable)` when it's those, and with `range`, `::part(range-start)`, `::part(range-end)` and `::part(preview)`. The first day picked of a range is its start and end until the last is picked. With `months`, lay the months out through `::part(months)`, which holds a `::part(month)` for each.
 
 #### Attributes
 
@@ -59,6 +96,7 @@ Style it through its parts. A day is also `::part(selected)`, `::part(today)` an
 | ---------------- | --------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `max`            | `string`  |         | The latest date that can be selected, as "yyyy-mm-dd".                                                                                                                                                                      |
 | `min`            | `string`  |         | The earliest date that can be selected, as "yyyy-mm-dd".                                                                                                                                                                    |
+| `months`         | `number`  | `1`     | How many months to show side by side, from the one the tabbable day is in.                                                                                                                                                  |
 | `next-label`     | `string`  |         | The next month button's text and so its accessible name. "Next month" in English when unset.                                                                                                                                |
 | `previous-label` | `string`  |         | The previous month button's text and so its accessible name. "Previous month" when unset.                                                                                                                                   |
 | `range`          | `boolean` | `false` | Selects a range of days rather than one.                                                                                                                                                                                    |
@@ -67,11 +105,12 @@ Style it through its parts. A day is also `::part(selected)`, `::part(today)` an
 
 #### Properties
 
-| Name                 | Type                        | Description                                                                                                                                                                                                              |
-| -------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `rangeSelectedLabel` | `(range: string) => string` | With `range`, what screenreaders are told once its last day is picked, from the range, such as "Monday, January 5 – Friday, January 9, 2026" in the calendar's language. The range and "selected" in English when unset. |
-| `rangeStartedLabel`  | `(date: string) => string`  | With `range`, what screenreaders are told once its first day is picked, from that day, in the calendar's language. That it's the range's start, and to pick its end, in English when unset.                              |
-| `selectedLabel`      | `(date: string) => string`  | Without `range`, what screenreaders are told once a day is picked, from that day, such as "Friday, October 16, 2026" in the calendar's language. The day and "selected" in English when unset.                           |
+| Name                 | Type                                     | Description                                                                                                                                                                                                                                                                                       |
+| -------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `isDateUnavailable`  | `(date: string) => boolean \| undefined` | Whether a day can't be picked, from that day as "yyyy-mm-dd", for days such as weekends or ones already booked. An unavailable day can still be focused, but not selected, and with `range` a range can't span one. Set a new function when what it returns changes, so the days are drawn again. |
+| `rangeSelectedLabel` | `(range: string) => string`              | With `range`, what screenreaders are told once its last day is picked, from the range, such as "Monday, January 5 – Friday, January 9, 2026" in the calendar's language. The range and "selected" in English when unset.                                                                          |
+| `rangeStartedLabel`  | `(date: string) => string`               | With `range`, what screenreaders are told once its first day is picked, from that day, in the calendar's language. That it's the range's start, and to pick its end, in English when unset.                                                                                                       |
+| `selectedLabel`      | `(date: string) => string`               | Without `range`, what screenreaders are told once a day is picked, from that day, such as "Friday, October 16, 2026" in the calendar's language. The day and "selected" in English when unset.                                                                                                    |
 
 #### Methods
 
@@ -87,19 +126,23 @@ Style it through its parts. A day is also `::part(selected)`, `::part(today)` an
 
 #### CSS parts
 
-| Name          | Description                                                                                         |
-| ------------- | --------------------------------------------------------------------------------------------------- |
-| `day`         | A day of the month                                                                                  |
-| `disabled`    | A day before the earliest date or after the latest                                                  |
-| `empty`       | A cell before the first day of the month or after the last                                          |
-| `grid`        | The days                                                                                            |
-| `header`      | The month and the buttons that change it                                                            |
-| `heading`     | The month and year                                                                                  |
-| `next`        | The button to the next month                                                                        |
-| `preview`     | With range, a day from the first one picked to the one focused or hovered, until the last is picked |
-| `previous`    | The button to the previous month                                                                    |
-| `range-end`   | With range, the last day of the selected range                                                      |
-| `range-start` | With range, the first day of the selected range                                                     |
-| `selected`    | The selected day, or with range a day of the selected range                                         |
-| `today`       | Today                                                                                               |
-| `weekday`     | A day of the week, above the days                                                                   |
+| Name            | Description                                                                                                             |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `day`           | A day of the month                                                                                                      |
+| `disabled`      | A day before the earliest date or after the latest, or with range one past an unavailable day from the first one picked |
+| `empty`         | A cell before the first day of the month or after the last                                                              |
+| `grid`          | A month's days                                                                                                          |
+| `header`        | The month and the buttons that change it                                                                                |
+| `heading`       | The month and year, or with months the first to the last                                                                |
+| `month`         | A month's heading and grid                                                                                              |
+| `month-heading` | With months, a month's own month and year                                                                               |
+| `months`        | The months, each with its heading and grid                                                                              |
+| `next`          | The button to the next month                                                                                            |
+| `preview`       | With range, a day from the first one picked to the one focused or hovered, until the last is picked                     |
+| `previous`      | The button to the previous month                                                                                        |
+| `range-end`     | With range, the last day of the selected range                                                                          |
+| `range-start`   | With range, the first day of the selected range                                                                         |
+| `selected`      | The selected day, or with range a day of the selected range                                                             |
+| `today`         | Today                                                                                                                   |
+| `unavailable`   | A day that isDateUnavailable says can't be picked                                                                       |
+| `weekday`       | A day of the week, above the days                                                                                       |

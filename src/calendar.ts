@@ -1,6 +1,7 @@
 import {
   html,
   LitElement,
+  nothing,
   type CSSResultGroup,
   type CSSResultOrNative,
   type PropertyValues,
@@ -29,6 +30,14 @@ interface Highlight {
   selected?: { end: Date; start: Date };
 }
 
+// What each day is drawn with, worked out once for all of them.
+interface DayContext {
+  formatDay: Intl.DateTimeFormat;
+  formatNumber: Intl.NumberFormat;
+  highlight: Highlight;
+  reach?: { end: Date; start: Date };
+}
+
 /**
  * A calendar with no visual styles: a month of days in a `[role=grid]`, to
  * pick one from, as in the APG's date picker.
@@ -54,6 +63,20 @@ interface Highlight {
  * range is once the last is, by `rangeSelectedLabel`. Without `range`,
  * they're told the day that's picked, by `selectedLabel`.
  *
+ * `isDateUnavailable` is a function of a "yyyy-mm-dd" day that says whether
+ * it can be picked, for days such as weekends or ones already booked. Unlike
+ * days outside `min` and `max`, an unavailable day can still be focused, so
+ * the keys move across it as across any other, but it can't be selected, and
+ * it's `aria-disabled` and `::part(unavailable)`. With `range`, a range can't
+ * span one: once the first day is picked, the days past the nearest
+ * unavailable day on either side are `::part(disabled)` until the last is.
+ *
+ * `months` shows that many months side by side, from the one the tabbable day
+ * is in. Each has its own grid, named by its own `::part(month-heading)`, and
+ * the heading between the buttons names them all. The keys move from one
+ * month to the next as they do in one, and the months shown follow the
+ * tabbable day. The previous and next buttons move them a month at a time.
+ *
  * The month's name, the weekdays', each day's full date and its number are
  * the browser's own, from `Intl`, in the language of the nearest `lang`
  * attribute. The only words that aren't the browser's are the previous and
@@ -62,12 +85,15 @@ interface Highlight {
  * that language with `registerStrings()`.
  *
  * Style it through its parts. A day is also `::part(selected)`,
- * `::part(today)` and `::part(disabled)` when it's those, and with `range`,
- * `::part(range-start)`, `::part(range-end)` and `::part(preview)`. The
- * first day picked of a range is its start and end until the last is picked.
+ * `::part(today)`, `::part(disabled)` and `::part(unavailable)` when it's
+ * those, and with `range`, `::part(range-start)`, `::part(range-end)` and
+ * `::part(preview)`. The first day picked of a range is its start and end
+ * until the last is picked. With `months`, lay the months out through
+ * `::part(months)`, which holds a `::part(month)` for each.
  *
  * @attr {string} [max] - The latest date that can be selected, as "yyyy-mm-dd".
  * @attr {string} [min] - The earliest date that can be selected, as "yyyy-mm-dd".
+ * @attr {number} [months=1] - How many months to show side by side, from the one the tabbable day is in.
  * @attr {string} [next-label] - The next month button's text and so its accessible name. "Next month" in English when unset.
  * @attr {string} [previous-label] - The previous month button's text and so its accessible name. "Previous month" when unset.
  * @attr {boolean} [range=false] - Selects a range of days rather than one.
@@ -75,11 +101,14 @@ interface Highlight {
  * @attr {number} [week-start=0] - The day weeks start on, from 0 for Sunday to 6 for Saturday.
  *
  * @csspart day - A day of the month
- * @csspart disabled - A day before the earliest date or after the latest
+ * @csspart disabled - A day before the earliest date or after the latest, or with range one past an unavailable day from the first one picked
  * @csspart empty - A cell before the first day of the month or after the last
- * @csspart grid - The days
+ * @csspart grid - A month's days
  * @csspart header - The month and the buttons that change it
- * @csspart heading - The month and year
+ * @csspart heading - The month and year, or with months the first to the last
+ * @csspart month - A month's heading and grid
+ * @csspart month-heading - With months, a month's own month and year
+ * @csspart months - The months, each with its heading and grid
  * @csspart next - The button to the next month
  * @csspart preview - With range, a day from the first one picked to the one focused or hovered, until the last is picked
  * @csspart previous - The button to the previous month
@@ -87,16 +116,27 @@ interface Highlight {
  * @csspart range-start - With range, the first day of the selected range
  * @csspart selected - The selected day, or with range a day of the selected range
  * @csspart today - Today
+ * @csspart unavailable - A day that isDateUnavailable says can't be picked
  * @csspart weekday - A day of the week, above the days
  *
  * @fires {Event} change - When the user selects a day, or both ends of a range. Setting `value` doesn't dispatch it.
  *
+ * @prop {(date: string) => boolean | undefined} isDateUnavailable - Whether a day can't be picked, from that day as "yyyy-mm-dd", for days such as weekends or ones already booked. An unavailable day can still be focused, but not selected, and with `range` a range can't span one. Set a new function when what it returns changes, so the days are drawn again.
  * @prop {(range: string) => string} rangeSelectedLabel - With `range`, what screenreaders are told once its last day is picked, from the range, such as "Monday, January 5 – Friday, January 9, 2026" in the calendar's language. The range and "selected" in English when unset.
  * @prop {(date: string) => string} rangeStartedLabel - With `range`, what screenreaders are told once its first day is picked, from that day, in the calendar's language. That it's the range's start, and to pick its end, in English when unset.
  * @prop {(date: string) => string} selectedLabel - Without `range`, what screenreaders are told once a day is picked, from that day, such as "Friday, October 16, 2026" in the calendar's language. The day and "selected" in English when unset.
  */
 @customElement('slab-calendar')
 export default class Calendar extends LitElement {
+  /**
+   * Whether a day can't be picked, from that day as "yyyy-mm-dd", for days
+   * such as weekends or ones already booked. An unavailable day can still be
+   * focused, but not selected, and with `range` a range can't span one. Set a
+   * new function when what it returns changes, so the days are drawn again.
+   */
+  @property({ attribute: false })
+  isDateUnavailable?: (date: string) => boolean;
+
   /**
    * The latest date that can be selected, as "yyyy-mm-dd".
    */
@@ -108,6 +148,13 @@ export default class Calendar extends LitElement {
    */
   @property({ reflect: true })
   min?: string;
+
+  /**
+   * How many months to show side by side, from the one the tabbable day is
+   * in.
+   */
+  @property({ reflect: true, type: Number, useDefault: true })
+  months = 1;
 
   /**
    * The next month button's text and so its accessible name. "Next month" in
@@ -180,30 +227,37 @@ export default class Calendar extends LitElement {
   readonly version: string = slab.version;
 
   override focus(options?: FocusOptions) {
-    this.#gridElementRef.value
+    this.#monthsElementRef.value
       ?.querySelector<HTMLElement>('[tabindex="0"]')
       ?.focus(options);
   }
 
   override render() {
-    const focused = this.#focused;
-
-    const first = new Date(
-      Date.UTC(focused.getUTCFullYear(), focused.getUTCMonth()),
-    );
+    const first = this.#firstVisible;
+    const last = addMonths(first, this.#monthCount - 1);
 
     const formatMonth = this.#format({ month: 'long', year: 'numeric' });
-    const formatDay = this.#format({ dateStyle: 'full' });
-    const highlight = this.#highlight;
 
-    // In the language's own digits, such as Arabic-Indic ones in Arabic.
-    const formatNumber = new Intl.NumberFormat(this.#locale);
+    const days: DayContext = {
+      formatDay: this.#format({ dateStyle: 'full' }),
+      // In the language's own digits, such as Arabic-Indic ones in Arabic.
+      formatNumber: new Intl.NumberFormat(this.#locale),
+      highlight: this.#highlight,
+      reach: this.#reach,
+    };
+
+    const months = Array.from({ length: this.#monthCount }, (_, index) => {
+      return addMonths(first, index);
+    });
+
+    const isSeveral = months.length > 1;
 
     // ARIA goes on attributes rather than on ElementInternals. Screenreaders
     // read both. But Playwright's role queries and ARIA snapshots, and Axe,
     // only read attributes, which would leave the ARIA untested.
     //
-    // The grid's clicks are its days', and its keyboard is `#onGridKeydown`.
+    // The grids' clicks are their days', and their keyboard is
+    // `#onMonthsKeydown`.
     return html`<div part="header">
         <!-- The month and the buttons that change it -->
         <button
@@ -217,12 +271,16 @@ export default class Calendar extends LitElement {
         </button>
 
         <span aria-live="polite" id="heading" part="heading">
-          <!-- The month and year -->
-          ${formatMonth.format(first)}
+          <!-- The month and year, or with months the first to the last -->
+          ${
+            isSeveral
+              ? formatMonth.formatRange(first, last)
+              : formatMonth.format(first)
+          }
         </span>
 
         <button
-          aria-disabled=${this.#isMonthAfterMax(first) ? 'true' : 'false'}
+          aria-disabled=${this.#isMonthAfterMax(last) ? 'true' : 'false'}
           part="next"
           type="button"
           @click=${this.#onNextClick}
@@ -232,55 +290,76 @@ export default class Calendar extends LitElement {
         </button>
       </div>
 
-      <table
-        aria-labelledby="heading"
-        aria-multiselectable=${this.range ? 'true' : 'false'}
-        part="grid"
-        role="grid"
-        @click=${this.#onGridClick}
-        @keydown=${this.#onGridKeydown}
-        @pointerleave=${this.#onGridPointerleave}
-        @pointerover=${this.#onGridPointerover}
-        ${ref(this.#gridElementRef)}
+      <div
+        part="months"
+        @click=${this.#onMonthsClick}
+        @keydown=${this.#onMonthsKeydown}
+        @pointerleave=${this.#onMonthsPointerleave}
+        @pointerover=${this.#onMonthsPointerover}
+        ${ref(this.#monthsElementRef)}
       >
-        <!-- The days -->
-        <thead>
-          <tr>
-            ${this.#weekdays.map(
-              ({ long, short }) =>
-                html`<th abbr=${long} part="weekday" scope="col">
-                  <!-- A day of the week, above the days -->
-                  ${short}
-                </th>`,
-            )}
-          </tr>
-        </thead>
+        <!-- The months, each with its heading and grid -->
+        ${months.map(
+          (month, index) =>
+            html`<div part="month">
+              <!-- A month's heading and grid -->
+              ${
+                isSeveral
+                  ? html`<span id="heading-${index}" part="month-heading">
+                      <!-- With months, a month's own month and year -->
+                      ${formatMonth.format(month)}
+                    </span>`
+                  : nothing
+              }
 
-        <tbody>
-          ${this.#getWeeks(first).map(
-            (week) =>
-              html`<tr>
-                ${week.map((date) =>
-                  date
-                    ? this.#renderDay(date, formatDay, formatNumber, highlight)
-                    : this.#renderEmpty(),
-                )}
-              </tr>`,
-          )}
-        </tbody>
-      </table>`;
+              <table
+                aria-labelledby=${isSeveral ? `heading-${index}` : 'heading'}
+                aria-multiselectable=${this.range ? 'true' : 'false'}
+                part="grid"
+                role="grid"
+              >
+                <!-- A month's days -->
+                <thead>
+                  <tr>
+                    ${this.#weekdays.map(
+                      ({ long, short }) =>
+                        html`<th abbr=${long} part="weekday" scope="col">
+                          <!-- A day of the week, above the days -->
+                          ${short}
+                        </th>`,
+                    )}
+                  </tr>
+                </thead>
+
+                <tbody>
+                  ${this.#getWeeks(month).map(
+                    (week) =>
+                      html`<tr>
+                        ${week.map((date) =>
+                          date
+                            ? this.#renderDay(date, days)
+                            : this.#renderEmpty(),
+                        )}
+                      </tr>`,
+                  )}
+                </tbody>
+              </table>
+            </div>`,
+        )}
+      </div>`;
   }
 
   // A `value` the consumer sets, or `range` set to read it as a range, moves
   // the tabbable day to it, or to the start of its range, and drops a range
-  // half picked. `min` and `max` need nothing here, since the tabbable day is
-  // kept between them as it's read.
+  // half picked. Its month is then the first one shown. `min` and `max` need
+  // nothing here, since the tabbable day is kept between them as it's read.
   override willUpdate(changes: PropertyValues<this>) {
     if (!changes.has('value') && !changes.has('range')) {
       return;
     }
 
     this.anchorDate = '';
+    this.visibleMonth = '';
 
     const start = this.#selection?.start;
 
@@ -310,7 +389,12 @@ export default class Calendar extends LitElement {
   @state()
   private hoveredDate = '';
 
-  #gridElementRef = createRef<HTMLTableElement>();
+  // The first month shown, as "yyyy-mm-dd" on its first day, until `value`
+  // moves it, or '' for the tabbable day's.
+  @state()
+  private visibleMonth = '';
+
+  #monthsElementRef = createRef<HTMLDivElement>();
 
   #strings = new StringsController(this);
 
@@ -322,15 +406,31 @@ export default class Calendar extends LitElement {
     return this.#clamp(date);
   }
 
+  // The first month shown: `visibleMonth`, moved as little as it takes for
+  // the tabbable day to be in one of the months shown.
+  get #firstVisible(): Date {
+    const focused = startOfMonth(this.#focused);
+    const first = parse(this.visibleMonth) ?? focused;
+
+    if (focused < first) {
+      return focused;
+    }
+
+    return focused > addMonths(first, this.#monthCount - 1)
+      ? addMonths(focused, 1 - this.#monthCount)
+      : first;
+  }
+
   // The days to show as selected, and as previewed. While a range is being
   // picked, the first day picked is the only one selected, and the preview
-  // runs from it to the hovered day or else the tabbable one. Otherwise it's
-  // `value`.
+  // runs from it to the hovered day or else the tabbable one, unless that one
+  // can't end the range. Otherwise it's `value`.
   get #highlight(): Highlight {
     const anchor = parse(this.anchorDate);
 
     if (anchor) {
-      const other = parse(this.hoveredDate) ?? this.#focused;
+      const hovered = parse(this.hoveredDate) ?? this.#focused;
+      const other = this.#canEndRange(hovered) ? hovered : anchor;
       const [start, end] = other < anchor ? [other, anchor] : [anchor, other];
 
       return {
@@ -340,6 +440,38 @@ export default class Calendar extends LitElement {
     }
 
     return { selected: this.#selection };
+  }
+
+  // `months` as a whole number of at least one.
+  get #monthCount() {
+    return Math.max(1, Math.trunc(this.months) || 1);
+  }
+
+  // While a range is being picked, the first and last days it can reach from
+  // the first day picked without spanning an unavailable day. Only the days
+  // shown, and those between them and the first day picked, are looked at.
+  get #reach(): { end: Date; start: Date } | undefined {
+    const anchor = parse(this.anchorDate);
+
+    if (!anchor) {
+      return;
+    }
+
+    const first = this.#firstVisible;
+    const after = addMonths(first, this.#monthCount);
+
+    let start = anchor;
+    let end = anchor;
+
+    while (start > first && !this.#isUnavailable(addDays(start, -1))) {
+      start = addDays(start, -1);
+    }
+
+    while (addDays(end, 1) < after && !this.#isUnavailable(addDays(end, 1))) {
+      end = addDays(end, 1);
+    }
+
+    return { end, start };
   }
 
   // `value` as its first and last days, which are the same day without
@@ -383,7 +515,7 @@ export default class Calendar extends LitElement {
   }
 
   // A day's, rather than a weekday's or an empty cell's.
-  #onGridClick = (event: MouseEvent) => {
+  #onMonthsClick = (event: MouseEvent) => {
     const date = event.composedPath().find((target): target is HTMLElement => {
       return target instanceof HTMLElement && 'date' in target.dataset;
     })?.dataset.date;
@@ -393,7 +525,7 @@ export default class Calendar extends LitElement {
     }
   };
 
-  #onGridKeydown = async (event: KeyboardEvent) => {
+  #onMonthsKeydown = async (event: KeyboardEvent) => {
     if (event.altKey || event.ctrlKey || event.metaKey) {
       return;
     }
@@ -440,23 +572,24 @@ export default class Calendar extends LitElement {
     }
 
     event.preventDefault(); // Prevent page scroll
-    this.focusedDate = format(this.#clamp(next));
+    this.#setFocused(this.#clamp(next));
 
     // The preview follows the keyboard from here.
     this.hoveredDate = '';
 
-    // The tabbable day is rendered anew, and maybe in another month.
+    // The tabbable day is rendered anew, and maybe in another month, or with
+    // other months shown.
     await this.updateComplete;
     this.focus();
   };
 
-  #onGridPointerleave = () => {
+  #onMonthsPointerleave = () => {
     this.hoveredDate = '';
   };
 
   // Only while a range is being picked, which is all the hovered day is for.
-  // A day that can't be picked doesn't move the preview.
-  #onGridPointerover = (event: PointerEvent) => {
+  // A day that can't end the range doesn't move the preview.
+  #onMonthsPointerover = (event: PointerEvent) => {
     if (this.anchorDate === '') {
       return;
     }
@@ -467,7 +600,7 @@ export default class Calendar extends LitElement {
       })?.dataset.date,
     );
 
-    this.hoveredDate = date && !this.#isDisabled(date) ? format(date) : '';
+    this.hoveredDate = date && this.#canEndRange(date) ? format(date) : '';
   };
 
   #onNextClick = () => {
@@ -477,6 +610,17 @@ export default class Calendar extends LitElement {
   #onPreviousClick = () => {
     this.#moveMonth(-1);
   };
+
+  // While a range is being picked, whether a day can be its last.
+  #canEndRange(date: Date) {
+    const reach = this.#reach;
+
+    return (
+      !this.#isDisabled(date) &&
+      !this.#isUnavailable(date) &&
+      (!reach || (date >= reach.start && date <= reach.end))
+    );
+  }
 
   #clamp(date: Date) {
     const min = parse(this.min);
@@ -518,6 +662,7 @@ export default class Calendar extends LitElement {
     });
   }
 
+  // Whether a day is before `min` or after `max`.
   #isDisabled(date: Date) {
     return this.#clamp(date).getTime() !== date.getTime();
   }
@@ -534,21 +679,37 @@ export default class Calendar extends LitElement {
     return min !== undefined && addDays(first, -1) < min;
   }
 
-  // The buttons keep focus, so only the tabbable day moves, to the same day of
-  // the other month, or the nearest it has, kept between `min` and `max`.
-  #moveMonth(months: number) {
-    this.focusedDate = format(this.#clamp(addMonths(this.#focused, months)));
+  #isUnavailable(date: Date) {
+    return this.isDateUnavailable?.(format(date)) === true;
   }
 
-  #renderDay(
-    date: Date,
-    formatDay: Intl.DateTimeFormat,
-    formatNumber: Intl.NumberFormat,
-    highlight: Highlight,
-  ) {
+  // The buttons keep focus, so only the tabbable day moves, to the same day of
+  // the other month, or the nearest it has, kept between `min` and `max`. The
+  // months shown move with it, unless there's no month to move to.
+  #moveMonth(months: number) {
+    const first = this.#firstVisible;
+    const last = addMonths(first, this.#monthCount - 1);
+
+    const isBlocked =
+      months < 0 ? this.#isMonthBeforeMin(first) : this.#isMonthAfterMax(last);
+
+    const focused = this.#clamp(addMonths(this.#focused, months));
+
+    this.visibleMonth = format(isBlocked ? first : addMonths(first, months));
+    this.focusedDate = format(focused);
+  }
+
+  #renderDay(date: Date, days: DayContext) {
+    const { highlight, reach } = days;
     const iso = format(date);
-    const isDisabled = this.#isDisabled(date);
+    const isUnavailable = this.#isUnavailable(date);
     const isToday = iso === format(today());
+
+    // Outside `min` and `max`, or while a range is being picked, past where it
+    // can reach.
+    const isDisabled =
+      this.#isDisabled(date) ||
+      (reach !== undefined && (date < reach.start || date > reach.end));
 
     const { preview, selected } = highlight;
 
@@ -571,12 +732,13 @@ export default class Calendar extends LitElement {
       ...(isPreviewed ? ['preview'] : []),
       ...(isToday ? ['today'] : []),
       ...(isDisabled ? ['disabled'] : []),
+      ...(isUnavailable ? ['unavailable'] : []),
     ].join(' ');
 
     return html`<td
       aria-current=${ifDefined(isToday ? 'date' : undefined)}
-      aria-disabled=${isDisabled ? 'true' : 'false'}
-      aria-label=${formatDay.format(date)}
+      aria-disabled=${isDisabled || isUnavailable ? 'true' : 'false'}
+      aria-label=${days.formatDay.format(date)}
       aria-selected=${isSelected ? 'true' : 'false'}
       data-date=${iso}
       part=${parts}
@@ -590,9 +752,10 @@ export default class Calendar extends LitElement {
         @part range-end - With range, the last day of the selected range
         @part preview - With range, a day from the first one picked to the one focused or hovered, until the last is picked
         @part today - Today
-        @part disabled - A day before the earliest date or after the latest
+        @part disabled - A day before the earliest date or after the latest, or with range one past an unavailable day from the first one picked
+        @part unavailable - A day that isDateUnavailable says can't be picked
       -->
-      ${formatNumber.format(date.getUTCDate())}
+      ${days.formatNumber.format(date.getUTCDate())}
     </td>`;
   }
 
@@ -602,16 +765,16 @@ export default class Calendar extends LitElement {
     </td>`;
   }
 
-  // What Enter, Space and a click on a day do. "change" is only for the
+  // Moves the tabbable day, and the months shown with it as little as it
   // user's selections, and with `range` only once its last day is picked.
   #select(iso: string) {
     const date = parse(iso);
 
-    if (!date || this.#isDisabled(date)) {
+    if (!date || !this.#canEndRange(date)) {
       return;
     }
 
-    this.focusedDate = iso;
+    this.#setFocused(date);
 
     const anchor = parse(this.anchorDate);
 
@@ -653,6 +816,16 @@ export default class Calendar extends LitElement {
       );
     }
   }
+
+  // takes for it to be in one of them.
+  #setFocused(date: Date) {
+    // Pinned first, so they move from the months shown now.
+    this.visibleMonth = format(this.#firstVisible);
+    this.focusedDate = format(date);
+    this.visibleMonth = format(this.#firstVisible);
+  }
+
+  // What Enter, Space and a click on a day do. "change" is only for the
 }
 
 function addDays(date: Date, days: number) {
@@ -666,6 +839,10 @@ function addMonths(date: Date, months: number) {
   const last = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
 
   return new Date(Date.UTC(year, month, Math.min(date.getUTCDate(), last)));
+}
+
+function startOfMonth(date: Date) {
+  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth()));
 }
 
 function format(date: Date) {

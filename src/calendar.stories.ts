@@ -28,6 +28,7 @@ const meta: Meta = {
     'addEventListener(event, handler)': '',
     max: '',
     min: '',
+    months: 1,
     'next-label': '',
     'previous-label': '',
     range: false,
@@ -59,6 +60,17 @@ const meta: Meta = {
         type: {
           summary: 'string',
           detail: '// The earliest date that can be selected, as "yyyy-mm-dd".',
+        },
+      },
+    },
+    months: {
+      control: { type: 'number', min: 1, max: 4 },
+      table: {
+        defaultValue: { summary: '1' },
+        type: {
+          summary: 'number',
+          detail:
+            '// How many months to show side by side, from the one the tabbable day is in.',
         },
       },
     },
@@ -123,6 +135,7 @@ const meta: Meta = {
     return html`<slab-calendar
       max=${arguments_.max || nothing}
       min=${arguments_.min || nothing}
+      months=${arguments_.months}
       next-label=${arguments_['next-label'] || nothing}
       previous-label=${arguments_['previous-label'] || nothing}
       ?range=${arguments_.range}
@@ -140,5 +153,25 @@ export const Range: StoryObj = {
   args: {
     range: true,
     value: '2026-10-12/2026-10-16',
+  },
+};
+
+export const Months: StoryObj = {
+  args: {
+    months: 2,
+    range: true,
+    value: '2026-10-26/2026-11-06',
+  },
+};
+
+// Weekends, through `isDateUnavailable`, which is a property only.
+export const UnavailableDates: StoryObj = {
+  render() {
+    return html`<slab-calendar
+      range
+      value="2026-10-12/2026-10-16"
+      .isDateUnavailable=${(date: string) =>
+        [0, 6].includes(new Date(date).getUTCDay())}
+    ></slab-calendar>`;
   },
 };

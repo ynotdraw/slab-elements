@@ -47,8 +47,8 @@ declare global {
  * first day starts over, and Escape otherwise, or a click outside, closes it
  * without picking anything, the way a native popover closes.
  *
- * `week-start` is passed to the Calendar, and so are `min` and `max`, so days
- * outside them can't be picked. The Calendar's language is the field's
+ * `week-start`, `months` and `isDateUnavailable` are passed to the Calendar,
+ * and so are `min` and `max`, so days outside them can't be picked. The Calendar's language is the field's
  * nearest `lang`.
  *
  * `open` reflects whether the calendar is open, and setting it opens or closes
@@ -68,6 +68,7 @@ declare global {
  * @attr {boolean} [hide-label=false] - Hides the label visually and leaves it as the accessible name, for a design that shows the label some other way.
  * @attr {string} [max] - The latest date allowed for either, as "yyyy-mm-dd".
  * @attr {string} [min] - The earliest date allowed for either, as "yyyy-mm-dd".
+ * @attr {number} [months=1] - How many months the Calendar shows side by side.
  * @attr {string} [name=''] - Submitted twice, with the start value and then the end value.
  * @attr {boolean} [open=false] - Whether the calendar is open, however it got there or went away. Setting it opens or closes the calendar.
  * @attr {boolean} [readonly=false] - Lets the user select the value but not change it, as `readonly` does a native input. The value is still submitted.
@@ -116,6 +117,8 @@ declare global {
  * @readonly
  * @prop {HTMLFormElement | null} form - The form it belongs to, or `null`.
  *
+ * @prop {(date: string) => boolean | undefined} isDateUnavailable - Whether a day can't be picked in the Calendar, from that day as "yyyy-mm-dd", for days such as weekends or ones already booked. It's passed to the Calendar. A day typed into the input isn't checked against it, as validity is the native input's.
+ *
  * @readonly
  * @prop {NodeList} labels - The `<label>` elements associated with it, as a native control's `labels`: each `<label for>` that names its `id`, and a `<label>` around it.
  *
@@ -163,6 +166,21 @@ export default class DateRangePicker extends DateRangeField {
    */
   @property({ attribute: 'button-label', reflect: true })
   buttonLabel?: string;
+
+  /**
+   * Whether a day can't be picked in the Calendar, from that day as
+   * "yyyy-mm-dd", for days such as weekends or ones already booked. It's
+   * passed to the Calendar. A day typed into the input isn't checked against
+   * it, as validity is the native input's.
+   */
+  @property({ attribute: false })
+  isDateUnavailable?: (date: string) => boolean;
+
+  /**
+   * How many months the Calendar shows side by side.
+   */
+  @property({ reflect: true, type: Number, useDefault: true })
+  months = 1;
 
   /**
    * Whether the calendar is open, however it got there or went away. Setting
@@ -237,13 +255,15 @@ export default class DateRangePicker extends DateRangeField {
         <!-- The popover the Calendar is in -->
         <slab-calendar
           data-test="calendar"
-          exportparts="day, disabled, empty, grid, header, heading, next, preview, previous, range-end, range-start, selected, today, weekday"
+          exportparts="day, disabled, empty, grid, header, heading, month, month-heading, months, next, preview, previous, range-end, range-start, selected, today, unavailable, weekday"
           lang=${ifDefined(langOf(this) || undefined)}
           max=${ifDefined(this.max)}
           min=${ifDefined(this.min)}
+          months=${this.months}
           part="calendar"
           range
           week-start=${this.weekStart}
+          .isDateUnavailable=${this.isDateUnavailable}
           .value=${this.#calendarValue}
           @change=${this.#onCalendarChange}
           ${ref(this.#calendarElementRef)}

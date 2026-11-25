@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
 import { viteUrl } from './playwright/constants.js';
+import type Calendar from './calendar.js';
 
 test('defines itself', { tag: '@miscellaneous' }, async ({ render, page }) => {
   await render(() => html`<slab-calendar></slab-calendar>`);
@@ -227,5 +228,101 @@ test(
     // Without `range`, a click selects the day it's on.
     await page.locator('[data-date="2026-10-21"]').click();
     await expect(host).toHaveJSProperty('value', '2026-10-21');
+  },
+);
+
+test(
+  'shows as many months as `months`, from the one with the tabbable day',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-calendar months="3" value="2026-11-15"></slab-calendar>`,
+    );
+
+    const host = page.locator('slab-calendar');
+
+    await expect(page.locator('[part="heading"]')).toHaveText(
+      /November 2026.+January 2027/,
+    );
+
+    await expect(page.locator('[part="month-heading"]')).toHaveText([
+      'November 2026',
+      'December 2026',
+      'January 2027',
+    ]);
+
+    await expect(page.getByRole('grid')).toHaveCount(3);
+
+    await expect(
+      page.getByRole('grid', { name: 'January 2027' }),
+    ).toBeVisible();
+
+    // A whole number of at least one, otherwise.
+    await host.evaluate((element: Calendar) => {
+      element.months = 0;
+    });
+
+    await expect(page.getByRole('grid')).toHaveCount(1);
+    await expect(page.locator('[part="month-heading"]')).toHaveCount(0);
+
+    await expect(
+      page.getByRole('grid', { name: 'November 2026' }),
+    ).toBeVisible();
+
+    await host.evaluate((element: Calendar) => {
+      element.months = 2.5;
+    });
+
+    await expect(page.getByRole('grid')).toHaveCount(2);
+
+    await host.evaluate((element: Calendar) => {
+      element.months = NaN;
+    });
+
+    await expect(page.getByRole('grid')).toHaveCount(1);
+  },
+);
+
+test(
+  'marks the days `isDateUnavailable` says are unavailable, and draws them again when it changes',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await page.clock.setFixedTime(new Date('2026-01-15T12:00:00'));
+
+    await render(
+      () =>
+        html`<slab-calendar
+          value="2026-10-15"
+          .isDateUnavailable=${(date: string) =>
+            [0, 6].includes(new Date(date).getUTCDay())}
+        ></slab-calendar>`,
+    );
+
+    const host = page.locator('slab-calendar');
+
+    await expect(page.locator('[part~="unavailable"]')).toHaveCount(9);
+
+    await expect(page.locator('[data-date="2026-10-17"]')).toHaveAttribute(
+      'part',
+      'day unavailable',
+    );
+
+    await host.evaluate((element: Calendar) => {
+      element.isDateUnavailable = (date) => date === '2026-10-15';
+    });
+
+    await expect(page.locator('[part~="unavailable"]')).toHaveCount(1);
+
+    // Still selected, since it's `value`.
+    await expect(page.locator('[data-date="2026-10-15"]')).toHaveAttribute(
+      'part',
+      'day selected unavailable',
+    );
+
+    await host.evaluate((element: Calendar) => {
+      element.isDateUnavailable = undefined;
+    });
+
+    await expect(page.locator('[part~="unavailable"]')).toHaveCount(0);
   },
 );

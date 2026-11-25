@@ -497,3 +497,144 @@ test(
       ]);
   },
 );
+
+test(
+  'moves onto an unavailable day, but does not select it',
+  { tag: '@keyboard' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () =>
+        html`<slab-calendar
+          value="2026-10-16"
+          .isDateUnavailable=${(date: string) => date === '2026-10-17'}
+        ></slab-calendar>`,
+    );
+
+    const host = page.locator('slab-calendar');
+
+    await callMethod(host, 'focus');
+    await page.keyboard.press('ArrowRight');
+
+    const unavailable = page.getByRole('gridcell', {
+      name: 'Saturday, October 17, 2026',
+    });
+
+    await expect(unavailable).toBeFocused();
+
+    await expect(host).not.toDispatchEvents(
+      () => page.keyboard.press('Enter'),
+      [{ type: 'change' }],
+    );
+
+    await expect(host).toHaveJSProperty('value', '2026-10-16');
+
+    // And on past it, as across any other day.
+    await page.keyboard.press('ArrowRight');
+    expect(await getFocused(page)).toBe('2026-10-18');
+  },
+);
+
+test(
+  'does not end a range past an unavailable day',
+  { tag: '@keyboard' },
+  async ({ callMethod, render, page }) => {
+    await page.clock.setFixedTime(new Date('2026-01-15T12:00:00'));
+
+    await render(
+      () =>
+        html`<slab-calendar
+          range
+          value="2026-10-14/2026-10-14"
+          .isDateUnavailable=${(date: string) =>
+            date === '2026-10-12' || date === '2026-10-17'}
+        ></slab-calendar>`,
+    );
+
+    const host = page.locator('slab-calendar');
+
+    await callMethod(host, 'focus');
+    await page.keyboard.press('Enter');
+
+    // Past the unavailable days on either side.
+    await expect(page.locator('[data-date="2026-10-11"]')).toHaveAttribute(
+      'part',
+      'day disabled',
+    );
+
+    await expect(page.locator('[data-date="2026-10-18"]')).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    );
+
+    await expect(page.locator('[data-date="2026-10-13"]')).toHaveAttribute(
+      'aria-disabled',
+      'false',
+    );
+
+    await page.keyboard.press('ArrowDown');
+    expect(await getFocused(page)).toBe('2026-10-21');
+
+    // Not a day the range can end on, so the preview stays on the first day.
+    await expect(page.locator('[part~="preview"]')).toHaveCount(1);
+
+    await expect(host).not.toDispatchEvents(
+      () => page.keyboard.press('Enter'),
+      [{ type: 'change' }],
+    );
+
+    await page.keyboard.press('ArrowUp');
+    await page.keyboard.press('ArrowRight');
+    await expect(page.locator('[part~="preview"]')).toHaveCount(2);
+
+    await expect(host).toDispatchEvents(
+      () => page.keyboard.press('Enter'),
+      [{ type: 'change', bubbles: true, cancelable: false, composed: true }],
+    );
+
+    await expect(host).toHaveJSProperty('value', '2026-10-14/2026-10-15');
+
+    // Nothing is past reach once the range is picked.
+    await expect(page.locator('[data-date="2026-10-21"]')).toHaveAttribute(
+      'aria-disabled',
+      'false',
+    );
+  },
+);
+
+test(
+  'moves the months shown with `months` as the focused day leaves them',
+  { tag: '@keyboard' },
+  async ({ callMethod, render, page }) => {
+    await render(
+      () => html`<slab-calendar months="2" value="2026-10-31"></slab-calendar>`,
+    );
+
+    const heading = page.locator('[part="heading"]');
+
+    await callMethod(page.locator('slab-calendar'), 'focus');
+
+    // Into the second month, which is already shown.
+    await page.keyboard.press('ArrowRight');
+    expect(await getFocused(page)).toBe('2026-11-01');
+    await expect(heading).toHaveText(/October.+November 2026/);
+
+    await expect(
+      page.getByRole('gridcell', { name: 'Sunday, November 1, 2026' }),
+    ).toBeFocused();
+
+    // Past it, so the months move on one.
+    await page.keyboard.press('PageDown');
+    expect(await getFocused(page)).toBe('2026-12-01');
+    await expect(heading).toHaveText(/November.+December 2026/);
+
+    // Back into the first month shown, which stays.
+    await page.keyboard.press('ArrowLeft');
+    expect(await getFocused(page)).toBe('2026-11-30');
+    await expect(heading).toHaveText(/November.+December 2026/);
+
+    // Back before it, so the months move back.
+    await page.keyboard.press('Shift+PageUp');
+    expect(await getFocused(page)).toBe('2025-11-30');
+    await expect(heading).toHaveText(/November.+December 2025/);
+  },
+);

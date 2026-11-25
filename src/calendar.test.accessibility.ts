@@ -91,3 +91,46 @@ test(
     ).toHaveAttribute('aria-selected', 'true');
   },
 );
+
+test(
+  'is accessible with `months` and unavailable days',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-calendar
+          months="2"
+          range
+          value="2026-10-14/2026-10-16"
+          .isDateUnavailable=${(date: string) => date === '2026-10-20'}
+        ></slab-calendar>`,
+    );
+
+    await expect(page).toBeAccessible('slab-calendar');
+
+    await expect(page.locator('[data-date="2026-10-20"]')).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    );
+  },
+);
+
+test(
+  'has a grid for each month with `months`, each named by its month',
+  { tag: '@accessibility' },
+  async ({ render, page }) => {
+    await render(
+      () => html`<slab-calendar months="2" value="2026-10-15"></slab-calendar>`,
+    );
+
+    await expect(page.locator('slab-calendar')).toMatchAriaSnapshot(`
+      - button "Previous month"
+      - text: /October.+November 2026/
+      - button "Next month"
+      - text: October 2026
+      - grid "October 2026"
+      - text: November 2026
+      - grid "November 2026"
+    `);
+  },
+);

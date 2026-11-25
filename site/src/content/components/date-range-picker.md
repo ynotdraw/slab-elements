@@ -16,6 +16,8 @@ It's [Date Range Field](../date-range-field/), so the two inputs, their values, 
 
 Opening it focuses the range's first day, or else today, kept between `min` and `max`. The first day picked starts the range and the second ends it, in either order. Picking the second sets both values, dispatches "input" and "change", closes the calendar and puts focus back on the button. A range left half picked is dropped when the calendar closes. `open` reflects whether it's open, and `showPicker()` and `hidePicker()` open and close it. Like a native input's, `showPicker()` only works from a user gesture, such as a click, and throws while it's disabled or read-only. The Calendar's parts are exported with the same names, so style its days with `::part(range-start)`, `::part(range-end)`, `::part(selected)`, `::part(preview)` and the rest.
 
+`months` and `isDateUnavailable` are passed to the Calendar, to show more than one month and to keep days such as booked ones from being picked, as on [Calendar](../calendar/#unavailable-dates). A range picked in the Calendar can't span an unavailable day. Days typed into the inputs aren't checked against `isDateUnavailable`, since validity is the native inputs'. To make a range invalid, call `setCustomValidity()` on "change".
+
 ## Keyboard
 
 | Key                  | What it does                                                                                      |
