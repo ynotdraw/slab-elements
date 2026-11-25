@@ -52,7 +52,7 @@ export default (
       },
       text(writer) {
         writer.write(
-          property.type
+          'type' in property && property.type
             ? `{${property.type.text}} ${property.name}`
             : property.name,
         );

@@ -260,7 +260,7 @@
     "heading": "Switch"
   },
   "components/table": {
-    "description": "Rows and columns, laid out and announced like a native table, that components can render into. Column headers can be buttons that sort.",
+    "description": "Rows and columns, laid out and announced like a native table, that components can render into. Column headers can be buttons that sort, and rows can be selected.",
     "eyebrow": "Data",
     "heading": "Table"
   },

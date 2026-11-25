@@ -12,9 +12,9 @@ tags:
     slab-table-column-header,
     slab-table-cell,
   ]
-summary: 'Rows and columns, laid out and announced like a native table, that components can render into. Column headers can be buttons that sort.'
+summary: 'Rows and columns, laid out and announced like a native table, that components can render into. Column headers can be buttons that sort, and rows can be selected.'
 example: |
-  <slab-styled-table aria-label="Pours">
+  <slab-styled-table aria-label="Pours" multiple>
     <slab-styled-table-head>
       <slab-styled-table-row>
         <slab-styled-table-column-header sortable sort="ascending">Slab</slab-styled-table-column-header>
@@ -28,7 +28,7 @@ example: |
         <slab-styled-table-cell>12</slab-styled-table-cell>
         <slab-styled-table-cell>2026-09-14</slab-styled-table-cell>
       </slab-styled-table-row>
-      <slab-styled-table-row>
+      <slab-styled-table-row selected>
         <slab-styled-table-cell row-header>Garage</slab-styled-table-cell>
         <slab-styled-table-cell>18</slab-styled-table-cell>
         <slab-styled-table-cell>2026-08-30</slab-styled-table-cell>
@@ -78,11 +78,39 @@ A `sortable` Column Header is a `<button>`. Clicking it sorts its column ascendi
 
 Sorting the rows is yours, since Table doesn't move them: on "sort", put the Table Body's rows in the order the Column Header's `sort` says, as the example above does, or sort your data and let your framework render it. Set `sort` yourself for a Table that starts out sorted.
 
-It's a table, not a grid. It's read, not moved through with the arrow keys, and only a sortable Column Header's button and what you put in a Cell take focus. Cells can't span columns or rows.
+It's a table, not a grid. It's read, not moved through with the arrow keys, and only a sortable Column Header's button, a selectable Table's check boxes and what you put in a Cell take focus. Cells can't span columns or rows.
+
+## Selecting rows
+
+Rows aren't selected unless the Table is `selectable`, or `multiple`, which allows more than one and needs no `selectable`, as in Grid List. Then each body row starts with a native check box, named "Select" and the text of its row header, so a screenreader hears "Select Garage" rather than a column of "checkbox, not checked". Checking one sets the row's `selected`, gives it `aria-selected="true"`, and dispatches "change" from the Table. Without `multiple`, checking one unchecks the rest.
+
+With `multiple`, the head row starts with a check box that selects every enabled row, or none when they all are. It's mixed while only some are. Shift with a click on a check box selects every row from the one last checked. A `disabled` row's check box is disabled, and selecting every row leaves it as it is. The foot row starts with an empty Cell, so the columns line up.
+
+```html
+<slab-table aria-label="Pours" multiple>
+  <slab-table-head>…</slab-table-head>
+  <slab-table-body>
+    <slab-table-row selected>…</slab-table-row>
+    <slab-table-row>…</slab-table-row>
+    <slab-table-row disabled>…</slab-table-row>
+  </slab-table-body>
+</slab-table>
+```
+
+```js
+const table = document.querySelector('slab-table');
+
+table.addEventListener('change', () => {
+  console.log(table.selectedRows); // The selected body rows, in order.
+});
+```
+
+As on an Option, a row's `selected` attribute is how it starts, and its `selected` property is how it is now. Setting the property selects the row without dispatching "change". Style the check boxes through `::part(checkbox)` and `::part(selection-cell)`, and a selected row on `:state(selected)`. Word the check boxes' names with `select-all-label`, `selectRowLabel`, or `tableSelectAll` and `tableSelectRow` in `registerStrings()`. A `selectable` Table that isn't `multiple` has no select-all check box, so its head row's first Column Header is named "Selection" for screenreaders, which `selection-label` or `tableSelection` words.
 
 ## Keyboard
 
-| Key          | What it does                                                       |
-| ------------ | ------------------------------------------------------------------ |
-| Tab          | Moves to each sortable Column Header, then to what's in the Cells. |
-| Enter, Space | On a sortable Column Header, sorts its column.                     |
+| Key          | What it does                                                                                      |
+| ------------ | ------------------------------------------------------------------------------------------------- |
+| Tab          | Moves through the check boxes, sortable Column Headers and what's in the Cells, in order.         |
+| Enter, Space | On a sortable Column Header, sorts its column.                                                    |
+| Space        | On a row's check box, selects or unselects the row. On the head row's, selects every row or none. |

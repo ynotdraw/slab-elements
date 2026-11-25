@@ -22488,6 +22488,20 @@
           "kind": "class",
           "description": "",
           "name": "TableRow",
+          "cssParts": [
+            {
+              "name": "selection-label",
+              "description": "Names the column of check boxes, visually hidden, when its Table is selectable but not multiple"
+            },
+            {
+              "name": "checkbox",
+              "description": "The check box, a native `<input type=\"checkbox\">`: the row's own in a body row, or the head row's, which selects every row, when its Table is `multiple`"
+            },
+            {
+              "name": "selection-cell",
+              "description": "Holds the check box, before the row's Cells, while its Table is selectable. In a head row it's a Column Header, and in a foot row it's empty"
+            }
+          ],
           "slots": [
             {
               "name": "",
@@ -22498,6 +22512,36 @@
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Can't be selected.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "selectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Set by its Table, on a body row."
+            },
+            {
+              "kind": "field",
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Like Option's, the attribute is the default state and the property is the\ncurrent one. Style `:state(selected)` rather than `[selected]`.",
+              "attribute": "selected"
+            },
             {
               "kind": "method",
               "name": "finalizeStyles",
@@ -22517,6 +22561,72 @@
                   }
                 }
               ]
+            }
+          ],
+          "events": [
+            {
+              "name": "private-connected",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "private-selected-change",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "private-disabled-change",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "private-select",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "private-select-all",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Can't be selected.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Like Option's, the attribute is the default state and the property is the\ncurrent one. Style `:state(selected)` rather than `[selected]`.",
+              "fieldName": "selected"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "While it's disabled.",
+              "name": "disabled"
+            },
+            {
+              "description": "While its Table is selectable, on a body row.",
+              "name": "selectable"
+            },
+            {
+              "description": "While it's selected.",
+              "name": "selected"
             }
           ],
           "superclass": {
@@ -22580,12 +22690,80 @@
           "members": [
             {
               "kind": "field",
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether more than one row can be selected, with a check box in the head\nrow that selects every row. Rows are selectable when it's set, without\n`selectable`.",
+              "attribute": "multiple",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "selectAllLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the head row's check box when `multiple`. \"Select all\" in English\nwhen unset.",
+              "attribute": "select-all-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "selectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether a row can be selected, with a check box at its start.",
+              "attribute": "selectable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "selectionLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the column of check boxes when the Table is `selectable` but not\n`multiple`, and so has no select-all check box. \"Selection\" in English\nwhen unset.",
+              "attribute": "selection-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "selectRowLabel",
+              "type": {
+                "text": "(row: string) => string"
+              },
+              "description": "Names each body row's check box, from the text of its row header, or its\nfirst Cell when it has no row header. \"Select\" and the text in English\nwhen unset."
+            },
+            {
+              "kind": "field",
               "name": "columnHeaders",
               "type": {
                 "text": "TableColumnHeader[]"
               },
               "readonly": true,
               "description": "Its Column Headers, in order."
+            },
+            {
+              "kind": "field",
+              "name": "selectedRow",
+              "type": {
+                "text": "TableRow | null"
+              },
+              "readonly": true,
+              "description": "The first selected body row, or `null`."
+            },
+            {
+              "kind": "field",
+              "name": "selectedRows",
+              "type": {
+                "text": "TableRow[]"
+              },
+              "readonly": true,
+              "description": "Every selected body row, in order."
             },
             {
               "kind": "method",
@@ -22606,6 +22784,51 @@
                   }
                 }
               ]
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When the user checks or unchecks a row's check box, or the head row's. Setting a row's `selected` from code doesn't dispatch it."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether more than one row can be selected, with a check box in the head\nrow that selects every row. Rows are selectable when it's set, without\n`selectable`.",
+              "fieldName": "multiple"
+            },
+            {
+              "name": "select-all-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the head row's check box when `multiple`. \"Select all\" in English\nwhen unset.",
+              "fieldName": "selectAllLabel"
+            },
+            {
+              "name": "selectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether a row can be selected, with a check box at its start.",
+              "fieldName": "selectable"
+            },
+            {
+              "name": "selection-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Names the column of check boxes when the Table is `selectable` but not\n`multiple`, and so has no select-all check box. \"Selection\" in English\nwhen unset.",
+              "fieldName": "selectionLabel"
             }
           ],
           "superclass": {

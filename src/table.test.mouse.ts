@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { expect, test } from './playwright/test.js';
+import type Table from './table.js';
 import type TableColumnHeader from './table.column-header.js';
 
 // A stand-in for `ariaNotify()`, since not every browser has one, and a real
@@ -108,7 +109,7 @@ test(
     const yards = page.getByRole('columnheader', { name: 'Yards' });
 
     // What "sort"'s listeners find.
-    const sorts = await page.locator('slab-table').evaluate((table) => {
+    const sorts = await page.locator('slab-table').evaluate((table: Table) => {
       return new Promise<string[]>((resolve) => {
         table.addEventListener(
           'sort',
@@ -257,5 +258,217 @@ test(
     );
 
     await expect(header).toHaveJSProperty('sort', 'none');
+  },
+);
+
+test(
+  'selects one row at a time when its check box is clicked when `selectable`',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-table aria-label="Pours" id="table" selectable>
+          <slab-table-head>
+            <slab-table-row>
+              <slab-table-column-header>Slab</slab-table-column-header>
+            </slab-table-row>
+          </slab-table-head>
+          <slab-table-body>
+            <slab-table-row id="driveway">
+              <slab-table-cell row-header>Driveway</slab-table-cell>
+            </slab-table-row>
+            <slab-table-row id="patio">
+              <slab-table-cell row-header>Patio</slab-table-cell>
+            </slab-table-row>
+          </slab-table-body>
+        </slab-table>`,
+    );
+
+    const table = page.locator('slab-table');
+    const driveway = page.locator('#driveway');
+    const patio = page.locator('#patio');
+
+    const drivewayCheckbox = page.getByRole('checkbox', {
+      name: 'Select Driveway',
+    });
+
+    const patioCheckbox = page.getByRole('checkbox', { name: 'Select Patio' });
+
+    await expect(table).toDispatchEvents(
+      () => drivewayCheckbox.click(),
+      [
+        {
+          type: 'change',
+          bubbles: true,
+          cancelable: false,
+          composed: true,
+          target: 'table',
+        },
+      ],
+    );
+
+    await expect(driveway).toHaveJSProperty('selected', true);
+    await expect(driveway).toHaveAttribute('aria-selected', 'true');
+    await expect(drivewayCheckbox).toBeChecked();
+    await expect(table).toHaveJSProperty('selectedRow.id', 'driveway');
+
+    await patioCheckbox.click();
+    await expect(patio).toHaveJSProperty('selected', true);
+    await expect(driveway).toHaveJSProperty('selected', false);
+    await expect(drivewayCheckbox).not.toBeChecked();
+
+    // A check box, so it can be unchecked.
+    await expect(table).toDispatchEvents(
+      () => patioCheckbox.click(),
+      [{ type: 'change' }],
+    );
+
+    await expect(patio).toHaveJSProperty('selected', false);
+    await expect(table).toHaveJSProperty('selectedRow', null);
+  },
+);
+
+test(
+  'toggles rows when their check boxes are clicked when `multiple`, and selects every one with the head row’s',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-table aria-label="Pours" id="table" multiple>
+          <slab-table-head>
+            <slab-table-row>
+              <slab-table-column-header>Slab</slab-table-column-header>
+            </slab-table-row>
+          </slab-table-head>
+          <slab-table-body>
+            <slab-table-row>
+              <slab-table-cell row-header>Driveway</slab-table-cell>
+            </slab-table-row>
+            <slab-table-row>
+              <slab-table-cell row-header>Patio</slab-table-cell>
+            </slab-table-row>
+            <slab-table-row disabled>
+              <slab-table-cell row-header>Walkway</slab-table-cell>
+            </slab-table-row>
+          </slab-table-body>
+        </slab-table>`,
+    );
+
+    const table = page.locator('slab-table');
+    const all = page.getByRole('checkbox', { name: 'Select all' });
+    const driveway = page.getByRole('checkbox', { name: 'Select Driveway' });
+    const patio = page.getByRole('checkbox', { name: 'Select Patio' });
+    const walkway = page.getByRole('checkbox', { name: 'Select Walkway' });
+
+    await expect(walkway).toBeDisabled();
+    await expect(all).toHaveJSProperty('indeterminate', false);
+
+    await driveway.click();
+    await patio.click();
+    await driveway.click();
+
+    await expect(driveway).not.toBeChecked();
+    await expect(patio).toBeChecked();
+    await expect(all).not.toBeChecked();
+    await expect(all).toHaveJSProperty('indeterminate', true);
+
+    await expect(table).toDispatchEvents(
+      () => all.click(),
+      [{ type: 'change', target: 'table' }],
+    );
+
+    await expect(driveway).toBeChecked();
+    await expect(patio).toBeChecked();
+    await expect(walkway).not.toBeChecked();
+    await expect(all).toBeChecked();
+    await expect(all).toHaveJSProperty('indeterminate', false);
+
+    const selected = await table.evaluate((table: Table) =>
+      table.selectedRows.map(({ textContent }) => textContent.trim()),
+    );
+
+    expect(selected).toStrictEqual(['Driveway', 'Patio']);
+
+    await expect(table).toDispatchEvents(
+      () => all.click(),
+      [{ type: 'change' }],
+    );
+
+    await expect(driveway).not.toBeChecked();
+    await expect(patio).not.toBeChecked();
+    await expect(all).not.toBeChecked();
+  },
+);
+
+test(
+  'selects every row from the last one selected when a check box is clicked with Shift when `multiple`',
+  { tag: '@mouse' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-table aria-label="Pours" multiple>
+          <slab-table-body>
+            <slab-table-row>
+              <slab-table-cell>One</slab-table-cell>
+            </slab-table-row>
+            <slab-table-row>
+              <slab-table-cell>Two</slab-table-cell>
+            </slab-table-row>
+            <slab-table-row disabled>
+              <slab-table-cell>Three</slab-table-cell>
+            </slab-table-row>
+            <slab-table-row>
+              <slab-table-cell>Four</slab-table-cell>
+            </slab-table-row>
+            <slab-table-row>
+              <slab-table-cell>Five</slab-table-cell>
+            </slab-table-row>
+          </slab-table-body>
+        </slab-table>`,
+    );
+
+    const table = page.locator('slab-table');
+
+    const checkbox = (name: string) =>
+      page.getByRole('checkbox', { name: `Select ${name}` });
+
+    const selected = () =>
+      table.evaluate((table: Table) =>
+        table.selectedRows.map(({ textContent }) => textContent.trim()),
+      );
+
+    // Nothing selected yet to select from.
+    await checkbox('Two').click({ modifiers: ['Shift'] });
+    expect(await selected()).toStrictEqual(['Two']);
+
+    await expect(table).toDispatchEvents(
+      () => checkbox('Five').click({ modifiers: ['Shift'] }),
+      [{ type: 'change' }],
+    );
+
+    expect(await selected()).toStrictEqual(['Two', 'Four', 'Five']);
+
+    // Unchecking with Shift unchecks only that one.
+    await checkbox('Four').click({ modifiers: ['Shift'] });
+    expect(await selected()).toStrictEqual(['Two', 'Five']);
+
+    // Upward, from the last one checked, Five.
+    await checkbox('One').click({ modifiers: ['Shift'] });
+    expect(await selected()).toStrictEqual(['One', 'Two', 'Four', 'Five']);
+
+    // From only the one clicked, when the last one checked, One, is disabled.
+    await checkbox('Two').click();
+    await checkbox('Four').click();
+
+    await table.evaluate((table: Table) => {
+      const [one] = table.querySelectorAll('slab-table-row');
+
+      if (one) {
+        one.disabled = true;
+      }
+    });
+
+    await checkbox('Four').click({ modifiers: ['Shift'] });
+    expect(await selected()).toStrictEqual(['One', 'Four', 'Five']);
   },
 );

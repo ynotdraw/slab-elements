@@ -77,6 +77,9 @@ export interface Strings {
   sortableListInstructions: string;
   sortableListMoved: (label: string, position: number, total: number) => string;
   stepsComplete: string;
+  tableSelectAll: string;
+  tableSelectRow: (row: string) => string;
+  tableSelection: string;
   tableSorted: (column: string, sort: 'ascending' | 'descending') => string;
   tagsInputAdded: (text: string) => string;
   tagsInputRemove: (text: string) => string;
@@ -156,6 +159,9 @@ const english: Strings = {
   sortableListMoved: (label, position, total) =>
     `${label} moved to position ${position} of ${total}`,
   stepsComplete: 'Completed',
+  tableSelectAll: 'Select all',
+  tableSelectRow: (row) => `Select ${row}`,
+  tableSelection: 'Selection',
   tableSorted: (column, sort) => `Sorted by ${column}, ${sort}`,
   tagsInputAdded: (text) => `${text} added`,
   tagsInputRemove: (text) => `Remove ${text}`,

@@ -490,7 +490,24 @@ const own: Record<string, Partial<Record<Kind, Descriptions>>> = {
     },
   },
   'slab-table': {
-    members: { columnHeaders: 'Its Column Headers, in order.' },
+    events: {
+      change:
+        "When the user checks or unchecks a row's check box, or the head row's. Setting a row's `selected` from code doesn't dispatch it.",
+    },
+    members: {
+      columnHeaders: 'Its Column Headers, in order.',
+      selectedRow: 'The first selected body row, or `null`.',
+      selectedRows: 'Every selected body row, in order.',
+    },
+  },
+  'slab-table-row': {
+    cssParts: {
+      checkbox:
+        'The check box, a native `<input type="checkbox">`: the row\'s own in a body row, or the head row\'s, which selects every row, when its Table is `multiple`',
+    },
+    cssStates: {
+      selectable: 'While its Table is selectable, on a body row.',
+    },
   },
   'slab-table-column-header': {
     cssStates: {
