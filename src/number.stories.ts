@@ -33,6 +33,7 @@ const meta: Meta = {
     autocomplete: '',
     'checkValidity()': '',
     disabled: false,
+    'format-options': '',
     'hide-label': false,
     max: '',
     min: '',
@@ -76,6 +77,15 @@ const meta: Meta = {
       table: {
         defaultValue: { summary: 'false' },
         type: { summary: 'boolean' },
+      },
+    },
+    'format-options': {
+      table: {
+        type: {
+          summary: 'Intl.NumberFormatOptions',
+          detail:
+            '// As JSON, such as {"style":"currency","currency":"USD"}. A percent\'s value is a fraction.',
+        },
       },
     },
     'hide-label': {
@@ -188,6 +198,7 @@ const meta: Meta = {
     /* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/prefer-nullish-coalescing */
     return html`<slab-number
       autocomplete=${arguments_.autocomplete || nothing}
+      format-options=${arguments_['format-options'] || nothing}
       label=${arguments_.label || nothing}
       max=${arguments_.max || nothing}
       min=${arguments_.min || nothing}
@@ -218,5 +229,23 @@ export const NumberField: StoryObj = {};
 export const WithError: StoryObj = {
   args: {
     required: true,
+  },
+};
+
+export const Currency: StoryObj = {
+  args: {
+    'format-options': '{"style":"currency","currency":"USD"}',
+    min: '0',
+    step: '0.01',
+    value: '1234.5',
+  },
+};
+
+export const Percent: StoryObj = {
+  args: {
+    'format-options': '{"style":"percent"}',
+    max: '1',
+    min: '0',
+    value: '0.15',
   },
 };

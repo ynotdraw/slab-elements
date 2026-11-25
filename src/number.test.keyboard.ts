@@ -179,3 +179,144 @@ test(
     expect(isSubmitted).toBe(false);
   },
 );
+
+test(
+  'reads what is typed as a number, and formats it once changed',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-number
+          .formatOptions=${{ style: 'currency', currency: 'USD' } as const}
+          label="Label"
+          lang="en-US"
+        ></slab-number>`,
+    );
+
+    const host = page.locator('slab-number');
+    const input = page.getByRole('spinbutton');
+
+    await expect(host).toDispatchEvents(async () => {
+      await input.pressSequentially('$1,2');
+      await expect(host).toHaveJSProperty('value', '12');
+      await input.blur();
+    }, [
+      { type: 'input', bubbles: true, cancelable: false, composed: true },
+      { type: 'input', bubbles: true, cancelable: false, composed: true },
+      { type: 'input', bubbles: true, cancelable: false, composed: true },
+      { type: 'input', bubbles: true, cancelable: false, composed: true },
+      { type: 'change', bubbles: true, cancelable: false, composed: true },
+    ]);
+
+    await expect(input).toHaveValue('$12.00');
+    await expect(host).toHaveJSProperty('value', '12');
+  },
+);
+
+test(
+  'rounds a typed value to what its format shows once changed',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-number
+          .formatOptions=${{ style: 'percent' } as const}
+          label="Label"
+          lang="en-US"
+          step="any"
+        ></slab-number>`,
+    );
+
+    const host = page.locator('slab-number');
+    const input = page.getByRole('spinbutton');
+
+    await input.fill('12.3 %');
+    await expect(host).toHaveJSProperty('value', '0.123');
+
+    await input.blur();
+    await expect(input).toHaveValue('12%');
+    await expect(host).toHaveJSProperty('value', '0.12');
+  },
+);
+
+test(
+  'steps a formatted value with the arrow keys and stops at `max` and `min`',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-number
+          .formatOptions=${{ style: 'currency', currency: 'USD' } as const}
+          label="Label"
+          lang="en-US"
+          max="10"
+          min="0"
+          step="5"
+          value="5"
+        ></slab-number>`,
+    );
+
+    const host = page.locator('slab-number');
+    const input = page.getByRole('spinbutton');
+
+    await expect(host).toDispatchEvents(
+      () => input.press('ArrowUp'),
+      [
+        { type: 'input', bubbles: true, cancelable: false, composed: true },
+        { type: 'change', bubbles: true, cancelable: false, composed: true },
+      ],
+    );
+
+    await expect(host).toHaveJSProperty('value', '10');
+    await expect(input).toHaveValue('$10.00');
+
+    await input.press('ArrowUp');
+    await expect(host).toHaveJSProperty('value', '10');
+
+    await input.press('ArrowDown');
+    await input.press('ArrowDown');
+    await input.press('ArrowDown');
+    await expect(host).toHaveJSProperty('value', '0');
+    await expect(input).toHaveValue('$0.00');
+  },
+);
+
+test(
+  'steps a formatted value by 1 with the arrow keys when `step` is "any"',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-number
+          .formatOptions=${{}}
+          label="Label"
+          lang="en-US"
+          step="any"
+          value="1.5"
+        ></slab-number>`,
+    );
+
+    await page.getByRole('spinbutton').press('ArrowUp');
+    await expect(page.locator('slab-number')).toHaveJSProperty('value', '2.5');
+  },
+);
+
+test(
+  'does not step a formatted value when readonly',
+  { tag: '@keyboard' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-number
+          .formatOptions=${{}}
+          label="Label"
+          readonly
+          value="1"
+        ></slab-number>`,
+    );
+
+    await page.getByRole('spinbutton').press('ArrowUp');
+    await page.getByRole('spinbutton').press('a');
+    await expect(page.locator('slab-number')).toHaveJSProperty('value', '1');
+  },
+);

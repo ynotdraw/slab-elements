@@ -290,3 +290,302 @@ test(
     expect(errorName).toBe('InvalidStateError');
   },
 );
+
+test(
+  'formats its value with `format-options`',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-number
+          .formatOptions=${{ style: 'currency', currency: 'USD' } as const}
+          label="Label"
+          lang="en-US"
+          value="1234.5"
+        ></slab-number>`,
+    );
+
+    await expect(page.getByRole('spinbutton')).toHaveValue('$1,234.50');
+
+    await expect(page.locator('slab-number')).toHaveJSProperty(
+      'value',
+      '1234.5',
+    );
+  },
+);
+
+test(
+  'formats in the language of the nearest `lang`',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<div lang="de-DE">
+          <slab-number
+            .formatOptions=${{ style: 'currency', currency: 'EUR' } as const}
+            label="Label"
+            value="1234.5"
+          ></slab-number>
+        </div>`,
+    );
+
+    await expect(page.getByRole('spinbutton')).toHaveValue('1.234,50\u{A0}€');
+  },
+);
+
+test(
+  'formats a percent from a fraction, as `Intl` does',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-number
+          .formatOptions=${{ style: 'percent' } as const}
+          label="Label"
+          lang="en-US"
+          value="0.12"
+        ></slab-number>`,
+    );
+
+    await expect(page.getByRole('spinbutton')).toHaveValue('12%');
+  },
+);
+
+test('formats a unit', { tag: '@miscellaneous' }, async ({ render, page }) => {
+  await render(
+    () =>
+      html`<slab-number
+        .formatOptions=${{ style: 'unit', unit: 'kilometer-per-hour' } as const}
+        label="Label"
+        lang="en-US"
+        value="88"
+      ></slab-number>`,
+  );
+
+  await expect(page.getByRole('spinbutton')).toHaveValue('88 km/h');
+});
+
+test(
+  'formats a value set from code, and again when its options change',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-number
+          .formatOptions=${{}}
+          label="Label"
+          lang="en-US"
+        ></slab-number>`,
+    );
+
+    const host = page.locator('slab-number');
+    const input = page.getByRole('spinbutton');
+
+    await expect(input).toHaveValue('');
+
+    await host.evaluate<void, void, NumberField>((element) => {
+      element.valueAsNumber = 12_345;
+    });
+
+    await expect(input).toHaveValue('12,345');
+
+    await host.evaluate<void, void, NumberField>((element) => {
+      element.formatOptions = { minimumFractionDigits: 2 };
+    });
+
+    await expect(input).toHaveValue('12,345.00');
+
+    await host.evaluate<void, void, NumberField>((element) => {
+      element.value = '';
+    });
+
+    await expect(input).toHaveValue('');
+  },
+);
+
+test(
+  'takes `format-options` as JSON, and is a number input without options it can read',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-number label="Label" lang="en-US" value="5"></slab-number>`,
+    );
+
+    const host = page.locator('slab-number');
+    const input = page.getByRole('spinbutton');
+
+    await host.evaluate((element) => {
+      element.setAttribute('format-options', 'not JSON');
+    });
+
+    await expect(input).toHaveAttribute('type', 'number');
+
+    await host.evaluate((element) => {
+      element.setAttribute('format-options', '5');
+    });
+
+    await expect(input).toHaveAttribute('type', 'number');
+
+    await host.evaluate((element) => {
+      element.setAttribute(
+        'format-options',
+        '{"style":"currency","currency":"USD"}',
+      );
+    });
+
+    await expect(input).toHaveAttribute('type', 'text');
+    await expect(input).toHaveValue('$5.00');
+
+    await host.evaluate((element) => {
+      element.removeAttribute('format-options');
+    });
+
+    await expect(input).toHaveAttribute('type', 'number');
+    await expect(input).toHaveValue('5');
+  },
+);
+
+test(
+  'steps a formatted value with `stepUp()` and `stepDown()`',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(
+      () =>
+        html`<slab-number
+          .formatOptions=${{ style: 'percent' } as const}
+          label="Label"
+          lang="en-US"
+          max="1"
+          min="0"
+          value="0.98"
+        ></slab-number>`,
+    );
+
+    const host = page.locator('slab-number');
+    const input = page.getByRole('spinbutton');
+
+    // A percent steps by 1%, unless `step` says otherwise.
+    await host.evaluate<void, void, NumberField>((element) => {
+      element.stepUp();
+    });
+
+    await expect(host).toHaveJSProperty('value', '0.99');
+    await expect(input).toHaveValue('99%');
+
+    // Kept to `max`, as on an input.
+    await host.evaluate<void, void, NumberField>((element) => {
+      element.stepUp(5);
+    });
+
+    await expect(host).toHaveJSProperty('value', '1');
+
+    await host.evaluate<void, void, NumberField>((element) => {
+      element.step = 0.1;
+      element.stepDown(2);
+    });
+
+    await expect(host).toHaveJSProperty('value', '0.8');
+    await expect(input).toHaveValue('80%');
+
+    const error = await host.evaluate<string, void, NumberField>((element) => {
+      element.step = 'any';
+
+      try {
+        element.stepUp();
+      } catch (error) {
+        return error instanceof DOMException ? error.name : '';
+      }
+
+      return '';
+    });
+
+    expect(error).toBe('InvalidStateError');
+  },
+);
+
+test(
+  'reads numbers the way its language writes them',
+  { tag: '@miscellaneous' },
+  async ({ render, page }) => {
+    await render(() => html`<slab-number label="Label"></slab-number>`);
+
+    const parse = (
+      lang: string,
+      formatOptions: Intl.NumberFormatOptions,
+      text: string,
+    ) => {
+      return page
+        .locator('slab-number')
+        .evaluate<
+          string,
+          [string, Intl.NumberFormatOptions, string],
+          NumberField
+        >(
+          async (element, [lang, formatOptions, text]) => {
+            element.lang = lang;
+            element.formatOptions = formatOptions;
+            element.value = '';
+            await element.updateComplete;
+
+            const input = element.shadowRoot?.querySelector('input');
+
+            if (input) {
+              input.value = text;
+              input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+
+            return element.value;
+          },
+          [lang, formatOptions, text],
+        );
+    };
+
+    const usd = { currency: 'USD', style: 'currency' } as const;
+
+    expect(await parse('en-US', usd, '$1,234.50')).toBe('1234.5');
+    expect(await parse('en-US', usd, '-$1,234.50')).toBe('-1234.5');
+    expect(await parse('en-US', usd, '+$5')).toBe('5');
+    expect(await parse('en-US', usd, '1234.5')).toBe('1234.5');
+    expect(await parse('en-US', usd, '.5')).toBe('0.5');
+    expect(await parse('en-US', usd, '-0')).toBe('0');
+    expect(await parse('en-US', usd, '−5')).toBe('-5');
+    expect(await parse('en-US', usd, '12abc')).toBe('');
+    expect(await parse('en-US', usd, '1.2.3')).toBe('');
+
+    expect(
+      await parse('en-US', { ...usd, currencySign: 'accounting' }, '($1.00)'),
+    ).toBe('-1');
+
+    expect(
+      await parse('en-US', { ...usd, currencyDisplay: 'name' }, '2 US dollars'),
+    ).toBe('2');
+
+    expect(await parse('en-US', { style: 'percent' }, '12.5 %')).toBe('0.125');
+    expect(await parse('fr-FR', { style: 'percent' }, '12,5 %')).toBe('0.125');
+
+    expect(
+      await parse(
+        'de-DE',
+        { currency: 'EUR', style: 'currency' },
+        '1.234,50 €',
+      ),
+    ).toBe('1234.5');
+
+    expect(
+      await parse('fr-FR', { currency: 'EUR', style: 'currency' }, '1 234,5 €'),
+    ).toBe('1234.5');
+
+    expect(await parse('fr-FR', {}, '1234.5')).toBe('1234.5');
+    expect(await parse('de-CH', {}, "1'234.5")).toBe('1234.5');
+    expect(await parse('ar-EG', {}, '١٢٣٫٥')).toBe('123.5');
+
+    expect(
+      await parse(
+        'en-US',
+        { style: 'unit', unit: 'kilometer-per-hour', unitDisplay: 'long' },
+        '1 kilometer per hour',
+      ),
+    ).toBe('1');
+  },
+);
